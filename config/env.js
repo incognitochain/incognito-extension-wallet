@@ -90,9 +90,15 @@ function getClientEnvironment(publicUrl) {
         // which is why it's disabled by default.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
-        DOMAIN_URL: process.env.DOMAIN_URL,
-        IS_DEV: process.env.IS_DEV !== 'false',
-        MODE: process.env.MODE
+        REACT_APP_DOMAIN_URL: process.env.REACT_APP_DOMAIN_URL,
+        REACT_APP_IS_DEV: process.env.REACT_APP_IS_DEV !== 'false',
+        REACT_APP_MODE: process.env.REACT_APP_MODE,
+        REACT_APP_PASSWORD_SECRET_KEY:
+          process.env.REACT_APP_PASSWORD_SECRET_KEY,
+        REACT_APP_WALLET_NAME: process.env.REACT_APP_WALLET_NAME,
+        REACT_APP_PASSPHRASE_WALLET_DEFAULT:
+          process.env.REACT_APP_PASSPHRASE_WALLET_DEFAULT,
+        PASSPHRASE: process.env.PASSPHRASE,
       }
     );
   // Stringify all values so we can feed into webpack DefinePlugin

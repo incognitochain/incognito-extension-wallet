@@ -45,7 +45,7 @@ export const COLORS = {
   toastBackgroundSuccess: 'rgba(42, 171, 160, 0.8)',
   overlayBlack: 'rgba(6, 40, 41, 0.9)',
   overlayBlackDark: 'rgba(0, 0, 0, 0.8)',
-  overlayBlackLight: 'rgba(0, 0, 0, 0.5)',
+  overlayBlackLight: 'rgba(0, 0, 0, 0.3)',
   errorMessage: '#ed4337',
   mottoGrey: '#8c9c9d',
   colorGrey: '#ECECEC',

@@ -1,1 +1,2 @@
-export * from './configs';
+export * from './ellipsis';
+export * from './interface';

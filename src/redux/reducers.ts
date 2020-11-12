@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 import { camelCase } from 'lodash';
 
 const requireModule = require.context('../../src', true, /\.reducer.ts/); //extract [reducerName].reducer.ts files inside redux folder
@@ -16,4 +17,5 @@ requireModule.keys().forEach((fileName: any) => {
 
 export default combineReducers({
   ...reducers,
+  form: formReducer,
 });
