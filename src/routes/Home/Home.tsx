@@ -1,12 +1,21 @@
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { Styled } from './Home.styled';
+import withHome from './Home.enhance';
+import { homeSelector } from './Home.selector';
+import { IProps } from './Home.interface';
+import Category, { ICategory } from './features/Category';
 
-interface IProps {}
-
-const Styled = styled.div``;
-
-const Home: FunctionComponent<IProps> = (props: IProps) => {
-  return <Styled className='home'></Styled>;
+const Home: FunctionComponent<IProps> = () => {
+  const homeData = useSelector(homeSelector);
+  return (
+    <Styled className='home-container'>
+      <p className='title'>{homeData.headerTitle}</p>
+      {homeData.categories.map((category: ICategory) => (
+        <Category {...category} key={category.id} />
+      ))}
+    </Styled>
+  );
 };
 
-export default Home;
+export default withHome(React.memo(Home));

@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import createSagaMiddleware from 'redux-saga';
+import { ENVS } from 'src/configs';
 
 export interface IConfigStore {
   store: any;
@@ -18,11 +19,14 @@ export const configStore = (preloadedState: any = {}) => {
     key: 'root',
     storage,
     whitelist: [],
-    blacklist: [],
+    blacklist: ['preload', 'home', 'wallet', 'account'],
   };
   const persistedReducer = persistReducer(persistConfig, reducers);
   const middlewareEnhancer = applyMiddleware(thunk, saga);
-  const composedEnhancers = composeWithDevTools(middlewareEnhancer);
+  const composedEnhancers =
+    ENVS.REACT_APP_MODE === 'development'
+      ? composeWithDevTools(middlewareEnhancer)
+      : middlewareEnhancer;
   const store: any = createStore(
     persistedReducer,
     preloadedState,

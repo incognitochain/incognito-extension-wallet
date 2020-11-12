@@ -1,8 +1,17 @@
-import Home from 'src/routes/Home/index';
+import { RouteProps } from 'react-router-dom';
 
-export const routes = [
-  {
-    path: '/',
-    component: Home,
-  },
-];
+export interface IRouteProps extends RouteProps {
+  id?: string | number;
+  name: string;
+  to: string;
+}
+
+let routes: IRouteProps[] = [];
+
+const context = require.context('./', true, /\.route.tsx?/);
+
+context.keys().forEach((path) => {
+  routes.push(require(`${path}`).default);
+});
+
+export default routes;
