@@ -9,6 +9,8 @@ import {
   ACTION_FETCHED_IMPORT_ACCOUNT,
   ACTION_SELECT_ACCOUNT,
   ACTION_SET_LIST_ACCOUNT,
+  ACTION_SWITCH_ACCOUNT_FETCHING,
+  ACTION_SWITCH_ACCOUNT_FETCHED,
 } from './Account.constant';
 import { IAccountReducer } from './Account.interface';
 
@@ -68,6 +70,18 @@ const accountReducer = (
       return {
         ...state,
         list: [...action.payload],
+      };
+    }
+    case ACTION_SWITCH_ACCOUNT_FETCHING: {
+      return {
+        ...state,
+        switch: true,
+      };
+    }
+    case ACTION_SWITCH_ACCOUNT_FETCHED: {
+      return {
+        ...state,
+        switch: false,
       };
     }
     default:

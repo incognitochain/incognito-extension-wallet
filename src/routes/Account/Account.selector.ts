@@ -3,7 +3,7 @@ import memoize from 'lodash/memoize';
 import isEmpty from 'lodash/isEmpty';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
-import { IAccount, IAccountReducer } from './Account.interface';
+import { IAccountReducer } from './Account.interface';
 
 export const accountSelector = createSelector(
   (state: IRootState) => state.account,
@@ -50,11 +50,6 @@ export const defaultAccountSelector = createSelector(
 export const isGettingAccountBalanceSelector = createSelector(
   accountSelector,
   (account) => account.isGettingBalance.length !== 0
-);
-
-export const defaultAccountBalanceSelector = createSelector(
-  defaultAccountSelector,
-  (account: IAccount & any) => account.value || 0
 );
 
 export const switchAccountSelector = createSelector(

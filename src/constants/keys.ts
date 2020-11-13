@@ -1,5 +1,3 @@
-import { isMainnetEnv } from 'src/services';
-
 const prefix_network = 'testnet';
 
 const isMainnet = false;

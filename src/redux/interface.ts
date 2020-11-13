@@ -5,6 +5,7 @@ import { IWalletReducer } from 'src/routes/Wallet';
 import { IConfigsReducer } from 'src/routes/Configs';
 import { IAccountReducer } from 'src/routes/Account';
 import { IModalReducer } from 'src/components/Modal';
+import { IToastReducer } from 'src/components';
 
 export interface IAction {
   type: string;
@@ -19,4 +20,5 @@ export interface IRootState {
   configs: IConfigsReducer;
   account: IAccountReducer;
   modal: IModalReducer;
+  toast: IToastReducer;
 }

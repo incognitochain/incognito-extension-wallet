@@ -7,7 +7,10 @@ import {
   TESTNET_WALLET_NAME,
 } from 'src/configs/walletConfigs';
 import { initWallet, loadWallet } from './Wallet.utils';
-import { WalletInstance } from 'incognito-js/build/web/browser';
+import {
+  AccountInstance,
+  WalletInstance,
+} from 'incognito-js/build/web/browser';
 import { IWalletReducer } from './Wallet.reducer';
 import {
   walletDataSelector,
@@ -54,10 +57,14 @@ export const actionInitWallet = () => async (
       mainnet ? MAINNET_WALLET_NAME : TESTNET_WALLET_NAME
     );
     walletId = dataInit.walletId;
+    const { wallet } = dataInit;
     const payload: IPayloadInitWallet = {
       ...dataInit,
       mainnet,
     };
+    const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+    dispatch(actionSetListAccount(listAccount));
+    dispatch(actionSelectAccount(listAccount && listAccount[0].name));
     dispatch(actionFetched(payload));
   } catch (error) {
     console.debug(error);
@@ -77,23 +84,19 @@ export const actionHandleLoadWallet = () => async (
     const { defaultAccountName, list } = accountState;
     const { mainnet } = preload.configs;
     const field = mainnet ? 'mainnet' : 'testnet';
-    const init = walletState[field].init;
-    let walletId;
-    if (!init) {
-      walletId = await actionInitWallet()(dispatch, getState);
-    }
-    walletId = walletId || walletState[field].walletId;
+    let walletId = walletState[field].walletId;
     if (!walletId) {
       throw new Error(`Can't not found wallet id`);
     }
     const wallet = await loadWallet(walletId);
-    const defaultAccount = wallet.masterAccount.getAccountByName(
+    let defaultAccount = wallet.masterAccount.getAccountByName(
       defaultAccountName
     );
     if (!defaultAccount) {
-      dispatch(actionSelectAccount(list && list[0].name));
+      defaultAccount = list[0];
     }
     dispatch(actionLoadWallet(wallet));
+    dispatch(actionSelectAccount(defaultAccount.name));
     dispatch(actionSetListAccount(wallet.masterAccount.getAccounts()));
   } catch (error) {
     throw error;

@@ -3,9 +3,15 @@ import { IRootState } from 'src/redux/interface';
 import { ACTION_FETCHING, ACTION_FETCHED } from './Preload.constant';
 import { IPreloadReducer } from './Preload.reducer';
 import { goServices, setConfig } from 'incognito-js/build/web/browser';
-import { actionHandleLoadWallet } from 'src/routes/Wallet';
+import {
+  actionHandleLoadWallet,
+  actionInitWallet,
+  IWalletReducer,
+  walletSelector,
+} from 'src/routes/Wallet';
 import { preloadSelector } from './Preload.selector';
 import { actionFetch as actionLoadHomeConfigs } from 'src/routes/Home';
+import { ENVS } from 'src/configs';
 
 export const actionFetching = () => ({
   type: ACTION_FETCHING,
@@ -22,15 +28,25 @@ export const actionFetch = () => async (
 ) => {
   const state: IRootState = getState();
   const preload: IPreloadReducer = preloadSelector(state);
+  const walletState: IWalletReducer = walletSelector(state);
   const { configs } = preload;
+  const { mainnet } = configs;
+  const field = mainnet ? 'mainnet' : 'testnet';
+  const init = walletState[field].init;
   try {
     await dispatch(actionFetching());
-    await setConfig(configs);
+    await setConfig({
+      ...configs,
+      wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
+    });
     await goServices.implementGoMethodUseWasm();
-    await Promise.all([
-      actionHandleLoadWallet()(dispatch, getState),
-      actionLoadHomeConfigs()(dispatch, getState),
-    ]);
+    let task: any[] = [actionLoadHomeConfigs()(dispatch, getState)];
+    if (!init) {
+      task = [...task, actionInitWallet()(dispatch, getState)];
+    } else {
+      task = [...task, actionHandleLoadWallet()(dispatch, getState)];
+    }
+    await Promise.all(task);
   } catch (error) {
     console.debug(error);
   } finally {

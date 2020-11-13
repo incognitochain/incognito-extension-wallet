@@ -1,7 +1,7 @@
 const vi = {
   general: {
     copied: 'Copied',
-    copy: 'Copy'
+    copy: 'Copy',
   },
   home: {
     title: 'Incognito Wallet',
@@ -35,6 +35,20 @@ const vi = {
       title8: 'Shard',
       keychain: 'keychain',
       delete: 'Delete',
+    },
+    error: {
+      create: 'Keychain was not created! Please try again.',
+      import: 'Import keychain failed, please try again.',
+    },
+    success: {
+      create: 'Create keychain successful.',
+      import: 'Import keychain successful.',
+    },
+  },
+  wallet: {
+    headerTitle: 'Assets',
+    selectAccount: {
+      headerTitle: 'Search keychains',
     },
   },
 };

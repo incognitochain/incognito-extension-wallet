@@ -40,6 +40,20 @@ export interface ILanguage {
       keychain: string;
       delete: string;
     };
+    error: {
+      create: string;
+      import: string;
+    };
+    success: {
+      create: string;
+      import: string;
+    };
+  };
+  wallet: {
+    headerTitle: string;
+    selectAccount: {
+      headerTitle: string;
+    };
   };
 }
 

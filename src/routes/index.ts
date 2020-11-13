@@ -4,6 +4,7 @@ export interface IRouteProps extends RouteProps {
   id?: string | number;
   name: string;
   to: string;
+  path: string;
 }
 
 let routes: IRouteProps[] = [];
@@ -13,5 +14,7 @@ const context = require.context('./', true, /\.route.tsx?/);
 context.keys().forEach((path) => {
   routes.push(require(`${path}`).default);
 });
+
+console.debug(routes);
 
 export default routes;

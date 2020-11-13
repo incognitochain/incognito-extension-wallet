@@ -60,6 +60,7 @@ class IndexedDb {
     const store = tx.objectStore(tableName);
     for (const value of values) {
       const result = await store.put(value);
+      console.debug(result);
     }
     return this.getAllValue(tableName);
   }

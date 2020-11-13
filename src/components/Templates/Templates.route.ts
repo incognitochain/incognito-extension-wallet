@@ -2,11 +2,11 @@ import { lazy } from 'react';
 import { IRouteProps } from 'src/routes';
 
 const templatesRoute: IRouteProps = {
-  path: '/',
+  path: '/templates',
   exact: true,
   component: lazy(() => import('./Templates')),
   name: 'Template',
-  to: '/',
+  to: '/templates',
 };
 
 export const route = ''

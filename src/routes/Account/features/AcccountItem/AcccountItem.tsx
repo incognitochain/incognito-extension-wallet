@@ -10,16 +10,23 @@ export interface IProps {
   title: string;
   desc: string;
   limit?: number;
+  hasQrCode?: boolean;
+  hasCopy?: boolean;
+  selectable?: boolean;
+  onSelectAccount?: any;
 }
 
 const Styled = styled.div`
   margin-bottom: 30px;
+  &.selectable {
+    cursor: pointer;
+  }
   .hook p.title {
     font-size: ${FONT_SIZES.medium}px;
     line-height: ${FONT_SIZES.medium + 9}px;
     font-weight: 500;
   }
-  .hook p.decs {
+  p.decs {
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 9}px;
     font-weight: 100;
@@ -46,7 +53,14 @@ const Styled = styled.div`
 `;
 
 const AccountItem = (props: IProps) => {
-  const { title, desc } = props;
+  const {
+    title,
+    desc,
+    hasCopy = true,
+    hasQrCode = true,
+    selectable = false,
+    onSelectAccount = null,
+  } = props;
   const history = useHistory();
   const handleCopy = () => {
     copy(desc);
@@ -58,12 +72,23 @@ const AccountItem = (props: IProps) => {
       desc,
     });
   return (
-    <Styled className='account-item'>
+    <Styled
+      className={`account-item ${selectable ? 'selectable' : ''}`}
+      onClick={() => {
+        if (typeof onSelectAccount === 'function' && selectable) {
+          onSelectAccount();
+        }
+      }}
+    >
       <div className='hook'>
         <p className='title'>{title}</p>
         <div className='icons'>
-          <FaQrcode color={COLORS.colorGreyBold} onClick={handleShowQrCode} />
-          <FaCopy color={COLORS.colorGreyBold} onClick={handleCopy} />
+          {hasQrCode && (
+            <FaQrcode color={COLORS.colorGreyBold} onClick={handleShowQrCode} />
+          )}
+          {hasCopy && (
+            <FaCopy color={COLORS.colorGreyBold} onClick={handleCopy} />
+          )}
         </div>
       </div>
       <p className='decs ellipsis'>{desc}</p>
