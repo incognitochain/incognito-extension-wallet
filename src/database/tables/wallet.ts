@@ -1,5 +1,4 @@
 import { WalletInstance } from 'incognito-js/build/web/browser';
-import { cloneDeep } from 'lodash';
 import { ENVS } from 'src/configs';
 import { initIncognitoDB } from '../IncognitoDB';
 export const TABLE_NAME = 'wallet';

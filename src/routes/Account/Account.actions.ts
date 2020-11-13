@@ -2,6 +2,7 @@ import {
   AccountInstance,
   WalletInstance,
 } from 'incognito-js/build/web/browser';
+import { isEqual } from 'lodash';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { actionSaveWallet, walletDataSelector } from 'src/routes//Wallet';
@@ -13,7 +14,10 @@ import {
   ACTION_FETCHING_IMPORT_ACCOUNT,
   ACTION_SELECT_ACCOUNT,
   ACTION_SET_LIST_ACCOUNT,
+  ACTION_SWITCH_ACCOUNT_FETCHING,
+  ACTION_SWITCH_ACCOUNT_FETCHED,
 } from './Account.constant';
+import { defaultAccountSelector } from './Account.selector';
 
 export const actionFetched = (payload: object) => ({
   type: ACTION_FETCHED,
@@ -116,3 +120,38 @@ export const actionSetListAccount = (payload: AccountInstance[]) => ({
   type: ACTION_SET_LIST_ACCOUNT,
   payload,
 });
+
+export const actionSwitchAccountFetching = () => ({
+  type: ACTION_SWITCH_ACCOUNT_FETCHING,
+});
+
+export const actionSwitchAccountFetched = () => ({
+  type: ACTION_SWITCH_ACCOUNT_FETCHED,
+});
+
+export const actionSwitchAccount = (
+  accountName: string,
+  shouldLoadBalance?: boolean
+) => async (dispatch: Dispatch, getState: () => IRootState) => {
+  const state = getState();
+  const defaultAccount = defaultAccountSelector(state);
+  let account: AccountInstance = defaultAccount;
+  const wallet: WalletInstance = walletDataSelector(state);
+  try {
+    if (isEqual(defaultAccount?.name, accountName)) {
+      return account;
+    }
+    await dispatch(actionSwitchAccountFetching());
+    account = await wallet.masterAccount.getAccountByName(accountName);
+    if (!account) {
+      throw new Error(`Account not found!`);
+    }
+    await dispatch(actionSelectAccount(account.name));
+    // dispatch(actionReloadFollowingToken(shouldLoadBalance));
+  } catch (error) {
+    throw error;
+  } finally {
+    dispatch(actionSwitchAccountFetched());
+  }
+  return account;
+};

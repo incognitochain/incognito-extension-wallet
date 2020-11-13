@@ -11,6 +11,9 @@ import {
 } from 'src/routes/Account';
 import { withLayout } from 'src/components/Layout';
 import { useHistory, useLocation } from 'react-router-dom';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { ILanguage } from 'src/i18n';
+import { translateSelector } from 'src/routes/Configs';
 
 export interface TOutter {
   disabledForm: boolean;
@@ -37,6 +40,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     onGoBack?: () => void;
   } = location.state;
   const accountNameList = useSelector(listAccountNameSelector);
+  const translate: ILanguage = useSelector(translateSelector);
   const [state, setState] = React.useState({
     readOnlyName: true,
   });
@@ -71,8 +75,21 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
       } else {
         history.goBack();
       }
-    } catch (error) {
-      console.debug(error);
+      dispatch(
+        actionToggleToast({
+          toggle: true,
+          value: translate.keychain.success.import,
+          type: TOAST_CONFIGS.success,
+        })
+      );
+    } catch (e) {
+      dispatch(
+        actionToggleToast({
+          toggle: true,
+          value: e?.message || translate.keychain.error.import,
+          type: TOAST_CONFIGS.error,
+        })
+      );
     }
   };
 

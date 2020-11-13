@@ -1,11 +1,14 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAccount, actionFetchCreateAccount } from 'src/routes/Account';
 import trim from 'lodash/trim';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { reduxForm } from 'redux-form';
 import { withLayout } from 'src/components/Layout';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { translateSelector } from 'src/routes/Configs';
+import { ILanguage } from 'src/i18n';
 
 interface IProps {}
 
@@ -26,6 +29,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
   const { isFormValid, isAccountExist } = useAccount({
     form: FORM_CONFIGS,
   });
+  const translate: ILanguage = useSelector(translateSelector);
   const disabledForm = !isFormValid;
   const handleCreateAccount = async (values: { accountName: string }) => {
     try {
@@ -37,9 +41,22 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         throw new Error('Account is existed!');
       }
       await dispatch(actionFetchCreateAccount(trim(accountName)));
+      dispatch(
+        actionToggleToast({
+          toggle: true,
+          value: translate.keychain.success.create,
+          type: TOAST_CONFIGS.success,
+        })
+      );
       history.goBack();
     } catch (e) {
-      console.debug(e);
+      dispatch(
+        actionToggleToast({
+          toggle: true,
+          value: e?.message || translate.keychain.error.create,
+          type: TOAST_CONFIGS.error,
+        })
+      );
     }
   };
   return (

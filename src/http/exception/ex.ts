@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { Toast } from 'src/components/Core';
 import Message from './customError/message';
 import ERROR from './customError/code';
 import CustomError from './customError/customError';
@@ -176,7 +175,7 @@ class Exception {
    * If __DEV__ is true, `debugMessage` will be displayed too.
    */
   showWarningToast() {
-    let msg = this.message;
+    // let msg = this.message;
     // msg && Toast.showWarning(msg);
     return this;
   }

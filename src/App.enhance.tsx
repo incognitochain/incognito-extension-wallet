@@ -7,6 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { withPreload } from './routes/Preload';
 import Modal from 'src/components/Modal';
+import { Toast } from './components';
 
 const { store, persistor }: IConfigStore = configStore();
 
@@ -20,6 +21,7 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: IProps) => {
           <GlobalStyled />
           <WrappedComponent {...props} />
           <Modal />
+          <Toast />
         </PersistGate>
       </Provider>
     </ErrorBoundary>

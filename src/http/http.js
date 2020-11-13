@@ -14,7 +14,6 @@ const instance = axios.create({
     Authorization: '',
   },
 });
-let renewToken = null;
 let pendingSubscribers = [];
 let isAlreadyFetchingAccessToken = false;
 
@@ -46,7 +45,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    const config = res?.config;
     const result = res?.data?.Result;
     return Promise.resolve(result);
   },
@@ -112,7 +110,6 @@ export const setTokenHeader = (token) => {
 export const setRenewToken = (fn) => {
   if (typeof fn !== 'function')
     throw new Error('setRenewToken must be recieved a function');
-  renewToken = fn;
 };
 
 export default instance;

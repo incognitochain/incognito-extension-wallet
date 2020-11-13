@@ -3,6 +3,8 @@ import withApp from './App.enhance';
 import { Router, Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './reset.scss';
+import 'animate.css';
+
 import routes, { IRouteProps } from 'src/routes';
 import { createMemoryHistory, createBrowserHistory } from 'history';
 import { isDev } from 'src/configs';
@@ -15,7 +17,7 @@ const App: React.FunctionComponent = () => {
       <Switch>
         <Suspense fallback={'...'}>
           {routes.map((route: IRouteProps) => (
-            <Route {...route} key={route.name} />
+            <Route {...route} key={route.path} />
           ))}
         </Suspense>
       </Switch>

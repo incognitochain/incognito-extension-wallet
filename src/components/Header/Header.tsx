@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 import { FONT_SIZES } from 'src/styles';
+import { BtnSelectAccount } from 'src/routes/Account/features/SelectAccount';
 
 interface IProps {
   title: string;
   onGoBack?: () => void;
+  rightHeader?: React.FunctionComponent;
+  selectAccount?: boolean;
 }
 
 const Styled = styled.div`
@@ -32,7 +35,7 @@ const Styled = styled.div`
 `;
 
 const Header = (props: IProps) => {
-  const { title, onGoBack } = props;
+  const { title, onGoBack, rightHeader, selectAccount } = props;
   const history = useHistory();
   const handleClick = () => {
     if (typeof onGoBack === 'function') {
@@ -46,7 +49,10 @@ const Header = (props: IProps) => {
         <FaAngleLeft size={20} />
         <h1 className='title ellipsis'>{title}</h1>
       </div>
-      <div className='right'></div>
+      <div className='right'>
+        {rightHeader}
+        {selectAccount && <BtnSelectAccount />}
+      </div>
     </Styled>
   );
 };

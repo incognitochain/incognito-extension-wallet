@@ -17,7 +17,6 @@ const Styled = styled.button`
   height: 50px;
   margin: auto;
   padding: 0 20px;
-  margin-top: 50px;
   color: ${COLORS.white};
   font-size: ${FONT_SIZES.medium}px;
   line-height: ${FONT_SIZES.medium + 3}px;
@@ -33,9 +32,12 @@ const Button = (
   props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>
 ) => {
   const { customContent, title, disabled, ...rest } = props;
-  console.debug(`disabled`,disabled)
+  console.debug(`disabled`, disabled);
   return (
-    <Styled className={`btn-container ${disabled ? 'btn-disabled' : ''}`} {...rest}>
+    <Styled
+      className={`btn-container ${disabled ? 'btn-disabled' : ''}`}
+      {...rest}
+    >
       {!!customContent ? customContent : title}
     </Styled>
   );
