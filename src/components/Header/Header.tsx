@@ -1,16 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
 import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/routes/Account/features/SelectAccount';
-
-interface IProps {
-  title: string;
-  onGoBack?: () => void;
-  rightHeader?: React.FunctionComponent;
-  selectAccount?: boolean;
-}
+import withHeader, { TInter, TOutter } from './Header.enhance';
 
 const Styled = styled.div`
   display: flex;
@@ -34,20 +27,13 @@ const Styled = styled.div`
   }
 `;
 
-const Header = (props: IProps) => {
-  const { title, onGoBack, rightHeader, selectAccount } = props;
-  const history = useHistory();
-  const handleClick = () => {
-    if (typeof onGoBack === 'function') {
-      return onGoBack();
-    }
-    history.goBack();
-  };
+const Header = (props: TInter & TOutter) => {
+  const { rightHeader, selectAccount, handleClick, renderHeaderTitle } = props;
   return (
     <Styled className='header'>
-      <div className='left' onClick={handleClick}>
-        <FaAngleLeft size={20} />
-        <h1 className='title ellipsis'>{title}</h1>
+      <div className='left'>
+        <FaAngleLeft size={20} onClick={handleClick} />
+        {renderHeaderTitle()}
       </div>
       <div className='right'>
         {rightHeader}
@@ -57,4 +43,4 @@ const Header = (props: IProps) => {
   );
 };
 
-export default Header;
+export default withHeader(Header);

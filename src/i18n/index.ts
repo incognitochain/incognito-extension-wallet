@@ -54,6 +54,28 @@ export interface ILanguage {
     selectAccount: {
       headerTitle: string;
     };
+    addCoin: string;
+    error: {
+      walletNotExisted: string;
+    };
+  };
+  token: {
+    followToken: {
+      headerTitle: string;
+      addManually: string;
+      dontSeeYourCoin: string;
+    };
+    addToken: {
+      headerTitle: string;
+    };
+    error: {
+      tokenIdRequired: string;
+    };
+  };
+  account: {
+    error: {
+      accountNotExisted: string;
+    };
   };
 }
 

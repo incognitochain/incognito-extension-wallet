@@ -1,12 +1,14 @@
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Header } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { defaultAccountSelector } from '../Account';
 import { translateSelector } from '../Configs';
 import withWallet from './Wallet.enhance';
+import { route as routeAddToken } from 'src/routes/Token/features/AddToken';
 
 interface IProps {}
 
@@ -34,6 +36,12 @@ const TotalShield = () => {
   return <div className='total-shield'>0</div>;
 };
 
+const AddCoin = React.memo(() => {
+  const translate: ILanguage = useSelector(translateSelector);
+  const wallet = translate.wallet;
+  return <Link to={routeAddToken}>{wallet.addCoin}</Link>;
+});
+
 const Wallet = (props: IProps) => {
   const translate: ILanguage = useSelector(translateSelector);
   const wallet = translate.wallet;
@@ -41,6 +49,7 @@ const Wallet = (props: IProps) => {
     <Styled>
       <Header title={wallet.headerTitle} selectAccount />
       <TotalShield />
+      <AddCoin />
     </Styled>
   );
 };

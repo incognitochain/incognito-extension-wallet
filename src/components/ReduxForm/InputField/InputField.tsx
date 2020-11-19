@@ -9,7 +9,7 @@ interface IProps {
   };
 }
 
-const Input = (props: any) => {
+export const Input = (props: any) => {
   const {
     input: { value, onChange, onFocus },
     componentProps,
@@ -30,12 +30,12 @@ const Input = (props: any) => {
 };
 
 const InputField = (props: any & IProps & React.FunctionComponent) => {
-  const { input, meta, label, ...rest } = props;
+  const { meta, label, ...rest } = props;
   const { error, warning } = meta;
   return (
     <Styled>
       <label>{label}</label>
-      <Input {...rest} input={input} />
+      <Input {...rest} />
       {(error && <span className='error'>{error}</span>) ||
         (warning && <span className='warning'>{warning}</span>)}
     </Styled>

@@ -12,6 +12,10 @@ import {
 import { preloadSelector } from './Preload.selector';
 import { actionFetch as actionLoadHomeConfigs } from 'src/routes/Home';
 import { ENVS } from 'src/configs';
+import {
+  actionFetchPCustomTokenList,
+  actionFetchPTokenList,
+} from 'src/routes//Token';
 
 export const actionFetching = () => ({
   type: ACTION_FETCHING,
@@ -40,7 +44,11 @@ export const actionFetch = () => async (
       wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
     });
     await goServices.implementGoMethodUseWasm();
-    let task: any[] = [actionLoadHomeConfigs()(dispatch, getState)];
+    let task: any[] = [
+      actionLoadHomeConfigs()(dispatch, getState),
+      actionFetchPTokenList()(dispatch, getState),
+      actionFetchPCustomTokenList()(dispatch, getState),
+    ];
     if (!init) {
       task = [...task, actionInitWallet()(dispatch, getState)];
     } else {

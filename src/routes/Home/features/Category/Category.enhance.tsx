@@ -2,7 +2,7 @@ import { lowerCase } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import { CRYPTO_SYMBOL } from 'src/constants/coin';
+import { COINS } from 'src/constants';
 import { ICategoryItem } from './Category.interface';
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
@@ -17,8 +17,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     switch (item.key) {
       case 'buy_prv':
         goToScreen(item?.route || '', {
-          inputTokenId: CRYPTO_SYMBOL.USDT,
-          outputTokenId: CRYPTO_SYMBOL.PRV,
+          inputTokenId: COINS.CRYPTO_SYMBOL.USDT,
+          outputTokenId: COINS.CRYPTO_SYMBOL.PRV,
           outputValue: 1750e9,
         });
         break;
