@@ -6,6 +6,8 @@ const POPULAR_COIN = {
   XMR: 'c01e7dc1d1aba995c19b257412340b057f8ad1482ccb6a9bb0adce61afbf05d4',
 };
 
+const POPULAR_COINS_SYMBOL = ['BTC', 'ETH', 'USDT', 'BNB', 'XMR'];
+
 const POPULAR_COIN_IDS = [
   POPULAR_COIN.XMR,
   POPULAR_COIN.BNB,
@@ -25,14 +27,7 @@ const PRV = {
   isVerified: true,
 };
 
-const COIN_CONSTANT = {
-  POPULAR_COIN,
-  POPULAR_COIN_IDS,
-  PRV,
-  PRV_ID: PRV.id,
-};
-
-export const CRYPTO_SYMBOL = {
+const CRYPTO_SYMBOL = {
   PRV: 'PRV',
   BTC: 'BTC',
   ETH: 'ETH',
@@ -73,6 +68,38 @@ export const CRYPTO_SYMBOL = {
   AUR: 'AUR',
   ZIL: 'ZIL',
   USDT: 'USDT',
+};
+
+const NETWORK_NAME = {
+  BINANCE: 'Binance',
+  ETHEREUM: 'Ethereum',
+  TOMO: 'TomoChain',
+};
+
+const PRIVATE_TOKEN_TYPE = {
+  COIN: 0,
+  TOKEN: 1, // including ERC20, BEP1, BEP2,...
+};
+
+const PRIVATE_TOKEN_CURRENCY_TYPE = {
+  ETH: 1,
+  BTC: 2,
+  ERC20: 3,
+  BNB: 4,
+  BNB_BEP2: 5,
+  USD: 6,
+};
+
+const COIN_CONSTANT = {
+  POPULAR_COIN,
+  POPULAR_COIN_IDS,
+  PRV,
+  PRV_ID: PRV.id,
+  CRYPTO_SYMBOL,
+  NETWORK_NAME,
+  PRIVATE_TOKEN_TYPE,
+  PRIVATE_TOKEN_CURRENCY_TYPE,
+  POPULAR_COINS_SYMBOL,
 };
 
 export default COIN_CONSTANT;

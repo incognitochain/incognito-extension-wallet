@@ -24,6 +24,12 @@ import {
   actionSelectAccount,
   IAccountReducer,
 } from 'src/routes/Account';
+import { COINS } from 'src/constants';
+import {
+  actionFollowedPopularTokenIds,
+  actionFollowPopularToken,
+  findPTokenBySymbolSelector,
+} from '../Token';
 
 export interface IDataInitWallet {
   wallet: WalletInstance;
@@ -63,8 +69,9 @@ export const actionInitWallet = () => async (
       mainnet,
     };
     const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+    const defaultAccount: AccountInstance = listAccount && listAccount[0];
     dispatch(actionSetListAccount(listAccount));
-    dispatch(actionSelectAccount(listAccount && listAccount[0].name));
+    dispatch(actionSelectAccount(defaultAccount.name));
     dispatch(actionFetched(payload));
   } catch (error) {
     console.debug(error);

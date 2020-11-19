@@ -55,4 +55,87 @@ export interface IPToken {
   decimals: number;
   pDecimals: number;
   currencyType: number;
+  type: number;
+  name: string;
+  contractId: string;
+  verified: boolean;
+  priceUsd: number;
+  pricePrv: number;
+  change: string;
+  pairPrv: boolean;
+}
+
+export interface IPCustomTokenFromApi {
+  ID: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+  DeletedAt: string;
+  TokenID: string;
+  Image: string;
+  IsPrivacy: string;
+  Name: string;
+  Symbol: string;
+  OwnerAddress: string;
+  OwnerName: string;
+  OwnerEmail: string;
+  OwnerWebsite: string;
+  UserID: number;
+  ShowOwnerAddress: number;
+  Description: string;
+  Verified: boolean;
+  Amount: number;
+}
+
+export interface IPCustomToken {
+  id: number;
+  tokenId: string;
+  symbol: string;
+  name: string;
+  totalSupply: number;
+  verified: boolean;
+  image: string;
+}
+
+export interface IFollowedToken {
+  tokenId: string;
+  amount: number;
+}
+
+export interface ISelectedPrivacy {
+  tokenId: string;
+  currencyType: number;
+  isToken: boolean;
+  isNativeToken: boolean;
+  isPrivateToken: boolean;
+  isPrivateCoin: boolean;
+  isPToken: boolean;
+  isIncognitoToken: boolean;
+  isErc20Token: boolean;
+  isBep2Token: boolean;
+  symbol: string;
+  name: string;
+  displayName: string;
+  contractId: string;
+  decimals: number;
+  pDecimals: number;
+  pSymbol: string;
+  isWithdrawable: boolean;
+  isDeposable: boolean;
+  isDecentralized: boolean;
+  isCentralized: boolean;
+  incognitoTotalSupply: number;
+  isVerified: boolean;
+  iconUrl: string;
+  priceUsd: number;
+  pricePrv: number;
+  change: string;
+  isFollowed: boolean;
+  amount: number;
+}
+
+export interface INameProps {
+  tokenId: string;
+}
+export interface IBalanceProps {
+  tokenId: string;
 }

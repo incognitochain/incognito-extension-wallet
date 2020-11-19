@@ -17,6 +17,8 @@ export interface IPreloadReducer {
   isFetching: boolean;
   configs: IPreloadConfigs;
   server: object;
+  decimalSeparator: string;
+  groupSeparator: string;
 }
 
 const initialState: IPreloadReducer = {
@@ -29,6 +31,8 @@ const initialState: IPreloadReducer = {
     wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
   },
   server: MAIN_NET_SERVER,
+  decimalSeparator: '.',
+  groupSeparator: ',',
 };
 
 const preloadReducer = (

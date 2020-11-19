@@ -50,6 +50,28 @@ const vi = {
     selectAccount: {
       headerTitle: 'Search keychains',
     },
+    addCoin: 'Add a coin',
+    error: {
+      walletNotExisted: 'Wallet is not exist',
+    },
+  },
+  token: {
+    followToken: {
+      headerTitle: 'Add a coin',
+      addManually: 'Add manually +',
+      dontSeeYourCoin: `Don't see your coin?`,
+    },
+    addToken: {
+      headerTitle: 'Add a coin',
+    },
+    error: {
+      tokenIdRequired: 'Token id is required',
+    },
+  },
+  account: {
+    error: {
+      accountNotExisted: 'Account is not exist',
+    },
   },
 };
 

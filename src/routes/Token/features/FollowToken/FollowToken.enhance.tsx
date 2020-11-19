@@ -1,17 +1,12 @@
 import React from 'react';
 import { compose } from 'recompose';
-import ErrorBoundary from 'src/components/ErrorBoundary';
 
 interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (
   props: IProps
 ) => {
-  return (
-    <ErrorBoundary>
-      <WrappedComponent {...props} />
-    </ErrorBoundary>
-  );
+  return <WrappedComponent {...props} />;
 };
 
 export default compose<IProps, any>(enhance);
