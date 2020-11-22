@@ -1,8 +1,8 @@
-export interface IReducer {}
+export interface ISendReducer {}
 
-const initialState: IReducer = {};
+const initialState: ISendReducer = {};
 
-const reducer = (
+const sendReducer = (
   state = initialState,
   action: {
     type: string;
@@ -20,4 +20,4 @@ const reducer = (
   }
 };
 
-export default reducer;
+export default sendReducer;

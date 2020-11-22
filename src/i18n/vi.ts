@@ -1,4 +1,6 @@
-const vi = {
+import { ILanguage } from '.';
+
+const vi: ILanguage | any = {
   general: {
     copied: 'Copied',
     copy: 'Copy',
@@ -64,6 +66,11 @@ const vi = {
     addToken: {
       headerTitle: 'Add a coin',
     },
+    detail: {
+      headerTitle: '',
+      btnSend: 'Send',
+      btnReceive: 'Receive',
+    },
     error: {
       tokenIdRequired: 'Token id is required',
     },
@@ -72,6 +79,25 @@ const vi = {
     error: {
       accountNotExisted: 'Account is not exist',
     },
+  },
+  setting: {
+    headerTitle: 'Settings',
+    network: {
+      headerTitle: 'Network',
+    },
+    dev: {
+      headerTitle: 'Dev Sections',
+      homeConfigs: 'Use staging home configs',
+    },
+  },
+  send: {
+    headerTitle: 'Send',
+    amount: 'Amount',
+    toAddress: 'To',
+    incognitoAddress: 'Incognito Address',
+    fee: 'Fee',
+    memo: 'Memo',
+    placeholderMemo: 'Add a note (optional)',
   },
 };
 

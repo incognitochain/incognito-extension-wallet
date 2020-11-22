@@ -2,21 +2,26 @@ import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { ENVS } from 'src/configs';
-import { MAIN_NET_SERVER, PRODUCTION_API } from 'src/services';
-import { ACTION_FETCHING, ACTION_FETCHED } from './Preload.constant';
+import { IServer, MAIN_NET_SERVER, PRODUCTION_API } from 'src/services';
+import {
+  ACTION_FETCHING,
+  ACTION_FETCHED,
+  ACTION_SET_CONFIGS,
+  ACTION_SET_SERVER,
+} from './Preload.constant';
 
 export interface IPreloadConfigs {
   chainURL: string;
   apiURL: string;
   mainnet: boolean;
-  wasmPath: string;
+  wasmPath?: string;
 }
 
 export interface IPreloadReducer {
   isFetched: boolean;
   isFetching: boolean;
   configs: IPreloadConfigs;
-  server: object;
+  server: IServer;
   decimalSeparator: string;
   groupSeparator: string;
 }
@@ -54,6 +59,23 @@ const preloadReducer = (
         ...state,
         isFetching: false,
         isFetched: true,
+      };
+    }
+    case ACTION_SET_CONFIGS: {
+      const configs = action.payload;
+      return {
+        ...state,
+        configs: {
+          ...state.configs,
+          ...configs,
+        },
+      };
+    }
+    case ACTION_SET_SERVER: {
+      const server = action.payload;
+      return {
+        ...state,
+        server,
       };
     }
     default:

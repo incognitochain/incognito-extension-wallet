@@ -7,3 +7,5 @@ export const ACTION_SELECT_ACCOUNT = `[account] Select account`;
 export const ACTION_SET_LIST_ACCOUNT = `[account] Set list account`;
 export const ACTION_SWITCH_ACCOUNT_FETCHING = `[account] Switching account`;
 export const ACTION_SWITCH_ACCOUNT_FETCHED = `[account] Switched account`;
+export const ACTION_GET_ACCOUNT_BALANCE_FETCHING = `[account] Get account balance fetching`;
+export const ACTION_GET_ACCOUNT_BALANCE_FETCHED = `[account] Get account balance fetched`;

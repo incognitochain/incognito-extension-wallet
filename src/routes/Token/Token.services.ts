@@ -7,9 +7,9 @@ import {
   IPCustomToken,
 } from './Token.interface';
 
-export const apiGetPTokenList = () =>
+export const apiGetPTokenList = (apiURL: string) =>
   cachePromise('ptoken', () =>
-    http.get('ptoken/list').then((res: any) =>
+    http.get(`${apiURL}/ptoken/list`).then((res: any) =>
       res.map((token: IPTokenFromApi) => {
         const pairPrv = token.CurrentPrvPool !== 0;
         let _token: IPToken = {
@@ -34,9 +34,9 @@ export const apiGetPTokenList = () =>
     )
   );
 
-export const apiGetPCustomTokenList = () =>
+export const apiGetPCustomTokenList = (apiURL: string) =>
   cachePromise('pcustomtoken', () =>
-    http.get('pcustomtoken/list').then((res: any) =>
+    http.get(`${apiURL}/pcustomtoken/list`).then((res: any) =>
       res.map((token: IPCustomTokenFromApi) => {
         let _token: IPCustomToken = {
           id: token.ID,

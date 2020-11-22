@@ -33,21 +33,21 @@ export const replaceDecimals = ({
   return text;
 };
 
-export const toHumanAmount = ({
-  originAmount,
-  decimals,
-}: {
+interface IHunmanAmount {
   originAmount: number;
   decimals: number;
-}) => {
-  try {
-    const amount = toNumber(originAmount);
-    checkAmount(amount);
-    const decision_rate = Number(decimals) ? 10 ** Number(decimals) : 1;
-    return amount / decision_rate;
-  } catch {
-    return originAmount;
+}
+
+export const toHumanAmount: (payload: IHunmanAmount) => number = (
+  payload: IHunmanAmount
+) => {
+  const { originAmount, decimals } = payload;
+  const amount = new BigNumber(originAmount);
+  if (amount.isNaN()) {
+    return 0;
   }
+  const indexNumber = new BigNumber(10).pow(decimals);
+  return amount.dividedBy(indexNumber).toNumber();
 };
 
 export const toOriginalAmount = ({
@@ -61,27 +61,26 @@ export const toOriginalAmount = ({
   round?: boolean;
   decimalSeparator: string;
 }) => {
+  let amount = 0;
   try {
     const amountRepDecimals = replaceDecimals({
       text: humanAmount,
       decimalSeparator,
     });
-    const amount = toNumber(amountRepDecimals);
-    checkAmount(amount);
-    const decision_rate = Number(decimals) ? 10 ** Number(decimals) : 1;
-    if (round) {
-      return Math.floor(
-        new BigNumber(amount)
-          .multipliedBy(new BigNumber(decision_rate))
-          .toNumber()
-      );
+    const bnAmount = new BigNumber(amountRepDecimals);
+    if (bnAmount.isNaN()) {
+      return 0;
     }
-    return new BigNumber(amount)
-      .multipliedBy(new BigNumber(decision_rate))
-      .toNumber();
+    const indexNumber = new BigNumber(10).pow(decimals || 0).toNumber();
+    amount = bnAmount.multipliedBy(new BigNumber(indexNumber)).toNumber();
+    if (round) {
+      amount = Math.floor(amount);
+    }
   } catch (error) {
+    amount = 0;
     throw error;
   }
+  return amount;
 };
 
 const convert = {

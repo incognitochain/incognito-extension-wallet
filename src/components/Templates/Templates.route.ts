@@ -5,7 +5,7 @@ const templatesRoute: IRouteProps = {
   path: '/templates',
   exact: true,
   component: lazy(() => import('./Templates')),
-  name: 'Template',
+  name: 'Templates',
   to: '/templates',
 };
 

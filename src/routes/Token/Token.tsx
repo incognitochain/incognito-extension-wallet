@@ -1,44 +1,70 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { IBalanceProps, INameProps, ISelectedPrivacy } from './Token.interface';
+import { ITokenProps, ISelectedPrivacy } from './Token.interface';
 import { getPrivacyDataByTokenIDSelector } from './Token.selector';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { COLORS } from 'src/styles';
-import { BalanceStyled, NameStyled, Styled, TextStyled } from './Token.styled';
-import format from 'src/utils/format';
-import { IPreloadReducer, preloadSelector } from 'src/routes/Preload';
+import {
+  AmountStyled,
+  BalanceStyled,
+  NameStyled,
+  Styled,
+  TextStyled,
+} from './Token.styled';
 
-export const Name = React.memo((props: INameProps) => {
-  const { tokenId } = props;
+export const Name = React.memo((props: ITokenProps) => {
+  const { tokenId, classNameCustom } = props;
   const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(
     tokenId
   );
-
   return (
-    <NameStyled>
-      <TextStyled className='bold'>{token.name}</TextStyled>
-      {token?.isVerified && <FaRegCheckCircle color={COLORS.green} />}
+    <NameStyled className={classNameCustom}>
+      <TextStyled className='text ellipsis bold'>{token.name}</TextStyled>
+      {token?.isVerified && (
+        <div className='verified-icon'>
+          <FaRegCheckCircle color={COLORS.green} />
+        </div>
+      )}
     </NameStyled>
   );
 });
 
-export const Balance = React.memo((props: IBalanceProps) => {
-  const { tokenId } = props;
+export const Amount = React.memo((props: ITokenProps) => {
+  const { tokenId, classNameCustom } = props;
   const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(
     tokenId
   );
-  const preloadState: IPreloadReducer = useSelector(preloadSelector);
-  const { decimalSeparator, groupSeparator } = preloadState;
   return (
-    <BalanceStyled>
-      <TextStyled>
-        {format.amount({
-          amount: token?.amount,
-          decimals: token?.pDecimals,
-          decimalSeparator,
-          groupSeparator,
-        })}
+    <AmountStyled className={classNameCustom}>
+      <TextStyled className='text ellipsis bold'>{`${token.formatAmount} ${
+        token.symbol || token?.pSymbol
+      }`}</TextStyled>
+    </AmountStyled>
+  );
+});
+
+export const Balance = React.memo((props: ITokenProps) => {
+  const { tokenId, classNameCustom } = props;
+  const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(
+    tokenId
+  );
+  return (
+    <BalanceStyled className={classNameCustom}>
+      <TextStyled className='text ellipsis'>
+        {`$${token.formatBalanceByUsd}`}
       </TextStyled>
+    </BalanceStyled>
+  );
+});
+
+export const Price = React.memo((props: ITokenProps) => {
+  const { tokenId, classNameCustom } = props;
+  const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(
+    tokenId
+  );
+  return (
+    <BalanceStyled className={classNameCustom}>
+      <TextStyled className='text ellipsis'>{`$${token.formatPriceByUsd}`}</TextStyled>
     </BalanceStyled>
   );
 });

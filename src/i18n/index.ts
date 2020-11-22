@@ -2,6 +2,15 @@ import { IObject } from 'src/utils';
 import en from './en';
 import vi from './vi';
 
+export interface ISendLanguage {
+  headerTitle: string;
+  amount: string;
+  toAddress: string;
+  incognitoAddress: string;
+  fee: string;
+  memo: string;
+  placeholderMemo: string;
+}
 export interface ILanguage {
   general: {
     copied: string;
@@ -68,6 +77,11 @@ export interface ILanguage {
     addToken: {
       headerTitle: string;
     };
+    detail: {
+      headerTitle: string;
+      btnSend: string;
+      btnReceive: string;
+    };
     error: {
       tokenIdRequired: string;
     };
@@ -77,6 +91,17 @@ export interface ILanguage {
       accountNotExisted: string;
     };
   };
+  setting: {
+    headerTitle: string;
+    network: {
+      headerTitle: string;
+    };
+    dev: {
+      headerTitle: string;
+      homeConfigs: string;
+    };
+  };
+  send: ISendLanguage;
 }
 
 export const translateByLanguage = (language: string) => {

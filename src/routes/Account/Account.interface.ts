@@ -19,8 +19,9 @@ export interface IAccount {
 export interface IAccountReducer {
   list: AccountInstance[];
   defaultAccountName: string;
-  isGettingBalance: any[];
+  gettingBalance: any[];
   switch: boolean;
   create: boolean;
   import: boolean;
+  accountBalance: number;
 }
