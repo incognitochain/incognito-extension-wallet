@@ -1,5 +1,5 @@
 {
-  "name": "extension-web-wallet",
+  "name": "incognito-extension-wallet",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
