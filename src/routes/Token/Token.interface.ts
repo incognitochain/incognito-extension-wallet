@@ -131,11 +131,18 @@ export interface ISelectedPrivacy {
   change: string;
   isFollowed: boolean;
   amount: number;
+  formatAmount: string;
+  formatPriceByUsd: string;
+  formatBalanceByUsd: string;
 }
 
-export interface INameProps {
+export interface ITokenProps {
   tokenId: string;
+  classNameCustom?: string;
 }
 export interface IBalanceProps {
+  tokenId: string;
+}
+export interface IAmountProps {
   tokenId: string;
 }

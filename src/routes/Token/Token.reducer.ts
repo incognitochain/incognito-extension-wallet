@@ -15,8 +15,9 @@ import {
   ACTION_SET_FOLLOWED_TOKENS,
   ACTION_GET_BALANCE_TOKEN_FETCHING,
   ACTION_GET_BALANCE_TOKEN_FETCHED,
+  ACTION_SET_SELECTED_TOKEN,
 } from './Token.constant';
-import { cloneDeep, uniq, uniqBy } from 'lodash';
+import { uniq, uniqBy } from 'lodash';
 
 export const LIMIT_RECEIVE_HISTORY_ITEM = 20;
 export const MAX_LIMIT_RECEIVE_HISTORY_ITEM = 50;
@@ -36,6 +37,7 @@ export interface ITokenReducer {
   receiveHistory: IHistoryReceiveToken;
   mainnet: IEnvToken;
   testnet: IEnvToken;
+  selectedTokenId: string;
 }
 
 const initialState: ITokenReducer = {
@@ -68,6 +70,7 @@ const initialState: ITokenReducer = {
   testnet: {
     followedPopularIds: false,
   },
+  selectedTokenId: '',
 };
 
 const tokenReducer = (
@@ -124,6 +127,9 @@ const tokenReducer = (
           (tokenId: string) => tokenId !== token?.tokenId
         ),
       };
+    }
+    case ACTION_SET_SELECTED_TOKEN: {
+      return { ...state, selectedTokenId: action.payload };
     }
     default:
       return state;

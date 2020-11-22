@@ -1,7 +1,12 @@
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { ACTION_FETCHING, ACTION_FETCHED } from './Preload.constant';
-import { IPreloadReducer } from './Preload.reducer';
+import {
+  ACTION_FETCHING,
+  ACTION_FETCHED,
+  ACTION_SET_SERVER,
+  ACTION_SET_CONFIGS,
+} from './Preload.constant';
+import { IPreloadConfigs, IPreloadReducer } from './Preload.reducer';
 import { goServices, setConfig } from 'incognito-js/build/web/browser';
 import {
   actionHandleLoadWallet,
@@ -16,6 +21,7 @@ import {
   actionFetchPCustomTokenList,
   actionFetchPTokenList,
 } from 'src/routes//Token';
+import { IServer } from 'src/services';
 
 export const actionFetching = () => ({
   type: ACTION_FETCHING,
@@ -61,3 +67,13 @@ export const actionFetch = () => async (
     dispatch(actionFetched({}));
   }
 };
+
+export const actionSetServer = (payload: IServer) => ({
+  type: ACTION_SET_SERVER,
+  payload,
+});
+
+export const actionSetConfigs = (payload: IPreloadConfigs) => ({
+  type: ACTION_SET_CONFIGS,
+  payload,
+});

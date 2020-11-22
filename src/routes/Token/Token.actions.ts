@@ -7,6 +7,7 @@ import {
   ACTION_GET_BALANCE_TOKEN_FETCHED,
   ACTION_FOLLOWED_POPULAR_TOKEN,
   ACTION_SET_FOLLOWED_TOKENS,
+  ACTION_SET_SELECTED_TOKEN,
 } from './Token.constant';
 import { apiGetPTokenList, apiGetPCustomTokenList } from './Token.services';
 import { IPToken } from './Token.interface';
@@ -17,7 +18,7 @@ import {
   AccountInstance,
   PrivacyTokenInstance,
 } from 'incognito-js/build/web/browser';
-import { IPreloadReducer, preloadSelector } from '../Preload';
+import { apiURLSelector, IPreloadReducer, preloadSelector } from '../Preload';
 import {
   followedTokensIdsSelector,
   popularCoinIdsSeletor,
@@ -36,7 +37,9 @@ export const actionFetchPTokenList = () => async (
   getState: () => IRootState
 ) => {
   try {
-    const pTokens = await apiGetPTokenList();
+    const state = getState();
+    const apiURL = apiURLSelector(state);
+    const pTokens = await apiGetPTokenList(apiURL);
     dispatch(actionFetchedPTokenList(pTokens));
   } catch (error) {
     throw error;
@@ -53,7 +56,9 @@ export const actionFetchPCustomTokenList = () => async (
   getState: () => IRootState
 ) => {
   try {
-    const pCustomTokens = await apiGetPCustomTokenList();
+    const state = getState();
+    const apiURL = apiURLSelector(state);
+    const pCustomTokens = await apiGetPCustomTokenList(apiURL);
     dispatch(actionFetchedPCustomTokenList(pCustomTokens));
   } catch (error) {
     throw error;
@@ -152,19 +157,26 @@ export const actionGetPrivacyTokensBalance = () => async (
   getState: () => IRootState
 ) => {
   const state: IRootState = getState();
-  const followed = followedTokensIdsSelector(state);
+  const followed = followedTokensIdsSelector(state)();
   if (!followed) {
     return;
   }
   try {
     const account: AccountInstance = defaultAccountSelector(state);
+    console.debug(`account`, account);
     const followed:
       | PrivacyTokenInstance[]
       | any = await account.getFollowingPrivacyToken('');
-    followed.map((token: PrivacyTokenInstance) =>
-      actionGetBalanceToken(token)(dispatch, getState)
-    );
+    followed &&
+      followed.map((token: PrivacyTokenInstance) =>
+        actionGetBalanceToken(token)(dispatch, getState)
+      );
   } catch (error) {
     throw error;
   }
 };
+
+export const actionSetSelectedToken = (payload: string) => ({
+  type: ACTION_SET_SELECTED_TOKEN,
+  payload,
+});

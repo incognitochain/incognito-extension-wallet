@@ -6,6 +6,8 @@ import { IConfigsReducer } from 'src/routes/Configs';
 import { IAccountReducer } from 'src/routes/Account';
 import { IModalReducer } from 'src/components/Modal';
 import { IToastReducer } from 'src/components';
+import { ISettingReducer } from 'src/routes/Setting';
+import { ISendReducer } from 'src/routes/Send';
 
 export interface IAction {
   type: string;
@@ -21,4 +23,6 @@ export interface IRootState {
   account: IAccountReducer;
   modal: IModalReducer;
   toast: IToastReducer;
+  setting: ISettingReducer;
+  send: ISendReducer;
 }

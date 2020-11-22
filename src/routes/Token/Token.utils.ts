@@ -2,6 +2,9 @@ import includes from 'lodash/includes';
 import toLower from 'lodash/toLower';
 import isNaN from 'lodash/isNaN';
 import { IPToken, ISelectedPrivacy } from './Token.interface';
+import convert from 'src/utils/convert';
+import format from 'src/utils/format';
+import BigNumber from 'bignumber.js';
 
 export const handleFilterTokenByKeySearch = ({
   tokens,
@@ -34,31 +37,59 @@ export const getPrice = ({
   if (!tokenUSDT) {
     return defaultValue;
   }
-  const { pricePrv: priceOneUsdtByPrv } = tokenUSDT;
-  const priceOnePrvToUsdt = 1 / priceOneUsdtByPrv;
+  const { pricePrv, priceUsd } = tokenUSDT;
   if (token?.isNativeToken) {
     return {
       change: '0',
       pricePrv: 1,
-      priceUsd: priceOnePrvToUsdt || 0,
+      priceUsd: priceUsd / pricePrv || 0,
     };
   }
-  const _pricePrv =
-    Number(token?.pricePrv) !== 0
-      ? token?.pricePrv
-      : token?.priceUsd / priceOnePrvToUsdt;
-  const _priceUsd =
-    Number(token?.priceUsd) !== 0
-      ? token?.priceUsd
-      : _pricePrv * priceOnePrvToUsdt;
   return {
     change: token?.change || defaultValue.change,
-    pricePrv:
-      token?.pricePrv !== 0
-        ? token?.pricePrv
-        : isNaN(_pricePrv)
-        ? 0
-        : _pricePrv,
-    priceUsd: _priceUsd,
+    pricePrv: token?.pricePrv !== 0 ? token?.pricePrv : 0,
+    priceUsd: token?.priceUsd !== 0 ? token?.priceUsd : 0,
   };
+};
+
+interface IGetFormatAmountByUSD {
+  amount: number;
+  priceUsd: number;
+  decimalSeparator: string;
+  decimals?: number;
+  groupSeparator: string;
+}
+
+export const getFormatAmountByUSD: (
+  payload: IGetFormatAmountByUSD
+) => string = (payload: IGetFormatAmountByUSD) => {
+  const {
+    amount,
+    priceUsd,
+    decimalSeparator,
+    decimals = 6,
+    groupSeparator,
+  } = payload;
+  let formatAmount = '0';
+  try {
+    const bnHumanAmount = new BigNumber(amount)
+      .multipliedBy(priceUsd)
+      .toNumber()
+      .toString();
+    const originalAmount = convert.toOriginalAmount({
+      humanAmount: String(bnHumanAmount),
+      decimalSeparator,
+      decimals,
+    });
+    formatAmount = format.formatAmount({
+      amount: originalAmount,
+      decimalSeparator,
+      decimals,
+      groupSeparator,
+    });
+  } catch (error) {
+    formatAmount = '0';
+    throw error;
+  }
+  return formatAmount;
 };

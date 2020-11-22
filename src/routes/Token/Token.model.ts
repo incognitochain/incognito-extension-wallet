@@ -86,6 +86,9 @@ class SelectedPrivacy {
   rootNetworkName: string;
   amount: number;
   isFollowed: boolean;
+  formatAmount: string;
+  formatBalanceByUsd: string;
+  formatPriceByUsd: string;
   constructor(
     pCustomTokenData: IPCustomToken | any,
     pTokenData: IPToken | any
@@ -109,7 +112,7 @@ class SelectedPrivacy {
       this,
       pTokenData?.symbol,
       pCustomTokenData?.symbol,
-      COINS.PRV.id
+      COINS.PRV.symbol
     );
     this.name = combineData.call(
       this,
@@ -155,6 +158,9 @@ class SelectedPrivacy {
     this.rootNetworkName = rootNetworkName;
     this.amount = 0;
     this.isFollowed = false;
+    this.formatAmount = '0';
+    this.formatPriceByUsd = '0';
+    this.formatBalanceByUsd = '0';
   }
 }
 export default SelectedPrivacy;

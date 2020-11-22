@@ -11,3 +11,8 @@ export const configsSelector = createSelector(
 export const translateSelector = createSelector(configsSelector, (configs) =>
   translateByLanguage(configs.language)
 );
+
+export const translateByFieldSelector = createSelector(
+  configsSelector,
+  (configs) => (field: string) => translateByLanguage(configs.language)[field]
+);

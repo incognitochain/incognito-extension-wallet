@@ -36,6 +36,7 @@ export const defaultAccountSelector = createSelector(
     }
     try {
       const { wallet } = walletState;
+      console.debug(wallet);
       account = wallet.masterAccount.getAccountByName(defaultAccountName);
     } catch (error) {
       console.debug('ERROR', error);
@@ -49,7 +50,7 @@ export const defaultAccountSelector = createSelector(
 
 export const isGettingAccountBalanceSelector = createSelector(
   accountSelector,
-  (account) => account.isGettingBalance.length !== 0
+  (account) => account.gettingBalance.length !== 0
 );
 
 export const switchAccountSelector = createSelector(
@@ -73,4 +74,9 @@ export const getAccountByNameSelector = createSelector(
     memoize((accountName: string) =>
       accounts.find((account: AccountInstance) => account?.name === accountName)
     )
+);
+
+export const accountBalanceSelector = createSelector(
+  accountSelector,
+  (account) => account.accountBalance || 0
 );

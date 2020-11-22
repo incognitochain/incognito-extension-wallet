@@ -11,16 +11,19 @@ import {
   ACTION_SET_LIST_ACCOUNT,
   ACTION_SWITCH_ACCOUNT_FETCHING,
   ACTION_SWITCH_ACCOUNT_FETCHED,
+  ACTION_GET_ACCOUNT_BALANCE_FETCHING,
+  ACTION_GET_ACCOUNT_BALANCE_FETCHED,
 } from './Account.constant';
 import { IAccountReducer } from './Account.interface';
 
 const initialState: IAccountReducer = {
   list: [],
   defaultAccountName: '',
-  isGettingBalance: [],
+  gettingBalance: [],
   switch: false,
   create: false,
   import: false,
+  accountBalance: 0,
 };
 
 const accountReducer = (
@@ -82,6 +85,23 @@ const accountReducer = (
       return {
         ...state,
         switch: false,
+      };
+    }
+    case ACTION_GET_ACCOUNT_BALANCE_FETCHING: {
+      const { accountName } = action.payload;
+      return {
+        ...state,
+        gettingBalance: [...state.gettingBalance, accountName],
+      };
+    }
+    case ACTION_GET_ACCOUNT_BALANCE_FETCHED: {
+      const { accountName, amount } = action.payload;
+      return {
+        ...state,
+        gettingBalance: state.gettingBalance.filter(
+          (name) => name !== accountName
+        ),
+        accountBalance: amount,
       };
     }
     default:

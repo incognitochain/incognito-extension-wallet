@@ -88,7 +88,7 @@ export const actionHandleLoadWallet = () => async (
     const preload: IPreloadReducer = preloadSelector(state);
     const walletState: IWalletReducer = walletSelector(state);
     const accountState: IAccountReducer = accountSelector(state);
-    const { defaultAccountName, list } = accountState;
+    const { defaultAccountName } = accountState;
     const { mainnet } = preload.configs;
     const field = mainnet ? 'mainnet' : 'testnet';
     let walletId = walletState[field].walletId;
@@ -96,15 +96,15 @@ export const actionHandleLoadWallet = () => async (
       throw new Error(`Can't not found wallet id`);
     }
     const wallet = await loadWallet(walletId);
-    let defaultAccount = wallet.masterAccount.getAccountByName(
-      defaultAccountName
-    );
-    if (!defaultAccount) {
-      defaultAccount = list[0];
+    const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+    const defaultAccount =
+      wallet.masterAccount.getAccountByName(defaultAccountName) ||
+      listAccount[0];
+    if (!!defaultAccount) {
+      dispatch(actionSetListAccount(listAccount));
+      dispatch(actionSelectAccount(defaultAccount.name));
+      dispatch(actionLoadWallet(wallet));
     }
-    dispatch(actionLoadWallet(wallet));
-    dispatch(actionSelectAccount(defaultAccount.name));
-    dispatch(actionSetListAccount(wallet.masterAccount.getAccounts()));
   } catch (error) {
     throw error;
   }

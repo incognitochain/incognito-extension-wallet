@@ -18,8 +18,13 @@ import {
   ACTION_SET_LIST_ACCOUNT,
   ACTION_SWITCH_ACCOUNT_FETCHING,
   ACTION_SWITCH_ACCOUNT_FETCHED,
+  ACTION_GET_ACCOUNT_BALANCE_FETCHING,
+  ACTION_GET_ACCOUNT_BALANCE_FETCHED,
 } from './Account.constant';
-import { defaultAccountSelector } from './Account.selector';
+import {
+  defaultAccountNameSelector,
+  defaultAccountSelector,
+} from './Account.selector';
 
 export const actionFetched = (payload: object) => ({
   type: ACTION_FETCHED,
@@ -136,15 +141,16 @@ export const actionSwitchAccount = (
   shouldLoadBalance?: boolean
 ) => async (dispatch: Dispatch, getState: () => IRootState) => {
   const state = getState();
-  const defaultAccount = defaultAccountSelector(state);
-  let account: AccountInstance = defaultAccount;
+  const accountName: string = defaultAccountNameSelector(state);
   const wallet: WalletInstance = walletDataSelector(state);
+  const account: AccountInstance = wallet.masterAccount.getAccountByName(
+    accountName
+  );
   try {
-    if (isEqual(defaultAccount?.name, accountName)) {
+    if (isEqual(account?.name, accountName)) {
       return account;
     }
     await dispatch(actionSwitchAccountFetching());
-    account = await wallet.masterAccount.getAccountByName(accountName);
     if (!account) {
       throw new Error(`Account not found!`);
     }
@@ -158,6 +164,21 @@ export const actionSwitchAccount = (
   return account;
 };
 
+export const actionGetAccountBalanceFetching = (payload: {
+  accountName: string;
+}) => ({
+  type: ACTION_GET_ACCOUNT_BALANCE_FETCHING,
+  payload,
+});
+
+export const actionGetAccountBalanceFetched = (payload: {
+  accountName: string;
+  amount: number;
+}) => ({
+  type: ACTION_GET_ACCOUNT_BALANCE_FETCHED,
+  payload,
+});
+
 export const actionGetAccountBalance = () => async (
   dispatch: Dispatch,
   getState: () => IRootState
@@ -166,11 +187,27 @@ export const actionGetAccountBalance = () => async (
   const translate: ILanguage = translateSelector(state);
   const accountTranslate = translate.account;
   const account: AccountInstance = defaultAccountSelector(state);
+  let accountBalance = 0;
   try {
     if (!account) {
       throw new Error(accountTranslate.error.accountNotExisted);
     }
+    dispatch(
+      actionGetAccountBalanceFetching({
+        accountName: account.name,
+      })
+    );
+    accountBalance = await (
+      await account.nativeToken.getTotalBalance()
+    ).toNumber();
   } catch (error) {
     throw error;
+  } finally {
+    dispatch(
+      actionGetAccountBalanceFetched({
+        accountName: account.name,
+        amount: accountBalance,
+      })
+    );
   }
 };
