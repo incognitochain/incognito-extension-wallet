@@ -19,7 +19,7 @@ export const configStore = (preloadedState: any = {}) => {
     key: 'root',
     storage,
     whitelist: [],
-    blacklist: ['preload', 'home', 'wallet', 'account', 'token'],
+    blacklist: ['preload', 'home', 'wallet', 'account', 'token', 'setting'],
   };
   const persistedReducer = persistReducer(persistConfig, reducers);
   const middlewareEnhancer = applyMiddleware(thunk, saga);

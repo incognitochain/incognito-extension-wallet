@@ -2,7 +2,7 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { defaultAccountSelector } from '../Account';
+import { actionGetAccountBalance, defaultAccountSelector } from '../Account';
 import { IPreloadReducer, preloadSelector } from '../Preload';
 import {
   actionFollowPopularToken,
@@ -31,6 +31,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
         await dispatch(actionFollowPopularToken({ defaultAccount }));
       }
       dispatch(actionGetPrivacyTokensBalance());
+      dispatch(actionGetAccountBalance());
     } catch (error) {
       console.debug(error);
     }

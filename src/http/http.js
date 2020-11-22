@@ -7,7 +7,7 @@ const TIMEOUT = 20000;
 let currentAccessToken = '';
 
 const instance = axios.create({
-  baseURL: CONSTANT_CONFIGS.API_BASE_URL,
+  // baseURL: CONSTANT_CONFIGS.API_BASE_URL,
   timeout: TIMEOUT,
   headers: {
     ...HEADERS,
