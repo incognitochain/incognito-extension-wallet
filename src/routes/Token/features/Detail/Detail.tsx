@@ -8,9 +8,11 @@ import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';
 import { Amount, Balance } from '../../Token';
 import {
-  getPrivacyDataByTokenIDSelector,
   selectedTokenIdSelector,
-} from '../../Token.selector';
+  selectedPrivacySelector,
+} from 'src/routes/Token';
+import { route as routeSend } from 'src/routes/Send';
+import { useHistory } from 'react-router-dom';
 
 interface IProps {}
 
@@ -50,17 +52,20 @@ const TokenBalance = React.memo(() => {
 export const GroupButton = React.memo(() => {
   const translate: ILanguage = useSelector(translateSelector);
   const translateDetail = translate.token.detail;
+  const history = useHistory();
+  const handleSend = () => {
+    history.push(routeSend);
+  };
   return (
     <div className='group-button'>
-      <Button title={translateDetail.btnSend} />
+      <Button title={translateDetail.btnSend} onClick={handleSend} />
       <Button title={translateDetail.btnReceive} />
     </div>
   );
 });
 
 const Detail = (props: IProps) => {
-  const tokenId = useSelector(selectedTokenIdSelector);
-  const token = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
+  const token = useSelector(selectedPrivacySelector);
   return (
     <Styled>
       <Header title={token.name} />
