@@ -20,3 +20,13 @@ export const isMainnetSelector = createSelector(
   preloadSelector,
   (preload) => preload.configs.mainnet
 );
+
+export const decimalSeparatorSelector = createSelector(
+  preloadSelector,
+  (preload) => preload.decimalSeparator
+);
+
+export const groupSeparatorSelector = createSelector(
+  preloadSelector,
+  (preload) => preload.groupSeparator
+);

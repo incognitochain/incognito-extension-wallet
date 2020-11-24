@@ -7,7 +7,11 @@ import {
   ACTION_SET_CONFIGS,
 } from './Preload.constant';
 import { IPreloadConfigs, IPreloadReducer } from './Preload.reducer';
-import { goServices, setConfig } from 'incognito-js/build/web/browser';
+import {
+  goServices,
+  setConfig,
+  storageService,
+} from 'incognito-js/build/web/browser';
 import {
   actionHandleLoadWallet,
   actionInitWallet,
@@ -45,9 +49,20 @@ export const actionFetch = () => async (
   const init = walletState[field].init;
   try {
     await dispatch(actionFetching());
+    storageService.implement({
+      setMethod: async (key: string, data: any) => {
+        return localStorage.setItem(key, data);
+      },
+      getMethod: async (key: string) => {
+        return localStorage.getItem(key);
+      },
+      removeMethod: async (key: string) => localStorage.removeItem(key),
+      namespace: 'EXTENSION_WALLET',
+    });
     await setConfig({
       ...configs,
       wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
+      logMethod: (message: string) => console.debug(`MESSAGE`, message),
     });
     await goServices.implementGoMethodUseWasm();
     let task: any[] = [

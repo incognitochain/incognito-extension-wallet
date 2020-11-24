@@ -196,6 +196,12 @@ export const selectedTokenIdSelector = createSelector(
   (token) => token.selectedTokenId || COINS.PRV.id
 );
 
+export const selectedPrivacySelector = createSelector(
+  getPrivacyDataByTokenIDSelector,
+  selectedTokenIdSelector,
+  (getPrivacyDataByTokenID, tokenId) => getPrivacyDataByTokenID(tokenId)
+);
+
 // export const totalShieldedTokensSelector = createSelector(
 //   getPrivacyDataByTokenIDSelector,
 //   accountBalanceSelector,
