@@ -1,11 +1,12 @@
 export interface IProps {}
 
 export interface IHistoryToken {
-  isFetching: boolean;
-  isFetched: boolean;
+  fetching: boolean;
   histories: any[];
   refreshing: boolean;
 }
+
+export interface IHistoryItem {}
 
 export interface IHistoryReceiveToken {
   isFetching: boolean;

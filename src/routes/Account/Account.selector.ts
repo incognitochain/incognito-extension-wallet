@@ -80,3 +80,8 @@ export const accountBalanceSelector = createSelector(
   accountSelector,
   (account) => account.accountBalance || 0
 );
+
+export const keySetAccountSelector = createSelector(
+  defaultAccountSelector,
+  (account: AccountInstance) => account.key.keySet || {}
+);

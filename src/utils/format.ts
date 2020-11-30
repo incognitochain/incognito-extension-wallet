@@ -1,8 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 import convert from './convert';
 import floor from 'lodash/floor';
-import { CONSTANT_COMMONS } from 'src/constants';
-import { toNumber } from 'lodash';
+import moment from 'moment';
 interface IAmount {
   amount: number;
   decimals: number;
@@ -144,8 +143,14 @@ export const formatAmount: (payload: IAmount) => string = (
   return formatAmount;
 };
 
+export const formatUnixDateTime = (
+  dateTime: number,
+  formatPattern = 'MMM DD YYYY, HH:mm'
+) => moment.unix(dateTime).format(formatPattern);
+
 const format = {
   formatAmount,
+  formatUnixDateTime,
 };
 
 export default format;

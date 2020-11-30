@@ -1,4 +1,5 @@
 export { default } from './Token';
+export * from './Token';
 export * from './Token.actions';
 export * from './Token.constant';
 export * from './Token.interface';

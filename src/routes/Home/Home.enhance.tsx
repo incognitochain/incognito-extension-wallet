@@ -2,15 +2,14 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { actionGetAccountBalance, defaultAccountSelector } from '../Account';
-import { IPreloadReducer, preloadSelector } from '../Preload';
+import { defaultAccountSelector } from 'src/routes/Account';
+import { IPreloadReducer, preloadSelector } from 'src/routes/Preload';
 import {
   actionFollowPopularToken,
-  actionGetPrivacyTokensBalance,
   IEnvToken,
   ITokenReducer,
   tokenSelector,
-} from '../Token';
+} from 'src/routes/Token';
 
 interface IProps {}
 
@@ -30,8 +29,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
       if (!followedPopularIds) {
         await dispatch(actionFollowPopularToken({ defaultAccount }));
       }
-      dispatch(actionGetPrivacyTokensBalance());
-      dispatch(actionGetAccountBalance());
     } catch (error) {
       console.debug(error);
     }
