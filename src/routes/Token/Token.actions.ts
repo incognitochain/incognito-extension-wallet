@@ -20,6 +20,8 @@ import {
 } from 'incognito-js/build/web/browser';
 import { apiURLSelector, IPreloadReducer, preloadSelector } from '../Preload';
 import {
+  bridgeTokensSelector,
+  chainTokensSelector,
   followedTokensIdsSelector,
   popularCoinIdsSeletor,
   tokenSelector,
@@ -161,15 +163,18 @@ export const actionGetPrivacyTokensBalance = () => async (
   if (!followed) {
     return;
   }
+  const bridgeTokens = bridgeTokensSelector(state);
+  const chainTokens = chainTokensSelector(state);
   try {
     const account: AccountInstance = defaultAccountSelector(state);
-    const followed:
-      | PrivacyTokenInstance[]
-      | any = await account.getFollowingPrivacyToken('');
-    followed &&
-      followed.map((token: PrivacyTokenInstance) =>
-        actionGetBalanceToken(token)(dispatch, getState)
+    followed.map(async (tokenId: string) => {
+      const token = await account.getPrivacyTokenById(
+        tokenId,
+        bridgeTokens,
+        chainTokens
       );
+      return actionGetBalanceToken(token)(dispatch, getState);
+    });
   } catch (error) {
     throw error;
   }

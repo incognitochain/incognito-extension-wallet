@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { selectedPrivacySelector } from '../../Token.selector';
+import { selectedTokenIdSelector } from 'src/routes/Token';
 import { actionFetchHistory } from './History.actions';
 
 interface IProps {}
@@ -11,7 +11,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
   props: IProps
 ) => {
   const dispatch = useDispatch();
-  const selectedPrivacy = useSelector(selectedPrivacySelector);
+  const selectedPrivacy = useSelector(selectedTokenIdSelector);
   const handleFetchHistory = async () => {
     try {
       dispatch(actionFetchHistory());
