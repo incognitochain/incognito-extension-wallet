@@ -6,7 +6,8 @@ import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/routes/Configs';
 import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';
-import { Amount, Balance } from '../../Token';
+import { Amount, Balance } from 'src/routes/Token';
+import { HistoryList } from 'src/routes/Token/features/History';
 import {
   selectedTokenIdSelector,
   selectedPrivacySelector,
@@ -71,6 +72,7 @@ const Detail = (props: IProps) => {
       <Header title={token.name} />
       <TokenBalance />
       <GroupButton />
+      <HistoryList />
     </Styled>
   );
 };

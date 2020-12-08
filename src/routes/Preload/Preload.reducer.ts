@@ -2,7 +2,7 @@ import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { ENVS } from 'src/configs';
-import { IServer, MAIN_NET_SERVER, PRODUCTION_API } from 'src/services';
+import { IServer, MAINNET_SERVER, PRODUCTION_API } from 'src/services';
 import {
   ACTION_FETCHING,
   ACTION_FETCHED,
@@ -30,12 +30,12 @@ const initialState: IPreloadReducer = {
   isFetching: false,
   isFetched: false,
   configs: {
-    chainURL: MAIN_NET_SERVER.address,
+    chainURL: MAINNET_SERVER.address,
     apiURL: PRODUCTION_API,
     mainnet: true,
     wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
   },
-  server: MAIN_NET_SERVER,
+  server: MAINNET_SERVER,
   decimalSeparator: '.',
   groupSeparator: ',',
 };

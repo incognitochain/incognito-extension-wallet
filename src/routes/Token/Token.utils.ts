@@ -1,6 +1,5 @@
 import includes from 'lodash/includes';
 import toLower from 'lodash/toLower';
-import isNaN from 'lodash/isNaN';
 import { IPToken, ISelectedPrivacy } from './Token.interface';
 import convert from 'src/utils/convert';
 import format from 'src/utils/format';

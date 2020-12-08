@@ -14,7 +14,7 @@ const Styled = styled.div`
     font-weight: 200;
     font-size: ${FONT_SIZES.regular};
     line-height: ${FONT_SIZES.regular + 5};
-    color: ${COLORS.black};
+   
     margin-left: 5px;
   }
 `;

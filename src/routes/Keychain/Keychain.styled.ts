@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 
 export const Styled = styled.div`
   .hook-container {
@@ -13,7 +13,6 @@ export const Styled = styled.div`
     margin-bottom: 10px;
   }
   p.desc {
-    color: ${COLORS.colorGreyBold};
   }
   .account-item {
     display: flex;

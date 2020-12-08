@@ -30,3 +30,8 @@ export const groupSeparatorSelector = createSelector(
   preloadSelector,
   (preload) => preload.groupSeparator
 );
+
+export const serverSelector = createSelector(
+  preloadSelector,
+  (preload) => preload.server || {}
+);

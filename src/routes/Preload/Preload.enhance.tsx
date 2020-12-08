@@ -19,7 +19,7 @@ const Styled = styled.div`
   display: flex;
   flex-direction: column;
   > p.desc {
-    color: ${COLORS.colorGreyBold};
+    
     text-align: center;
     margin-top: 15px;
   }

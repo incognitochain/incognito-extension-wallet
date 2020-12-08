@@ -1,13 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { GlobalStyled } from 'src/styles/index';
 import { Provider } from 'react-redux';
 import { configStore, IConfigStore } from 'src/redux/index';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { withPreload } from './routes/Preload';
-import Modal from 'src/components/Modal';
-import { Toast } from './components';
 
 const { store, persistor }: IConfigStore = configStore();
 
@@ -18,10 +15,7 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: IProps) => {
     <ErrorBoundary>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <GlobalStyled />
           <WrappedComponent {...props} />
-          <Modal />
-          <Toast />
         </PersistGate>
       </Provider>
     </ErrorBoundary>

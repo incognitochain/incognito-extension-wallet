@@ -13,7 +13,7 @@ const TEST_NODE_SERVER = {
   password: '',
   name: 'Test Node',
 };
-const MAIN_NET_SERVER = {
+const MAINNET_SERVER = {
   id: 'mainnet',
   default: true,
   address: MAINNET_FULLNODE,
@@ -21,7 +21,7 @@ const MAIN_NET_SERVER = {
   password: '',
   name: 'Mainnet',
 };
-const TEST_NET_SERVER = {
+const TESTNET_SERVER = {
   id: 'testnet',
   default: false,
   address: TESTNET_FULLNODE,
@@ -47,9 +47,9 @@ const TEST_NET_1_SERVER = {
 };
 const DEFAULT_LIST_SERVER = [
   LOCAL_SERVER,
-  TEST_NET_SERVER,
+  TESTNET_SERVER,
   TEST_NODE_SERVER,
-  MAIN_NET_SERVER,
+  MAINNET_SERVER,
   TEST_NET_1_SERVER,
 ];
 
@@ -100,8 +100,8 @@ export default class Server {
         }
       }
 
-      this.setDefault(MAIN_NET_SERVER);
-      return MAIN_NET_SERVER;
+      this.setDefault(MAINNET_SERVER);
+      return MAINNET_SERVER;
     });
   }
 

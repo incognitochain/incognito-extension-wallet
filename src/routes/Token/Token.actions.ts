@@ -163,7 +163,6 @@ export const actionGetPrivacyTokensBalance = () => async (
   }
   try {
     const account: AccountInstance = defaultAccountSelector(state);
-    console.debug(`account`, account);
     const followed:
       | PrivacyTokenInstance[]
       | any = await account.getFollowingPrivacyToken('');

@@ -29,7 +29,6 @@ const Styled = styled.div`
   }
   .copy-block .btn-copy {
     background: #000;
-    color: #fff;
     height: 40px;
     border-radius: 40px;
     padding: 0 10px;

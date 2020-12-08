@@ -1,6 +1,7 @@
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import { TxHistoryModel } from 'incognito-js/build/web/browser';
 import {
   IHistoryReceiveToken,
   IHistoryToken,
@@ -18,6 +19,10 @@ import {
   ACTION_SET_SELECTED_TOKEN,
 } from './Token.constant';
 import { uniq, uniqBy } from 'lodash';
+import {
+  ACTION_FETCHED_TX_HISTORIES,
+  ACTION_FETCHING_TX_HISTORIES,
+} from './features/History/History.constant';
 
 export const LIMIT_RECEIVE_HISTORY_ITEM = 20;
 export const MAX_LIMIT_RECEIVE_HISTORY_ITEM = 50;
@@ -48,8 +53,7 @@ const initialState: ITokenReducer = {
   following: [],
   toggleUnVerified: false,
   history: {
-    isFetching: false,
-    isFetched: false,
+    fetching: false,
     histories: [],
     refreshing: true,
   },
@@ -130,6 +134,30 @@ const tokenReducer = (
     }
     case ACTION_SET_SELECTED_TOKEN: {
       return { ...state, selectedTokenId: action.payload };
+    }
+    case ACTION_FETCHING_TX_HISTORIES: {
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          fetching: true,
+        },
+      };
+    }
+    case ACTION_FETCHED_TX_HISTORIES: {
+      const {
+        histories,
+      }: {
+        histories: TxHistoryModel[];
+      } = action.payload;
+      return {
+        ...state,
+        history: {
+          ...state.history,
+          fetching: false,
+          histories,
+        },
+      };
     }
     default:
       return state;

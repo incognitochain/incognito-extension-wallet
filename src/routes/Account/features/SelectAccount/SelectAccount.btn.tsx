@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/routes/Configs';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';
 import { defaultAccountNameSelector } from 'src/routes/Account';
 import { FaAngleDown } from 'react-icons/fa';
@@ -12,7 +12,6 @@ import { route } from './SelectAccount.route';
 interface IProps {}
 
 const CustomLink = styled(Link)`
-  background-color: ${COLORS.colorGrey};
   height: 40px;
   border-radius: 40px;
   padding: 0 10px;
@@ -24,7 +23,7 @@ const CustomLink = styled(Link)`
     font-weight: 200;
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 3}px;
-    color: ${COLORS.black};
+
     margin-right: 5px;
   }
 `;
