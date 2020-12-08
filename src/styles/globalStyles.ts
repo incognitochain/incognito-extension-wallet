@@ -47,10 +47,13 @@ export const GlobalStyled = createGlobalStyle`
         box-sizing: border-box;
         font-weight: 100;
         margin: auto;
-        height: 600px;
+        height: 750px;
         border: solid 0.5px;
         overflow: scroll;
         position: relative;
+        font-size: ${FONT_SIZES.regular}px;
+        line-height: ${FONT_SIZES.regular + 5}px;
+        font-weight: 100;
     }
     
     @font-face {
@@ -74,31 +77,35 @@ export const GlobalStyled = createGlobalStyle`
         font-display: swap;
         font-weight: 200;
     }
-    .text {
-        font-size: ${FONT_SIZES.regular}px;
-        line-height: ${FONT_SIZES.regular + 5}px;
-    }
-
-    .regular-text{
-        font-size: ${FONT_SIZES.regular}px;
-        line-height: ${FONT_SIZES.regular + 5}px;
+    .fontweight-regular{
         font-weight: 100;
     }
-
-    .medium-text{
-        font-size: ${FONT_SIZES.medium}px;
-        line-height: ${FONT_SIZES.medium + 5}px;
+    .fontweight-medium{
         font-weight: 200;
-        
     }
-
-    .bold-text {
+    .fontweight-bold {
+        font-weight: 500;
+    }
+    .fontsize-regular {
+        font-size: ${FONT_SIZES.regular}px;
+        line-height: ${FONT_SIZES.regular + 5}px;
+    }
+    .fontsize-medium {
         font-size: ${FONT_SIZES.medium}px;
         line-height: ${FONT_SIZES.medium + 5}px;
-        font-weight: 500;
-       
     }
-
+    .fontsize-supermedium {
+        font-size: ${FONT_SIZES.superMedium}px;
+        line-height: ${FONT_SIZES.superMedium + 5}px;
+    }
+    .fontsize-large{
+        font-size: ${FONT_SIZES.large}px;
+        line-height: ${FONT_SIZES.large + 5}px;
+    }
+    .fontsize-verylarge{
+        font-size: ${FONT_SIZES.veryLarge}px;
+        line-height: ${FONT_SIZES.veryLarge + 5}px;
+    }
     .hook-row {
         display: flex;
         flex-direction: row;
@@ -106,5 +113,19 @@ export const GlobalStyled = createGlobalStyle`
     }
     .hook-column {
 
+    }
+    .right-text{
+        text-align: right;
+    }
+    .center-text{
+        text-align: center;
+    }
+    .left-text{
+        text-align: left;
+    }
+    .wrapper {
+        height: 100%;
+        width: 100%;
+        position: relative;
     }
 `;

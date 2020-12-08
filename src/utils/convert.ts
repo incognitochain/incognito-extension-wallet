@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import toNumber from 'lodash/toNumber';
 
 export const checkAmount = (amount: number) => {
   if (!Number.isFinite(amount))
@@ -34,15 +33,13 @@ export const replaceDecimals = ({
 };
 
 interface IHunmanAmount {
-  originAmount: number;
+  originalAmount?: number;
   decimals: number;
 }
 
-export const toHumanAmount: (payload: IHunmanAmount) => number = (
-  payload: IHunmanAmount
-) => {
-  const { originAmount, decimals } = payload;
-  const amount = new BigNumber(originAmount);
+export const toHumanAmount: (payload: IHunmanAmount) => number = (payload) => {
+  const { originalAmount = 0, decimals } = payload;
+  const amount = new BigNumber(originalAmount);
   if (amount.isNaN()) {
     return 0;
   }

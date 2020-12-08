@@ -5,7 +5,7 @@ import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
 import { decimalSeparatorSelector } from 'src/routes/Preload';
 import { selectedPrivacySelector } from 'src/routes/Token';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 import format from 'src/utils/format';
 import styled from 'styled-components';
 
@@ -35,7 +35,7 @@ const Styled = styled.div`
   .confirm-tx-item span {
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 5}px;
-    
+
     font-weight: 200;
     flex-basis: 70%;
   }
@@ -69,7 +69,7 @@ const ConfirmTx = (props: IProps) => {
       <ConfirmTxItem
         title={`Amount:`}
         desc={format.formatAmount({
-          amount: nativeTokenInfo.amount,
+          originalAmount: nativeTokenInfo.amount,
           decimalSeparator,
           groupSeparator,
           decimals: selectedPrivacy.pDecimals,
@@ -80,7 +80,7 @@ const ConfirmTx = (props: IProps) => {
       <ConfirmTxItem
         title={`Fee:`}
         desc={format.formatAmount({
-          amount: nativeTokenInfo.fee,
+          originalAmount: nativeTokenInfo.fee,
           decimalSeparator,
           groupSeparator,
           decimals: selectedPrivacy.pDecimals,

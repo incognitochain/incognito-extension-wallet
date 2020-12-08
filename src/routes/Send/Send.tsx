@@ -59,7 +59,7 @@ const Send = (props: any & TOutter & InjectedFormProps<{}, TOutter>) => {
           label={translate.fee}
           componentProps={{
             placeholder: format.formatAmount({
-              amount: MAX_FEE_PER_TX,
+              originalAmount: MAX_FEE_PER_TX,
               decimals: COINS.PRV.pDecimals,
               groupSeparator,
               decimalSeparator,

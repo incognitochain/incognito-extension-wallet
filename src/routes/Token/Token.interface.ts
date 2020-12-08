@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 export interface IProps {}
 
 export interface IHistoryToken {
@@ -146,4 +148,9 @@ export interface IBalanceProps {
 }
 export interface IAmountProps {
   tokenId: string;
+}
+
+export interface ITotalShielded {
+  formatTotalAmountPRV: string;
+  formatTotalAmountUSD: string;
 }

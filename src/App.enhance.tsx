@@ -5,7 +5,6 @@ import { configStore, IConfigStore } from 'src/redux/index';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { withPreload } from './routes/Preload';
-
 const { store, persistor }: IConfigStore = configStore();
 
 interface IProps {}

@@ -12,18 +12,7 @@ export const NameStyled = styled.div`
   }
 `;
 
-export const TextStyled = styled.p`
-  font-weight: 200;
-  font-size: ${FONT_SIZES.medium}px;
-  line-height: ${FONT_SIZES.medium + 5}px;
-  
-  &.bold {
-    font-weight: 500;
-    font-size: ${FONT_SIZES.medium}px;
-    line-height: ${FONT_SIZES.medium + 4}px;
-   
-  }
-`;
+export const TextStyled = styled.p``;
 
 export const AmountStyled = styled.div``;
 

@@ -19,7 +19,9 @@ export const Name = React.memo((props: ITokenProps) => {
   );
   return (
     <NameStyled className={classNameCustom}>
-      <TextStyled className='text ellipsis bold'>{token.name}</TextStyled>
+      <TextStyled className='fontsize-medium fontweight-bold ellipsis'>
+        {token.name}
+      </TextStyled>
       {token?.isVerified && (
         <div className='verified-icon'>
           <FaRegCheckCircle color={COLORS.green} />
@@ -36,9 +38,9 @@ export const Amount = React.memo((props: ITokenProps) => {
   );
   return (
     <AmountStyled className={classNameCustom}>
-      <TextStyled className='text ellipsis bold'>{`${token.formatAmount} ${
-        token.symbol || token?.pSymbol
-      }`}</TextStyled>
+      <TextStyled className='fontsize-medium fontweight-bold right-text ellipsis'>{`${
+        token.formatAmount
+      } ${token.symbol || token?.pSymbol}`}</TextStyled>
     </AmountStyled>
   );
 });
@@ -50,7 +52,7 @@ export const Balance = React.memo((props: ITokenProps) => {
   );
   return (
     <BalanceStyled className={classNameCustom}>
-      <TextStyled className='text ellipsis'>
+      <TextStyled className='fontsize-regular fontweight-medium right-text ellipsis'>
         {`$${token.formatBalanceByUsd}`}
       </TextStyled>
     </BalanceStyled>
@@ -64,7 +66,7 @@ export const Price = React.memo((props: ITokenProps) => {
   );
   return (
     <BalanceStyled className={classNameCustom}>
-      <TextStyled className='text ellipsis'>{`$${token.formatPriceByUsd}`}</TextStyled>
+      <TextStyled className='fontsize-regular fontweight-medium  ellipsis'>{`$${token.formatPriceByUsd}`}</TextStyled>
     </BalanceStyled>
   );
 });
