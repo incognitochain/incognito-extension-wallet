@@ -6,7 +6,9 @@ import { IRootState } from 'src/redux/interface';
 import {
   IFollowedToken,
   IPCustomToken,
+  IPCustomTokenFromApi,
   IPToken,
+  IPTokenFromApi,
   ISelectedPrivacy,
 } from './Token.interface';
 import { ITokenReducer } from './Token.reducer';
@@ -26,12 +28,45 @@ export const tokenSelector = createSelector(
 
 export const pTokensSelector = createSelector(
   tokenSelector,
-  (token) => token.pTokens || []
+  (token) =>
+    token.pTokens.map((token: IPTokenFromApi) => {
+      const pairPrv = token.CurrentPrvPool !== 0;
+      let _token: IPToken = {
+        id: token.ID,
+        tokenId: token.TokenID,
+        symbol: token.Symbol,
+        pSymbol: token.PSymbol,
+        decimals: token.Decimals,
+        pDecimals: token.PDecimals,
+        currencyType: token.CurrencyType,
+        type: token.Type,
+        name: token.Name,
+        contractId: token.ContractID,
+        verified: token.Verified,
+        pricePrv: token.PricePrv,
+        priceUsd: token.PriceUsd,
+        pairPrv,
+        change: pairPrv ? token?.PercentChangePrv1h : token?.PercentChange1h,
+      };
+      return _token;
+    }) || []
 );
 
 export const pCustomTokensSelector = createSelector(
   tokenSelector,
-  (token) => token.pCustomTokens || []
+  (token) =>
+    token.pCustomTokens.map((token: IPCustomTokenFromApi) => {
+      let _token: IPCustomToken = {
+        id: token.ID,
+        tokenId: token.TokenID,
+        symbol: token.Symbol,
+        name: token.Name,
+        totalSupply: token.Amount,
+        verified: token.Verified,
+        image: token.Image,
+      };
+      return _token;
+    }) || []
 );
 
 export const followedTokensIdsSelector = createSelector(
@@ -200,6 +235,16 @@ export const selectedPrivacySelector = createSelector(
   getPrivacyDataByTokenIDSelector,
   selectedTokenIdSelector,
   (getPrivacyDataByTokenID, tokenId) => getPrivacyDataByTokenID(tokenId)
+);
+
+export const bridgeTokensSelector = createSelector(
+  tokenSelector,
+  (token) => token.pTokens
+);
+
+export const chainTokensSelector = createSelector(
+  tokenSelector,
+  (token) => token.pCustomTokens
 );
 
 // export const totalShieldedTokensSelector = createSelector(

@@ -5,9 +5,9 @@ import { TxHistoryModel } from 'incognito-js/build/web/browser';
 import {
   IHistoryReceiveToken,
   IHistoryToken,
-  IPCustomToken,
-  IPToken,
   IFollowedToken,
+  IPTokenFromApi,
+  IPCustomTokenFromApi,
 } from './Token.interface';
 import {
   ACTION_FETCHED_PTOKEN_LIST,
@@ -33,8 +33,8 @@ export interface IEnvToken {
 
 export interface ITokenReducer {
   followed: IFollowedToken[];
-  pTokens: IPToken[];
-  pCustomTokens: IPCustomToken[];
+  pTokens: IPTokenFromApi[];
+  pCustomTokens: IPCustomTokenFromApi[];
   gettingBalance: any[];
   following: any[];
   toggleUnVerified: boolean;

@@ -109,7 +109,7 @@ export interface ISelectedPrivacy {
   isNativeToken: boolean;
   isPrivateToken: boolean;
   isPrivateCoin: boolean;
-  isPToken: boolean;
+  isPrivacyToken: boolean;
   isIncognitoToken: boolean;
   isErc20Token: boolean;
   isBep2Token: boolean;

@@ -32,7 +32,7 @@ function combineData(
   pCustomTokenData: any,
   defaultData: any
 ) {
-  if (this?.isPToken) {
+  if (this?.isPrivacyToken) {
     return pTokenData;
   }
   if (this?.isIncognitoToken) {
@@ -43,7 +43,7 @@ function combineData(
 
 function getIconUrl(this: SelectedPrivacy, chainTokenImageUri: string) {
   let uri;
-  if (!!this.isNativeToken || this.isPToken) {
+  if (!!this.isNativeToken || this.isPrivacyToken) {
     let formatedSymbol = String(this.pSymbol || this.symbol).toLowerCase();
     uri = `${CONSTANT_CONFIGS.CRYPTO_ICON_URL}/${formatedSymbol}@2x.png`;
   } else {
@@ -60,7 +60,7 @@ class SelectedPrivacy {
   isNativeToken: boolean;
   isPrivateToken: boolean;
   isPrivateCoin: boolean;
-  isPToken: boolean;
+  isPrivacyToken: boolean;
   isIncognitoToken: boolean;
   isErc20Token: boolean;
   isBep2Token: boolean;
@@ -100,8 +100,8 @@ class SelectedPrivacy {
     this.isNativeToken = this.tokenId === COINS.PRV.id || !this.isToken; // PRV
     this.isPrivateToken = pTokenData?.type === COINS.PRIVATE_TOKEN_TYPE.TOKEN; // ERC20 tokens, BEP2 tokens
     this.isPrivateCoin = pTokenData?.type === COINS.PRIVATE_TOKEN_TYPE.COIN; // pETH, pBTC, pTOMO,...
-    this.isPToken = !!pTokenData?.pSymbol; // pToken is private token (pETH <=> ETH, pBTC <=> BTC, ...)
-    this.isIncognitoToken = !this.isPToken && !this.isNativeToken; // is tokens were issued from users
+    this.isPrivacyToken = !!pTokenData?.pSymbol; // pToken is private token (pETH <=> ETH, pBTC <=> BTC, ...)
+    this.isIncognitoToken = !this.isPrivacyToken && !this.isNativeToken; // is tokens were issued from users
     this.isErc20Token =
       this.isPrivateToken &&
       this.currencyType === COINS.PRIVATE_TOKEN_CURRENCY_TYPE.ERC20;
@@ -134,8 +134,8 @@ class SelectedPrivacy {
       ? COINS.PRV.pDecimals
       : pTokenData?.pDecimals;
     this.pSymbol = pTokenData?.pSymbol;
-    this.isWithdrawable = !!this.isPToken;
-    this.isDeposable = !!this.isPToken;
+    this.isWithdrawable = !!this.isPrivacyToken;
+    this.isDeposable = !!this.isPrivacyToken;
     this.isDecentralized =
       (this.isToken && this.symbol === COINS.CRYPTO_SYMBOL.ETH) ||
       this.isErc20Token;

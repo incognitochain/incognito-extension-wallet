@@ -1,13 +1,16 @@
 import {
   AccountInstance,
-  PrivacyTokenInstance,
   TxHistoryModel,
 } from 'incognito-js/build/web/browser';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/routes/Account';
-import { ISelectedPrivacy } from '../../Token.interface';
-import { selectedPrivacySelector } from '../../Token.selector';
+import {
+  bridgeTokensSelector,
+  selectedPrivacySelector,
+  ISelectedPrivacy,
+  chainTokensSelector,
+} from 'src/routes/Token';
 import {
   ACTION_FETCHING_TX_HISTORIES,
   ACTION_FETCHED_TX_HISTORIES,
@@ -33,22 +36,24 @@ export const actionFetchHistory = () => async (
   const historyState = state.token.history;
   const account: AccountInstance = defaultAccountSelector(state);
   const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
+  const brideTokens = bridgeTokensSelector(state);
+  const chainTokens = chainTokensSelector(state);
   const { fetching } = historyState;
-  if (fetching) {
+  if (fetching || !selectedPrivacy?.tokenId) {
     return;
   }
   try {
     dispatch(actionFetchingTxHistories());
     if (selectedPrivacy.isNativeToken) {
       histories = await account.nativeToken.getTxHistories();
-      console.debug(histories);
-    } else {
-      const token:
-        | PrivacyTokenInstance
-        | any = await account.getFollowingPrivacyToken(
-        selectedPrivacy?.tokenId
+    }
+    if (selectedPrivacy.isPrivacyToken) {
+      const token = await account.getPrivacyTokenById(
+        selectedPrivacy?.tokenId,
+        brideTokens,
+        chainTokens
       );
-      histories = [];
+      histories = await token.getTxHistories();
     }
   } catch (error) {
     throw error;
