@@ -30,7 +30,7 @@ const Styled = styled.div`
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 9}px;
     font-weight: 100;
-    color: ${COLORS.colorGreyBold};
+    
   }
   .hook {
     display: flex;

@@ -1,4 +1,4 @@
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';
 
 export const Styled = styled.div`
@@ -7,13 +7,11 @@ export const Styled = styled.div`
     font-weight: 500;
     font-size: ${FONT_SIZES.medium}px;
     line-height: ${FONT_SIZES.medium + 5}px;
-    color: ${COLORS.black};
     margin-bottom: 15px;
   }
   .item {
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 5}px;
-    color: ${COLORS.colorGreyBold};
     font-weight: 200;
   }
   .toggle-item {

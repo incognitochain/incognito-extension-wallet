@@ -5,4 +5,5 @@ export interface IHistory {
   type: string;
   symbol: string;
   feeFormated: string;
+  isIncognitoTx?: boolean;
 }

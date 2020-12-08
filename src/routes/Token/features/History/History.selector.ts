@@ -45,6 +45,7 @@ export const historyLocalSelector = createSelector(
         decimalSeparator,
         groupSeparator,
         decimals: selectedPrivacy?.pDecimals,
+        decimalDigits: false,
       });
       const { statusMessage } = getStatusData(history);
       return {
@@ -59,6 +60,7 @@ export const historyLocalSelector = createSelector(
           keySet.paymentAddressKeySerialized
         ),
         symbol: selectedPrivacy?.symbol || selectedPrivacy?.pSymbol,
+        isIncognitoTx: true,
       };
     });
   }

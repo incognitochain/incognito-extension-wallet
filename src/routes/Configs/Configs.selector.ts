@@ -16,3 +16,8 @@ export const translateByFieldSelector = createSelector(
   configsSelector,
   (configs) => (field: string) => translateByLanguage(configs.language)[field]
 );
+
+export const themeSelector = createSelector(
+  configsSelector,
+  (configs) => configs.theme
+);

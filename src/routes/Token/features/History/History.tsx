@@ -1,107 +1,147 @@
 import { TxHistoryModel } from 'incognito-js/build/web/browser';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { Header } from 'src/components';
+import { withLayout } from 'src/components/Layout';
+import { serverSelector } from 'src/routes/Preload';
 import { IObject } from 'src/utils';
 import styled from 'styled-components';
 import { IHistory } from './History.interface';
 
 interface IProps {}
 
-const Styled = styled.div``;
+interface IHistoryItem {
+  label: string;
+  desc: string;
+  disabled?: boolean;
+  copyable?: boolean;
+  link?: string;
+}
+
+const Styled = styled.div`
+  .hook-row {
+    margin-top: 15px;
+    > p {
+      :first-child {
+        flex: 1 0 20%;
+      }
+      :last-child {
+        flex: 1 0 60%;
+      }
+    }
+  }
+`;
+
+const HistoryItem = React.memo((props: { item: IHistoryItem }) => {
+  const { item } = props;
+  return (
+    <div className='item'>
+      <div className='hook-row'>
+        <p className='bold-text'>{item.label}</p>
+        <p className='medium-text ellipsis'>{item.desc}</p>
+      </div>
+    </div>
+  );
+});
 
 const History = (props: IProps) => {
   const location: any = useLocation();
+  const server = useSelector(serverSelector);
   const state: {
     history: IHistory & TxHistoryModel;
   } = location.state;
   const { history } = state;
-  const historyFactories = [
+  const historyFactories: IHistoryItem[] = [
     {
       label: 'ID',
+      desc: `#${history?.txId}`,
       disabled: !history?.txId,
-      //   copyable: true,
-      //   openUrl: !!history?.isIncognitoTx,
-      valueText: `#${history?.txId}`,
-      //   handleOpenLink: () =>
-      //     history?.isIncognitoTx
-      //       ? linkingService.openUrl(
-      //         `${CONSTANT_CONFIGS.EXPLORER_CONSTANT_CHAIN_URL}/tx/${history?.id}`,
-      //       )
-      //       : null,
+      copyable: true,
+      link: !!history?.isIncognitoTx
+        ? `${server.exploreChainURL} /tx/${history?.txId}`
+        : '',
     },
     {
-      label: typeText,
-      valueText: `${amountStr} ${history.symbol}`,
-      disabled: !amount,
+      label: history.type,
+      desc: `${history.amountFormated} ${history.symbol}`,
+      disabled: !history.amountFormated,
     },
     {
       label: 'Fee',
-      valueText: `${formatFee} ${feeUnit}`,
-      disabled: !fee,
+      // desc: `${history?.feeFormated} ${feeUnit}`,
+      desc: `${history?.feeFormated}`,
+      disabled: !history?.feeFormated,
     },
     {
       label: 'Status',
-      valueText: statusMessage,
-      valueTextStyle: { color: statusColor },
-      disabled: !toggleHistoryDetail && !statusMessage,
-      canRetryExpiredDeposit: history?.canRetryExpiredDeposit,
-      handleRetryExpiredDeposit: onRetryExpiredDeposit,
-      message: history?.statusDetail,
-      handleRetryHistoryStatus: onRetryHistoryStatus,
-      showReload,
-      fetchingHistory,
+      desc: history?.status,
+      disabled: !history?.status,
+      // canRetryExpiredDeposit: history?.canRetryExpiredDeposit,
+      // handleRetryExpiredDeposit: onRetryExpiredDeposit,
+      // message: history?.statusDetail,
+      // handleRetryHistoryStatus: onRetryHistoryStatus,
+      // showReload,
+      // fetchingHistory,
     },
     {
       label: 'Time',
-      valueText: formatUtil.formatDateTime(history?.time),
-      disabled: !history?.time,
+      desc: history?.timeFormated,
+      disabled: !history?.timeFormated,
     },
-    {
-      label: 'Expired at',
-      valueText: formatUtil.formatDateTime(history?.expiredAt),
-      disabled: history?.decentralized ? true : !history?.expiredAt,
-    },
-    {
-      label: 'TxID',
-      valueText: `${CONSTANT_CONFIGS.EXPLORER_CONSTANT_CHAIN_URL}/tx/${history.incognitoTxID}`,
-      openUrl: true,
-      disabled:
-        history?.id === history?.incognitoTxID ||
-        !history.incognitoTxID ||
-        includes(history?.inchainTx, history.incognitoTxID) ||
-        (!!history?.isUnshieldTx && selectedPrivacy?.isDecentralized),
-    },
-    {
-      label: 'Inchain TxID',
-      valueText: history?.inchainTx,
-      openUrl: true,
-      disabled: !history?.inchainTx,
-    },
-    {
-      label: 'Outchain TxID',
-      valueText: history?.outchainTx,
-      openUrl: true,
-      disabled: !history?.outchainTx,
-    },
-    {
-      label: 'To address',
-      valueText: history?.toAddress,
-      copyable: true,
-      disabled: !history?.toAddress,
-    },
+    // {
+    //   label: 'Expired at',
+    //   desc: formatUtil.formatDateTime(history?.expiredAt),
+    //   disabled: history?.decentralized ? true : !history?.expiredAt,
+    // },
+    // {
+    //   label: 'TxID',
+    //   desc: `${CONSTANT_CONFIGS.EXPLORER_CONSTANT_CHAIN_URL}/tx/${history.incognitoTxID}`,
+    //   openUrl: true,
+    //   disabled:
+    //     history?.id === history?.incognitoTxID ||
+    //     !history.incognitoTxID ||
+    //     includes(history?.inchainTx, history.incognitoTxID) ||
+    //     (!!history?.isUnshieldTx && selectedPrivacy?.isDecentralized),
+    // },
+    // {
+    //   label: 'Inchain TxID',
+    //   desc: history?.inchainTx,
+    //   openUrl: true,
+    //   disabled: !history?.inchainTx,
+    // },
+    // {
+    //   label: 'Outchain TxID',
+    //   desc: history?.outchainTx,
+    //   openUrl: true,
+    //   disabled: !history?.outchainTx,
+    // },
+    // {
+    //   label: 'To address',
+    //   desc: history?.toAddress,
+    //   copyable: true,
+    //   disabled: !history?.toAddress,
+    // },
     {
       label: 'Coin',
-      valueText: history.symbol,
+      desc: history.symbol,
       disabled: !history?.symbol,
     },
-    {
-      label: 'Contract',
-      valueText: history.erc20TokenAddress,
-      copyable: true,
-      disabled: !history?.erc20TokenAddress,
-    },
+    // {
+    //   label: 'Contract',
+    //   desc: history.erc20TokenAddress,
+    //   copyable: true,
+    //   disabled: !history?.erc20TokenAddress,
+    // },
   ];
-  return <Styled></Styled>;
+  return (
+    <Styled>
+      <Header />
+      {historyFactories.map((item, index) => (
+        <HistoryItem key={index} item={item} />
+      ))}
+    </Styled>
+  );
 };
 
-export default History;
+export default withLayout(History);

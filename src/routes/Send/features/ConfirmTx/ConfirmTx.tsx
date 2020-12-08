@@ -3,10 +3,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
-import {
-  decimalSeparatorSelector,
-  groupSeparatorSelector,
-} from 'src/routes/Preload';
+import { decimalSeparatorSelector } from 'src/routes/Preload';
 import { selectedPrivacySelector } from 'src/routes/Token';
 import { COLORS, FONT_SIZES } from 'src/styles';
 import format from 'src/utils/format';
@@ -18,7 +15,6 @@ const Styled = styled.div`
   p.title {
     font-size: ${FONT_SIZES.superMedium}px;
     line-height: ${FONT_SIZES.superMedium + 5}px;
-    color: ${COLORS.black};
     font-weight: 500;
     text-align: center;
     margin-bottom: 50px;
@@ -32,14 +28,14 @@ const Styled = styled.div`
   .confirm-tx-item label {
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 5}px;
-    color: ${COLORS.black};
+
     font-weight: 200;
     flex-basis: 30%;
   }
   .confirm-tx-item span {
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 5}px;
-    color: ${COLORS.colorGreyBold};
+    
     font-weight: 200;
     flex-basis: 70%;
   }
@@ -60,7 +56,7 @@ const ConfirmTx = (props: IProps) => {
     tx: any;
     isNativeToken: boolean;
   } & any = location.state;
-  const { tx, isNativeToken } = state;
+  const { tx } = state;
   const nativeTokenInfo = tx?.nativeTokenInfo;
   const groupSeparator = useSelector(decimalSeparatorSelector);
   const decimalSeparator = useSelector(decimalSeparatorSelector);

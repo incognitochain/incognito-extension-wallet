@@ -25,13 +25,11 @@ const Styled = styled.div`
   .network-item .title {
     font-size: ${FONT_SIZES.medium}px;
     line-height: ${FONT_SIZES.medium + 5}px;
-    color: ${COLORS.black};
     margin-bottom: 15px;
   }
   .network-item .desc {
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 5}px;
-    color: ${COLORS.colorGreyBold};
   }
 `;
 

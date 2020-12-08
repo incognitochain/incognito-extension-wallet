@@ -23,7 +23,6 @@ const Styled = styled.div`
   }
   button {
     background-color: ${COLORS.black};
-    color: #fff;
     height: 32px;
     border-radius: 20px;
     font-size: 14px;
