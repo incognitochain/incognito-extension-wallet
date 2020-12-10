@@ -36,10 +36,9 @@ export const defaultAccountSelector = createSelector(
     }
     try {
       const { wallet } = walletState;
-      console.debug(wallet);
       account = wallet.masterAccount.getAccountByName(defaultAccountName);
     } catch (error) {
-      console.debug('ERROR', error);
+      throw error;
     }
     if (isEmpty(account?.name)) {
       account = list && list[0];

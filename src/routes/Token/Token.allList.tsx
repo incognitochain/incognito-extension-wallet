@@ -1,8 +1,9 @@
 import React from 'react';
 import { Checkbox } from 'src/components/Core';
 import ListToken from './Token.list';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';
+import { IAllListTokenInner } from './Token.interface';
 
 const Styled = styled.div`
   .hook {
@@ -14,19 +15,11 @@ const Styled = styled.div`
     font-weight: 200;
     font-size: ${FONT_SIZES.regular};
     line-height: ${FONT_SIZES.regular + 5};
-   
     margin-left: 5px;
   }
 `;
 
-interface IProps {
-  tokensFactories: any[];
-  onToggleUnVerifiedTokens: () => void;
-  toggleUnVerified: boolean;
-  renderItem: () => any;
-}
-
-const ListAllToken = (props: IProps) => {
+const ListAllToken = (props: IAllListTokenInner) => {
   const {
     tokensFactories,
     onToggleUnVerifiedTokens,

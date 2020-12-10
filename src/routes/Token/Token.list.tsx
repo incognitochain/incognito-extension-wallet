@@ -3,7 +3,7 @@ import React from 'react';
 interface IProps {
   data: any[];
   visible?: boolean;
-  renderItem: (token: string) => any;
+  renderItem: (tokenId: string) => any;
 }
 
 const ListToken = (props: IProps) => {

@@ -1,4 +1,3 @@
-export { default } from './Token';
 export * from './Token';
 export * from './Token.actions';
 export * from './Token.constant';
@@ -9,3 +8,4 @@ export { default as withAllListToken } from './Token.enhanceAllList';
 export { default as ListToken } from './Token.list';
 export { default as ListAllToken } from './Token.allList';
 export { default as TokenBasic } from './Token.basic';
+export { default as Token } from './Token';

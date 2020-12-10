@@ -67,6 +67,10 @@ export interface ILanguage {
     error: {
       walletNotExisted: string;
     };
+    blockShield: {
+      totalShielded: string;
+      btnShield: string;
+    };
   };
   token: {
     followToken: {
@@ -76,6 +80,7 @@ export interface ILanguage {
     };
     addToken: {
       headerTitle: string;
+      added: string;
     };
     detail: {
       headerTitle: string;

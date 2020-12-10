@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { compose } from 'recompose';
 import { useHistory } from 'react-router-dom';
 import SearchBox from './Header.searchBox';
@@ -17,7 +17,7 @@ export interface TInter {
 }
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (
-  props: TInter & any
+  props: TInter & { children?: ReactNode }
 ) => {
   const { canSearch = false, onGoBack, title } = props;
   const [state, setState] = React.useState({
@@ -61,4 +61,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
   );
 };
 
-export default compose<any, TInter & TOutter & any>(enhance);
+export default compose<TInter & TOutter, any>(enhance);

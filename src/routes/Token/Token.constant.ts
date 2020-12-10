@@ -5,3 +5,4 @@ export const ACTION_GET_BALANCE_TOKEN_FETCHED = `[Token] Get balance token fetch
 export const ACTION_FOLLOWED_POPULAR_TOKEN = `[Token] Followed popular token`;
 export const ACTION_SET_FOLLOWED_TOKENS = `[Token] Set followed tokens`;
 export const ACTION_SET_SELECTED_TOKEN = `[Token] Set selected tokens`;
+export const ACTION_FOLLOW_TOKEN_BY_ID = `[Token] Follow token by id`;

@@ -56,6 +56,10 @@ const vi: ILanguage | any = {
     error: {
       walletNotExisted: 'Wallet is not exist',
     },
+    blockShield: {
+      totalShielded: 'Shielded Balance',
+      btnShield: 'Shield my crypto',
+    },
   },
   token: {
     followToken: {
@@ -65,6 +69,7 @@ const vi: ILanguage | any = {
     },
     addToken: {
       headerTitle: 'Add a coin',
+      added: 'Added',
     },
     detail: {
       headerTitle: '',

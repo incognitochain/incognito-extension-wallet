@@ -141,13 +141,13 @@ export const actionSwitchAccount = (
   shouldLoadBalance?: boolean
 ) => async (dispatch: Dispatch, getState: () => IRootState) => {
   const state = getState();
-  const accountName: string = defaultAccountNameSelector(state);
   const wallet: WalletInstance = walletDataSelector(state);
+  const defaultAccountName = defaultAccountNameSelector(state);
   const account: AccountInstance = wallet.masterAccount.getAccountByName(
     accountName
   );
   try {
-    if (isEqual(account?.name, accountName)) {
+    if (isEqual(account?.name, defaultAccountName)) {
       return account;
     }
     await dispatch(actionSwitchAccountFetching());

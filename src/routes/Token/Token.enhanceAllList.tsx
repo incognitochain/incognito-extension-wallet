@@ -4,67 +4,46 @@ import { useSelector } from 'react-redux';
 import { availableTokensSelector } from './Token.selector';
 import { useSearchBox } from 'src/components/Header';
 import { handleFilterTokenByKeySearch } from './Token.utils';
-import PropTypes from 'prop-types';
-
+import { keySearchSelector } from 'src/components/Header/Header.selector';
+import { IAllListTokenInner, ISelectedPrivacy } from './Token.interface';
 interface IProps {
-  availableTokens: any[];
+  availableTokens?: ISelectedPrivacy[];
 }
-
-const enhance = (WrappedComp: any) => (props: IProps) => {
+const enhance = (WrappedComp: React.FunctionComponent) => (
+  props: IProps & IAllListTokenInner & any
+) => {
   const [toggleUnVerified, onToggleUnVerifiedTokens] = React.useState(false);
   const availableTokens =
     props?.availableTokens || useSelector(availableTokensSelector);
-  let verifiedTokens: any[] = [];
-  let unVerifiedTokens: any[] = [];
-  availableTokens.map((token) =>
+  let verifiedTokens: ISelectedPrivacy[] = [];
+  let unVerifiedTokens: ISelectedPrivacy[] = [];
+  const keySearch = useSelector(keySearchSelector);
+  availableTokens.map((token: ISelectedPrivacy) =>
     token?.isVerified
       ? verifiedTokens.push(token)
       : unVerifiedTokens.push(token)
   );
-  const {
-    result: _verifiedTokens,
-    keySearch,
-    handleFilter: handleFilterData,
-  } = useSearchBox({
+  const { result: _verifiedTokens } = useSearchBox({
     data: verifiedTokens,
     handleFilter: () =>
       handleFilterTokenByKeySearch({ tokens: verifiedTokens, keySearch }),
   });
-  const {
-    result: _unVerifiedTokens,
-    keySearch: _keySearch,
-    handleFilter: _handleFilterData,
-  } = useSearchBox({
+  const { result: _unVerifiedTokens } = useSearchBox({
     data: unVerifiedTokens,
     handleFilter: () =>
       handleFilterTokenByKeySearch({
         tokens: unVerifiedTokens,
-        keySearch: _keySearch,
+        keySearch,
       }),
   });
 
-  React.useEffect(() => {
-    handleFilterTokenByKeySearch({
-      tokens: verifiedTokens,
-      keySearch,
-    });
-    handleFilterData();
-    if (toggleUnVerified) {
-      handleFilterTokenByKeySearch({
-        tokens: unVerifiedTokens,
-        keySearch: _keySearch,
-      });
-      _handleFilterData();
-    }
-  }, [availableTokens]);
-
   const tokensFactories = [
     {
-      data: _verifiedTokens,
+      data: _verifiedTokens.map((token: ISelectedPrivacy) => token.tokenId),
       visible: true,
     },
     {
-      data: _unVerifiedTokens,
+      data: _unVerifiedTokens.map((token: ISelectedPrivacy) => token.tokenId),
       visible: toggleUnVerified,
     },
   ];
@@ -86,10 +65,6 @@ const enhance = (WrappedComp: any) => (props: IProps) => {
       />
     </ErrorBoundary>
   );
-};
-
-enhance.propTypes = {
-  availableTokens: PropTypes.array.isRequired,
 };
 
 export default enhance;

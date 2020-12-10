@@ -35,13 +35,13 @@ export const historyLocalSelector = createSelector(
         ? history?.nativeTokenInfo?.fee
         : history?.privacyTokenInfo?.fee;
       const amountFormated = formatAmount({
-        amount: new BigNumber(amount).toNumber(),
+        originalAmount: new BigNumber(amount).toNumber(),
         decimalSeparator,
         groupSeparator,
         decimals: selectedPrivacy?.pDecimals,
       });
       const feeFormated = formatAmount({
-        amount: new BigNumber(fee).toNumber(),
+        originalAmount: new BigNumber(fee).toNumber(),
         decimalSeparator,
         groupSeparator,
         decimals: selectedPrivacy?.pDecimals,

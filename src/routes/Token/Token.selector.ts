@@ -10,16 +10,23 @@ import {
   IPToken,
   IPTokenFromApi,
   ISelectedPrivacy,
+  ITotalShielded,
 } from './Token.interface';
 import { ITokenReducer } from './Token.reducer';
 import SelectedPrivacy from './Token.model';
 import { getFormatAmountByUSD, getPrice } from './Token.utils';
 import uniqBy from 'lodash/uniqBy';
-import { preloadSelector } from '../Preload';
+import {
+  decimalSeparatorSelector,
+  groupSeparatorSelector,
+  preloadSelector,
+} from '../Preload';
 import { accountBalanceSelector, defaultAccountSelector } from '../Account';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import * as format from 'src/utils/format';
 import convert from 'src/utils/convert';
+import { compact, reverse } from 'lodash';
+import BigNumber from 'bignumber.js';
 
 export const tokenSelector = createSelector(
   (state: IRootState) => state.token,
@@ -71,12 +78,13 @@ export const pCustomTokensSelector = createSelector(
 
 export const followedTokensIdsSelector = createSelector(
   defaultAccountSelector,
-  (defaultAccount: AccountInstance) => (excludePRV = true) =>
-    defaultAccount
-      ? excludePRV
-        ? defaultAccount.privacyTokenIds
-        : [COINS.PRV.id, ...defaultAccount.privacyTokenIds]
-      : []
+  (defaultAccount: AccountInstance) => (excludePRV = true) => {
+    if (!defaultAccount) {
+      return [];
+    }
+    const privacyTokenIds = reverse([...defaultAccount.privacyTokenIds]);
+    return excludePRV ? privacyTokenIds : [COINS.PRV.id, ...privacyTokenIds];
+  }
 );
 
 export const findPTokenBySymbolSelector = createSelector(
@@ -159,7 +167,7 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
         );
         const price = getPrice({ token, tokenUSDT });
         const formatAmount = format.formatAmount({
-          amount,
+          originalAmount: amount,
           decimals: token.pDecimals,
           decimalSeparator,
           groupSeparator,
@@ -173,7 +181,7 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
         });
         const formatBalanceByUsd = getFormatAmountByUSD({
           amount: convert.toHumanAmount({
-            originAmount: amount,
+            originalAmount: amount,
             decimals: token.pDecimals,
           }),
           priceUsd: price.priceUsd,
@@ -214,9 +222,7 @@ export const availableTokensSelector = createSelector(
     let tokens: ISelectedPrivacy[] = allTokenIds
       .map((tokenId: string) => getPrivacyDataByTokenID(tokenId))
       .filter((token) => token?.name && token?.symbol && token.tokenId);
-    const excludeRPV = (token: ISelectedPrivacy) =>
-      token?.tokenId !== COINS.PRV.id;
-    return uniqBy(tokens.filter(excludeRPV), 'tokenId') || [];
+    return uniqBy(tokens, 'tokenId') || [];
   }
 );
 
@@ -247,59 +253,71 @@ export const chainTokensSelector = createSelector(
   (token) => token.pCustomTokens
 );
 
-// export const totalShieldedTokensSelector = createSelector(
-//   getPrivacyDataByTokenIDSelector,
-//   accountBalanceSelector,
-//   (getPrivacyDataByTokenID, accountBalance) => {
-//     const { isToggleUSD, pToken: decimalDigit } = currency;
-//     const tokens = followed.map((token) =>
-//       availableTokens.find(
-//         (t) => t?.tokenId === token?.id || t?.tokenId === token?.tokenId,
-//       ),
-//     );
-
-//     const prv = {
-//       ...getPrivacyDataByTokenID(CONSTANT_COMMONS.PRV.id),
-//       amount: accountBalance,
-//     };
-//     const totalShieldedTokens = compact([...tokens, prv]).reduce(
-//       (prevValue, currentValue) => {
-//         const totalShieldByPRV = prevValue.totalShieldByPRV;
-//         const totalShieldByUSD = prevValue.totalShieldByUSD;
-//         const pricePrv = currentValue?.pricePrv || 0;
-//         const priceUsd = currentValue?.priceUsd || 0;
-//         const humanAmount = convert.toHumanAmount(
-//           currentValue?.amount,
-//           currentValue?.pDecimals,
-//         );
-
-//         let _currentPrvValue = pricePrv * convert.toNumber(humanAmount);
-//         if (isNaN(_currentPrvValue)) {
-//           _currentPrvValue = 0;
-//         }
-
-//         let _currentUsdValue = priceUsd * convert.toNumber(humanAmount);
-//         if (isNaN(_currentUsdValue)) {
-//           _currentUsdValue = 0;
-//         }
-//         return {
-//           totalShieldByPRV: totalShieldByPRV + _currentPrvValue,
-//           totalShieldByUSD: totalShieldByUSD + _currentUsdValue
-//         };
-//       },
-//       {
-//         totalShieldByPRV: 0,
-//         totalShieldByUSD: 0
-//       },
-//     );
-
-//     const { totalShieldByPRV, totalShieldByUSD } = totalShieldedTokens;
-//     const totalShielded = isToggleUSD ? totalShieldByUSD : totalShieldByPRV;
-
-//     return convert.toOriginalAmount(
-//       totalShielded,
-//       decimalDigit?.pDecimals,
-//       true,
-//     );
-//   },
-// );
+export const totalShieldedTokensSelector = createSelector(
+  getPrivacyDataByTokenIDSelector,
+  followedTokensIdsSelector,
+  decimalSeparatorSelector,
+  groupSeparatorSelector,
+  pUSDTSelector,
+  (
+    getPrivacyDataByTokenID,
+    followedIds,
+    decimalSeparator,
+    groupSeparator,
+    USDT
+  ) => {
+    const followed = followedIds(false);
+    const tokens = followed.map((tokenId) => getPrivacyDataByTokenID(tokenId));
+    const totalShieldedTokens = compact([...tokens]).reduce(
+      (
+        prevValue: {
+          totalShieldByPRV: number;
+          totalShieldByUSD: number;
+        },
+        currentValue: ISelectedPrivacy
+      ) => {
+        const totalShieldByPRV = new BigNumber(prevValue.totalShieldByPRV);
+        const totalShieldByUSD = new BigNumber(prevValue.totalShieldByUSD);
+        const pricePrv = new BigNumber(currentValue?.pricePrv || 0);
+        const priceUsd = new BigNumber(currentValue?.priceUsd || 0);
+        const humanAmount = convert.toHumanAmount({
+          originalAmount: currentValue.amount,
+          decimals: currentValue.pDecimals,
+        });
+        let _currentPrvValue = pricePrv.multipliedBy(humanAmount);
+        if (_currentPrvValue.isNaN()) {
+          _currentPrvValue = totalShieldByPRV;
+        }
+        let _currentUsdValue = priceUsd.multipliedBy(humanAmount);
+        if (_currentUsdValue.isNaN()) {
+          _currentUsdValue = totalShieldByUSD;
+        }
+        return {
+          totalShieldByPRV: totalShieldByPRV.plus(_currentPrvValue).toNumber(),
+          totalShieldByUSD: totalShieldByUSD.plus(_currentUsdValue).toNumber(),
+        };
+      },
+      {
+        totalShieldByPRV: 0,
+        totalShieldByUSD: 0,
+      }
+    );
+    const { totalShieldByPRV, totalShieldByUSD } = totalShieldedTokens;
+    const formatTotalAmountPRV = format.formatAmount({
+      humanAmount: totalShieldByPRV,
+      decimalSeparator,
+      decimals: COINS.PRV.pDecimals,
+      groupSeparator,
+    });
+    const formatTotalAmountUSD = format.formatAmount({
+      humanAmount: totalShieldByUSD,
+      decimalSeparator,
+      decimals: USDT.pDecimals,
+      groupSeparator,
+    });
+    return {
+      formatTotalAmountPRV,
+      formatTotalAmountUSD,
+    };
+  }
+);

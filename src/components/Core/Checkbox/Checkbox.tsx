@@ -15,16 +15,16 @@ const Styled = styled.div`
     align-items: center;
     display: flex;
     margin: 15px 0;
-    /* The container */
-    .container {
+    /* The checkbox-container */
+    .checkbox-container {
       position: relative;
       height: 25px;
       width: 25px;
       cursor: pointer;
-      margin-right: 25px;
+      margin-right: 15px;
       user-select: none;
     }
-    .container input {
+    .checkbox-container input {
       position: absolute;
       opacity: 0;
       cursor: pointer;
@@ -39,7 +39,7 @@ const Styled = styled.div`
       height: 100%;
       background-color: ${COLORS.black};
     }
-    .container input:checked ~ .checkmark {
+    .checkbox-container input:checked ~ .checkmark {
       background-color: ${COLORS.black};
     }
     .checkmark:after {
@@ -47,10 +47,10 @@ const Styled = styled.div`
       position: absolute;
       display: none;
     }
-    .container input:checked ~ .checkmark:after {
+    .checkbox-container input:checked ~ .checkmark:after {
       display: block;
     }
-    .container .checkmark:after {
+    .checkbox-container .checkmark:after {
       left: 9px;
       top: 5px;
       width: 5px;
@@ -68,7 +68,7 @@ const Checkbox = (props: IProps) => {
   const { onHandleChecked, label, checked } = props;
   return (
     <Styled>
-      <div className='container' onClick={onHandleChecked}>
+      <div className='checkbox-container' onClick={onHandleChecked}>
         <input type='checkbox' checked={checked} />
         <span className='checkmark'></span>
       </div>

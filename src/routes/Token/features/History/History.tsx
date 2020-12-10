@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
 import { serverSelector } from 'src/routes/Preload';
-import { IObject } from 'src/utils';
 import styled from 'styled-components';
 import { IHistory } from './History.interface';
 
@@ -48,10 +47,8 @@ const HistoryItem = React.memo((props: { item: IHistoryItem }) => {
 const History = (props: IProps) => {
   const location: any = useLocation();
   const server = useSelector(serverSelector);
-  const state: {
-    history: IHistory & TxHistoryModel;
-  } = location.state;
-  const { history } = state;
+  const state: any = location.state;
+  const { history }: { history: IHistory & TxHistoryModel } = state;
   const historyFactories: IHistoryItem[] = [
     {
       label: 'ID',

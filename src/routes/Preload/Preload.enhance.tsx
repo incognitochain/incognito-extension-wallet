@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
 import { IPreloadReducer } from './Preload.reducer';
 import { preloadSelector } from './Preload.selector';
-import { COLORS } from 'src/styles';
 import Spinner from 'react-bootstrap/esm/Spinner';
 
 const Styled = styled.div`
@@ -19,7 +18,6 @@ const Styled = styled.div`
   display: flex;
   flex-direction: column;
   > p.desc {
-    
     text-align: center;
     margin-top: 15px;
   }

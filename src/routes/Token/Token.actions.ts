@@ -123,11 +123,10 @@ export const actionSetFollowedTokens = (payload: { followed: string[] }) => ({
   payload,
 });
 
-export const actionFollowPopularToken = ({
-  defaultAccount,
-}: {
-  defaultAccount: AccountInstance;
-}) => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionFollowPopularToken = () => async (
+  dispatch: Dispatch,
+  getState: () => IRootState
+) => {
   const state: IRootState = getState();
   const preload: IPreloadReducer = preloadSelector(state);
   const tokenState: ITokenReducer = tokenSelector(state);
@@ -139,6 +138,7 @@ export const actionFollowPopularToken = ({
     if (followedPopularIds) {
       return;
     }
+    const defaultAccount: AccountInstance = defaultAccountSelector(state);
     const popularCoinIds = popularCoinIdsSeletor(state);
     for (const [key, value] of Object.entries(popularCoinIds)) {
       console.log(`${key}: ${value}`);
@@ -146,6 +146,7 @@ export const actionFollowPopularToken = ({
     Object.entries(popularCoinIds).map((coin) => {
       const [symbol, tokenId] = coin;
       defaultAccount.followTokenById(tokenId);
+      return coin;
     });
     dispatch(actionFollowedPopularTokenIds({ mainnet }));
     await actionSaveWallet()(dispatch, getState);

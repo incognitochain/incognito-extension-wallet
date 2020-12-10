@@ -22,7 +22,7 @@ const SelectAccount = (props: IProps) => {
   const dispatch = useDispatch();
   const handleSelectAccount = async (accountName: string) => {
     try {
-      dispatch(actionSwitchAccount(accountName));
+      dispatch(actionSwitchAccount(accountName, true));
     } catch (error) {
       console.debug(error);
     }
@@ -40,6 +40,7 @@ const SelectAccount = (props: IProps) => {
           hasQrCode={false}
           selectable
           onSelectAccount={() => handleSelectAccount(account.name)}
+          key={account.name}
         />
       ))}
     </Styled>

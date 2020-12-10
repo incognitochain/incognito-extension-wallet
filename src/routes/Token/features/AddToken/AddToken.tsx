@@ -4,20 +4,24 @@ import { Header } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/routes/Configs';
 import styled from 'styled-components';
-import withAddToken from './AddToken.enhance';
 import { ListAllToken } from 'src/routes/Token';
-import { ISelectedPrivacy } from '../../Token.interface';
 import { TokenBasic } from 'src/routes/Token';
-
-// interface IProps {}
-
+import { IAllListTokenInner } from 'src/routes/Token';
+import withAddToken, { TInner } from './AddToken.enhance';
 const Styled = styled.div``;
 
-const AddToken = (props: any) => {
+const AddToken = (props: TInner & IAllListTokenInner & any) => {
   const translate: ILanguage = useSelector(translateSelector);
   const addTokenTranslate = translate.token.addToken;
-  const renderItem = (token: ISelectedPrivacy) => {
-    return <TokenBasic tokenId={token?.tokenId} />;
+  const { handleToggleFollowTokenById } = props;
+  const renderItem = (tokenId: string) => {
+    return (
+      <TokenBasic
+        tokenId={tokenId}
+        handleSelectToken={() => handleToggleFollowTokenById(tokenId)}
+        showFollowed
+      />
+    );
   };
   return (
     <Styled>

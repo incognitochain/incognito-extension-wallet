@@ -3,7 +3,8 @@ import convert from './convert';
 import floor from 'lodash/floor';
 import moment from 'moment';
 interface IAmount {
-  amount: number;
+  originalAmount?: number;
+  humanAmount?: number;
   decimals: number;
   clipAmount?: boolean;
   decimalDigits?: boolean;
@@ -11,6 +12,8 @@ interface IAmount {
   groupSeparator: string;
   maxDigits?: number;
 }
+
+interface IAmountFromHunman {}
 
 export const removeTrailingZeroes = ({
   amountString,
@@ -36,23 +39,20 @@ interface IMaxDigits {
   decimalDigits?: boolean;
   clipAmount?: boolean;
   decimals: number;
-  amount: number;
+  humanAmount: number;
 }
 
-export const getMaxDecimalDigits: (
+export const getMaxDecimalDigits: (payload: IMaxDigits) => number = (
   payload: IMaxDigits
 ) => {
-  maxDigits: number;
-  humanAmount: number;
-} = (payload: IMaxDigits) => {
-  const { decimals, decimalDigits = true, clipAmount = true, amount } = payload;
+  const {
+    decimals,
+    decimalDigits = true,
+    clipAmount = true,
+    humanAmount,
+  } = payload;
   let maxDigits = decimals;
-  let humanAmount = 0;
   try {
-    humanAmount = convert.toHumanAmount({
-      originAmount: amount,
-      decimals,
-    });
     if (clipAmount) {
       if (humanAmount > 0 && humanAmount < 1 && !!decimalDigits) {
         maxDigits = 5;
@@ -66,21 +66,12 @@ export const getMaxDecimalDigits: (
       if (humanAmount > 1e5) {
         maxDigits = 0;
       }
-      if (decimals) {
-        humanAmount = floor(humanAmount, Math.min(decimals, maxDigits));
-      } else {
-        humanAmount = floor(humanAmount, maxDigits);
-      }
     }
   } catch (error) {
     maxDigits = decimals;
-    humanAmount = 0;
     throw error;
   }
-  return {
-    maxDigits,
-    humanAmount,
-  };
+  return maxDigits;
 };
 
 interface IToFixed {
@@ -102,7 +93,8 @@ export const formatAmount: (payload: IAmount) => string = (
   payload: IAmount
 ) => {
   const {
-    amount,
+    originalAmount,
+    humanAmount,
     decimals,
     decimalSeparator,
     groupSeparator,
@@ -116,14 +108,26 @@ export const formatAmount: (payload: IAmount) => string = (
   };
   let formatAmount;
   try {
-    const { maxDigits, humanAmount } = getMaxDecimalDigits({
-      amount,
+    const convertHumanAmount =
+      humanAmount ||
+      convert.toHumanAmount({
+        originalAmount,
+        decimals,
+      });
+    const maxDigits = getMaxDecimalDigits({
       clipAmount,
       decimalDigits,
       decimals,
+      humanAmount: convertHumanAmount,
     });
+    let fixedNumber = convertHumanAmount;
+    if (decimals) {
+      fixedNumber = floor(convertHumanAmount, Math.min(decimals, maxDigits));
+    } else {
+      fixedNumber = floor(convertHumanAmount, maxDigits);
+    }
     const fixedString = toFixed({
-      number: humanAmount,
+      number: fixedNumber,
       decimals,
       decimalSeparator,
     });
@@ -147,6 +151,12 @@ export const formatUnixDateTime = (
   dateTime: number,
   formatPattern = 'MMM DD YYYY, HH:mm'
 ) => moment.unix(dateTime).format(formatPattern);
+
+export const formatAmountFromHunman: (payload: IAmountFromHunman) => string = (
+  payload
+) => {
+  return '';
+};
 
 const format = {
   formatAmount,

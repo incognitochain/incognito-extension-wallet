@@ -12,7 +12,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
   props: IProps & any
 ) => {
   return (
-    <Styled>
+    <Styled className='wrapper'>
       <WrappedComponent {...props} />
     </Styled>
   );

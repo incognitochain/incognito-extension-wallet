@@ -81,7 +81,7 @@ export const getFormatAmountByUSD: (
       decimals,
     });
     formatAmount = format.formatAmount({
-      amount: originalAmount,
+      originalAmount,
       decimalSeparator,
       decimals,
       groupSeparator,

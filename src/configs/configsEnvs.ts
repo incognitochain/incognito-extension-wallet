@@ -13,7 +13,7 @@ interface IENVS {
 
 const defaultEnvs = {
   REACT_APP_MODE: 'development',
-  REACT_APP_IS_DEV: true,
+  REACT_APP_IS_DEV: 'true',
   REACT_APP_DOMAIN_URL: 'http://192.168.0.124:3000',
   REACT_APP_PASSPHRASE_WALLET_DEFAULT: '',
   REACT_APP_PASSWORD_SECRET_KEY: '',
@@ -38,5 +38,5 @@ export const getEnvs = () => {
 };
 
 export const ENVS: IENVS = getEnvs();
-console.debug(`ENVS`,ENVS)
+
 export const isDev: boolean = ENVS.REACT_APP_MODE === 'development';
