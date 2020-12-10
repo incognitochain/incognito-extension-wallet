@@ -127,13 +127,21 @@ class SelectedPrivacy {
       'Privacy'
     );
     this.contractId = pTokenData?.contractId;
-    this.decimals = this.isNativeToken
+    this.decimals = this.isPrivacyToken
+      ? pTokenData?.decimals
+      : this.isNativeToken
       ? COINS.PRV.pDecimals
-      : pTokenData?.decimals;
-    this.pDecimals = this.isNativeToken
+      : 0;
+    this.pDecimals = this.isPrivacyToken
+      ? pTokenData.pDecimals
+      : this.isNativeToken
       ? COINS.PRV.pDecimals
-      : pTokenData?.pDecimals;
-    this.pSymbol = pTokenData?.pSymbol;
+      : 0;
+    this.pSymbol = this.isPrivacyToken
+      ? pTokenData?.pSymbol
+      : this.isNativeToken
+      ? COINS.PRV.symbol
+      : this.symbol;
     this.isWithdrawable = !!this.isPrivacyToken;
     this.isDeposable = !!this.isPrivacyToken;
     this.isDecentralized =

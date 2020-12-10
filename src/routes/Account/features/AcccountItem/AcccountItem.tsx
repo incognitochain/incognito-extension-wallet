@@ -5,6 +5,8 @@ import copy from 'copy-to-clipboard';
 import { COLORS, FONT_SIZES } from 'src/styles';
 import { route } from './AccountItem.route';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 
 export interface IProps {
   title: string;
@@ -30,7 +32,6 @@ const Styled = styled.div`
     font-size: ${FONT_SIZES.regular}px;
     line-height: ${FONT_SIZES.regular + 9}px;
     font-weight: 100;
-    
   }
   .hook {
     display: flex;
@@ -61,10 +62,17 @@ const AccountItem = (props: IProps) => {
     selectable = false,
     onSelectAccount = null,
   } = props;
+  const dispatch = useDispatch();
   const history = useHistory();
   const handleCopy = () => {
     copy(desc);
-    alert('Copied');
+    dispatch(
+      actionToggleToast({
+        toggle: true,
+        value: 'Copied',
+        type: TOAST_CONFIGS.success,
+      })
+    );
   };
   const handleShowQrCode = () =>
     history.push(route, {

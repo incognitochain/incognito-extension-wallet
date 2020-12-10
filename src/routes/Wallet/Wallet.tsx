@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { translateSelector } from '../Configs';
 import {
   ListToken,
-  TokenBasic,
+  Token,
   followedTokensIdsSelector,
   actionSetSelectedToken,
   totalShieldedTokensSelector,
@@ -52,9 +52,11 @@ const ListFollowToken = (props: IListFollowToken) => {
     history.push(`/token/${tokenId}`);
   };
   const renderItem = (tokenId: string) => (
-    <TokenBasic
+    <Token
       tokenId={tokenId}
       handleSelectToken={() => handleSelectToken(tokenId)}
+      showBalance
+      showAmount
     />
   );
   return <ListToken data={listFollowTokenIds} renderItem={renderItem} />;

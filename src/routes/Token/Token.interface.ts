@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js';
-
 export interface IProps {}
 
 export interface IHistoryToken {
@@ -139,10 +137,6 @@ export interface ISelectedPrivacy {
   formatBalanceByUsd: string;
 }
 
-export interface ITokenProps {
-  tokenId: string;
-  classNameCustom?: string;
-}
 export interface IBalanceProps {
   tokenId: string;
 }
@@ -153,4 +147,27 @@ export interface IAmountProps {
 export interface ITotalShielded {
   formatTotalAmountPRV: string;
   formatTotalAmountUSD: string;
+}
+
+export interface ITokenProps {
+  tokenId: string;
+  handleSelectToken?: () => void;
+  showAmount?: boolean;
+  showBalance?: boolean;
+  showFollowed?: boolean;
+}
+export interface ITokenChildProps {
+  tokenId: string;
+  classNameCustom?: string;
+}
+
+interface ITokensFactories {
+  data: ISelectedPrivacy[];
+  visible: boolean;
+}
+export interface IAllListTokenInner {
+  tokensFactories: ITokensFactories[];
+  onToggleUnVerifiedTokens: () => void;
+  toggleUnVerified: boolean;
+  renderItem: (tokenId: string) => any;
 }

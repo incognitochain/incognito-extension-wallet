@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import QRCodeReact, { BaseQRCodeProps } from 'qrcode.react';
-import { translateSelector } from 'src/routes/Configs';
+import { themeSelector, translateSelector } from 'src/routes/Configs';
 import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
-import { COLORS } from 'src/styles';
+import { COLORS, ITheme } from 'src/styles';
 import copyToClipboard from 'copy-to-clipboard';
+import { Button } from 'src/components/Core';
 
 interface IProps {}
 
@@ -20,7 +21,6 @@ const Styled = styled.div`
     flex-direction: row;
     align-items: center;
     height: 50px;
-    background: grey;
     border-radius: 50px;
     padding: 0 15px;
     justify-content: space-between;
@@ -28,7 +28,7 @@ const Styled = styled.div`
     margin-top: 50px;
   }
   .copy-block .btn-copy {
-    background: #000;
+    background: ${({ theme }: { theme: ITheme }) => theme.button};
     height: 40px;
     border-radius: 40px;
     padding: 0 10px;
@@ -42,6 +42,7 @@ const QrCode = (props: IProps & BaseQRCodeProps) => {
   const [state, setState] = React.useState({
     copied: false,
   });
+  const theme = useSelector(themeSelector);
   const translate: ILanguage = useSelector(translateSelector);
   const { copied, copy } = translate.general;
   const handleCopy = () => {
@@ -50,15 +51,17 @@ const QrCode = (props: IProps & BaseQRCodeProps) => {
   };
 
   return (
-    <Styled className='qrcode-container'>
+    <Styled theme={theme} className='qrcode-container'>
       <div className='qrcode-react'>
         <QRCodeReact {...props} />
       </div>
       <div className='copy-block'>
         <p className='ellipsis'>{props?.value}</p>
-        <button className='btn-copy' onClick={handleCopy}>
-          {state.copied ? copied : copy}
-        </button>
+        <Button
+          title={state.copied ? copied : copy}
+          onClick={handleCopy}
+          className='btn-copy fontsize-regular fontweight-medium'
+        ></Button>
       </div>
     </Styled>
   );

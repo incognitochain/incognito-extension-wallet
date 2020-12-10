@@ -17,6 +17,7 @@ import {
   ACTION_GET_BALANCE_TOKEN_FETCHING,
   ACTION_GET_BALANCE_TOKEN_FETCHED,
   ACTION_SET_SELECTED_TOKEN,
+  ACTION_FOLLOW_TOKEN_BY_ID,
 } from './Token.constant';
 import { uniq, uniqBy } from 'lodash';
 import {
@@ -158,6 +159,9 @@ const tokenReducer = (
           histories,
         },
       };
+    }
+    case ACTION_FOLLOW_TOKEN_BY_ID: {
+      return state;
     }
     default:
       return state;

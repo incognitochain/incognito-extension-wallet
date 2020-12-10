@@ -1,12 +1,15 @@
+import BigNumber from 'bignumber.js';
+import { TxHistoryModel } from 'incognito-js/build/web/browser';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
-import { decimalSeparatorSelector } from 'src/routes/Preload';
+import { COINS } from 'src/constants';
+import { decimalSeparatorSelector, serverSelector } from 'src/routes/Preload';
 import { selectedPrivacySelector } from 'src/routes/Token';
 import { FONT_SIZES } from 'src/styles';
-import format from 'src/utils/format';
+import format, { formatUnixDateTime } from 'src/utils/format';
 import styled from 'styled-components';
 
 interface IProps {}
@@ -40,8 +43,12 @@ const Styled = styled.div`
     flex-basis: 70%;
   }
 `;
+interface IFactoriesItem {
+  title: string;
+  desc: string;
+}
 
-const ConfirmTxItem = React.memo((props: { title: string; desc: string }) => {
+const ConfirmTxItem = React.memo((props: IFactoriesItem) => {
   const { title, desc } = props;
   return (
     <div className='confirm-tx-item'>
@@ -50,44 +57,58 @@ const ConfirmTxItem = React.memo((props: { title: string; desc: string }) => {
     </div>
   );
 });
+
 const ConfirmTx = (props: IProps) => {
   const location = useLocation();
-  const state: {
-    tx: any;
-    isNativeToken: boolean;
-  } & any = location.state;
-  const { tx } = state;
-  const nativeTokenInfo = tx?.nativeTokenInfo;
+  const state: any = location.state;
+  const { tx }: { tx: TxHistoryModel } = state;
   const groupSeparator = useSelector(decimalSeparatorSelector);
   const decimalSeparator = useSelector(decimalSeparatorSelector);
   const selectedPrivacy = useSelector(selectedPrivacySelector);
+  const server = useSelector(serverSelector);
+  const itemsFactories: IFactoriesItem[] = [
+    {
+      title: `TxID:`,
+      desc: tx.txId,
+    },
+    {
+      title: `Time:`,
+      desc: formatUnixDateTime(tx.lockTime),
+    },
+    {
+      title: `Amount:`,
+      desc: `${format.formatAmount({
+        originalAmount: new BigNumber(tx.amount).toNumber(),
+        decimalSeparator,
+        groupSeparator,
+        decimals: selectedPrivacy.pDecimals,
+        clipAmount: false,
+        decimalDigits: false,
+      })} ${selectedPrivacy.symbol}`,
+    },
+    {
+      title: `Fee:`,
+      desc: `${format.formatAmount({
+        originalAmount: new BigNumber(tx.fee).toNumber(),
+        decimalSeparator,
+        groupSeparator,
+        decimals: selectedPrivacy.pDecimals,
+        clipAmount: false,
+        decimalDigits: false,
+      })} ${tx.useNativeFee ? COINS.PRV.symbol : selectedPrivacy.symbol}`,
+    },
+    {
+      title: `TxID`,
+      desc: `${server.exploreChainURL}/tx/${tx.txId}`,
+    },
+  ];
   return (
     <Styled>
       <Header title={`Confirm Tx`} />
       <p className='title'>Sent.</p>
-      <ConfirmTxItem title={`TxID:`} desc={tx?.txId} />
-      <ConfirmTxItem
-        title={`Amount:`}
-        desc={format.formatAmount({
-          originalAmount: nativeTokenInfo.amount,
-          decimalSeparator,
-          groupSeparator,
-          decimals: selectedPrivacy.pDecimals,
-          clipAmount: false,
-          decimalDigits: false,
-        })}
-      />
-      <ConfirmTxItem
-        title={`Fee:`}
-        desc={format.formatAmount({
-          originalAmount: nativeTokenInfo.fee,
-          decimalSeparator,
-          groupSeparator,
-          decimals: selectedPrivacy.pDecimals,
-          clipAmount: false,
-          decimalDigits: false,
-        })}
-      />
+      {itemsFactories.map((item: IFactoriesItem) => (
+        <ConfirmTxItem key={item.title} title={item.title} desc={item.desc} />
+      ))}
     </Styled>
   );
 };

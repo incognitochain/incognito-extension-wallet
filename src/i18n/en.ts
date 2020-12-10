@@ -69,6 +69,7 @@ const en: ILanguage | any = {
     },
     addToken: {
       headerTitle: 'Add a coin',
+      added: 'Added'
     },
     detail: {
       headerTitle: '',

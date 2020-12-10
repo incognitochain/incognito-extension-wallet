@@ -25,7 +25,7 @@ import { accountBalanceSelector, defaultAccountSelector } from '../Account';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import * as format from 'src/utils/format';
 import convert from 'src/utils/convert';
-import { compact } from 'lodash';
+import { compact, reverse } from 'lodash';
 import BigNumber from 'bignumber.js';
 
 export const tokenSelector = createSelector(
@@ -78,12 +78,13 @@ export const pCustomTokensSelector = createSelector(
 
 export const followedTokensIdsSelector = createSelector(
   defaultAccountSelector,
-  (defaultAccount: AccountInstance) => (excludePRV = true) =>
-    defaultAccount
-      ? excludePRV
-        ? defaultAccount.privacyTokenIds
-        : [COINS.PRV.id, ...defaultAccount.privacyTokenIds]
-      : []
+  (defaultAccount: AccountInstance) => (excludePRV = true) => {
+    if (!defaultAccount) {
+      return [];
+    }
+    const privacyTokenIds = reverse([...defaultAccount.privacyTokenIds]);
+    return excludePRV ? privacyTokenIds : [COINS.PRV.id, ...privacyTokenIds];
+  }
 );
 
 export const findPTokenBySymbolSelector = createSelector(
@@ -221,9 +222,7 @@ export const availableTokensSelector = createSelector(
     let tokens: ISelectedPrivacy[] = allTokenIds
       .map((tokenId: string) => getPrivacyDataByTokenID(tokenId))
       .filter((token) => token?.name && token?.symbol && token.tokenId);
-    const excludeRPV = (token: ISelectedPrivacy) =>
-      token?.tokenId !== COINS.PRV.id;
-    return uniqBy(tokens.filter(excludeRPV), 'tokenId') || [];
+    return uniqBy(tokens, 'tokenId') || [];
   }
 );
 

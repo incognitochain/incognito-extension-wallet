@@ -80,6 +80,7 @@ export interface ILanguage {
     };
     addToken: {
       headerTitle: string;
+      added: string;
     };
     detail: {
       headerTitle: string;
