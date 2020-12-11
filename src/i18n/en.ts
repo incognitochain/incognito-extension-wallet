@@ -1,6 +1,6 @@
 import { ILanguage } from '.';
 
-const en: ILanguage | any = {
+const en: ILanguage = {
   general: {
     copied: 'Copied',
     copy: 'Copy',
@@ -69,7 +69,7 @@ const en: ILanguage | any = {
     },
     addToken: {
       headerTitle: 'Add a coin',
-      added: 'Added'
+      added: 'Added',
     },
     detail: {
       headerTitle: '',
@@ -103,8 +103,23 @@ const en: ILanguage | any = {
     fee: 'Fee',
     memo: 'Memo',
     placeholderMemo: 'Add a note (optional)',
-    send: 'Send',
-    sending: '',
+    confirm: {
+      headerTitle: 'Back',
+      txId: 'TxID',
+      fee: 'Fee',
+      time: 'Time',
+      toAddress: 'To address',
+      amount: 'Amount',
+    },
+  },
+  history: {
+    headerTitle: 'History',
+    id: 'ID',
+    fee: 'Fee',
+    status: 'Status',
+    time: 'Time',
+    toAddress: 'To address',
+    coin: 'Coin',
   },
 };
 

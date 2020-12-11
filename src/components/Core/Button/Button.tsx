@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/routes/Configs';
+import { themeSelector } from 'src/module/Configs';
 import { COLORS, FONT_SIZES, ITheme } from 'src/styles';
 import styled from 'styled-components';
 

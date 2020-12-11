@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
 import { FONT_SIZES } from 'src/styles';
-import { BtnSelectAccount } from 'src/routes/Account/features/SelectAccount';
+import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import withHeader, { TInter, TOutter } from './Header.enhance';
 
 const Styled = styled.div`

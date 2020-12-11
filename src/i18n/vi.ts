@@ -1,6 +1,6 @@
 import { ILanguage } from '.';
 
-const vi: ILanguage | any = {
+const vi: ILanguage = {
   general: {
     copied: 'Copied',
     copy: 'Copy',
@@ -103,6 +103,23 @@ const vi: ILanguage | any = {
     fee: 'Fee',
     memo: 'Memo',
     placeholderMemo: 'Add a note (optional)',
+    confirm: {
+      headerTitle: 'Back',
+      txId: 'TxID',
+      fee: 'Fee',
+      time: 'Time',
+      toAddress: 'To address',
+      amount: 'Amount',
+    },
+  },
+  history: {
+    headerTitle: 'History',
+    id: 'ID',
+    fee: 'Fee',
+    status: 'Status',
+    time: 'Time',
+    toAddress: 'To address',
+    coin: 'Coin',
   },
 };
 

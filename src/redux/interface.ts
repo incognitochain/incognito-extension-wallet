@@ -1,13 +1,14 @@
-import { IHomeReducer } from 'src/routes/Home';
-import { IPreloadReducer } from 'src/routes/Preload';
-import { ITokenReducer } from 'src/routes/Token';
-import { IWalletReducer } from 'src/routes/Wallet';
-import { IConfigsReducer } from 'src/routes/Configs';
-import { IAccountReducer } from 'src/routes/Account';
+import { IHomeReducer } from 'src/module/Home';
+import { IPreloadReducer } from 'src/module/Preload';
+import { ITokenReducer } from 'src/module/Token';
+import { IWalletReducer } from 'src/module/Wallet';
+import { IConfigsReducer } from 'src/module/Configs';
+import { IAccountReducer } from 'src/module/Account';
 import { IModalReducer } from 'src/components/Modal';
 import { IToastReducer } from 'src/components';
-import { ISettingReducer } from 'src/routes/Setting';
-import { ISendReducer } from 'src/routes/Send';
+import { ISettingReducer } from 'src/module/Setting';
+import { ISendReducer } from 'src/module/Send';
+import { IHistoryReducer } from 'src/module/History';
 
 export interface IAction {
   type: string;
@@ -25,4 +26,5 @@ export interface IRootState {
   toast: IToastReducer;
   setting: ISettingReducer;
   send: ISendReducer;
+  history: IHistoryReducer;
 }

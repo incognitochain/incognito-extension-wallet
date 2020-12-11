@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import withApp from './App.enhance';
 import { Router, Route, Switch } from 'react-router-dom';
 import { GlobalStyled } from 'src/styles/index';
-import routes, { IRouteProps } from 'src/routes';
+import routes, { IRouteProps } from 'src/module';
 import { createMemoryHistory, createBrowserHistory } from 'history';
 import { isDev } from 'src/configs';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import { ThemeProvider } from 'styled-components';
 import 'animate.css';
 import './reset.scss';
 import { Toast } from './components';
-import { themeSelector } from './routes/Configs';
+import { themeSelector } from './module/Configs';
 
 const history = isDev ? createBrowserHistory() : createMemoryHistory(); // Instead of createBrowserHistory();
 
