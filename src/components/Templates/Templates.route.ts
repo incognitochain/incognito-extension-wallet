@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { IRouteProps } from 'src/routes';
+import { IRouteProps } from 'src/module';
 
 const templatesRoute: IRouteProps = {
   path: '/templates',

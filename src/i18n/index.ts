@@ -10,8 +10,28 @@ export interface ISendLanguage {
   fee: string;
   memo: string;
   placeholderMemo: string;
+  confirm: {
+    headerTitle: string;
+    txId: string;
+    fee: string;
+    time: string;
+    toAddress: string;
+    amount: string;
+  };
 }
+
+export interface IHistoryLanguage {
+  headerTitle: string;
+  id: string;
+  fee: string;
+  status: string;
+  time: string;
+  toAddress: string;
+  coin: string;
+}
+
 export interface ILanguage {
+  [key: string]: any;
   general: {
     copied: string;
     copy: string;
@@ -106,6 +126,7 @@ export interface ILanguage {
       homeConfigs: string;
     };
   };
+  history: IHistoryLanguage;
   send: ISendLanguage;
 }
 
