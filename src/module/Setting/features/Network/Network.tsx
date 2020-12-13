@@ -68,7 +68,7 @@ const Network = (props: IProps) => {
   };
   return (
     <Styled>
-      <Header title={networkTranslate.headerTitle} />
+      <Header title={networkTranslate.title} />
       {DEFAULT_LIST_SERVER.map((server) => (
         <NetworkItem
           key={server.id}

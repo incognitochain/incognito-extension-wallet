@@ -16,7 +16,7 @@ export interface IWalletReducer {
   mainnet: IWallet;
   testnet: IWallet;
   loaded: boolean;
-  wallet: any;
+  wallet: WalletInstance | any;
 }
 
 const initialState: IWalletReducer = {

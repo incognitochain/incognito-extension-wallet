@@ -9,12 +9,15 @@ interface IProps {
   };
 }
 
-export const Input = (props: any) => {
+export const Input = (
+  props: React.InputHTMLAttributes<HTMLInputElement> & any
+) => {
   const {
     input: { value, onChange, onFocus },
     componentProps,
     rightLabel,
   } = props;
+  const readOnly = !!componentProps?.readOnly;
   return (
     <div className='input-container'>
       <input
@@ -22,6 +25,7 @@ export const Input = (props: any) => {
         value={value}
         onChange={onChange}
         onFocus={onFocus}
+        className={`fw-medium fs-medium ${readOnly && 'readonly'}`}
         {...componentProps}
       />
       {rightLabel}
@@ -29,15 +33,22 @@ export const Input = (props: any) => {
   );
 };
 
-const InputField = (props: any & IProps & React.FunctionComponent) => {
+const InputField = (
+  props: React.InputHTMLAttributes<HTMLInputElement> &
+    IProps &
+    React.FunctionComponent &
+    any
+) => {
   const { meta, label, ...rest } = props;
   const { error, warning } = meta;
   return (
     <Styled>
-      <label>{label}</label>
+      <label className='fw-bold fs-medium'>{label}</label>
       <Input {...rest} />
-      {(error && <span className='error'>{error}</span>) ||
-        (warning && <span className='warning'>{warning}</span>)}
+      {(error && <span className='error fs-small fw-regular'>{error}</span>) ||
+        (warning && (
+          <span className='warning fs-small fw-regular'>{warning}</span>
+        ))}
     </Styled>
   );
 };

@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Header } from 'src/components';
 import { ILanguage } from 'src/i18n';
-
 import { translateSelector } from 'src/module/Configs';
 import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';

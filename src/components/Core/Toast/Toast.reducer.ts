@@ -1,3 +1,4 @@
+import Exception from 'src/http/exception/ex';
 import { IObject } from 'src/utils';
 import { ACTION_TOGGLE_TOAST } from './Toast.constant';
 
@@ -16,7 +17,7 @@ export const TOAST_CONFIGS_CLASSNAME: IObject = {
 };
 
 export interface IToastReducer {
-  value: string;
+  value: any;
   type: number;
   toggle: boolean;
 }
@@ -36,9 +37,25 @@ const reducer = (
 ) => {
   switch (action.type) {
     case ACTION_TOGGLE_TOAST: {
+      let {
+        type,
+        toggle,
+        value,
+      }: {
+        type: number;
+        toggle: boolean;
+        value: any;
+      } = action.payload;
+      if (type === TOAST_CONFIGS.error) {
+        if (value instanceof Error) {
+          value = value?.message || JSON.stringify(value);
+        }
+      }
       return {
         ...state,
-        ...action.payload,
+        type,
+        toggle,
+        value,
       };
     }
     default:

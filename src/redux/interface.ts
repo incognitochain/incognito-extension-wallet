@@ -9,6 +9,7 @@ import { IToastReducer } from 'src/components';
 import { ISettingReducer } from 'src/module/Setting';
 import { ISendReducer } from 'src/module/Send';
 import { IHistoryReducer } from 'src/module/History';
+import { IAddressBookReducer } from 'src/module/AddressBook';
 
 export interface IAction {
   type: string;
@@ -27,4 +28,5 @@ export interface IRootState {
   setting: ISettingReducer;
   send: ISendReducer;
   history: IHistoryReducer;
+  addressBook: IAddressBookReducer;
 }
