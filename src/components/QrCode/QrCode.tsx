@@ -60,7 +60,7 @@ const QrCode = (props: IProps & BaseQRCodeProps) => {
         <Button
           title={state.copied ? copied : copy}
           onClick={handleCopy}
-          className='btn-copy fontsize-regular fontweight-medium'
+          className='btn-copy fs-regular fw-medium'
         ></Button>
       </div>
     </Styled>

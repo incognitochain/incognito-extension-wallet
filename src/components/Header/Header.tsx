@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FaAngleLeft } from 'react-icons/fa';
 import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
-import withHeader, { TInter, TOutter } from './Header.enhance';
+import withHeader, { IMergeProps } from './Header.enhance';
 
 const Styled = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ const Styled = styled.div`
   }
 `;
 
-const Header = (props: TInter & TOutter) => {
+const Header = (props: IMergeProps) => {
   const { rightHeader, selectAccount, handleClick, renderHeaderTitle } = props;
   return (
     <Styled className='header'>

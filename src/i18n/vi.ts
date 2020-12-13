@@ -88,11 +88,15 @@ const vi: ILanguage = {
   setting: {
     headerTitle: 'Settings',
     network: {
-      headerTitle: 'Network',
+      title: 'Network',
     },
     dev: {
-      headerTitle: 'Dev Sections',
+      title: 'Dev Sections',
       homeConfigs: 'Use staging home configs',
+    },
+    addressBook: {
+      title: 'Address Book',
+      desc: 'Manage your saved addresses',
     },
   },
   send: {
@@ -120,6 +124,21 @@ const vi: ILanguage = {
     time: 'Time',
     toAddress: 'To address',
     coin: 'Coin',
+  },
+  addressBook: {
+    headerTitle: 'Address book',
+    name: 'Name',
+    address: 'Address',
+    networkName: 'Network',
+    btnCreate: 'Create',
+    btnEdit: 'Edit',
+    btnRemove: 'Remove',
+    msgExist: 'Address book is exist!',
+    keychains: 'Your keychains',
+    incognito: 'Incognito addresses',
+    external: 'External addresses',
+    headerTitleCreate: 'Create',
+    headerTitleEdit: 'Edit',
   },
 };
 

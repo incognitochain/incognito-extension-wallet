@@ -18,15 +18,12 @@ const Styled = styled.button`
   height: 50px;
   margin: auto;
   padding: 0 20px;
-  font-size: ${FONT_SIZES.medium}px;
-  line-height: ${FONT_SIZES.medium + 3}px;
-  font-weight: 500;
   background-color: ${(props: { theme: ITheme }) => props.theme.button};
   color: ${(props: { theme: ITheme }) => props.theme.text};
   p.btn-title {
   }
   &.btn-disabled {
-    background-color: ${COLORS.colorGreyMedium};
+    background-color: ${COLORS.colorGreyLight};
   }
 `;
 
@@ -38,7 +35,9 @@ const Button = (
   return (
     <Styled
       theme={theme}
-      className={`btn-container ${disabled ? 'btn-disabled' : ''} ${className}`}
+      className={`btn-container ${
+        disabled ? 'btn-disabled' : ''
+      } ${className} fw-bold fs-medium`}
       {...rest}
     >
       {!!customContent ? customContent : title}

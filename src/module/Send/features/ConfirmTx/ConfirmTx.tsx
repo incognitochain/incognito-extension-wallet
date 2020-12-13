@@ -69,7 +69,7 @@ const ConfirmTx = (props: IProps) => {
   return (
     <Styled>
       <Header title={`Confirm Tx`} />
-      <p className='title fontweight-bold fontsize-supermedium center-text'>
+      <p className='title fw-bold fs-supermedium center-text'>
         Sent.
       </p>
       {itemsFactories.map((item: IHistoryItem) => (

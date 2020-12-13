@@ -1,14 +1,14 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { compose } from 'recompose';
 import { useHistory } from 'react-router-dom';
 import SearchBox from './Header.searchBox';
 
-export interface TOutter {
+export interface TInner {
   handleClick: () => void;
   renderHeaderTitle: () => void;
 }
 
-export interface TInter {
+export interface IProps {
   title: string;
   onGoBack?: () => void;
   rightHeader?: React.FunctionComponent;
@@ -16,8 +16,10 @@ export interface TInter {
   canSearch?: boolean;
 }
 
+export interface IMergeProps extends TInner, IProps {}
+
 const enhance = (WrappedComponent: React.FunctionComponent) => (
-  props: TInter & { children?: ReactNode }
+  props: IProps & any
 ) => {
   const { canSearch = false, onGoBack, title } = props;
   const [state, setState] = React.useState({
@@ -61,4 +63,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
   );
 };
 
-export default compose<TInter & TOutter, any>(enhance);
+export default compose<IMergeProps, any>(enhance);

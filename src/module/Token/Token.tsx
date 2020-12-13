@@ -22,7 +22,7 @@ export const Name = React.memo((props: ITokenChildProps) => {
   );
   return (
     <NameStyled className={classNameCustom}>
-      <TextStyled className='fontsize-medium fontweight-bold ellipsis'>
+      <TextStyled className='fs-medium fw-bold ellipsis'>
         {token.name}
       </TextStyled>
       {token?.isVerified && (
@@ -41,7 +41,7 @@ export const Amount = React.memo((props: ITokenChildProps) => {
   );
   return (
     <AmountStyled className={classNameCustom}>
-      <TextStyled className='fontsize-medium fontweight-bold right-text ellipsis'>{`${
+      <TextStyled className='fs-medium fw-bold right-text ellipsis'>{`${
         token.formatAmount
       } ${token.symbol || token?.pSymbol}`}</TextStyled>
     </AmountStyled>
@@ -55,7 +55,7 @@ export const Balance = React.memo((props: ITokenChildProps) => {
   );
   return (
     <BalanceStyled className={classNameCustom}>
-      <TextStyled className='fontsize-medium fontweight-medium right-text ellipsis'>
+      <TextStyled className='fs-medium fw-medium right-text ellipsis'>
         {`$${token.formatBalanceByUsd}`}
       </TextStyled>
     </BalanceStyled>
@@ -69,7 +69,7 @@ export const Price = React.memo((props: ITokenChildProps) => {
   );
   return (
     <BalanceStyled className={classNameCustom}>
-      <TextStyled className='fontsize-medium fontweight-medium  ellipsis'>{`$${token.formatPriceByUsd}`}</TextStyled>
+      <TextStyled className='fs-medium fw-medium  ellipsis'>{`$${token.formatPriceByUsd}`}</TextStyled>
     </BalanceStyled>
   );
 });
@@ -83,7 +83,7 @@ export const Followed = React.memo((props: ITokenChildProps) => {
   const addTokenTs = translate.token.addToken;
   if (token.isFollowed) {
     return (
-      <TextStyled className='fontsize-medium fontweight-normal'>
+      <TextStyled className='fs-medium fw-normal'>
         {addTokenTs.added}
       </TextStyled>
     );
@@ -97,7 +97,7 @@ export const Symbol = React.memo((props: ITokenChildProps) => {
     tokenId
   );
   return (
-    <TextStyled className='fontsize-medium fontweight-medium  ellipsis'>
+    <TextStyled className='fs-medium fw-medium  ellipsis'>
       {token.symbol || token.pSymbol}
     </TextStyled>
   );

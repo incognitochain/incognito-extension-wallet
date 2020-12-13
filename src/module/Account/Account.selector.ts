@@ -1,6 +1,10 @@
-import { AccountInstance } from 'incognito-js/build/web/browser';
+import {
+  AccountInstance,
+  WalletInstance,
+} from 'incognito-js/build/web/browser';
 import memoize from 'lodash/memoize';
 import isEmpty from 'lodash/isEmpty';
+import { walletDataSelector } from 'src/module/Wallet';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
 import { IAccountReducer } from './Account.interface';

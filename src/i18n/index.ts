@@ -1,34 +1,12 @@
 import { IObject } from 'src/utils';
+import {
+  ISendLanguage,
+  IHistoryLanguage,
+  IAddressBookLanguage,
+  ISettingLanguage,
+} from './interface';
 import en from './en';
 import vi from './vi';
-
-export interface ISendLanguage {
-  headerTitle: string;
-  amount: string;
-  toAddress: string;
-  incognitoAddress: string;
-  fee: string;
-  memo: string;
-  placeholderMemo: string;
-  confirm: {
-    headerTitle: string;
-    txId: string;
-    fee: string;
-    time: string;
-    toAddress: string;
-    amount: string;
-  };
-}
-
-export interface IHistoryLanguage {
-  headerTitle: string;
-  id: string;
-  fee: string;
-  status: string;
-  time: string;
-  toAddress: string;
-  coin: string;
-}
 
 export interface ILanguage {
   [key: string]: any;
@@ -116,18 +94,10 @@ export interface ILanguage {
       accountNotExisted: string;
     };
   };
-  setting: {
-    headerTitle: string;
-    network: {
-      headerTitle: string;
-    };
-    dev: {
-      headerTitle: string;
-      homeConfigs: string;
-    };
-  };
+  setting: ISettingLanguage;
   history: IHistoryLanguage;
   send: ISendLanguage;
+  addressBook: IAddressBookLanguage;
 }
 
 export const translateByLanguage = (language: string) => {

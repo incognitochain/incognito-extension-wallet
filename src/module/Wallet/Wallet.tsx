@@ -68,10 +68,10 @@ const TotalShield = () => {
   const { btnShield, totalShielded } = translate.wallet.blockShield;
   return (
     <div className='total-shield'>
-      <p className='fontsize-verylarge fontweight-medium center-text'>
+      <p className='fs-verylarge fw-medium center-text'>
         {`$${totalShield.formatTotalAmountUSD}`}
       </p>
-      <p className='fontsize-regular fontweight-medium center-text'>
+      <p className='fs-regular fw-medium center-text'>
         {totalShielded}
       </p>
       <Button title={btnShield}></Button>

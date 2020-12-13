@@ -27,6 +27,7 @@ export const configStore = (preloadedState: any = {}) => {
       'token',
       'setting',
       'history',
+      'addressBook',
     ],
   };
   const persistedReducer = persistReducer(persistConfig, reducers);

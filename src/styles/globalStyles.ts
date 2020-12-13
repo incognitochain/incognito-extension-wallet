@@ -77,32 +77,36 @@ export const GlobalStyled = createGlobalStyle`
         font-display: swap;
         font-weight: 200;
     }
-    .fontweight-regular{
+    .fw-regular{
         font-weight: 100;
     }
-    .fontweight-medium{
+    .fw-medium{
         font-weight: 200;
     }
-    .fontweight-bold {
+    .fw-bold {
         font-weight: 500;
     }
-    .fontsize-regular {
+    .fs-small {
+        font-size: ${FONT_SIZES.small}px;
+        line-height: ${FONT_SIZES.small + 5}px;
+    }
+    .fs-regular {
         font-size: ${FONT_SIZES.regular}px;
         line-height: ${FONT_SIZES.regular + 5}px;
     }
-    .fontsize-medium {
+    .fs-medium {
         font-size: ${FONT_SIZES.medium}px;
         line-height: ${FONT_SIZES.medium + 5}px;
     }
-    .fontsize-supermedium {
+    .fs-supermedium {
         font-size: ${FONT_SIZES.superMedium}px;
         line-height: ${FONT_SIZES.superMedium + 5}px;
     }
-    .fontsize-large{
+    .fs-large{
         font-size: ${FONT_SIZES.large}px;
         line-height: ${FONT_SIZES.large + 5}px;
     }
-    .fontsize-verylarge{
+    .fs-verylarge{
         font-size: ${FONT_SIZES.veryLarge}px;
         line-height: ${FONT_SIZES.veryLarge + 5}px;
     }
