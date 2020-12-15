@@ -1,6 +1,6 @@
 import lowerCase from 'lodash/lowerCase';
 import { useSelector } from 'react-redux';
-import { required } from 'src/components/ReduxForm';
+import { validator } from 'src/components/ReduxForm';
 import { formValueSelector, isValid } from 'redux-form';
 import trim from 'lodash/trim';
 import { listAccountSelector } from './Account.selector';
@@ -31,7 +31,7 @@ export const useAccount = (props: IProps) => {
     (account) => lowerCase(account?.name) === accountNameToLowercase
   );
   const getPrivateKeyValidator = () => {
-    const validate = [required];
+    const validate = [validator.required];
     return validate;
   };
   return {

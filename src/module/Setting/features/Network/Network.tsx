@@ -6,7 +6,7 @@ import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
 import { actionSetConfigs, actionSetServer } from 'src/module/Preload';
 import { DEFAULT_LIST_SERVER, IServer } from 'src/services';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 import styled from 'styled-components';
 
 interface IProps {}

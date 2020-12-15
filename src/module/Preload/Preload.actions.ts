@@ -26,6 +26,7 @@ import {
   actionFetchPTokenList,
 } from 'src/module//Token';
 import { IServer } from 'src/services';
+import { loadSeparator } from 'src/utils/separator';
 
 export const actionFetching = () => ({
   type: ACTION_FETCHING,
@@ -49,6 +50,7 @@ export const actionFetch = () => async (
   const init = walletState[field].init;
   try {
     await dispatch(actionFetching());
+    loadSeparator();
     storageService.implement({
       setMethod: async (key: string, data: any) => {
         return localStorage.setItem(key, data);

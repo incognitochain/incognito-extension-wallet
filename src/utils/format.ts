@@ -2,14 +2,13 @@ import { BigNumber } from 'bignumber.js';
 import convert from './convert';
 import floor from 'lodash/floor';
 import moment from 'moment';
+import { getGroupSeparator, getDecimalSeparator } from './separator';
 interface IAmount {
   originalAmount?: number;
   humanAmount?: number;
   decimals: number;
   clipAmount?: boolean;
   decimalDigits?: boolean;
-  decimalSeparator: string;
-  groupSeparator: string;
   maxDigits?: number;
 }
 
@@ -17,12 +16,11 @@ interface IAmountFromHunman {}
 
 export const removeTrailingZeroes = ({
   amountString,
-  decimalSeparator,
 }: {
   amountString: string;
-  decimalSeparator: string;
 }) => {
   let formattedString = amountString;
+  const decimalSeparator = getDecimalSeparator();
   while (
     formattedString.length > 0 &&
     ((formattedString.includes(decimalSeparator) &&
@@ -77,16 +75,18 @@ export const getMaxDecimalDigits: (payload: IMaxDigits) => number = (
 interface IToFixed {
   number: number;
   decimals: number;
-  decimalSeparator: string;
 }
 
 export const toFixed: (payload: IToFixed) => string = (payload: IToFixed) => {
-  const { number, decimals, decimalSeparator } = payload;
+  const decimalSeparator = getDecimalSeparator();
+  const { number, decimals } = payload;
   const bigNumber = new BigNumber(number);
   if (bigNumber.isNaN()) {
     return '0';
   }
-  return bigNumber.toFixed(decimals).replace('.', decimalSeparator);
+  return removeTrailingZeroes({
+    amountString: bigNumber.toFixed(decimals).replace('.', decimalSeparator),
+  });
 };
 
 export const formatAmount: (payload: IAmount) => string = (
@@ -96,11 +96,11 @@ export const formatAmount: (payload: IAmount) => string = (
     originalAmount,
     humanAmount,
     decimals,
-    decimalSeparator,
-    groupSeparator,
     clipAmount = true,
     decimalDigits = true,
   } = payload;
+  const decimalSeparator = getDecimalSeparator();
+  const groupSeparator = getGroupSeparator();
   const fmt = {
     decimalSeparator,
     groupSeparator,
@@ -129,7 +129,6 @@ export const formatAmount: (payload: IAmount) => string = (
     const fixedString = toFixed({
       number: fixedNumber,
       decimals,
-      decimalSeparator,
     });
     const amountString = new BigNumber(fixedString).toFormat(
       maxDigits,
@@ -138,7 +137,6 @@ export const formatAmount: (payload: IAmount) => string = (
     );
     formatAmount = removeTrailingZeroes({
       amountString,
-      decimalSeparator,
     });
   } catch (error) {
     formatAmount = '0';
@@ -158,9 +156,21 @@ export const formatAmountFromHunman: (payload: IAmountFromHunman) => string = (
   return '';
 };
 
+export const number = (num: number) => {
+  const fmt = {
+    decimalSeparator: getDecimalSeparator(),
+    groupSeparator: getGroupSeparator(),
+    groupSize: 3,
+  };
+  const rs = new BigNumber(num);
+  return rs.isFinite() ? rs.toFormat(fmt) : num;
+};
+
 const format = {
   formatAmount,
   formatUnixDateTime,
+  number,
+  toFixed,
 };
 
 export default format;

@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import findIndex from 'lodash/findIndex';
 import { CONSTANT_KEYS } from 'src/constants';
+import { DECIMAL_SEPARATOR } from 'src/utils/separator';
 
 export const KEY_SAVE = {
   USER: CONSTANT_KEYS.USER,
@@ -160,12 +161,12 @@ export const savePIN = (newPin: any) => {
   setItem(KEY_SAVE.PIN, newPin);
 };
 
-export const saveDecimalSeparator = (separator: string) => {
+export const saveLocalDecimalSeparator = (separator: string) => {
   return setItem(KEY_SAVE.DECIMAL_SEPARATOR, separator);
 };
 
-export const getDecimalSeparator = () => {
-  return getItem(KEY_SAVE.DECIMAL_SEPARATOR);
+export const getLocalDecimalSeparator = () => {
+  return getItem(KEY_SAVE.DECIMAL_SEPARATOR) || DECIMAL_SEPARATOR;
 };
 
 export const saveVerifyCode = (verifyCode: string) => {

@@ -3,14 +3,18 @@ export const TESTNET_FULLNODE = 'https://testnet.incognito.org/fullnode';
 export const TESTNET1_FULLNODE = 'http://51.83.36.184:20002/fullnode';
 export const PRODUCTION_API = 'https://api-service.incognito.org';
 export const STAGING_API = 'https://staging-api-service.incognito.org';
+export const PRODUCTION_API_2 = 'https://device-network.incognito.org';
+export const STAGING_API_2 = 'https://device-network-staging.incognito.org';
+
 export interface IServer {
   id: string;
   default?: boolean;
   address: string;
   name: string;
-  chainURL?: string;
-  apiURL?: string;
-  exploreChainURL?: string;
+  chainURL: string;
+  apiURL: string;
+  exploreChainURL: string;
+  api2URL: string;
 }
 
 export const TEST_NODE_SERVER = {
@@ -27,6 +31,7 @@ export const MAINNET_SERVER: IServer = {
   name: 'Mainnet',
   chainURL: MAINNET_FULLNODE,
   apiURL: PRODUCTION_API,
+  api2URL: PRODUCTION_API_2,
   exploreChainURL: 'https://mainnet.incognito.org',
 };
 
@@ -37,14 +42,19 @@ export const TESTNET_SERVER: IServer = {
   name: 'Testnet',
   chainURL: TESTNET_FULLNODE,
   apiURL: STAGING_API,
+  api2URL: STAGING_API_2,
   exploreChainURL: 'https://testnet.incognito.org',
 };
 
-export const LOCAL_SERVER = {
+export const LOCAL_SERVER: IServer = {
   id: 'local',
   default: false,
   address: 'http://localhost:9334',
   name: 'Local',
+  chainURL: '',
+  apiURL: '',
+  api2URL: '',
+  exploreChainURL: '',
 };
 
 export const TEST_NET_1_SERVER = {
@@ -58,6 +68,4 @@ export const DEFAULT_LIST_SERVER = [
   LOCAL_SERVER,
   MAINNET_SERVER,
   TESTNET_SERVER,
-  // TEST_NODE_SERVER,
-  // TEST_NET_1_SERVER,
 ];

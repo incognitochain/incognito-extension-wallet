@@ -2,10 +2,6 @@ import BigNumber from 'bignumber.js';
 import { TxHistoryModelParam, CONSTANT } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
 import { keySetAccountSelector } from 'src/module/Account';
-import {
-  decimalSeparatorSelector,
-  groupSeparatorSelector,
-} from 'src/module/Preload';
 import { IRootState } from 'src/redux/interface';
 import { isEmpty } from 'lodash';
 import { formatAmount, formatUnixDateTime } from 'src/utils';
@@ -29,10 +25,8 @@ export const historyCacheSelector = createSelector(
 export const historyCacheDataSelector = createSelector(
   historyCacheSelector,
   selectedPrivacySelector,
-  decimalSeparatorSelector,
-  groupSeparatorSelector,
   keySetAccountSelector,
-  (history, selectedPrivacy, decimalSeparator, groupSeparator, keySet) => {
+  (history, selectedPrivacy, keySet) => {
     const histories = history.histories;
     if (!histories) {
       return [];
@@ -74,14 +68,10 @@ export const historyCacheDataSelector = createSelector(
           : selectedPrivacy.symbol || selectedPrivacy.pSymbol;
         const amountFormated = formatAmount({
           originalAmount: new BigNumber(amount).toNumber(),
-          decimalSeparator,
-          groupSeparator,
           decimals: selectedPrivacy?.pDecimals,
         });
         const feeFormated = formatAmount({
           originalAmount: new BigNumber(fee).toNumber(),
-          decimalSeparator,
-          groupSeparator,
           decimals: selectedPrivacy?.pDecimals,
           decimalDigits: false,
         });

@@ -54,21 +54,13 @@ export const getPrice = ({
 interface IGetFormatAmountByUSD {
   amount: number;
   priceUsd: number;
-  decimalSeparator: string;
   decimals?: number;
-  groupSeparator: string;
 }
 
 export const getFormatAmountByUSD: (
   payload: IGetFormatAmountByUSD
 ) => string = (payload: IGetFormatAmountByUSD) => {
-  const {
-    amount,
-    priceUsd,
-    decimalSeparator,
-    decimals = 6,
-    groupSeparator,
-  } = payload;
+  const { amount, priceUsd, decimals = 6 } = payload;
   let formatAmount = '0';
   try {
     const bnHumanAmount = new BigNumber(amount)
@@ -77,14 +69,11 @@ export const getFormatAmountByUSD: (
       .toString();
     const originalAmount = convert.toOriginalAmount({
       humanAmount: String(bnHumanAmount),
-      decimalSeparator,
       decimals,
     });
     formatAmount = format.formatAmount({
       originalAmount,
-      decimalSeparator,
       decimals,
-      groupSeparator,
     });
   } catch (error) {
     formatAmount = '0';

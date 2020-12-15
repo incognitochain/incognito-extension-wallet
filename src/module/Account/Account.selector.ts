@@ -1,10 +1,6 @@
-import {
-  AccountInstance,
-  WalletInstance,
-} from 'incognito-js/build/web/browser';
+import { AccountInstance } from 'incognito-js/build/web/browser';
 import memoize from 'lodash/memoize';
 import isEmpty from 'lodash/isEmpty';
-import { walletDataSelector } from 'src/module/Wallet';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
 import { IAccountReducer } from './Account.interface';
@@ -53,7 +49,9 @@ export const defaultAccountSelector = createSelector(
 
 export const isGettingAccountBalanceSelector = createSelector(
   accountSelector,
-  (account) => account.gettingBalance.length !== 0
+  defaultAccountSelector,
+  (account: IAccountReducer, defaultAccount: AccountInstance) =>
+    account.gettingBalance.includes(defaultAccount.name)
 );
 
 export const switchAccountSelector = createSelector(
