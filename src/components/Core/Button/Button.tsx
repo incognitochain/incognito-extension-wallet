@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { themeSelector } from 'src/module/Configs';
-import { COLORS, FONT_SIZES, ITheme } from 'src/styles';
+import { COLORS, ITheme } from 'src/styles';
 import styled from 'styled-components';
 
 interface IProps {
@@ -19,7 +19,7 @@ const Styled = styled.button`
   margin: auto;
   padding: 0 20px;
   background-color: ${(props: { theme: ITheme }) => props.theme.button};
-  color: ${(props: { theme: ITheme }) => props.theme.text};
+  color: ${(props: { theme: ITheme }) => props.theme.textButton};
   p.btn-title {
   }
   &.btn-disabled {

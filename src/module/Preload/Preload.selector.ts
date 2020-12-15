@@ -6,11 +6,6 @@ export const preloadSelector = createSelector(
   (preload) => preload
 );
 
-export const apiURLSelector = createSelector(
-  preloadSelector,
-  (preload) => preload.configs.apiURL
-);
-
 export const chainURLSelector = createSelector(
   preloadSelector,
   (preload) => preload.configs.chainURL
@@ -21,17 +16,17 @@ export const isMainnetSelector = createSelector(
   (preload) => preload.configs.mainnet
 );
 
-export const decimalSeparatorSelector = createSelector(
-  preloadSelector,
-  (preload) => preload.decimalSeparator
-);
-
-export const groupSeparatorSelector = createSelector(
-  preloadSelector,
-  (preload) => preload.groupSeparator
-);
-
 export const serverSelector = createSelector(
   preloadSelector,
   (preload) => preload.server || {}
+);
+
+export const apiURLSelector = createSelector(
+  serverSelector,
+  (server) => server.apiURL
+);
+
+export const apiURL2Selector = createSelector(
+  serverSelector,
+  (server) => server.api2URL
 );

@@ -12,7 +12,6 @@ import {
 } from 'src/module/History';
 import { serverSelector } from 'src/module/Preload';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { ISendLanguage } from 'src/i18n';
 
 interface IProps {}
 
@@ -69,9 +68,7 @@ const ConfirmTx = (props: IProps) => {
   return (
     <Styled>
       <Header title={`Confirm Tx`} />
-      <p className='title fw-bold fs-supermedium center-text'>
-        Sent.
-      </p>
+      <p className='title fw-bold fs-supermedium center-text'>Sent.</p>
       {itemsFactories.map((item: IHistoryItem) => (
         <HistoryItem key={item.title} {...item} />
       ))}

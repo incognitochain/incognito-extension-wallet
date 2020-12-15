@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { CONSTANT_CONFIGS } from 'src/constants';
 import { CustomError, ErrorCode, ExHandler } from './exception';
 
 const HEADERS = { 'Content-Type': 'application/json' };
@@ -7,7 +6,6 @@ const TIMEOUT = 20000;
 let currentAccessToken = '';
 
 const instance = axios.create({
-  // baseURL: CONSTANT_CONFIGS.API_BASE_URL,
   timeout: TIMEOUT,
   headers: {
     ...HEADERS,

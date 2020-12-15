@@ -7,6 +7,7 @@ import {
 } from './interface';
 import en from './en';
 import vi from './vi';
+export * from './interface';
 
 export interface ILanguage {
   [key: string]: any;

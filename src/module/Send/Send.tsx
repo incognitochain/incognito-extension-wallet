@@ -1,29 +1,30 @@
-import { isNumber } from 'lodash';
-import React, { ChangeEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { change, Field, InjectedFormProps } from 'redux-form';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Field } from 'redux-form';
 import { Button, Header } from 'src/components';
 import { InputField } from 'src/components/ReduxForm';
-import { COINS } from 'src/constants';
 import { ISendLanguage } from 'src/i18n';
-import convert from 'src/utils/convert';
 import format from 'src/utils/format';
 import styled from 'styled-components';
-import { translateByFieldSelector } from '../Configs';
-import { decimalSeparatorSelector, groupSeparatorSelector } from '../Preload';
-import withSend, { FORM_CONFIGS, TOutter } from './Send.enhance';
-import { MAX_FEE_PER_TX } from './Send.utils';
+import { translateByFieldSelector } from 'src/module/Configs';
+import withSend, { IMergeProps } from './Send.enhance';
+import { sendDataSelector } from './Send.selector';
 
 const Styled = styled.div``;
 
-const Send = (props: any & TOutter & InjectedFormProps<{}, TOutter>) => {
+const Send = (props: IMergeProps) => {
   const translate: ISendLanguage = useSelector(translateByFieldSelector)(
     'send'
   );
-  const { handleSubmit, handleSend, disabledForm, submitting } = props;
-  const dispatch = useDispatch();
-  const decimalSeparator = useSelector(decimalSeparatorSelector);
-  const groupSeparator = useSelector(groupSeparatorSelector);
+  const { fee, feePDecimals } = useSelector(sendDataSelector);
+  const {
+    handleSubmit,
+    handleSend,
+    valid,
+    submitting,
+    validateAddress,
+    validateAmount,
+  } = props;
   return (
     <Styled>
       <Header title={translate.headerTitle} />
@@ -32,23 +33,17 @@ const Send = (props: any & TOutter & InjectedFormProps<{}, TOutter>) => {
           component={InputField}
           name='amount'
           label={translate.amount}
+          validate={validateAmount}
           componentProps={{
             autoFocus: true,
             placeholder: '0.0',
-            // onChange: (e: ChangeEvent<HTMLInputElement>) => {
-            //   const value: string = e.target.value;
-            //   if (isNumber(value)) {
-            //     dispatch(
-            //       change(FORM_CONFIGS.formName, FORM_CONFIGS.amount, value)
-            //     );
-            //   }
-            // },
           }}
         />
         <Field
           component={InputField}
           name='toAddress'
           label={translate.toAddress}
+          validate={validateAddress}
           componentProps={{
             placeholder: translate.incognitoAddress,
           }}
@@ -59,10 +54,8 @@ const Send = (props: any & TOutter & InjectedFormProps<{}, TOutter>) => {
           label={translate.fee}
           componentProps={{
             placeholder: format.formatAmount({
-              originalAmount: MAX_FEE_PER_TX,
-              decimals: COINS.PRV.pDecimals,
-              groupSeparator,
-              decimalSeparator,
+              originalAmount: fee,
+              decimals: feePDecimals,
               clipAmount: false,
               decimalDigits: false,
             }),
@@ -79,7 +72,7 @@ const Send = (props: any & TOutter & InjectedFormProps<{}, TOutter>) => {
         />
         <Button
           title={'Send anonymously'}
-          disabled={disabledForm || submitting}
+          disabled={!valid || submitting}
           type='submit'
         />
       </form>

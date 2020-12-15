@@ -3,7 +3,7 @@ import { Field, InjectedFormProps } from 'redux-form';
 import Header from 'src/components/Header';
 import { Styled } from './ImportAccount.styled';
 import withImportAccount from './ImportAccount.enhance';
-import { combinedAccountName, required } from 'src/components/ReduxForm';
+import { validator } from 'src/components/ReduxForm';
 import { TOutter } from './ImportAccount.enhance';
 import InputField from 'src/components/ReduxForm/InputField';
 import { Button } from 'src/components/Core';
@@ -36,7 +36,7 @@ const ImportAccount = (
             }}
             name='accountName'
             label='Keychain name'
-            validate={[...combinedAccountName]}
+            validate={[...validator.combinedAccountName]}
             rightLabel={
               readOnlyName && (
                 <button onClick={handleChangeRandomName}>Edit</button>
@@ -47,7 +47,7 @@ const ImportAccount = (
             component={InputField}
             name='privateKey'
             label='Private Key'
-            validate={[required]}
+            validate={[validator.required]}
             componentProps={{
               autoFocus: true,
               placeholder: 'Enter private key',

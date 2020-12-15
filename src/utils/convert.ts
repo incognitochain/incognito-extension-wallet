@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { getDecimalSeparator } from './separator';
 
 export const checkAmount = (amount: number) => {
   if (!Number.isFinite(amount))
@@ -8,12 +9,11 @@ export const checkAmount = (amount: number) => {
 export const replaceDecimals = ({
   text,
   autoCorrect = false,
-  decimalSeparator,
 }: {
   text: string;
   autoCorrect?: boolean;
-  decimalSeparator: string;
 }) => {
+  const decimalSeparator = getDecimalSeparator();
   if (typeof text !== 'string') {
     return text;
   }
@@ -51,18 +51,15 @@ export const toOriginalAmount = ({
   humanAmount,
   decimals,
   round = true,
-  decimalSeparator,
 }: {
   humanAmount: string;
   decimals: number;
   round?: boolean;
-  decimalSeparator: string;
 }) => {
   let amount = 0;
   try {
     const amountRepDecimals = replaceDecimals({
       text: humanAmount,
-      decimalSeparator,
     });
     const bnAmount = new BigNumber(amountRepDecimals);
     if (bnAmount.isNaN()) {
@@ -80,11 +77,41 @@ export const toOriginalAmount = ({
   return amount;
 };
 
+const toNumber = ({
+  text,
+  autoCorrect = false,
+}: {
+  text: string;
+  autoCorrect?: boolean;
+}) => {
+  const number = replaceDecimals({
+    text,
+    autoCorrect,
+  });
+  return new BigNumber(number).toNumber();
+};
+
+const toString = ({
+  text,
+  autoCorrect = false,
+}: {
+  text: string;
+  autoCorrect?: boolean;
+}) => {
+  const number = replaceDecimals({
+    text,
+    autoCorrect,
+  });
+  return new BigNumber(number).toString();
+};
+
 const convert = {
   checkAmount,
   replaceDecimals,
   toHumanAmount,
   toOriginalAmount,
+  toNumber,
+  toString,
 };
 
 export default convert;

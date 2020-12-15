@@ -26,7 +26,7 @@ export interface ITokenReducer {
   followed: IFollowedToken[];
   pTokens: IPTokenFromApi[];
   pCustomTokens: IPCustomTokenFromApi[];
-  gettingBalance: any[];
+  gettingBalance: string[];
   following: any[];
   toggleUnVerified: boolean;
   mainnet: IEnvToken;

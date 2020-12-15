@@ -5,7 +5,7 @@ import { Button } from 'src/components/Core';
 import withCreateAccount, { TOutter } from './CreateAccount.enhance';
 import { Styled } from './CreateAccount.styled';
 import InputField from 'src/components/ReduxForm/InputField';
-import { combinedAccountName } from 'src/components/ReduxForm';
+import { validator } from 'src/components/ReduxForm';
 
 const CreateAccount = (
   props: any & TOutter & InjectedFormProps<{}, TOutter>
@@ -23,7 +23,7 @@ const CreateAccount = (
           component={InputField}
           name='accountName'
           label='Keychain name'
-          validate={[...combinedAccountName]}
+          validate={[...validator.combinedAccountName]}
           componentProps={{
             autoFocus: true,
             placeholder: 'Keychain name',
