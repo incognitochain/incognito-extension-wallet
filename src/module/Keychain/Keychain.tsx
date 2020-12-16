@@ -1,8 +1,12 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from 'src/components';
-import { IProps, translateSelector } from 'src/module/Configs';
-import { ILanguage } from 'src/i18n';
+import {
+  IProps,
+  translateByFieldSelector,
+  translateSelector,
+} from 'src/module/Configs';
+import { IAccountLanguage, IKeychainLanguage, ILanguage } from 'src/i18n';
 import {
   actionFetchSelectAccount,
   defaultAccountSelector,
@@ -67,20 +71,25 @@ const YourKeychains = React.memo(() => {
 });
 
 const Keychain = (props: IProps) => {
-  const translate: ILanguage = useSelector(translateSelector);
+  const translate: IAccountLanguage = useSelector(translateByFieldSelector)(
+    'account'
+  );
+  const translateKeychain: IKeychainLanguage = useSelector(
+    translateByFieldSelector
+  )('keychain');
   const hookFactories = React.useMemo(
     () => [
       {
-        ...translate.keychain.create,
+        ...translate.create,
         path: '/create-account',
       },
       {
-        ...translate.keychain.import,
+        ...translate.import,
         path: '/import-account',
       },
 
       {
-        ...translate.keychain.backup,
+        ...translate.backup,
         path: '/backup-account',
       },
     ],
@@ -88,7 +97,7 @@ const Keychain = (props: IProps) => {
   );
   return (
     <Styled>
-      <Header title={translate.keychain.headerTitle} />
+      <Header title={translateKeychain.headerTitle} />
       <YourKeychains />
       {hookFactories.map((item) => (
         <Hook {...item} key={item.title} />

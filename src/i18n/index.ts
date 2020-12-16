@@ -4,6 +4,8 @@ import {
   IHistoryLanguage,
   IAddressBookLanguage,
   ISettingLanguage,
+  IAccountLanguage,
+  IKeychainLanguage,
 } from './interface';
 import en from './en';
 import vi from './vi';
@@ -18,45 +20,7 @@ export interface ILanguage {
   home: {
     title: string;
   };
-  keychain: {
-    headerTitle: string;
-    yourKeychain: string;
-    create: {
-      title: string;
-      desc: string;
-    };
-    import: {
-      title: string;
-      desc: string;
-    };
-    backup: {
-      headerTitle: string;
-      title: string;
-      desc: string;
-      copyAll: string;
-      copied: string;
-    };
-    accountDetail: {
-      title1: string;
-      title2: string;
-      title3: string;
-      title4: string;
-      title5: string;
-      title6: string;
-      title7: string;
-      title8: string;
-      keychain: string;
-      delete: string;
-    };
-    error: {
-      create: string;
-      import: string;
-    };
-    success: {
-      create: string;
-      import: string;
-    };
-  };
+  keychain: IKeychainLanguage;
   wallet: {
     headerTitle: string;
     selectAccount: {
@@ -90,11 +54,7 @@ export interface ILanguage {
       tokenIdRequired: string;
     };
   };
-  account: {
-    error: {
-      accountNotExisted: string;
-    };
-  };
+  account: IAccountLanguage;
   setting: ISettingLanguage;
   history: IHistoryLanguage;
   send: ISendLanguage;

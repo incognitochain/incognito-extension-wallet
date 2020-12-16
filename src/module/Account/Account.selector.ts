@@ -29,7 +29,7 @@ export const defaultAccountSelector = createSelector(
   defaultAccountNameSelector,
   (state: IRootState) => state.wallet,
   (list, defaultAccountName, walletState) => {
-    let account;
+    let account: any= {};
     const { loaded } = walletState;
     if (!loaded) {
       return null;
@@ -84,5 +84,10 @@ export const accountBalanceSelector = createSelector(
 
 export const keySetAccountSelector = createSelector(
   defaultAccountSelector,
-  (account: AccountInstance) => account.key.keySet || {}
+  (account: AccountInstance) => account && account.key.keySet
+);
+
+export const paymentAddressSelector = createSelector(
+  keySetAccountSelector,
+  (keySet) => keySet.paymentAddressKeySerialized
 );

@@ -6,6 +6,7 @@ import { FONT_SIZES } from './fontSize';
 export interface ITheme {
   body: string;
   text: string;
+  subText: string;
   toggleBorder: string;
   gradient: string;
   button: string;
@@ -19,6 +20,7 @@ export interface IGlobalStyle {
 export const lightTheme: ITheme = {
   body: COLORS.white,
   text: COLORS.black,
+  subText: COLORS.colorGreyBold,
   toggleBorder: COLORS.white,
   gradient: 'linear-gradient(#39598A, #79D7ED)',
   button: '#333335',
@@ -28,6 +30,7 @@ export const lightTheme: ITheme = {
 export const darkTheme: ITheme = {
   body: '#363537',
   text: '#FAFAFA',
+  subText: COLORS.colorGreyLight,
   toggleBorder: '#6B8096',
   gradient: 'linear-gradient(#091236, #1E215D)',
   button: COLORS.colorGreyBold,
@@ -55,7 +58,7 @@ export const GlobalStyled = createGlobalStyle`
         overflow: scroll;
         position: relative;
         font-size: ${FONT_SIZES.regular}px;
-        line-height: ${FONT_SIZES.regular + 5}px;
+        line-height: ${FONT_SIZES.regular + 3}px;
         font-weight: 100;
     }
     
@@ -91,27 +94,31 @@ export const GlobalStyled = createGlobalStyle`
     }
     .fs-small {
         font-size: ${FONT_SIZES.small}px;
-        line-height: ${FONT_SIZES.small + 5}px;
+        line-height: ${FONT_SIZES.small + 3}px;
     }
     .fs-regular {
         font-size: ${FONT_SIZES.regular}px;
-        line-height: ${FONT_SIZES.regular + 5}px;
+        line-height: ${FONT_SIZES.regular + 3}px;
     }
     .fs-medium {
         font-size: ${FONT_SIZES.medium}px;
-        line-height: ${FONT_SIZES.medium + 5}px;
+        line-height: ${FONT_SIZES.medium + 3}px;
     }
     .fs-supermedium {
         font-size: ${FONT_SIZES.superMedium}px;
-        line-height: ${FONT_SIZES.superMedium + 5}px;
+        line-height: ${FONT_SIZES.superMedium + 3}px;
     }
     .fs-large{
         font-size: ${FONT_SIZES.large}px;
-        line-height: ${FONT_SIZES.large + 5}px;
+        line-height: ${FONT_SIZES.large + 3}px;
+    }
+    .fs-avglarge{
+        font-size: ${FONT_SIZES.avgLarge}px;
+        line-height: ${FONT_SIZES.avgLarge + 3}px;
     }
     .fs-verylarge{
         font-size: ${FONT_SIZES.veryLarge}px;
-        line-height: ${FONT_SIZES.veryLarge + 5}px;
+        line-height: ${FONT_SIZES.veryLarge + 3}px;
     }
     .hook-row {
         display: flex;
@@ -134,5 +141,11 @@ export const GlobalStyled = createGlobalStyle`
         height: 100%;
         width: 100%;
         position: relative;
+    }
+    .main-text {
+        color: ${(props: IGlobalStyle) => props.theme.text};
+    }
+    .sub-text {
+        color: ${(props: IGlobalStyle) => props.theme.subText};
     }
 `;

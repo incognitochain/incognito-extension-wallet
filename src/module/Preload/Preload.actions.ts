@@ -19,7 +19,6 @@ import {
   walletSelector,
 } from 'src/module/Wallet';
 import { preloadSelector } from './Preload.selector';
-import { actionFetch as actionLoadHomeConfigs } from 'src/module/Home';
 import { ENVS } from 'src/configs';
 import {
   actionFetchPCustomTokenList,
@@ -68,7 +67,6 @@ export const actionFetch = () => async (
     });
     await goServices.implementGoMethodUseWasm();
     let task: any[] = [
-      actionLoadHomeConfigs()(dispatch, getState),
       actionFetchPTokenList()(dispatch, getState),
       actionFetchPCustomTokenList()(dispatch, getState),
     ];

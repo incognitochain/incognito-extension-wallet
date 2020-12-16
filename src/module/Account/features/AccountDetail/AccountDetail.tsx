@@ -4,21 +4,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Header } from 'src/components';
 import { isDev } from 'src/configs';
-import { ILanguage } from 'src/i18n';
-import { translateSelector } from 'src/module/Configs';
+import { IAccountLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
+import Item from 'src/module/Account/features/AccountItem';
 import styled from 'styled-components';
 import { actionFetchRemoveAccount } from 'src/module/Account';
 import { withLayout } from 'src/components/Layout';
-import Item from 'src/module/Account/features/AcccountItem';
 
 const Styled = styled.div``;
 
-const AcccountDetails = () => {
+const AccountDetails = () => {
   const location: any = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
-  const translate: ILanguage = useSelector(translateSelector);
-  const translateAccountDetail = translate.keychain.accountDetail;
+  const translate: IAccountLanguage = useSelector(translateByFieldSelector)(
+    'account'
+  );
+  const translateAccountDetail = translate.accountDetail;
   const { account }: { account: AccountInstance } = location.state;
   const {
     paymentAddressKeySerialized,
@@ -98,4 +100,4 @@ const AcccountDetails = () => {
   );
 };
 
-export default withLayout(AcccountDetails);
+export default withLayout(AccountDetails);

@@ -1,26 +1,24 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
-import { FaAngleLeft } from 'react-icons/fa';
 import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import withHeader, { IMergeProps } from './Header.enhance';
+import { ArrowLeftIcon } from '../Icons';
 
 const Styled = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 42px;
+  margin-bottom: 30px;
   .left {
     display: flex;
     flex-direction: row;
     align-items: center;
     cursor: pointer;
   }
-  .left h1.title {
-    font-weight: 200;
-    font-size: ${FONT_SIZES.medium}px;
-    line-height: ${FONT_SIZES.medium + 4}px;
+  .left p.header-title {
+    line-height: ${FONT_SIZES.medium + 3}px;
     &.ellipsis {
       max-width: 100%;
     }
@@ -32,7 +30,13 @@ const Header = (props: IMergeProps) => {
   return (
     <Styled className='header'>
       <div className='left'>
-        <FaAngleLeft size={20} onClick={handleClick} />
+        <ArrowLeftIcon
+          to='#'
+          onClick={(e: SyntheticEvent) => {
+            e.preventDefault();
+            handleClick();
+          }}
+        />
         {renderHeaderTitle()}
       </div>
       <div className='right'>

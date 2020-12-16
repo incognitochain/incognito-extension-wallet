@@ -32,7 +32,12 @@ export const pTokensSelector = createSelector(
   tokenSelector,
   (token) =>
     token.pTokens.map((token: IPTokenFromApi) => {
-      const pairPrv = token.CurrentPrvPool !== 0;
+      const pairPrv = new BigNumber(token.CurrentPrvPool).isGreaterThan(
+        new BigNumber(0)
+      );
+      const change = pairPrv
+        ? token?.PercentChangePrv1h
+        : token?.PercentChange1h;
       let _token: IPToken = {
         id: token.ID,
         tokenId: token.TokenID,
@@ -48,7 +53,7 @@ export const pTokensSelector = createSelector(
         pricePrv: token.PricePrv,
         priceUsd: token.PriceUsd,
         pairPrv,
-        change: pairPrv ? token?.PercentChangePrv1h : token?.PercentChange1h,
+        change,
       };
       return _token;
     }) || []

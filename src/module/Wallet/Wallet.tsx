@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, Header } from 'src/components';
+import { Button } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from '../Configs';
@@ -16,14 +16,19 @@ import {
 import withWallet from './Wallet.enhance';
 import { route as routeAddToken } from 'src/module/Token/features/AddToken';
 
-interface IProps {}
-
 interface IListFollowToken {}
 
 const Styled = styled.div`
+  position: relative;
+  height: 485px;
   .list-token {
     height: 300px;
     overflow: scroll;
+  }
+  .list-token .token-container {
+    :last-child {
+      margin-bottom: 0;
+    }
   }
   .total-shield {
     > p {
@@ -32,7 +37,7 @@ const Styled = styled.div`
       }
     }
     .btn-container {
-      margin: 50px 0;
+      margin: 30px 0;
       width: 100%;
     }
   }
@@ -65,14 +70,11 @@ const ListFollowToken = (props: IListFollowToken) => {
 const TotalShield = () => {
   const totalShield: ITotalShielded = useSelector(totalShieldedTokensSelector);
   const translate: ILanguage = useSelector(translateSelector);
-  const { btnShield, totalShielded } = translate.wallet.blockShield;
+  const { btnShield } = translate.wallet.blockShield;
   return (
     <div className='total-shield'>
-      <p className='fs-verylarge fw-medium center-text'>
+      <p className='fs-avglarge fw-medium center-text'>
         {`$${totalShield.formatTotalAmountUSD}`}
-      </p>
-      <p className='fs-regular fw-medium center-text'>
-        {totalShielded}
       </p>
       <Button title={btnShield}></Button>
     </div>
@@ -83,18 +85,15 @@ const AddCoin = React.memo(() => {
   const translate: ILanguage = useSelector(translateSelector);
   const wallet = translate.wallet;
   return (
-    <Link className='btn-add-coin' to={routeAddToken}>
+    <Link className='btn-add-coin fw-medium' to={routeAddToken}>
       {wallet.addCoin}
     </Link>
   );
 });
 
-const Wallet = (props: IProps) => {
-  const translate: ILanguage = useSelector(translateSelector);
-  const wallet = translate.wallet;
+const Wallet = () => {
   return (
-    <Styled className='wrapper'>
-      <Header title={wallet.headerTitle} selectAccount />
+    <Styled>
       <TotalShield />
       <ListFollowToken />
       <AddCoin />

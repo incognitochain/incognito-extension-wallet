@@ -7,8 +7,8 @@ import { compose } from 'recompose';
 import { reduxForm } from 'redux-form';
 import { withLayout } from 'src/components/Layout';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
-import { translateSelector } from 'src/module/Configs';
-import { ILanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { IAccountLanguage } from 'src/i18n';
 
 interface IProps {}
 
@@ -29,7 +29,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
   const { isFormValid, isAccountExist } = useAccount({
     form: FORM_CONFIGS,
   });
-  const translate: ILanguage = useSelector(translateSelector);
+  const translate: IAccountLanguage = useSelector(translateByFieldSelector)(
+    'account'
+  );
   const disabledForm = !isFormValid;
   const handleCreateAccount = async (values: { accountName: string }) => {
     try {
@@ -44,7 +46,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
       dispatch(
         actionToggleToast({
           toggle: true,
-          value: translate.keychain.success.create,
+          value: translate.success.create,
           type: TOAST_CONFIGS.success,
         })
       );
@@ -53,7 +55,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
       dispatch(
         actionToggleToast({
           toggle: true,
-          value: e?.message || translate.keychain.error.create,
+          value: e?.message || translate.error.create,
           type: TOAST_CONFIGS.error,
         })
       );

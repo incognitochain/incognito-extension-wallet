@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import QRCodeReact, { BaseQRCodeProps } from 'qrcode.react';
-import { themeSelector, translateSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Configs';
 import { useSelector } from 'react-redux';
-import { ILanguage } from 'src/i18n';
 import { COLORS, ITheme } from 'src/styles';
-import copyToClipboard from 'copy-to-clipboard';
-import { Button } from 'src/components/Core';
+import Copy from '../Copy';
 
-interface IProps {}
+interface IProps {
+  hook?: any;
+  qrCodeProps: BaseQRCodeProps;
+}
 
 const Styled = styled.div`
-  padding-top: 30px;
   .qrcode-react {
     justify-content: center;
     display: flex;
@@ -25,7 +25,7 @@ const Styled = styled.div`
     padding: 0 15px;
     justify-content: space-between;
     background-color: ${COLORS.colorGreyLight};
-    margin-top: 50px;
+    margin-top: 30px;
   }
   .copy-block .btn-copy {
     background: ${({ theme }: { theme: ITheme }) => theme.button};
@@ -38,31 +38,17 @@ const Styled = styled.div`
   }
 `;
 
-const QrCode = (props: IProps & BaseQRCodeProps) => {
-  const [state, setState] = React.useState({
-    copied: false,
-  });
+const QrCode = (props: IProps) => {
+  const { hook, qrCodeProps } = props;
+  const { value } = qrCodeProps;
   const theme = useSelector(themeSelector);
-  const translate: ILanguage = useSelector(translateSelector);
-  const { copied, copy } = translate.general;
-  const handleCopy = () => {
-    copyToClipboard(props?.value);
-    setState({ copied: true });
-  };
-
   return (
     <Styled theme={theme} className='qrcode-container'>
       <div className='qrcode-react'>
-        <QRCodeReact {...props} />
+        <QRCodeReact size={qrCodeProps?.size || 150} {...qrCodeProps} />
       </div>
-      <div className='copy-block'>
-        <p className='ellipsis'>{props?.value}</p>
-        <Button
-          title={state.copied ? copied : copy}
-          onClick={handleCopy}
-          className='btn-copy fs-regular fw-medium'
-        ></Button>
-      </div>
+      {hook}
+      <Copy text={value} />
     </Styled>
   );
 };
