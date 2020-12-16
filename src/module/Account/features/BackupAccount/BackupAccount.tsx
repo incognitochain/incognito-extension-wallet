@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux';
 import { Button, Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
 import { ILanguage } from 'src/i18n';
-import { translateSelector } from 'src/module/Configs';
+import { translateByFieldSelector } from 'src/module/Configs';
 import styled from 'styled-components';
 import { listAccountSelector } from 'src/module/Account';
-import AcccountItem from 'src/module/Account/features/AcccountItem';
+import AccountItem from 'src/module/Account/features/AccountItem';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import copy from 'copy-to-clipboard';
 
@@ -19,8 +19,8 @@ const Backup = (props: IProps) => {
     copied: false,
   });
   const { copied } = state;
-  const translate: ILanguage = useSelector(translateSelector);
-  const backup = translate.keychain.backup;
+  const translate: ILanguage = useSelector(translateByFieldSelector)('account');
+  const backup = translate.backup;
   const listAccount = useSelector(listAccountSelector);
   const backupData = listAccount
     .map(
@@ -36,7 +36,7 @@ const Backup = (props: IProps) => {
     <Styled>
       <Header title={backup.headerTitle} />
       {listAccount.map((account: AccountInstance) => (
-        <AcccountItem
+        <AccountItem
           title={account.name}
           desc={account.key.keySet.privateKeySerialized}
           key={account.name}

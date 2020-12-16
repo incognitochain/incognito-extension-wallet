@@ -1,7 +1,7 @@
 export const FONT_SIZES = {
   superSmall: 12,
   small: 14,
-  regular: 16,
+  regular: 15,
   medium: 18,
   superMedium: 20,
   large: 22,

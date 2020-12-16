@@ -46,9 +46,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
       return <SearchBox title={title} />;
     }
     return (
-      <h1 onClick={onHandleToggleSearch} className='title ellipsis'>
+      <p
+        onClick={onHandleToggleSearch}
+        className='header-title fw-medium fs-medium '
+      >
         {title}
-      </h1>
+      </p>
     );
   };
   return (

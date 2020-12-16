@@ -7,7 +7,7 @@ import { translateSelector } from 'src/module/Configs';
 import styled from 'styled-components';
 import { listAccountSelector } from 'src/module/Account';
 import { AccountInstance } from 'incognito-js/build/web/browser';
-import AcccountItem from 'src/module/Account/features/AcccountItem';
+import AccountItem from 'src/module/Account/features/AccountItem';
 import { actionSwitchAccount } from 'src/module/Account';
 import { useHistory } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const SelectAccount = (props: IProps) => {
     <Styled>
       <Header title={translate.wallet.selectAccount.headerTitle} />
       {listAccount.map((account: AccountInstance) => (
-        <AcccountItem
+        <AccountItem
           title={account.name}
           desc={account.key.keySet.paymentAddressKeySerialized}
           hasCopy={false}

@@ -2,8 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { ITokenChildProps, ISelectedPrivacy } from './Token.interface';
 import { getPrivacyDataByTokenIDSelector } from './Token.selector';
-import { FaRegCheckCircle } from 'react-icons/fa';
-import { COLORS } from 'src/styles';
 import {
   AmountStyled,
   BalanceStyled,
@@ -14,6 +12,9 @@ import {
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
 import withToken, { IMergePropsToken } from './Token.enhance';
+import { VerifiedIcon } from 'src/components/Icons';
+import { replace, round } from 'lodash';
+import { COLORS } from 'src/styles';
 
 export const Name = React.memo((props: ITokenChildProps) => {
   const { tokenId, classNameCustom } = props;
@@ -22,14 +23,8 @@ export const Name = React.memo((props: ITokenChildProps) => {
   );
   return (
     <NameStyled className={classNameCustom}>
-      <TextStyled className='fs-medium fw-bold ellipsis'>
-        {token.name}
-      </TextStyled>
-      {token?.isVerified && (
-        <div className='verified-icon'>
-          <FaRegCheckCircle color={COLORS.green} />
-        </div>
-      )}
+      <TextStyled className='fw-medium  ellipsis'>{token.name}</TextStyled>
+      {token?.isVerified && <VerifiedIcon />}
     </NameStyled>
   );
 });
@@ -41,7 +36,7 @@ export const Amount = React.memo((props: ITokenChildProps) => {
   );
   return (
     <AmountStyled className={classNameCustom}>
-      <TextStyled className='fs-medium fw-bold right-text ellipsis'>{`${
+      <TextStyled className='fw-medium right-text ellipsis'>{`${
         token.formatAmount
       } ${token.symbol || token?.pSymbol}`}</TextStyled>
     </AmountStyled>
@@ -55,7 +50,7 @@ export const Balance = React.memo((props: ITokenChildProps) => {
   );
   return (
     <BalanceStyled className={classNameCustom}>
-      <TextStyled className='fs-medium fw-medium right-text ellipsis'>
+      <TextStyled className='sub-text right-text ellipsis'>
         {`$${token.formatBalanceByUsd}`}
       </TextStyled>
     </BalanceStyled>
@@ -67,9 +62,34 @@ export const Price = React.memo((props: ITokenChildProps) => {
   const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(
     tokenId
   );
+  const { change } = token;
+  const renderTokenChange = () => {
+    const isTokenDecrease = change[0] === '-';
+    const changeToNumber = Number(replace(change, '-', ''));
+    if (changeToNumber === 0) {
+      return null;
+    }
+    const tokenChange = `${isTokenDecrease ? '-' : '+'}${round(
+      changeToNumber,
+      2
+    )}%`;
+    return (
+      <TextStyled
+        className='per-change'
+        style={{
+          color: isTokenDecrease ? COLORS.red : COLORS.green,
+        }}
+      >
+        {tokenChange}
+      </TextStyled>
+    );
+  };
   return (
     <BalanceStyled className={classNameCustom}>
-      <TextStyled className='fs-medium fw-medium  ellipsis'>{`$${token.formatPriceByUsd}`}</TextStyled>
+      <TextStyled className='sub-text ellipsis price'>
+        {`$${token.formatPriceByUsd}`}
+        {renderTokenChange()}
+      </TextStyled>
     </BalanceStyled>
   );
 });
@@ -97,7 +117,7 @@ export const Symbol = React.memo((props: ITokenChildProps) => {
     tokenId
   );
   return (
-    <TextStyled className='fs-medium fw-medium  ellipsis'>
+    <TextStyled className='fw-medium ellipsis'>
       {token.symbol || token.pSymbol}
     </TextStyled>
   );
@@ -106,7 +126,7 @@ export const Symbol = React.memo((props: ITokenChildProps) => {
 const Token = (props: IMergePropsToken) => {
   const { tokenId, handleOnClick } = props;
   return (
-    <Styled to='#' onClick={handleOnClick}>
+    <Styled to='#' className='token-container' onClick={handleOnClick}>
       <div className='extra'>
         <Name classNameCustom={'extra-item'} tokenId={tokenId} />
         <Amount classNameCustom={'extra-item'} tokenId={tokenId} />

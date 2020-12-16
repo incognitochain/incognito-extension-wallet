@@ -8,7 +8,7 @@ export const NameStyled = styled.div`
   flex-direction: row;
   align-items: center;
   .verified-icon {
-    margin-left: 10px;
+    margin-left: 5px;
   }
 `;
 
@@ -16,7 +16,14 @@ export const TextStyled = styled.p``;
 
 export const AmountStyled = styled.div``;
 
-export const BalanceStyled = styled.div``;
+export const BalanceStyled = styled.div`
+  .price {
+    display: flex;
+  }
+  .per-change {
+    margin-left: 5px;
+  }
+`;
 
 export const TokenStyled = styled(Link)`
   margin-bottom: 30px;

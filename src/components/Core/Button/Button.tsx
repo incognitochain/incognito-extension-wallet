@@ -30,14 +30,14 @@ const Styled = styled.button`
 const Button = (
   props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>
 ) => {
-  const { customContent, title, disabled, className, ...rest } = props;
+  const { customContent, title, disabled, className = '', ...rest } = props;
   const theme = useSelector(themeSelector);
   return (
     <Styled
       theme={theme}
-      className={`btn-container ${
+      className={`${className} btn-container ${
         disabled ? 'btn-disabled' : ''
-      } ${className} fw-bold fs-medium`}
+      } fw-regular fs-regular`}
       {...rest}
     >
       {!!customContent ? customContent : title}

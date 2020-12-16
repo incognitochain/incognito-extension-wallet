@@ -8,10 +8,13 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withLayout } from 'src/components/Layout';
 import { isAddressBookExist } from 'src/module/AddressBook';
 import { isMainnetSelector } from 'src/module/Preload';
-import { actionCreate } from '../../AddressBook.actions';
-import { IAddressBook, IAddressBookReducer } from '../../AddressBook.interface';
-import { addressBookSelector } from '../../AddressBook.selector';
-import { ADDRESS_BOOK_TYPE } from '../../AddressBook.utils';
+import {
+  actionCreate,
+  IAddressBook,
+  IAddressBookReducer,
+  addressBookSelector,
+  ADDRESS_BOOK_TYPE,
+} from 'src/module/AddressBook';
 
 interface IProps {}
 

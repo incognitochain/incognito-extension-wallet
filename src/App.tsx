@@ -12,6 +12,7 @@ import { ThemeProvider } from 'styled-components';
 import 'animate.css';
 import './reset.scss';
 import { Toast } from './components';
+import { HeaderApp } from './components/Header';
 import { themeSelector } from './module/Configs';
 
 const history = isDev ? createBrowserHistory() : createMemoryHistory(); // Instead of createBrowserHistory();
@@ -22,6 +23,7 @@ const App: React.FunctionComponent = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyled />
       <Router history={history}>
+        <HeaderApp />
         <Switch>
           <Suspense fallback={'...'}>
             {routes.map((route: IRouteProps) => (

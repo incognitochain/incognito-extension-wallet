@@ -2,13 +2,13 @@ import { lazy } from 'react';
 import { IRouteProps } from '..';
 
 const homeRoute: IRouteProps = {
-  path: '/',
+  path: '/home',
   exact: true,
   component: lazy(() => import('./Home')),
   name: 'Home',
-  to: '/',
+  to: '/home',
 };
 
-export const route = '/';
+export const route = '/home';
 
 export default homeRoute;

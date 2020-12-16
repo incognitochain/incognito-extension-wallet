@@ -2,13 +2,13 @@ import { lazy } from 'react';
 import { IRouteProps } from '..';
 
 const walletRoute: IRouteProps = {
-  path: '/wallet',
+  path: '/',
   exact: true,
   component: lazy(() => import('./Wallet')),
   name: 'Wallet',
-  to: '/wallet',
+  to: '/',
 };
 
-export const route = '/wallet';
+export const route = '/';
 
 export default walletRoute;

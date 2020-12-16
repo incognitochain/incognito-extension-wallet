@@ -2,7 +2,9 @@ import React from 'react';
 import { compose } from 'recompose';
 import styled from 'styled-components';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+  padding: 30px;
+`;
 
 interface IProps {}
 
