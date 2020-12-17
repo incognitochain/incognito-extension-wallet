@@ -104,3 +104,31 @@ export interface IKeychainLanguage {
   headerTitle: string;
   yourKeychain: string;
 }
+
+export interface ITokenLanguage {
+  followToken: {
+    headerTitle: string;
+    addManually: string;
+    dontSeeYourCoin: string;
+  };
+  addToken: {
+    headerTitle: string;
+    added: string;
+  };
+  detail: {
+    headerTitle: string;
+    btnSend: string;
+    btnReceive: string;
+  };
+  infoToken: {
+    headerTitle: string;
+  };
+  error: {
+    tokenIdRequired: string;
+  };
+}
+
+export interface IGeneralLanguage {
+  copied: string;
+  copy: string;
+}

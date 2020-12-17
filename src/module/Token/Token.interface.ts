@@ -75,6 +75,10 @@ export interface IPCustomToken {
   totalSupply: number;
   verified: boolean;
   image: string;
+  ownerName: string;
+  ownerAddress: string;
+  ownerEmail: string;
+  ownerWebsite: string;
 }
 
 export interface IFollowedToken {
@@ -115,6 +119,12 @@ export interface ISelectedPrivacy {
   formatAmount: string;
   formatPriceByUsd: string;
   formatBalanceByUsd: string;
+  networkName: string;
+  rootNetworkName: string;
+  ownerName: string;
+  ownerAddress: string;
+  ownerEmail: string;
+  ownerWebsite: string;
 }
 
 export interface IBalanceProps {
@@ -139,6 +149,8 @@ export interface ITokenProps {
 export interface ITokenChildProps {
   tokenId: string;
   classNameCustom?: string;
+  classNameTextCustom?: string;
+  showVerifiedToken?: boolean;
 }
 
 interface ITokensFactories {
@@ -147,7 +159,7 @@ interface ITokensFactories {
 }
 export interface IAllListTokenInner {
   tokensFactories: ITokensFactories[];
-  onToggleUnVerifiedTokens: () => void;
+  onToggleUnVerifiedTokens: (toggle: boolean) => void;
   toggleUnVerified: boolean;
   renderItem: (tokenId: string) => any;
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { COLORS } from 'src/styles';
+import { themeSelector } from 'src/module/Configs';
+import { COLORS, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 import { modalSelector } from './Modal.selector';
 
@@ -15,26 +16,28 @@ const Styled = styled.div`
   z-index: 10000;
   display: flex;
   justify-content: center;
-  .modal-content {
+  background-color: ${COLORS.overlayBlackLight};
+  .modal-content-wrapper {
     position: absolute;
-    width: 100%;
-    min-width: 320px;
-    max-width: 375px;
-    height: 100%;
-    max-height: 600px;
-    background-color: ${COLORS.overlayBlackLight};
+    min-width: ${(props: IGlobalStyle) => props.theme.minWidth};
+    max-width: ${(props: IGlobalStyle) => props.theme.maxWidth};
+    width: ${(props: IGlobalStyle) => props.theme.width};
+    height: ${(props: IGlobalStyle) => props.theme.height};
+    background: ${(props: IGlobalStyle) => props.theme.body};
+    padding: 30px;
   }
 `;
 
 const Modal = (props: IProps) => {
   const modalState = useSelector(modalSelector);
+  const theme = useSelector(themeSelector);
   const { data, visible } = modalState;
   if (!visible) {
     return null;
   }
   return (
-    <Styled className='modal'>
-      <div className='modal-content'>{data}</div>
+    <Styled className='modal-wrapper' theme={theme}>
+      <div className='modal-content-wrapper'>{data}</div>
     </Styled>
   );
 };

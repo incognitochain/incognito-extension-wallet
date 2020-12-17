@@ -45,7 +45,7 @@ const QrCode = (props: IProps) => {
   return (
     <Styled theme={theme} className='qrcode-container'>
       <div className='qrcode-react'>
-        <QRCodeReact size={qrCodeProps?.size || 150} {...qrCodeProps} />
+        <QRCodeReact {...qrCodeProps} />
       </div>
       {hook}
       <Copy text={value} />

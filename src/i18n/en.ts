@@ -41,6 +41,9 @@ const en: ILanguage = {
       btnSend: 'Send',
       btnReceive: 'Receive',
     },
+    infoToken: {
+      headerTitle: 'Coin info',
+    },
     error: {
       tokenIdRequired: 'Token id is required',
     },

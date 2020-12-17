@@ -13,7 +13,7 @@ import { SpinnerContainer } from 'src/components';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { accountBalanceSelector } from '../Account';
 import { FORM_CONFIGS } from './Send.enhance';
-import { isGettingBalanceSelector } from 'src/redux/selector';
+import { isGettingBalanceByTokenIdSelector } from 'src/redux';
 import format from 'src/utils/format';
 import convert from 'src/utils/convert';
 import { COINS } from 'src/constants';
@@ -26,7 +26,9 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     selectedPrivacySelector
   );
   const accountBalance: number = useSelector(accountBalanceSelector);
-  const isGettingBalance = useSelector(isGettingBalanceSelector);
+  const isGettingBalance = useSelector(isGettingBalanceByTokenIdSelector)(
+    selectedPrivacy.tokenId
+  );
   const send = useSelector(sendSelector);
   const handleFetchedMaxPrv = async (accountBalance: number) =>
     dispatch(

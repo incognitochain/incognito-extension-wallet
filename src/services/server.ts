@@ -15,6 +15,8 @@ export interface IServer {
   apiURL: string;
   exploreChainURL: string;
   api2URL: string;
+  exploreBinanceURL: string;
+  etherscanURL: string;
 }
 
 export const TEST_NODE_SERVER = {
@@ -33,6 +35,8 @@ export const MAINNET_SERVER: IServer = {
   apiURL: PRODUCTION_API,
   api2URL: PRODUCTION_API_2,
   exploreChainURL: 'https://mainnet.incognito.org',
+  exploreBinanceURL: 'https://explorer.binance.org',
+  etherscanURL: 'https://etherscan.io',
 };
 
 export const TESTNET_SERVER: IServer = {
@@ -44,6 +48,8 @@ export const TESTNET_SERVER: IServer = {
   apiURL: STAGING_API,
   api2URL: STAGING_API_2,
   exploreChainURL: 'https://testnet.incognito.org',
+  exploreBinanceURL: 'https://testnet-explorer.binance.org',
+  etherscanURL: 'https://kovan.etherscan.io',
 };
 
 export const LOCAL_SERVER: IServer = {
@@ -55,6 +61,8 @@ export const LOCAL_SERVER: IServer = {
   apiURL: '',
   api2URL: '',
   exploreChainURL: '',
+  exploreBinanceURL: '',
+  etherscanURL: '',
 };
 
 export const TEST_NET_1_SERVER = {

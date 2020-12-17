@@ -1,5 +1,4 @@
-import React from 'react';
-import { compose } from 'recompose';
+import React, { HTMLAttributes } from 'react';
 import { useHistory } from 'react-router-dom';
 import SearchBox from './Header.searchBox';
 
@@ -14,14 +13,15 @@ export interface IProps {
   rightHeader?: React.FunctionComponent;
   selectAccount?: boolean;
   canSearch?: boolean;
+  customHeader?: React.FunctionComponent | React.ReactElement;
 }
 
 export interface IMergeProps extends TInner, IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (
-  props: IProps & any
+  props: IProps & HTMLAttributes<HTMLElement>
 ) => {
-  const { canSearch = false, onGoBack, title } = props;
+  const { canSearch = false, onGoBack, title, customHeader } = props;
   const [state, setState] = React.useState({
     toggleSearch: false,
   });
@@ -46,12 +46,15 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
       return <SearchBox title={title} />;
     }
     return (
-      <p
-        onClick={onHandleToggleSearch}
-        className='header-title fw-medium fs-medium '
-      >
-        {title}
-      </p>
+      <div className='header-container flex'>
+        <p
+          onClick={onHandleToggleSearch}
+          className='header-title fw-medium fs-medium ellipsis'
+        >
+          {title}
+        </p>
+        {customHeader && customHeader}
+      </div>
     );
   };
   return (
@@ -66,4 +69,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
   );
 };
 
-export default compose<IMergeProps, any>(enhance);
+export default enhance;
