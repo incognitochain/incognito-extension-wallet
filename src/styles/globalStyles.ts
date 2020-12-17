@@ -174,4 +174,7 @@ export const GlobalStyled = createGlobalStyle`
         bottom: 0;
         top: 0;
     }
+    .icon {
+        margin-left: 5px;
+    }
 `;

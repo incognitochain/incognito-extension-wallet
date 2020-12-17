@@ -1,10 +1,10 @@
 import React from 'react';
-import { FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
 import copy from 'copy-to-clipboard';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { IHistoryItem } from './History.interface';
+import { CopyIcon, OpenLinkIcon } from 'src/components/Icons';
 
 const Styled = styled.div`
   .confirm-tx-item {
@@ -48,8 +48,8 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
         <label htmlFor=''>{title}</label>
         <div className='hook'>
           <span className='ellipsis'>{desc}</span>
-          {!!copyData && <FaCopy onClick={handleCopy} />}
-          {!!link && <FaExternalLinkAlt onClick={handleOpenLink} />}
+          {!!copyData && <CopyIcon onClick={handleCopy} />}
+          {!!link && <OpenLinkIcon onClick={handleOpenLink} />}
         </div>
       </div>
     </Styled>
