@@ -6,7 +6,7 @@ function getNetworkName(this: ISelectedPrivacy) {
   const isETH = this?.symbol === COINS.CRYPTO_SYMBOL.ETH;
   const isBNB = this?.symbol === COINS.CRYPTO_SYMBOL.BNB;
   if (this.isPrivateCoin) {
-    name = `${name}`;
+    name = `${this.name}`;
   } else if (this.isErc20Token) {
     name = 'ERC20';
   } else if (this.isBep2Token) {
@@ -20,10 +20,11 @@ function getNetworkName(this: ISelectedPrivacy) {
   } else if (isBNB || this?.isBep2Token) {
     rootNetworkName = COINS.NETWORK_NAME.BINANCE;
   }
-  return {
+  const result = {
     networkName: name,
     rootNetworkName,
   };
+  return result;
 }
 
 function combineData(
@@ -89,6 +90,10 @@ class SelectedPrivacy {
   formatAmount: string;
   formatBalanceByUsd: string;
   formatPriceByUsd: string;
+  ownerName: string;
+  ownerAddress: string;
+  ownerEmail: string;
+  ownerWebsite: string;
   constructor(
     pCustomTokenData: IPCustomToken | any,
     pTokenData: IPToken | any
@@ -168,6 +173,10 @@ class SelectedPrivacy {
     this.isFollowed = false;
     this.formatAmount = '0';
     this.formatPriceByUsd = '0';
+    this.ownerName = pCustomTokenData?.ownerName;
+    this.ownerAddress = pCustomTokenData?.ownerAddress;
+    this.ownerEmail = pCustomTokenData?.ownerEmail;
+    this.ownerWebsite = pCustomTokenData?.ownerWebsite;
     this.formatBalanceByUsd = '0';
   }
 }

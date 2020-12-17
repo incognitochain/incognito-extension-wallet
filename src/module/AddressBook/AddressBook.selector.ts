@@ -23,16 +23,19 @@ export const keychainAddrSelector = createSelector(
   defaultAccountSelector,
   isMainnetSelector,
   (accounts, defaultAccount, mainnet) =>
-    accounts
-      .filter(
-        (account: AccountInstance) =>
-          account.key.keySet.paymentAddressKeySerialized !==
-          defaultAccount.key.keySet.paymentAddressKeySerialized
-      )
-      .map((account: AccountInstance) => ({
-        name: account.name,
-        address: account.key.keySet.paymentAddressKeySerialized,
-        type: 1,
-        mainnet,
-      }))
+    (accounts &&
+      defaultAccount &&
+      accounts
+        .filter(
+          (account: AccountInstance) =>
+            account.key.keySet.paymentAddressKeySerialized !==
+            defaultAccount.key.keySet.paymentAddressKeySerialized
+        )
+        .map((account: AccountInstance) => ({
+          name: account.name,
+          address: account.key.keySet.paymentAddressKeySerialized,
+          type: 1,
+          mainnet,
+        }))) ||
+    []
 );

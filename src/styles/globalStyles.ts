@@ -11,6 +11,10 @@ export interface ITheme {
   gradient: string;
   button: string;
   textButton: string;
+  width: string;
+  minWidth: string;
+  maxWidth: string;
+  height: string;
 }
 
 export interface IGlobalStyle {
@@ -25,6 +29,10 @@ export const lightTheme: ITheme = {
   gradient: 'linear-gradient(#39598A, #79D7ED)',
   button: '#333335',
   textButton: COLORS.white,
+  width: '357px',
+  minWidth: '320px',
+  maxWidth: '375px',
+  height: '600px',
 };
 
 export const darkTheme: ITheme = {
@@ -35,6 +43,10 @@ export const darkTheme: ITheme = {
   gradient: 'linear-gradient(#091236, #1E215D)',
   button: COLORS.colorGreyBold,
   textButton: COLORS.white,
+  width: '357px',
+  minWidth: '320px',
+  maxWidth: '375px',
+  height: '600px',
 };
 
 export const DEFAULT_THEME = lightTheme;
@@ -45,21 +57,21 @@ export const GlobalStyled = createGlobalStyle`
         color: ${(props: IGlobalStyle) => props.theme.text};
         scrollbar-color: transparent transparent; /*just hides the scrollbar for firefox */
         font-family: 'SF-Pro-Display';
-        min-width: 320px;
-        max-width: 375px;
+        min-width:${(props: IGlobalStyle) => props.theme.minWidth};
+        max-width: ${(props: IGlobalStyle) => props.theme.maxWidth};;
+        width: ${(props: IGlobalStyle) => props.theme.width};
         font-style: normal;
         font-display: swap;
-        width: auto;
         box-sizing: border-box;
         font-weight: 100;
-        margin: auto;
-        height: 600px;
+        height:${(props: IGlobalStyle) => props.theme.height};
         border: solid 0.5px;
-        overflow: scroll;
+        overflow: hidden;
         position: relative;
         font-size: ${FONT_SIZES.regular}px;
         line-height: ${FONT_SIZES.regular + 3}px;
         font-weight: 100;
+        margin: auto;
     }
     
     @font-face {
@@ -147,5 +159,19 @@ export const GlobalStyled = createGlobalStyle`
     }
     .sub-text {
         color: ${(props: IGlobalStyle) => props.theme.subText};
+    }
+    .flex {
+        display: flex;
+        align-items: center;
+    }
+    .icon-wrapper {
+        position: relative;
+    }
+    .icon-abs {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
     }
 `;

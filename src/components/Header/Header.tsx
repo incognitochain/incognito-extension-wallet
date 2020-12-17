@@ -19,13 +19,11 @@ const Styled = styled.div`
   }
   .left p.header-title {
     line-height: ${FONT_SIZES.medium + 3}px;
-    &.ellipsis {
-      max-width: 100%;
-    }
+    margin-right: 10px;
   }
 `;
 
-const Header = (props: IMergeProps) => {
+const Header = (props: IMergeProps & any) => {
   const { rightHeader, selectAccount, handleClick, renderHeaderTitle } = props;
   return (
     <Styled className='header'>

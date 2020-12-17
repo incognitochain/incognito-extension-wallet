@@ -6,6 +6,8 @@ import {
   ISettingLanguage,
   IAccountLanguage,
   IKeychainLanguage,
+  ITokenLanguage,
+  IGeneralLanguage,
 } from './interface';
 import en from './en';
 import vi from './vi';
@@ -13,10 +15,7 @@ export * from './interface';
 
 export interface ILanguage {
   [key: string]: any;
-  general: {
-    copied: string;
-    copy: string;
-  };
+  general: IGeneralLanguage;
   home: {
     title: string;
   };
@@ -35,25 +34,7 @@ export interface ILanguage {
       btnShield: string;
     };
   };
-  token: {
-    followToken: {
-      headerTitle: string;
-      addManually: string;
-      dontSeeYourCoin: string;
-    };
-    addToken: {
-      headerTitle: string;
-      added: string;
-    };
-    detail: {
-      headerTitle: string;
-      btnSend: string;
-      btnReceive: string;
-    };
-    error: {
-      tokenIdRequired: string;
-    };
-  };
+  token: ITokenLanguage;
   account: IAccountLanguage;
   setting: ISettingLanguage;
   history: IHistoryLanguage;

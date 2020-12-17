@@ -31,9 +31,9 @@ const App: React.FunctionComponent = () => {
             ))}
           </Suspense>
         </Switch>
+        <Modal />
+        <Toast />
       </Router>
-      <Modal />
-      <Toast />
     </ThemeProvider>
   );
 };

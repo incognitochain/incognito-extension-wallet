@@ -4,10 +4,8 @@ import {
 } from 'incognito-js/build/web/browser';
 import { isEqual } from 'lodash';
 import { Dispatch } from 'redux';
-import { ILanguage } from 'src/i18n';
 import { IRootState } from 'src/redux/interface';
 import { actionSaveWallet, walletDataSelector } from 'src/module//Wallet';
-import { translateSelector } from '../Configs';
 import {
   ACTION_FETCHED,
   ACTION_FETCHING_CREATE_ACCOUNT,
@@ -184,14 +182,12 @@ export const actionGetAccountBalance = () => async (
   getState: () => IRootState
 ) => {
   const state: IRootState = getState();
-  const translate: ILanguage = translateSelector(state);
-  const accountTranslate = translate.account;
   const account: AccountInstance = defaultAccountSelector(state);
+  if (!account) {
+    return;
+  }
   let accountBalance = 0;
   try {
-    if (!account) {
-      throw new Error(accountTranslate.error.accountNotExisted);
-    }
     dispatch(
       actionGetAccountBalanceFetching({
         accountName: account.name,

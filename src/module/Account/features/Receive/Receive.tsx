@@ -29,7 +29,7 @@ const Receive = (props: IProps) => {
         }}
         hook={
           <div className='hook'>
-            {translate.receive.hook.split('\n').map((text) => (
+            {translate.receive.hook.split('\n').map((text: string) => (
               <p className='fw-regular fs-regular center-text'>{text}</p>
             ))}
           </div>

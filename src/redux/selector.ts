@@ -1,23 +1,24 @@
 import { createSelector } from 'reselect';
-import { isGettingAccountBalanceSelector } from 'src/module/Account';
+import { isGettingAccountBalanceSelector as getAccountBalance } from 'src/module/Account';
 import {
+  getPrivacyDataByTokenIDSelector,
   ISelectedPrivacy,
-  isGettingBalanceTokenByIdSelector,
-  selectedPrivacySelector,
+  isGettingBalanceTokenByIdSelector as getTokenBalanceById,
 } from 'src/module/Token';
 
-export const isGettingBalanceSelector = createSelector(
-  isGettingAccountBalanceSelector,
-  isGettingBalanceTokenByIdSelector,
-  selectedPrivacySelector,
+export const isGettingBalanceByTokenIdSelector = createSelector(
+  getAccountBalance,
+  getTokenBalanceById,
+  getPrivacyDataByTokenIDSelector,
   (
     getAccBal: boolean,
     getTokenBal: (tokenId: string) => boolean,
-    selectedPrivacy: ISelectedPrivacy
-  ) => {
-    if (selectedPrivacy.isNativeToken) {
+    getPrivacyDataByTokenID: (tokenId: string) => ISelectedPrivacy
+  ) => (tokenId: string) => {
+    const token = getPrivacyDataByTokenID(tokenId);
+    if (token.isNativeToken) {
       return getAccBal;
     }
-    return getTokenBal(selectedPrivacy.tokenId);
+    return getTokenBal(tokenId);
   }
 );

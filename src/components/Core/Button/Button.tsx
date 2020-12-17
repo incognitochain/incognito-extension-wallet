@@ -14,12 +14,13 @@ const Styled = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50px;
-  height: 50px;
+  border-radius: 20px;
+  height: 40px;
   margin: auto;
-  padding: 0 20px;
+  padding: 0 11px;
   background-color: ${(props: { theme: ITheme }) => props.theme.button};
   color: ${(props: { theme: ITheme }) => props.theme.textButton};
+  width: 100%;
   p.btn-title {
   }
   &.btn-disabled {

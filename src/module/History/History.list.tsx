@@ -13,9 +13,8 @@ interface IHistoryItem {
 }
 
 const Styled = styled.div`
-  max-height: 300px;
+  max-height: 270px;
   overflow: scroll;
-  margin-top: 30px;
   .history-item {
     margin-bottom: 30px;
     :last-child {
@@ -42,12 +41,12 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
   return (
     <Link to='#' onClick={handleClick} className='history-item'>
       <div className='hook'>
-        <p className='bold-text'>{history.type}</p>
-        <p className='bold-text'>{history.amountFormated}</p>
+        <p className='fw-medium'>{history.type}</p>
+        <p className='fw-medium'>{history.amountFormated}</p>
       </div>
       <div className='hook'>
-        <p className='medium-text'>{history.timeFormated}</p>
-        <p className='medium-text'>{history.statusMessage}</p>
+        <p className='sub-text'>{history.timeFormated}</p>
+        <p className='sub-text'>{history.statusMessage}</p>
       </div>
     </Link>
   );

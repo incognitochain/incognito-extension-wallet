@@ -71,6 +71,10 @@ export const pCustomTokensSelector = createSelector(
         totalSupply: token?.Amount || 0,
         verified: token.Verified,
         image: token.Image,
+        ownerName: token.OwnerName,
+        ownerAddress: token.OwnerAddress,
+        ownerEmail: token.OwnerEmail,
+        ownerWebsite: token.OwnerWebsite,
       };
       return _token;
     }) || []
@@ -78,7 +82,7 @@ export const pCustomTokensSelector = createSelector(
 
 export const followedTokensIdsSelector = createSelector(
   defaultAccountSelector,
-  (defaultAccount: AccountInstance) => (excludePRV = true) => {
+  (defaultAccount) => (excludePRV = true) => {
     if (!defaultAccount) {
       return [];
     }
