@@ -11,12 +11,13 @@ export const accountSelector = createSelector(
 );
 export const listAccountSelector = createSelector(
   accountSelector,
-  (account) => account.list || []
+  (account) => account?.list || []
 );
 
 export const listAccountNameSelector = createSelector(
   listAccountSelector,
-  (listAccount) => listAccount.map((account) => account.name)
+  (listAccount) =>
+    (listAccount && listAccount.map((account) => account.name)) || []
 );
 
 export const defaultAccountNameSelector = createSelector(
@@ -29,7 +30,7 @@ export const defaultAccountSelector = createSelector(
   defaultAccountNameSelector,
   (state: IRootState) => state.wallet,
   (list, defaultAccountName, walletState) => {
-    let account: any= {};
+    let account: any = {};
     const { loaded } = walletState;
     if (!loaded) {
       return null;

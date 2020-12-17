@@ -5,7 +5,7 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-  width: 15px;
+  width: 16px;
   height: 16px;
 `;
 
