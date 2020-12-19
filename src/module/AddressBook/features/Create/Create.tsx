@@ -11,39 +11,37 @@ import withCreate, { IMergeProps } from './Create.enhance';
 const Styled = styled.div``;
 
 const Create = (props: IMergeProps & InjectedFormProps & any) => {
-  const translate: IAddressBookLanguage = useSelector(translateByFieldSelector)(
-    'addressBook'
-  );
-  const { handleSubmit, handleCreate, valid } = props;
-  return (
-    <Styled>
-      <Header title={translate.headerTitleCreate} />
-      <form onSubmit={handleSubmit(handleCreate)}>
-        <Field
-          component={InputField}
-          name='name'
-          label={translate.name}
-          validate={[validator.required]}
-          componentProps={{
-            placeholder: translate.name,
-            autoFocus: true,
-            maxLength: 50,
-          }}
-        />
-        <Field
-          component={InputField}
-          name='address'
-          label={translate.address}
-          validate={[validator.required]}
-          componentProps={{
-            placeholder: translate.address,
-            // readOnly: true,
-          }}
-        />
-        <Button title={translate.btnCreate} type='submit' disabled={!valid} />
-      </form>
-    </Styled>
-  );
+    const translate: IAddressBookLanguage = useSelector(translateByFieldSelector)('addressBook');
+    const { handleSubmit, handleCreate, valid } = props;
+    return (
+        <Styled>
+            <Header title={translate.headerTitleCreate} />
+            <form onSubmit={handleSubmit(handleCreate)}>
+                <Field
+                    component={InputField}
+                    name="name"
+                    label={translate.name}
+                    validate={[validator.required]}
+                    componentProps={{
+                        placeholder: translate.name,
+                        autoFocus: true,
+                        maxLength: 50,
+                    }}
+                />
+                <Field
+                    component={InputField}
+                    name="address"
+                    label={translate.address}
+                    validate={[validator.required]}
+                    componentProps={{
+                        placeholder: translate.address,
+                        // readOnly: true,
+                    }}
+                />
+                <Button title={translate.btnCreate} type="submit" disabled={!valid} />
+            </form>
+        </Styled>
+    );
 };
 
 export default withCreate(Create);

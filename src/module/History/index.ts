@@ -4,6 +4,5 @@ export { default as HistoryList } from './History.list';
 export * from './History.actions';
 export * from './History.constant';
 export * from './History.interface';
-export * from './History.reducer';
 export * from './History.selector';
 export * from './History.route';

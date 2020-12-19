@@ -6,57 +6,42 @@ import convert from 'src/utils/convert';
 import format from 'src/utils/format';
 import { walletServices } from 'incognito-js/build/web/browser';
 
-const isSafeInteger = (number: number) =>
-  Math.abs(number) <= Number.MAX_SAFE_INTEGER;
+// const isSafeInteger = (number: number) => Math.abs(number) <= Number.MAX_SAFE_INTEGER;
 
 const required = (value: any) => (isEmpty(value) ? 'Required' : undefined);
 
 const maxLength = (max: number) => (value: string) =>
-  value && value.length > max ? `Must be ${max} characters or less` : undefined;
+    value && value.length > max ? `Must be ${max} characters or less` : undefined;
 
 const minLength = (min: number) => (value: string) =>
-  value && value.length < min ? `Must be ${min} characters or more` : undefined;
+    value && value.length < min ? `Must be ${min} characters or more` : undefined;
 
 const isInteger = (value: string) =>
-  value && !new BigNumber(value).isInteger()
-    ? 'Must be a integer number'
-    : undefined;
+    value && !new BigNumber(value).isInteger() ? 'Must be a integer number' : undefined;
 
 const number = (value: string) => {
-  const number = new BigNumber(value);
-  if (value && number.isNaN()) {
-    return 'Must be a number';
-  }
-  return undefined;
+    const bn = new BigNumber(value);
+    if (bn.isNaN()) {
+        return 'Must be a number';
+    }
+    return undefined;
 };
 
 const minValue = (min: number, message?: string) => (value: string) =>
-  value && convert.toNumber({ text: value }) < min
-    ? message
-      ? message
-      : `Must be at least ${format.number(min)}`
-    : undefined;
+    value && convert.toNumber({ text: value }) < min ? message || `Must be at least ${format.number(min)}` : undefined;
 
 const maxValue = (max: number, message?: string) => (value: string) =>
-  value && convert.toNumber({ text: value }) > max
-    ? message
-      ? message
-      : `Must be less than or equal ${format.number(max)}`
-    : undefined;
+    value && convert.toNumber({ text: value }) > max
+        ? message || `Must be less than or equal ${format.number(max)}`
+        : undefined;
 
 const largerThan = (min: number, message?: string) => (value: string) =>
-  value && convert.toNumber({ text: value }) <= min
-    ? message
-      ? message
-      : `Must be larger than ${format.number(min)}`
-    : undefined;
+    value && convert.toNumber({ text: value }) <= min
+        ? message || `Must be larger than ${format.number(min)}`
+        : undefined;
 
 const email = (message?: string) => (value: string) =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? message
-      ? message
-      : 'Invalid email address'
-    : undefined;
+    value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ? message || 'Invalid email address' : undefined;
 
 // const notInList = (list, { message } = {}) => (value) =>
 //   list?.includes(value)
@@ -64,7 +49,7 @@ const email = (message?: string) => (value: string) =>
 //     : undefined;
 
 const regexp = (pattern: RegExp, message = 'Invalid data') => (value: string) =>
-  pattern && !pattern.test(value) ? message : undefined;
+    pattern && !pattern.test(value) ? message : undefined;
 
 // const maxBytes = (max, { message } = {}) => (value) =>
 //   value && new Blob([String(value)])?.size > max
@@ -72,260 +57,129 @@ const regexp = (pattern: RegExp, message = 'Invalid data') => (value: string) =>
 //       `Must be less than or equal ${formatUtils.number(max)} bytes`
 //     : undefined;
 
-const incognitoAddress = (message?: string) => (value: string) =>
-  value && value?.length < 15
-    ? 'Invalid address'
-    : value && !walletServices.checkPaymentAddress(value)
-    ? message
-      ? message
-      : 'Use Unshield to exit Incognito'
-    : undefined;
+const incognitoAddress = (message?: string) => (value: string) => {
+    if (value && value?.length < 15) {
+        return 'Invalid address';
+    }
+    if (value && !walletServices.checkPaymentAddress(value)) {
+        return message || 'Use Unshield to exit Incognito';
+    }
+    return undefined;
+};
 
 const ethAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'ETH', 'both')
-    ? message
-      ? message
-      : 'Invalid ETH address'
-    : undefined;
+    !walletValidator.validate(value, 'ETH', 'both') ? message || 'Invalid ETH address' : undefined;
 
 const btcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'BTC', 'both')
-    ? message
-      ? message
-      : 'Invalid BTC address'
-    : undefined;
+    !walletValidator.validate(value, 'BTC', 'both') ? message || 'Invalid BTC address' : undefined;
 
 const neoAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'NEO', 'both')
-    ? message
-      ? message
-      : 'Invalid NEO address'
-    : undefined;
+    !walletValidator.validate(value, 'NEO', 'both') ? message || 'Invalid NEO address' : undefined;
 
 const zenAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'ZEN', 'both')
-    ? message
-      ? message
-      : 'Invalid Zen address'
-    : undefined;
+    !walletValidator.validate(value, 'ZEN', 'both') ? message || 'Invalid Zen address' : undefined;
 
 const zclAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'ZCL', 'both')
-    ? message
-      ? message
-      : 'Invalid ZCL address'
-    : undefined;
+    !walletValidator.validate(value, 'ZCL', 'both') ? message || 'Invalid ZCL address' : undefined;
 
 const zecAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'ZEC', 'both')
-    ? message
-      ? message
-      : 'Invalid ZEC address'
-    : undefined;
+    !walletValidator.validate(value, 'ZEC', 'both') ? message || 'Invalid ZEC address' : undefined;
 
 const votAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'VOT', 'both')
-    ? message
-      ? message
-      : 'Invalid VOT address'
-    : undefined;
+    !walletValidator.validate(value, 'VOT', 'both') ? message || 'Invalid VOT address' : undefined;
 
 const vtcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'VTC', 'both')
-    ? message
-      ? message
-      : 'Invalid VTC address'
-    : undefined;
+    !walletValidator.validate(value, 'VTC', 'both') ? message || 'Invalid VTC address' : undefined;
 
 const sngAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'SNG', 'both')
-    ? message
-      ? message
-      : 'Invalid SNG address'
-    : undefined;
+    !walletValidator.validate(value, 'SNG', 'both') ? message || 'Invalid SNG address' : undefined;
 
 const xrpAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'XRP', 'both')
-    ? message
-      ? message
-      : 'Invalid XRP address'
-    : undefined;
+    !walletValidator.validate(value, 'XRP', 'both') ? message || 'Invalid XRP address' : undefined;
 
 const xrbAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'XRB', 'both')
-    ? message
-      ? message
-      : 'Invalid XRB address'
-    : undefined;
+    !walletValidator.validate(value, 'XRB', 'both') ? message || 'Invalid XRB address' : undefined;
 
 const qtumAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'QTUM', 'both')
-    ? message
-      ? message
-      : 'Invalid QTUM address'
-    : undefined;
+    !walletValidator.validate(value, 'QTUM', 'both') ? message || 'Invalid QTUM address' : undefined;
 
 const ptsAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'PTS', 'both')
-    ? message
-      ? message
-      : 'Invalid protoshares address'
-    : undefined;
+    !walletValidator.validate(value, 'PTS', 'both') ? message || 'Invalid protoshares address' : undefined;
 
 const ppcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'PPC', 'both')
-    ? message
-      ? message
-      : 'Invalid PPC address'
-    : undefined;
+    !walletValidator.validate(value, 'PPC', 'both') ? message || 'Invalid PPC address' : undefined;
 
 const gasAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'GAS', 'both')
-    ? message
-      ? message
-      : 'Invalid GAS address'
-    : undefined;
+    !walletValidator.validate(value, 'GAS', 'both') ? message || 'Invalid GAS address' : undefined;
 
 const nmcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'NMC', 'both')
-    ? message
-      ? message
-      : 'Invalid NMC address'
-    : undefined;
+    !walletValidator.validate(value, 'NMC', 'both') ? message || 'Invalid NMC address' : undefined;
 
 const mecAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'MEC', 'both')
-    ? message
-      ? message
-      : 'Invalid MEC address'
-    : undefined;
+    !walletValidator.validate(value, 'MEC', 'both') ? message || 'Invalid MEC address' : undefined;
 
 const ltcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'LTC', 'both')
-    ? message
-      ? message
-      : 'Invalid LTC address'
-    : undefined;
+    !walletValidator.validate(value, 'LTC', 'both') ? message || 'Invalid LTC address' : undefined;
 
 const kmdAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'KMD', 'both')
-    ? message
-      ? message
-      : 'Invalid KMD address'
-    : undefined;
+    !walletValidator.validate(value, 'KMD', 'both') ? message || 'Invalid KMD address' : undefined;
 
 const hushAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'HUSH', 'both')
-    ? message
-      ? message
-      : 'Invalid HUSH address'
-    : undefined;
+    !walletValidator.validate(value, 'HUSH', 'both') ? message || 'Invalid HUSH address' : undefined;
 
 const grlcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'GRLC', 'both')
-    ? message
-      ? message
-      : 'Invalid GRLC address'
-    : undefined;
+    !walletValidator.validate(value, 'GRLC', 'both') ? message || 'Invalid GRLC address' : undefined;
 
 const frcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'FRC', 'both')
-    ? message
-      ? message
-      : 'Invalid FRC address'
-    : undefined;
+    !walletValidator.validate(value, 'FRC', 'both') ? message || 'Invalid FRC address' : undefined;
 
 const dogeAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'DOGE', 'both')
-    ? message
-      ? message
-      : 'Invalid DOGE address'
-    : undefined;
+    !walletValidator.validate(value, 'DOGE', 'both') ? message || 'Invalid DOGE address' : undefined;
 
 const dgbAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'DGB', 'both')
-    ? message
-      ? message
-      : 'Invalid DGB address'
-    : undefined;
+    !walletValidator.validate(value, 'DGB', 'both') ? message || 'Invalid DGB address' : undefined;
 
 const dcrAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'DCR', 'both')
-    ? message
-      ? message
-      : 'Invalid DCR address'
-    : undefined;
+    !walletValidator.validate(value, 'DCR', 'both') ? message || 'Invalid DCR address' : undefined;
 
 const cloAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'CLO', 'both')
-    ? message
-      ? message
-      : 'Invalid CLO address'
-    : undefined;
+    !walletValidator.validate(value, 'CLO', 'both') ? message || 'Invalid CLO address' : undefined;
 
 const btgAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'BTG', 'both')
-    ? message
-      ? message
-      : 'Invalid BTG address'
-    : undefined;
+    !walletValidator.validate(value, 'BTG', 'both') ? message || 'Invalid BTG address' : undefined;
 
 const bchAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'BCH', 'both')
-    ? message
-      ? message
-      : 'Invalid BCH address'
-    : undefined;
+    !walletValidator.validate(value, 'BCH', 'both') ? message || 'Invalid BCH address' : undefined;
 
 const bioAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'BIO', 'both')
-    ? message
-      ? message
-      : 'Invalid BIO address'
-    : undefined;
+    !walletValidator.validate(value, 'BIO', 'both') ? message || 'Invalid BIO address' : undefined;
 
 const bvcAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'BVC', 'both')
-    ? message
-      ? message
-      : 'Invalid BVC address'
-    : undefined;
+    !walletValidator.validate(value, 'BVC', 'both') ? message || 'Invalid BVC address' : undefined;
 
 const bkxAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'BKX', 'both')
-    ? message
-      ? message
-      : 'Invalid BKX address'
-    : undefined;
+    !walletValidator.validate(value, 'BKX', 'both') ? message || 'Invalid BKX address' : undefined;
 
 const aurAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'AUR', 'both')
-    ? message
-      ? message
-      : 'Invalid AUR address'
-    : undefined;
+    !walletValidator.validate(value, 'AUR', 'both') ? message || 'Invalid AUR address' : undefined;
 
 const bnbAddress = (message?: string) => (value: string) => {
-  const regexp = new RegExp('^(t)?(bnb)([a-z0-9]{39})$'); // t(for testnet) bnb + 39 a-z0-9
-  if (!regexp.test(value)) {
-    return message ? message : 'Invalid BNB address';
-  }
-  return undefined;
+    const reg = new RegExp('^(t)?(bnb)([a-z0-9]{39})$'); // t(for testnet) bnb + 39 a-z0-9
+    if (!reg.test(value)) {
+        return message || 'Invalid BNB address';
+    }
+    return undefined;
 };
 
 const zilAddress = (message?: string) => (value: string) => {
-  if (!validation.isBech32(value)) {
-    return message ? message : 'Invalid ZIL address';
-  }
-  return undefined;
+    if (!validation.isBech32(value)) {
+        return message || 'Invalid ZIL address';
+    }
+    return undefined;
 };
 // the same as ETH
 const tomoAddress = (message?: string) => (value: string) =>
-  !walletValidator.validate(value, 'ETH', 'both')
-    ? message
-      ? message
-      : 'Invalid TOMO address'
-    : undefined;
+    !walletValidator.validate(value, 'ETH', 'both') ? message || 'Invalid TOMO address' : undefined;
 
 // /**
 //  *
@@ -386,18 +240,9 @@ const tomoAddress = (message?: string) => (value: string) =>
 //   return false;
 // };
 
-const combinedAmount = [
-  required,
-  number,
-  largerThan(0, 'Please enter an amount greater than 0'),
-];
+const combinedAmount = [required, number, largerThan(0, 'Please enter an amount greater than 0')];
 
-const combinedNanoAmount = [
-  required,
-  isInteger,
-  number,
-  minValue(1, 'Please enter an amount greater than 1.'),
-];
+const combinedNanoAmount = [required, isInteger, number, minValue(1, 'Please enter an amount greater than 1.')];
 
 const combinedIncognitoAddress = [required, incognitoAddress()];
 const combinedETHAddress = [required, ethAddress()];
@@ -454,10 +299,10 @@ const combinedUnknownAddress = [required, minLength(15)];
 //   }),
 // ];
 const combinedAccountName = [
-  required,
-  minLength(1),
-  maxLength(50),
-  regexp(/\w+$/i, 'Please use a valid account name (Ex: "Cat, Account-1,..").'),
+    required,
+    minLength(1),
+    maxLength(50),
+    regexp(/\w+$/i, 'Please use a valid account name (Ex: "Cat, Account-1,..").'),
 ];
 
 // const isBNBAddress = (address) => {
@@ -467,54 +312,54 @@ const combinedAccountName = [
 
 // const isZILAddress = (address) => validation.isBech32(address);
 
-const invalidAddress = (message: string) => () =>
-  message ? message : 'Invalid address';
+const invalidAddress = (message: string) => () => message || 'Invalid address';
 
 const validator = {
-  required,
-  maxValue,
-  minValue,
-  combinedAmount,
-  combinedAccountName,
-  combinedNanoAmount,
-  invalidAddress,
-  combinedIncognitoAddress,
-  combinedETHAddress,
-  combinedTOMOAddress,
-  combinedBTCAddress,
-  combinedBNBAddress,
-  combinedNEOAddress,
-  combinedZenAddress,
-  combinedZCLAddress,
-  combinedZECAddress,
-  combinedVOTAddress,
-  combinedVTCAddress,
-  combinedSNGAddress,
-  combinedXRBAddress,
-  combinedXRPAddress,
-  combinedQTUMAddress,
-  combinedPTSAddress,
-  combinedPPCAddress,
-  combinedGASAddress,
-  combinedNMCAddress,
-  combinedMECAddress,
-  combinedLTCAddress,
-  combinedKMDAddress,
-  combinedHUSHAddress,
-  combinedGRLCAddress,
-  combinedFRCAddress,
-  combinedDOGEAddress,
-  combinedDGBAddress,
-  combinedDCRAddress,
-  combinedCLOAddress,
-  combinedBTGAddress,
-  combinedBCHAddress,
-  combinedBIOAddress,
-  combinedBVCAddress,
-  combinedBKXAddress,
-  combinedAURAddress,
-  combinedZILAddress,
-  combinedUnknownAddress,
+    required,
+    maxValue,
+    minValue,
+    combinedAmount,
+    combinedAccountName,
+    combinedNanoAmount,
+    invalidAddress,
+    combinedIncognitoAddress,
+    combinedETHAddress,
+    combinedTOMOAddress,
+    combinedBTCAddress,
+    combinedBNBAddress,
+    combinedNEOAddress,
+    combinedZenAddress,
+    combinedZCLAddress,
+    combinedZECAddress,
+    combinedVOTAddress,
+    combinedVTCAddress,
+    combinedSNGAddress,
+    combinedXRBAddress,
+    combinedXRPAddress,
+    combinedQTUMAddress,
+    combinedPTSAddress,
+    combinedPPCAddress,
+    combinedGASAddress,
+    combinedNMCAddress,
+    combinedMECAddress,
+    combinedLTCAddress,
+    combinedKMDAddress,
+    combinedHUSHAddress,
+    combinedGRLCAddress,
+    combinedFRCAddress,
+    combinedDOGEAddress,
+    combinedDGBAddress,
+    combinedDCRAddress,
+    combinedCLOAddress,
+    combinedBTGAddress,
+    combinedBCHAddress,
+    combinedBIOAddress,
+    combinedBVCAddress,
+    combinedBKXAddress,
+    combinedAURAddress,
+    combinedZILAddress,
+    combinedUnknownAddress,
+    email,
 };
 
 export default validator;

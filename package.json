@@ -36,7 +36,7 @@
         "css-loader": "4.3.0",
         "dotenv": "8.2.0",
         "dotenv-expand": "5.1.0",
-        "eslint": "^7.11.0",
+        "eslint": "^7.15.0",
         "eslint-config-react-app": "^6.0.0",
         "eslint-plugin-flowtype": "^5.2.0",
         "eslint-plugin-import": "^2.22.1",
@@ -109,7 +109,7 @@
         "start": "node scripts/start.js",
         "build": "node scripts/build.js",
         "test": "node scripts/test.js",
-        "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+        "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix"
     },
     "eslintConfig": {
         "extends": [
@@ -152,6 +152,9 @@
         "@types/reselect": "^2.2.0",
         "@types/styled-components": "^5.1.4",
         "@types/webpack-env": "^1.15.3",
+        "eslint-config-airbnb": "^18.2.1",
+        "eslint-config-airbnb-typescript": "^12.0.0",
+        "eslint-config-airbnb-typescript-prettier": "^4.1.0",
         "eslint-config-prettier": "^7.0.0",
         "eslint-plugin-prettier": "^3.3.0",
         "prettier": "^2.2.1",

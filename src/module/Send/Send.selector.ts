@@ -4,18 +4,18 @@ import { selectedPrivacySelector } from 'src/module/Token';
 import { getSendData } from './Send.utils';
 
 export const sendSelector = createSelector(
-  (state: IRootState) => state.send,
-  (send) => send
+    (state: IRootState) => state.send,
+    (send) => send,
 );
 
 export const sendDataSelector = createSelector(
-  sendSelector,
-  selectedPrivacySelector,
-  (state: IRootState) => state,
-  (send, selectedPrivacy, state) =>
-    getSendData({
-      send,
-      selectedPrivacy,
-      state,
-    })
+    sendSelector,
+    selectedPrivacySelector,
+    (state: IRootState) => state,
+    (send, selectedPrivacy, state) =>
+        getSendData({
+            send,
+            selectedPrivacy,
+            state,
+        }),
 );

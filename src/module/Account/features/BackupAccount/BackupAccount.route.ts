@@ -2,11 +2,11 @@ import { lazy } from 'react';
 import { IRouteProps } from 'src/module';
 
 const templatesRoute: IRouteProps = {
-  path: '/backup-account',
-  exact: true,
-  component: lazy(() => import('./BackupAccount')),
-  name: 'Backup Account',
-  to: '/backup-account',
+    path: '/backup-account',
+    exact: true,
+    component: lazy(() => import('./BackupAccount')),
+    name: 'Backup Account',
+    to: '/backup-account',
 };
 
 export const route = '/backup-account';

@@ -5,34 +5,32 @@ import QrCode from 'src/components/Icons/QrCode';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { route as receiveRoute } from 'src/module/Account/features/Receive';
 
-interface IProps {}
-
 const Styled = styled.div`
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .menu {
+    margin-bottom: 30px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-  }
-  .menu .btn-select-account {
-    margin-left: 10px;
-  }
+    .menu {
+        display: flex;
+        align-items: center;
+    }
+    .menu .btn-select-account {
+        margin-left: 10px;
+    }
 `;
 
-const HeaderApp = (props: IProps) => {
-  return (
-    <Styled>
-      <div className='menu'>
-        <SettingIcon />
-      </div>
-      <div className='menu'>
-        <QrCode route={receiveRoute} />
-        <BtnSelectAccount />
-      </div>
-    </Styled>
-  );
-};
+const HeaderApp = React.memo(() => {
+    return (
+        <Styled>
+            <div className="menu">
+                <SettingIcon />
+            </div>
+            <div className="menu">
+                <QrCode route={receiveRoute} />
+                <BtnSelectAccount />
+            </div>
+        </Styled>
+    );
+});
 
 export default HeaderApp;
