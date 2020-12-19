@@ -9,6 +9,8 @@ import { COINS } from 'src/constants';
 import { IRootState } from 'src/redux/interface';
 import { formValueSelector } from 'redux-form';
 import { FORM_CONFIGS } from './Send.enhance';
+import { isEmpty } from 'lodash';
+import convert from 'src/utils/convert';
 
 export const DEFAULT_FEE_PER_KB_HUMAN_AMOUNT = 0.000000001; // in nano
 export const DEFAULT_FEE_PER_KB = DEFAULT_FEE_PER_KB_HUMAN_AMOUNT * 1e9; // in nano
@@ -26,17 +28,17 @@ export const getMaxAmount = ({
 }) => {
   const { amount, isNativeToken, pDecimals } = selectedPrivacy;
   let bnAmount = new BigNumber(amount);
-  let amountNumber = bnAmount.toNumber();
+  const bnTotalFee = new BigNumber(totalFee);
   if (isUseTokenFee || isNativeToken) {
-    const newAmount = bnAmount.minus(totalFee);
-    amountNumber = Math.max(newAmount.toNumber(), 0);
+    bnAmount = bnAmount.minus(bnTotalFee);
   }
-  const maxAmount = Math.max(floor(amountNumber), 0);
-  const maxAmountText = format.formatAmount({
-    originalAmount: maxAmount,
+  const maxAmount = Math.max(bnAmount.toNumber(), 0);
+  const maxAmountText = format.toFixed({
+    number: convert.toHumanAmount({
+      originalAmount: maxAmount,
+      decimals: pDecimals,
+    }),
     decimals: pDecimals,
-    decimalDigits: false,
-    clipAmount: false,
   });
   return {
     maxAmount,
@@ -66,7 +68,6 @@ export const getSendData: (props: {
     // isAddressValidated,
     // isValidETHAddress,
     // userFees,
-    // types,
     // fast2x,
     // feePrvText,
     // feePTokenText,
@@ -86,7 +87,13 @@ export const getSendData: (props: {
     ? selectedPrivacy?.pDecimals
     : COINS.PRV.pDecimals;
   const fee = isUseTokenFee ? feePToken : feePrv;
-  const userFee = isUseTokenFee ? userFeePToken : userFeePrv;
+  const feeText = format.formatAmount({
+    originalAmount: fee,
+    decimalDigits: false,
+    clipAmount: false,
+    decimals: feePDecimals,
+  });
+  // const userFee = isUseTokenFee ? userFeePToken : userFeePrv;
   const totalFeeText = isUseTokenFee ? totalFeePTokenText : totalFeePrvText;
   const totalFee = isUseTokenFee ? totalFeePToken : totalFeePrv;
   const { maxAmount, maxAmountText } = getMaxAmount({
@@ -99,12 +106,6 @@ export const getSendData: (props: {
   if (isFetching) {
     titleBtnSubmit = 'Calculating fee...';
   }
-  // const feeText = format.formatAmount({
-  //   originalAmount: fee,
-  //   decimalDigits: false,
-  //   clipAmount: false,
-  //   decimals: feePDecimals,
-  // });
 
   const selector = formValueSelector(FORM_CONFIGS.formName);
   const inputAmount = selector(state, FORM_CONFIGS.amount);
@@ -115,8 +116,12 @@ export const getSendData: (props: {
     selectedPrivacy.isNativeToken;
   return {
     fee,
+    feeText,
     feeUnitByTokenId: actived,
     feePDecimals,
+
+    totalFee,
+    totalFeeText,
 
     minAmount,
     minAmountText,
@@ -239,3 +244,20 @@ export const getTotalFee = ({
 
 export const hasMultiLevelUsersFee = (data: IUserFeesData) =>
   !!data?.PrivacyFees?.Level2 || !!data?.TokenFees?.Level2;
+
+export const removeAllSpace = (str: string) => {
+  if (isEmpty(str)) return str;
+  return str.replace(/\s/g, '');
+};
+
+export const standardizedAddress = (address: string) => {
+  if (!address) {
+    return '';
+  }
+  let indexParams = address?.indexOf('?');
+  let newAddress = address;
+  if (indexParams !== -1) {
+    newAddress = address.substring(0, indexParams);
+  }
+  return removeAllSpace(newAddress);
+};

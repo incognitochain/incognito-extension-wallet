@@ -1,6 +1,6 @@
 import { ILanguage } from '.';
 
-const en: ILanguage = {
+const vn: ILanguage = {
   general: {
     copied: 'Copied',
     copy: 'Copy',
@@ -106,12 +106,13 @@ const en: ILanguage = {
   },
   send: {
     headerTitle: 'Send',
-    amount: 'Amount',
+    amount: 'Enter amount',
     toAddress: 'To',
-    incognitoAddress: 'Incognito Address',
+    incognitoAddress: 'Enter address',
     fee: 'Fee',
     memo: 'Memo',
-    placeholderMemo: 'Add a note (optional)',
+    placeholderMemo: 'Add a memo (optional)',
+    balance: 'Balance',
     confirm: {
       headerTitle: 'Back',
       txId: 'TxID',
@@ -119,6 +120,7 @@ const en: ILanguage = {
       time: 'Time',
       toAddress: 'To address',
       amount: 'Amount',
+      sent: 'Sent.',
     },
   },
   history: {
@@ -147,4 +149,4 @@ const en: ILanguage = {
   },
 };
 
-export default en;
+export default vn;

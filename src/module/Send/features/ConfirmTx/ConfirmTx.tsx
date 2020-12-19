@@ -12,13 +12,14 @@ import {
 } from 'src/module/History';
 import { serverSelector } from 'src/module/Preload';
 import { translateByFieldSelector } from 'src/module/Configs';
+import { IConfirmTxLanguage } from 'src/i18n';
 
 interface IProps {}
 
 const Styled = styled.div`
   p.title {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
   }
 `;
 
@@ -26,14 +27,9 @@ const ConfirmTx = (props: IProps) => {
   const { state }: { state: any } = useLocation();
   const { txId }: { txId: string } = state;
   const server = useSelector(serverSelector);
-  const confirmLanguage: {
-    headerTitle: string;
-    txId: string;
-    fee: string;
-    time: string;
-    toAddress: string;
-    amount: string;
-  } = useSelector(translateByFieldSelector)('send.confirm');
+  const confirmLanguage: IConfirmTxLanguage = useSelector(
+    translateByFieldSelector
+  )('send.confirm');
   const tx: ICacheHistoryTokenSelector | undefined = useSelector(
     historyCacheByTxIdSelector
   )(txId);
@@ -67,8 +63,10 @@ const ConfirmTx = (props: IProps) => {
   ];
   return (
     <Styled>
-      <Header title={`Confirm Tx`} />
-      <p className='title fw-bold fs-supermedium center-text'>Sent.</p>
+      <Header title={confirmLanguage.headerTitle} />
+      <p className='title fw-bold fs-supermedium center-text'>
+        {confirmLanguage.sent}
+      </p>
       {itemsFactories.map((item: IHistoryItem) => (
         <HistoryItem key={item.title} {...item} />
       ))}

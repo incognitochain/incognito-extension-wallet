@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
@@ -28,13 +28,7 @@ const Header = (props: IMergeProps & any) => {
   return (
     <Styled className='header'>
       <div className='left'>
-        <ArrowLeftIcon
-          to='#'
-          onClick={(e: SyntheticEvent) => {
-            e.preventDefault();
-            handleClick();
-          }}
-        />
+        <ArrowLeftIcon onClick={handleClick} />
         {renderHeaderTitle()}
       </div>
       <div className='right'>

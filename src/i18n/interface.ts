@@ -14,6 +14,16 @@ export interface IAddressBookLanguage {
   headerTitleEdit: string;
 }
 
+export interface IConfirmTxLanguage {
+  headerTitle: string;
+  txId: string;
+  fee: string;
+  time: string;
+  toAddress: string;
+  amount: string;
+  sent: string;
+}
+
 export interface ISendLanguage {
   headerTitle: string;
   amount: string;
@@ -22,14 +32,8 @@ export interface ISendLanguage {
   fee: string;
   memo: string;
   placeholderMemo: string;
-  confirm: {
-    headerTitle: string;
-    txId: string;
-    fee: string;
-    time: string;
-    toAddress: string;
-    amount: string;
-  };
+  confirm: IConfirmTxLanguage;
+  balance: string;
 }
 
 export interface IHistoryLanguage {

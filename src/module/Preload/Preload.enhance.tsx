@@ -6,6 +6,7 @@ import { actionFetch as actionPreloadApp } from './Preload.actions';
 import { IPreloadReducer } from './Preload.reducer';
 import { preloadSelector } from './Preload.selector';
 import Spinner from 'react-bootstrap/esm/Spinner';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 
 const Styled = styled.div`
   width: 100%;
@@ -30,10 +31,18 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
 ) => {
   const dispatch = useDispatch();
   const { isFetching }: IPreloadReducer = useSelector(preloadSelector);
-  const handlePreload = () => {
+  const handlePreload = async () => {
     try {
-      dispatch(actionPreloadApp());
-    } catch (error) {}
+      await dispatch(actionPreloadApp());
+    } catch (error) {
+      dispatch(
+        actionToggleToast({
+          toggle: true,
+          value: error,
+          type: TOAST_CONFIGS.error,
+        })
+      );
+    }
   };
   React.useEffect(() => {
     handlePreload();

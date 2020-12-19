@@ -5,22 +5,25 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-  width: 9px;
-  height: 100%;
-  margin-right: 15px;
+  width: 20px;
+  height: 20px;
 `;
 
-const ArrowLeft = (
+const AddressBook = (
   props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>
 ) => {
   return (
-    <Styled {...props}>
+    <Styled
+      type='button'
+      className={`icon ${props?.className || ''}`}
+      {...props}
+    >
       <img
-        src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/arrow-left.png`}
+        src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/address-book.png`}
         alt=''
       />
     </Styled>
   );
 };
 
-export default ArrowLeft;
+export default AddressBook;

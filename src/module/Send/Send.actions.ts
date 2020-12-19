@@ -9,7 +9,7 @@ import {
   ACTION_FETCHED_FEE,
   ACTION_FETCH_FAIL_FEE,
   ACTION_ADD_FEE_TYPE,
-  // ACTION_CHANGE_FEE_TYPE,
+  ACTION_CHANGE_FEE_TYPE,
   ACTION_FETCHED_PTOKEN_FEE,
   ACTION_FETCHED_MIN_PTOKEN_FEE,
   // ACTION_CHANGE_FEE,
@@ -26,6 +26,7 @@ import {
 } from './Send.constant';
 import { apiGetEstimateFeeFromChain } from './Send.services';
 import {
+  getMaxAmount,
   MAX_FEE_PER_TX,
   // getMaxAmount,
   // getTotalFee
@@ -40,6 +41,7 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import { COINS } from 'src/constants';
 import { ISendReducer } from './Send.reducer';
 import { FORM_CONFIGS } from './Send.enhance';
+import { ISendData } from './Send.interface';
 
 export const actionInitEstimateFee = (config: { screen: string }) => async (
   dispatch: Dispatch,
@@ -433,10 +435,10 @@ export const actionAddFeeType = (payload: {
   payload,
 });
 
-// export const actionChangeFeeType = (payload) => ({
-//   type: ACTION_CHANGE_FEE_TYPE,
-//   payload,
-// });
+export const actionChangeFeeType = (payload: string) => ({
+  type: ACTION_CHANGE_FEE_TYPE,
+  payload,
+});
 
 export const actionFetchedPTokenFee = (payload: {
   feePToken: number;
@@ -461,64 +463,74 @@ export const actionFetchedMinPTokenFee = (payload: {
 //   payload,
 // });
 
-// export const actionFetchFeeByMax = () => async (dispatch, getState) => {
-//   const state = getState();
-//   const selectedPrivacy = selectedPrivacySeleclor.selectedPrivacy(state);
-//   const {
-//     isUseTokenFee,
-//     isFetched,
-//     totalFee,
-//     isFetching,
-//     tokenId,
-//   } = feeDataSelector(state);
-//   const { amount, isMainCrypto, pDecimals, isToken } = selectedPrivacy;
-//   const feeEst = MAX_FEE_PER_TX;
-//   let _amount = Math.max(isMainCrypto ? amount - feeEst : amount, 0);
-//   let maxAmount = floor(_amount, pDecimals);
-//   let maxAmountText = format.toFixed(
-//     convert.toHumanAmount(maxAmount, pDecimals),
-//     pDecimals
-//   );
-//   if (isFetching) {
-//     return;
-//   }
-//   try {
-//     if (isFetched) {
-//       const { maxAmountText: _maxAmountText } = getMaxAmount({
-//         selectedPrivacy,
-//         isUseTokenFee,
-//         totalFee,
-//       });
-//       maxAmountText = _maxAmountText;
-//     } else {
-//       await dispatch(actionFetchingFee());
-//       if (isToken) {
-//         const feePTokenEst = await apiGetEstimateFeeFromChain({
-//           Prv: feeEst,
-//           TokenID: tokenId,
-//         });
-//         if (feePTokenEst) {
-//           await new Promise.all([
-//             dispatch(actionHandleFeePTokenEst({ feePTokenEst })),
-//             dispatch(actionHandleMinFeeEst({ minFeePTokenEst: feePTokenEst })),
-//           ]);
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   } finally {
-//     if (!isFetched) {
-//       await dispatch(
-//         actionHandleFeeEst({
-//           feeEst,
-//         })
-//       );
-//     }
-//     // eslint-disable-next-line no-unsafe-finally
-//     return maxAmountText;
-//   }
-// };
+export const actionFetchFeeByMax = () => async (
+  dispatch: Dispatch,
+  getState: () => IRootState
+) => {
+  const state = getState();
+  const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
+  const apiURL2 = apiURL2Selector(state);
+  const { isFetched, isFetching }: ISendReducer = sendSelector(state);
+  const { isUseTokenFee, totalFee }: ISendData = sendDataSelector(state);
+  const { amount, isNativeToken, pDecimals, isToken } = selectedPrivacy;
+  let bnAmount = new BigNumber(amount);
+  const bnFeeEst = new BigNumber(MAX_FEE_PER_TX);
+  let maxAmount = Math.max(
+    isNativeToken ? bnAmount.minus(bnFeeEst).toNumber() : amount,
+    0
+  );
+  let maxAmountText = format.toFixed({
+    number: convert.toHumanAmount({
+      originalAmount: maxAmount,
+      decimals: pDecimals,
+    }),
+    decimals: pDecimals,
+  });
+  let feeEst = bnFeeEst.toNumber();
+  if (isFetching) {
+    return;
+  }
+  try {
+    if (isFetched) {
+      const { maxAmountText: _maxAmountText } = getMaxAmount({
+        selectedPrivacy,
+        isUseTokenFee,
+        totalFee,
+      });
+      maxAmountText = _maxAmountText;
+    } else {
+      await dispatch(actionFetchingFee());
+      if (isToken) {
+        try {
+          const feePTokenEst: any = await apiGetEstimateFeeFromChain(apiURL2, {
+            Prv: feeEst,
+            TokenID: selectedPrivacy.tokenId,
+          });
+          if (feePTokenEst) {
+            await Promise.all([
+              actionHandleFeePTokenEst({ feePTokenEst })(dispatch, getState),
+              actionHandleMinFeeEst({ minFeePTokenEst: feePTokenEst })(
+                dispatch,
+                getState
+              ),
+            ]);
+          }
+        } catch (error) {
+          console.debug(error);
+        }
+      }
+    }
+  } catch (error) {
+    throw error;
+  } finally {
+    if (!isFetched) {
+      await actionHandleFeeEst({
+        feeEst,
+      })(dispatch, getState);
+    }
+  }
+  return maxAmountText;
+};
 
 // export const actionFetchedValidAddr = (payload) => ({
 //   type: ACTION_FETCHED_VALID_ADDR,
