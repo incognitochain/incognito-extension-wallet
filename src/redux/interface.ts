@@ -1,4 +1,3 @@
-import { IHomeReducer } from 'src/module/Home';
 import { IPreloadReducer } from 'src/module/Preload';
 import { ITokenReducer } from 'src/module/Token';
 import { IWalletReducer } from 'src/module/Wallet';
@@ -12,21 +11,20 @@ import { IHistoryReducer } from 'src/module/History';
 import { IAddressBookReducer } from 'src/module/AddressBook';
 
 export interface IAction {
-  type: string;
-  payload: any;
+    type: string;
+    payload: any;
 }
 
 export interface IRootState {
-  home: IHomeReducer;
-  wallet: IWalletReducer;
-  preload: IPreloadReducer;
-  token: ITokenReducer;
-  configs: IConfigsReducer;
-  account: IAccountReducer;
-  modal: IModalReducer;
-  toast: IToastReducer;
-  setting: ISettingReducer;
-  send: ISendReducer;
-  history: IHistoryReducer;
-  addressBook: IAddressBookReducer;
+    wallet: IWalletReducer;
+    preload: IPreloadReducer;
+    token: ITokenReducer;
+    configs: IConfigsReducer;
+    account: IAccountReducer;
+    modal: IModalReducer;
+    toast: IToastReducer;
+    setting: ISettingReducer;
+    send: ISendReducer;
+    history: IHistoryReducer;
+    addressBook: IAddressBookReducer;
 }

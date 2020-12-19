@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import withApp from './App.enhance';
 import { Router, Route, Switch } from 'react-router-dom';
 import { GlobalStyled } from 'src/styles/index';
 import routes, { IRouteProps } from 'src/module';
@@ -14,28 +13,29 @@ import './reset.scss';
 import { Toast } from './components';
 import { HeaderApp } from './components/Header';
 import { themeSelector } from './module/Configs';
+import withApp from './App.enhance';
 
 const history = isDev ? createBrowserHistory() : createMemoryHistory(); // Instead of createBrowserHistory();
 
 const App: React.FunctionComponent = () => {
-  const theme = useSelector(themeSelector);
-  return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyled />
-      <Router history={history}>
-        <HeaderApp />
-        <Switch>
-          <Suspense fallback={'...'}>
-            {routes.map((route: IRouteProps) => (
-              <Route {...route} key={route.path} />
-            ))}
-          </Suspense>
-        </Switch>
-        <Modal />
-        <Toast />
-      </Router>
-    </ThemeProvider>
-  );
+    const theme = useSelector(themeSelector);
+    return (
+        <ThemeProvider theme={theme}>
+            <GlobalStyled />
+            <Router history={history}>
+                <HeaderApp />
+                <Switch>
+                    <Suspense fallback="...">
+                        {routes.map((route: IRouteProps) => (
+                            <Route {...route} key={route.path} />
+                        ))}
+                    </Suspense>
+                </Switch>
+                <Modal />
+                <Toast />
+            </Router>
+        </ThemeProvider>
+    );
 };
 
 export default withApp(React.memo(App));

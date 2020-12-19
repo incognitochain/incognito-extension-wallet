@@ -4,49 +4,49 @@ import { COLORS } from './colors';
 import { FONT_SIZES } from './fontSize';
 
 export interface ITheme {
-  body: string;
-  text: string;
-  subText: string;
-  toggleBorder: string;
-  gradient: string;
-  button: string;
-  textButton: string;
-  width: string;
-  minWidth: string;
-  maxWidth: string;
-  height: string;
+    body: string;
+    text: string;
+    subText: string;
+    toggleBorder: string;
+    gradient: string;
+    button: string;
+    textButton: string;
+    width: string;
+    minWidth: string;
+    maxWidth: string;
+    height: string;
 }
 
 export interface IGlobalStyle {
-  theme: ITheme;
+    theme: ITheme;
 }
 
 export const lightTheme: ITheme = {
-  body: COLORS.white,
-  text: COLORS.black,
-  subText: COLORS.colorGreyBold,
-  toggleBorder: COLORS.white,
-  gradient: 'linear-gradient(#39598A, #79D7ED)',
-  button: '#333335',
-  textButton: COLORS.white,
-  width: '357px',
-  minWidth: '320px',
-  maxWidth: '375px',
-  height: '600px',
+    body: COLORS.white,
+    text: COLORS.black,
+    subText: COLORS.colorGreyBold,
+    toggleBorder: COLORS.white,
+    gradient: 'linear-gradient(#39598A, #79D7ED)',
+    button: '#333335',
+    textButton: COLORS.white,
+    width: '357px',
+    minWidth: '320px',
+    maxWidth: '375px',
+    height: '600px',
 };
 
 export const darkTheme: ITheme = {
-  body: '#363537',
-  text: '#FAFAFA',
-  subText: COLORS.colorGreyLight,
-  toggleBorder: '#6B8096',
-  gradient: 'linear-gradient(#091236, #1E215D)',
-  button: COLORS.colorGreyBold,
-  textButton: COLORS.white,
-  width: '357px',
-  minWidth: '320px',
-  maxWidth: '375px',
-  height: '600px',
+    body: '#363537',
+    text: '#FAFAFA',
+    subText: COLORS.colorGreyLight,
+    toggleBorder: '#6B8096',
+    gradient: 'linear-gradient(#091236, #1E215D)',
+    button: COLORS.colorGreyBold,
+    textButton: COLORS.white,
+    width: '357px',
+    minWidth: '320px',
+    maxWidth: '375px',
+    height: '600px',
 };
 
 export const DEFAULT_THEME = lightTheme;

@@ -7,36 +7,34 @@ import { translateByFieldSelector } from 'src/module/Configs';
 import styled from 'styled-components';
 import { paymentAddressSelector } from 'src/module/Account';
 
-interface IProps {}
-
 const Styled = styled.div`
-  .hook {
-    margin-top: 15px;
-  }
+    .hook {
+        margin-top: 15px;
+    }
 `;
 
-const Receive = (props: IProps) => {
-  const translate: IAccountLanguage = useSelector(translateByFieldSelector)(
-    'account'
-  );
-  const paymentAddress = useSelector(paymentAddressSelector);
-  return (
-    <Styled>
-      <Header title={translate.receive.headerTitle} />
-      <QrCode
-        qrCodeProps={{
-          value: paymentAddress,
-        }}
-        hook={
-          <div className='hook'>
-            {translate.receive.hook.split('\n').map((text: string) => (
-              <p className='fw-regular fs-regular center-text'>{text}</p>
-            ))}
-          </div>
-        }
-      />
-    </Styled>
-  );
+const Receive = () => {
+    const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
+    const paymentAddress = useSelector(paymentAddressSelector);
+    return (
+        <Styled>
+            <Header title={translate.receive.headerTitle} />
+            <QrCode
+                qrCodeProps={{
+                    value: paymentAddress,
+                }}
+                hook={
+                    <div className="hook">
+                        {translate.receive.hook.split('\n').map((text: string) => (
+                            <p className="fw-regular fs-regular center-text" key={text}>
+                                {text}
+                            </p>
+                        ))}
+                    </div>
+                }
+            />
+        </Styled>
+    );
 };
 
 export default Receive;

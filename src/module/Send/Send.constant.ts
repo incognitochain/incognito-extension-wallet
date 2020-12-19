@@ -17,3 +17,10 @@ export const ACTION_FETCHING_USER_FEES = '[send] Fetching user fees';
 export const ACTION_FETCH_FAIL_USER_FEES = '[send] Fetch fail user fees';
 export const ACTION_TOGGLE_FAST_FEE = '[send] Toggle fast fee';
 export const ACTION_REMOVE_FEE_TYPE = '[send] Remove fee type';
+export const FORM_CONFIGS = {
+    formName: 'form-send',
+    amount: 'amount',
+    toAddress: 'toAddress',
+    fee: 'fee',
+    memo: 'memo',
+};

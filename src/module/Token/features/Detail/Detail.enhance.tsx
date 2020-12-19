@@ -9,32 +9,30 @@ import { selectedTokenIdSelector } from 'src/module/Token';
 
 interface IProps {}
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (
-  props: IProps
-) => {
-  const dispatch = useDispatch();
-  const selectedPrivacyTokenId = useSelector(selectedTokenIdSelector);
-  const fetchData = async () => {
-    try {
-      dispatch(actionFetchCacheHistory());
-    } catch (error) {
-      dispatch(
-        actionToggleToast({
-          toggle: true,
-          value: error?.message || JSON.stringify(error),
-          type: TOAST_CONFIGS.error,
-        })
-      );
-    }
-  };
-  React.useEffect(() => {
-    fetchData();
-  }, [selectedPrivacyTokenId]);
-  return (
-    <ErrorBoundary>
-      <WrappedComponent {...props} />
-    </ErrorBoundary>
-  );
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
+    const dispatch = useDispatch();
+    const selectedPrivacyTokenId = useSelector(selectedTokenIdSelector);
+    const fetchData = async () => {
+        try {
+            dispatch(actionFetchCacheHistory());
+        } catch (error) {
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: error?.message || JSON.stringify(error),
+                    type: TOAST_CONFIGS.error,
+                }),
+            );
+        }
+    };
+    React.useEffect(() => {
+        fetchData();
+    }, [selectedPrivacyTokenId]);
+    return (
+        <ErrorBoundary>
+            <WrappedComponent {...props} />
+        </ErrorBoundary>
+    );
 };
 
 export default compose<IProps, any>(withLayout, enhance);

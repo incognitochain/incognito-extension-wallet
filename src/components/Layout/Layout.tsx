@@ -6,14 +6,12 @@ const Styled = styled.div``;
 
 interface IProps {}
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (
-  props: IProps & any
-) => {
-  return (
-    <Styled className='wrapper'>
-      <WrappedComponent {...props} />
-    </Styled>
-  );
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
+    return (
+        <Styled className="wrapper">
+            <WrappedComponent {...props} />
+        </Styled>
+    );
 };
 
 export default compose<IProps & any, any>(enhance);

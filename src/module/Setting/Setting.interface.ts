@@ -1,3 +1,3 @@
 export interface IInner {
-  settingFactories: any[];
+    settingFactories: any[];
 }

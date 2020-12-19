@@ -3,34 +3,28 @@ import { Field, reduxForm } from 'redux-form';
 import { Input } from 'src/components/ReduxForm/InputField/InputField';
 
 interface IProps {
-  title: string;
+    title: string;
 }
 
 export const FORM_CONFIGS = {
-  formName: 'form-create-header-search-box',
-  searchBox: 'searchBox',
+    formName: 'form-create-header-search-box',
+    searchBox: 'searchBox',
 };
 
 const SearchBox = (props: IProps) => {
-  const { title } = props;
-  return (
-    <Field
-      name={FORM_CONFIGS.searchBox}
-      component={(props: any) => {
-        return (
-          <Input
-            input={props?.input}
+    const { title } = props;
+    return (
+        <Field
+            name={FORM_CONFIGS.searchBox}
+            component={Input}
             componentProps={{
-              placeholder: title,
-              autoFocus: true,
+                placeholder: title,
+                autoFocus: true,
             }}
-          />
-        );
-      }}
-    />
-  );
+        />
+    );
 };
 
-export default reduxForm<{}, any>({
-  form: FORM_CONFIGS.formName,
+export default reduxForm<any, any>({
+    form: FORM_CONFIGS.formName,
 })(React.memo(SearchBox));

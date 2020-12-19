@@ -8,7 +8,7 @@ const rootEl = document.getElementById('root');
 ReactDOM.render(<App />, rootEl);
 
 if (module.hot) {
-  module.hot.accept();
+    module.hot.accept();
 }
 
 // If you want to start measuring performance in your app, pass a function
