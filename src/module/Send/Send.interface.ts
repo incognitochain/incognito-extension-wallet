@@ -28,6 +28,9 @@ export interface ISendData {
   fee: number;
   feeUnitByTokenId: string;
   feePDecimals: number;
+  feeText: string;
+  totalFee: number;
+  totalFeeText: string;
   minAmount: number;
   minAmountText: string;
   maxAmount: number;
@@ -36,9 +39,9 @@ export interface ISendData {
   isUseTokenFee: boolean;
   isUnShield: boolean;
   isSend: boolean;
-  // hasMultiLevel: boolean;
   isIncognitoAddress: boolean;
   inputAmount: string;
   inputMemo: string;
   inputAddress: string;
+  titleBtnSubmit: string;
 }

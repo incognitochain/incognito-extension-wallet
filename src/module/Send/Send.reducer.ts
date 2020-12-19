@@ -72,23 +72,23 @@ const initialState: ISendReducer = {
   isFetching: false,
   isFetched: false,
   minFeePrv: 0,
-  minFeePrvText: '',
+  minFeePrvText: '0',
   feePrv: 0,
-  feePrvText: '',
+  feePrvText: '0',
   maxFeePrv: 0,
-  maxFeePrvText: '',
+  maxFeePrvText: '0',
   feePToken: 0,
-  feePTokenText: '',
+  feePTokenText: '0',
   feeBurnPToken: 0,
-  feeBurnPTokenText: '',
+  feeBurnPTokenText: '0',
   minFeePToken: 0,
-  minFeePTokenText: '',
+  minFeePTokenText: '0',
   maxFeePToken: 0,
-  maxFeePTokenText: '',
+  maxFeePTokenText: '0',
   amount: 0,
-  amountText: '',
+  amountText: '0',
   minAmount: 0,
-  minAmountText: '',
+  minAmountText: '0',
   init: false,
   screen: '',
   types: [
@@ -111,10 +111,10 @@ const initialState: ISendReducer = {
   isValidating: false,
   fast2x: false,
   totalFeePrv: 0,
-  totalFeePrvText: '',
+  totalFeePrvText: '0',
   userFeePrv: 0,
   totalFeePToken: 0,
-  totalFeePTokenText: '',
+  totalFeePTokenText: '0',
   userFeePToken: 0,
 };
 
@@ -193,7 +193,6 @@ const sendReducer = (
       };
     }
     case ACTION_FETCHED_PTOKEN_FEE: {
-      console.debug(`aaaa`, action.payload);
       return {
         ...state,
         ...action.payload,

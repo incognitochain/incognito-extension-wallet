@@ -4,6 +4,8 @@ import isEmpty from 'lodash/isEmpty';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
 import { IAccountReducer } from './Account.interface';
+import { IWalletReducer, walletSelector } from '../Wallet';
+import { cloneDeep } from 'lodash';
 
 export const accountSelector = createSelector(
   (state: IRootState) => state.account,
@@ -28,21 +30,24 @@ export const defaultAccountNameSelector = createSelector(
 export const defaultAccountSelector = createSelector(
   listAccountSelector,
   defaultAccountNameSelector,
-  (state: IRootState) => state.wallet,
+  walletSelector,
   (list, defaultAccountName, walletState) => {
-    let account: any = {};
-    const { loaded } = walletState;
+    const { loaded }: IWalletReducer = walletState;
     if (!loaded) {
-      return null;
+      return {};
     }
+    let account: any = undefined;
     try {
       const { wallet } = walletState;
-      account = wallet.masterAccount.getAccountByName(defaultAccountName);
+      const defaultAccount: AccountInstance = wallet.masterAccount.getAccountByName(
+        defaultAccountName
+      );
+      if (isEmpty(defaultAccount?.name)) {
+        account = list && list[0];
+      }
+      account = cloneDeep(defaultAccount);
     } catch (error) {
       throw error;
-    }
-    if (isEmpty(account?.name)) {
-      account = list && list[0];
     }
     return account;
   }
@@ -51,8 +56,9 @@ export const defaultAccountSelector = createSelector(
 export const isGettingAccountBalanceSelector = createSelector(
   accountSelector,
   defaultAccountSelector,
-  (account: IAccountReducer, defaultAccount: AccountInstance) =>
-    account.gettingBalance.includes(defaultAccount.name)
+  (account: IAccountReducer, defaultAccount: AccountInstance | undefined) =>
+    (defaultAccount && account.gettingBalance.includes(defaultAccount.name)) ||
+    false
 );
 
 export const switchAccountSelector = createSelector(

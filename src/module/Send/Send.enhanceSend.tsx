@@ -14,12 +14,14 @@ import {
   AccountInstance,
   PaymentInfoModel,
 } from 'incognito-js/build/web/browser';
-import { MAX_FEE_PER_TX } from './Send.utils';
 import { route as routeConfirmTx } from './features/ConfirmTx';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
-import { actionFetchCacheHistory } from '../History';
+import { actionFetchCacheHistory } from 'src/module/History';
+import { sendDataSelector } from './Send.selector';
+import { ISendData } from './Send.interface';
+import { floor } from 'lodash';
 
 export interface TInner {
   handleSend: (values: {
@@ -38,6 +40,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
   const account: AccountInstance = useSelector(defaultAccountSelector);
   const chainTokens = useSelector(chainTokensSelector);
   const bridgeTokens = useSelector(bridgeTokensSelector);
+  const { totalFee }: ISendData = useSelector(sendDataSelector);
   const handleSend = async (values: {
     amount: string;
     toAddress: string;
@@ -48,6 +51,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
       if (!amount || !toAddress) {
         return;
       }
+      let fee = toString(totalFee);
       const originalAmount = convert.toOriginalAmount({
         humanAmount: amount,
         decimals: selectedPrivacy.pDecimals,
@@ -55,23 +59,20 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
       const paymentInfos: PaymentInfoModel[] = [
         {
           paymentAddressStr: account.key.keySet.paymentAddressKeySerialized,
-          amount: new BigNumber(originalAmount).toString(),
+          amount: new BigNumber(floor(originalAmount)).toString(),
           message: memo,
         },
       ];
       let tx;
       if (selectedPrivacy.isNativeToken) {
-        tx = await account.nativeToken.transfer(
-          paymentInfos,
-          toString(MAX_FEE_PER_TX)
-        );
+        tx = await account.nativeToken.transfer(paymentInfos, fee);
       } else {
         let token = await account.getPrivacyTokenById(
           selectedPrivacy.tokenId,
           bridgeTokens,
           chainTokens
         );
-        tx = await token.transfer(paymentInfos, toString(MAX_FEE_PER_TX), '');
+        tx = await token.transfer(paymentInfos, '', fee);
       }
       if (!tx) {
         throw new Error(`Failed`);

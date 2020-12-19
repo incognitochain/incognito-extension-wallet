@@ -1,20 +1,17 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { withLayout } from 'src/components/Layout';
-import { selectedPrivacySelector } from 'src/module/Token';
 import { useLocation } from 'react-router-dom';
 import { translateByFieldSelector } from 'src/module/Configs';
+import { selectedPrivacySelector } from 'src/module/Token';
 import { IAddressBookLanguage } from 'src/i18n/interface';
+import { useSearchBox, keySearchSelector } from 'src/components/Header';
 import {
   externalAddrSelector,
   incognitoAddrSelector,
   keychainAddrSelector,
 } from './AddressBook.selector';
 import { IAddressBook } from './AddressBook.interface';
-import { useSearchBox } from 'src/components/Header';
-import { keySearchSelector } from 'src/components/Header/Header.selector';
 import { filterAddressByKey } from './AddressBook.utils';
 import { actionRemoveSelectedReceiver } from './AddressBook.actions';
 
@@ -27,7 +24,10 @@ export interface IPropsAddrBook {
   title: string;
 }
 
-export interface IProps {}
+export interface IProps {
+  onGoBack?: () => any;
+  onSelectedAddrBook?: (addressBook: IAddressBook) => any;
+}
 
 export interface IMergeProps extends TInner, IProps {}
 
@@ -90,4 +90,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (
   );
 };
 
-export default compose<IMergeProps, any>(withLayout, enhance);
+export default enhance;

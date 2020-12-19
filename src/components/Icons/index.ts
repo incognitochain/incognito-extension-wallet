@@ -6,3 +6,8 @@ export { default as CopyIcon } from './Copy';
 export { default as OpenLinkIcon } from './OpenLink';
 export { default as QuestionIcon } from './Question';
 export { default as InfoIcon } from './Info';
+export { default as InfiniteIcon } from './Infinite';
+export { default as ScanIcon } from './Scan';
+export { default as AddressBookIcon } from './AddressBook';
+export { default as ArrowUpIcon } from './ArrowUp';
+export { default as ArrowDownIcon } from './ArrowDown';

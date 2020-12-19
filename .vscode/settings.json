@@ -1,8 +1,6 @@
 {
-    "cSpell.words": [
-        "Formated",
-        "Hunman",
-        "keychain",
-        "keychains"
-    ]
+    "cSpell.words": ["Formated", "Hunman", "keychain", "keychains"],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }
