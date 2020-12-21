@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/module/Account';
-import { apiURL2Selector } from 'src/module/Preload';
+// import { apiURL2Selector } from 'src/module/Preload';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { COINS } from 'src/constants';
@@ -18,7 +18,7 @@ import {
     // getMaxAmount,
     // getTotalFee
 } from './Send.utils';
-import { apiGetEstimateFeeFromChain } from './Send.services';
+// import { apiGetEstimateFeeFromChain } from './Send.services';
 import {
     ACTION_FETCHING_FEE,
     ACTION_FETCHED_FEE,
@@ -441,10 +441,15 @@ export const actionChangeFeeType = (payload: string) => ({
 export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
     const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
-    const apiURL2 = apiURL2Selector(state);
+    // const apiURL2 = apiURL2Selector(state);
     const { isFetched, isFetching }: ISendReducer = sendSelector(state);
     const { isUseTokenFee, totalFee }: ISendData = sendDataSelector(state);
-    const { amount, isNativeToken, pDecimals, isToken } = selectedPrivacy;
+    const {
+        amount,
+        isNativeToken,
+        pDecimals,
+        //  isToken
+    } = selectedPrivacy;
     const bnAmount = new BigNumber(amount);
     const bnFeeEst = new BigNumber(MAX_FEE_PER_TX);
     const maxAmount = Math.max(isNativeToken ? bnAmount.minus(bnFeeEst).toNumber() : amount, 0);
@@ -469,22 +474,22 @@ export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: ()
             maxAmountText = _maxAmountText;
         } else {
             await dispatch(actionFetchingFee());
-            if (isToken) {
-                try {
-                    const feePTokenEst: any = await apiGetEstimateFeeFromChain(apiURL2, {
-                        Prv: feeEst,
-                        TokenID: selectedPrivacy.tokenId,
-                    });
-                    if (feePTokenEst) {
-                        await Promise.all([
-                            actionHandleFeePTokenEst({ feePTokenEst })(dispatch, getState),
-                            actionHandleMinFeeEst({ minFeePTokenEst: feePTokenEst })(dispatch, getState),
-                        ]);
-                    }
-                } catch (error) {
-                    console.debug(error);
-                }
-            }
+            // if (isToken) {
+            //     try {
+            //         const feePTokenEst: any = await apiGetEstimateFeeFromChain(apiURL2, {
+            //             Prv: feeEst,
+            //             TokenID: selectedPrivacy.tokenId,
+            //         });
+            //         if (feePTokenEst) {
+            //             await Promise.all([
+            //                 actionHandleFeePTokenEst({ feePTokenEst })(dispatch, getState),
+            //                 actionHandleMinFeeEst({ minFeePTokenEst: feePTokenEst })(dispatch, getState),
+            //             ]);
+            //         }
+            //     } catch (error) {
+            //         console.debug(error);
+            //     }
+            // }
         }
     } catch (error) {
         throw error;

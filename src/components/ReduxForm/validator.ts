@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import isEmpty from 'lodash/isEmpty';
 import convert from 'src/utils/convert';
 import format from 'src/utils/format';
-import { walletServices } from 'incognito-js/build/web/browser';
+import { keyServices } from 'incognito-js/build/web/browser';
 
 // const isSafeInteger = (number: number) => Math.abs(number) <= Number.MAX_SAFE_INTEGER;
 
@@ -58,12 +58,12 @@ const regexp = (pattern: RegExp, message = 'Invalid data') => (value: string) =>
 //     : undefined;
 
 const incognitoAddress = (message?: string) => (value: string) => {
-    if (value && value?.length < 15) {
-        return 'Invalid address';
+    if (value?.length < 15 || !keyServices.checkPaymentAddress(value)) {
+        return message || 'Invalid address';
     }
-    if (value && !walletServices.checkPaymentAddress(value)) {
-        return message || 'Use Unshield to exit Incognito';
-    }
+    // if (value && !keyServices.checkPaymentAddress(value)) {
+    //     return message || 'Use Unshield to exit Incognito';
+    // }
     return undefined;
 };
 

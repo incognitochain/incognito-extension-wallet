@@ -495,3 +495,12 @@ input {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+
+#root {
+  width: '357px';
+  min-width: '320px';
+  max-width: '375px';
+  height: '600px';
+  background-color: #FFF;
+}

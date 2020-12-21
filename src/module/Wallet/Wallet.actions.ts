@@ -3,7 +3,7 @@ import { IRootState } from 'src/redux/interface';
 import { MAINNET_WALLET_NAME, TESTNET_WALLET_NAME } from 'src/configs/walletConfigs';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { updateWallet } from 'src/database/tables/wallet';
-import { accountSelector, actionSetListAccount, actionSelectAccount, IAccountReducer } from 'src/module/Account';
+import { actionSetListAccount, actionSelectAccount, defaultAccountNameSelector } from 'src/module/Account';
 import { IPreloadReducer, preloadSelector } from 'src/module/Preload';
 import { ACTION_FETCHED, ACTION_LOAD_WALLET } from './Wallet.constant';
 import { initWallet, loadWallet } from './Wallet.utils';
@@ -44,8 +44,7 @@ export const actionHandleLoadWallet = () => async (dispatch: Dispatch, getState:
     const state: IRootState = getState();
     const preload: IPreloadReducer = preloadSelector(state);
     const walletState: IWalletReducer = walletSelector(state);
-    const accountState: IAccountReducer = accountSelector(state);
-    const { defaultAccountName } = accountState;
+    const defaultAccountName: string = defaultAccountNameSelector(state);
     const { mainnet } = preload.configs;
     const field = mainnet ? 'mainnet' : 'testnet';
     const { walletId } = walletState[field];

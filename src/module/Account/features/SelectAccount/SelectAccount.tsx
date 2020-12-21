@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { Header } from 'src/components';
+import { actionToggleToast, Header, TOAST_CONFIGS } from 'src/components';
 import { withLayout } from 'src/components/Layout';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
@@ -21,9 +21,10 @@ const SelectAccount = React.memo(() => {
         try {
             dispatch(actionSwitchAccount(accountName));
         } catch (error) {
-            console.debug(error);
+            dispatch(actionToggleToast({ value: error, toggle: true, type: TOAST_CONFIGS.error }));
+        } finally {
+            history.goBack();
         }
-        history.goBack();
     };
 
     return (

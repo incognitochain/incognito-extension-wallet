@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Header } from 'src/components';
 import { translateByFieldSelector, translateSelector } from 'src/module/Configs';
 import { IAccountLanguage, IKeychainLanguage, ILanguage } from 'src/i18n';
-import { actionSelectAccount, defaultAccountSelector, listAccountSelector } from 'src/module/Account';
+import { actionSwitchAccount, defaultAccountSelector, listAccountSelector } from 'src/module/Account';
 import { FaKey } from 'react-icons/fa';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { Link, useHistory } from 'react-router-dom';
@@ -34,7 +34,7 @@ const AccountItem = React.memo((props: IAccountItem) => {
             account,
         });
     };
-    const handleSelectAccount = () => dispatch(actionSelectAccount(account.name));
+    const handleSelectAccount = () => dispatch(actionSwitchAccount(account.name));
     return (
         <div onClick={handleSelectAccount} className={`account-item ${isSelected ? 'selected' : ''}`}>
             <p className="account-name ellipsis">{account.name}</p>
