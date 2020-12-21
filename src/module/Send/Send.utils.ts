@@ -5,7 +5,7 @@ import { walletServices } from 'incognito-js/build/web/browser';
 import { ISelectedPrivacy } from 'src/module/Token';
 import { COINS } from 'src/constants';
 import { IRootState } from 'src/redux/interface';
-import { formValueSelector } from 'redux-form';
+import { formValueSelector, isSubmitting, isValid } from 'redux-form';
 import { isEmpty } from 'lodash';
 import convert from 'src/utils/convert';
 import { FORM_CONFIGS } from './Send.constant';
@@ -68,8 +68,8 @@ export const getSendData = ({
         screen,
         minAmount,
         minAmountText,
-        // isAddressValidated,
-        // isValidETHAddress,
+        isAddressValidated,
+        isValidETHAddress,
         // userFees,
         // fast2x,
         // feePrvText,
@@ -111,7 +111,10 @@ export const getSendData = ({
     const inputAmount = selector(state, FORM_CONFIGS.amount);
     const inputAddress = selector(state, FORM_CONFIGS.toAddress);
     const inputMemo = selector(state, FORM_CONFIGS.memo);
+    const valid = isValid(FORM_CONFIGS.formName)(state);
+    const submitting = isSubmitting(FORM_CONFIGS.formName)(state);
     const isIncognitoAddress = walletServices.checkPaymentAddress(inputAddress) || selectedPrivacy.isNativeToken;
+    const disabledForm = !valid || submitting || !fee || isFetching || !isAddressValidated || !isValidETHAddress;
     return {
         fee,
         feeText,
@@ -142,6 +145,8 @@ export const getSendData = ({
         inputMemo,
 
         titleBtnSubmit,
+
+        disabledForm,
 
         // amount,
         // isUseTokenFee,

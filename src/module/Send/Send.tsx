@@ -65,22 +65,24 @@ const EstimateFee = React.memo(() => {
 const Send = (props: IMergeProps) => {
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
-    const { titleBtnSubmit }: ISendData = useSelector(sendDataSelector);
+    const { titleBtnSubmit, disabledForm }: ISendData = useSelector(sendDataSelector);
     const {
         handleSubmit,
         handleSend,
-        valid,
-        submitting,
         validateAddress,
         validateAmount,
         onChangeField,
         onClickMax,
         onClickAddressBook,
         onClickScan,
+        onGoBack,
     } = props;
     return (
         <Styled>
-            <Header title={`${translate.headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`} />
+            <Header
+                onGoBack={onGoBack}
+                title={`${translate.headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`}
+            />
             <p className="balance">{`${translate.balance}: ${selectedPrivacy.formatAmount}`}</p>
             <form onSubmit={handleSubmit(handleSend)}>
                 <Field
@@ -115,7 +117,7 @@ const Send = (props: IMergeProps) => {
                     }}
                 />
                 <EstimateFee />
-                <Button title={titleBtnSubmit} disabled={!valid || submitting} type="submit" />
+                <Button title={titleBtnSubmit} disabled={disabledForm} type="submit" />
             </form>
         </Styled>
     );

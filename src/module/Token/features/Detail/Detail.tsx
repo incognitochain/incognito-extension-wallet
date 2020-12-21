@@ -11,6 +11,7 @@ import { HistoryList } from 'src/module/History';
 import { route as routeSend } from 'src/module/Send';
 import { useHistory } from 'react-router-dom';
 import { InfoIcon, VerifiedIcon } from 'src/components/Icons';
+import { route as routeWallet } from 'src/module/Wallet';
 import withDetail from './Detail.enhance';
 
 const Styled = styled.div`
@@ -85,7 +86,11 @@ const Detail = React.memo(() => {
     const history = useHistory();
     return (
         <Styled theme={theme}>
-            <Header title={token.name} customHeader={<InfoIcon onClick={() => history.push(routeTokenInfo)} />} />
+            <Header
+                onGoBack={() => history.push(routeWallet)}
+                title={token.name}
+                customHeader={<InfoIcon onClick={() => history.push(routeTokenInfo)} />}
+            />
             <TokenBalance />
             <GroupButton />
             <HistoryList />

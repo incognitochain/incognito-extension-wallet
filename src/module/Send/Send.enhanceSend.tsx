@@ -27,11 +27,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const account: AccountInstance = useSelector(defaultAccountSelector);
     const chainTokens = useSelector(chainTokensSelector);
     const bridgeTokens = useSelector(bridgeTokensSelector);
-    const { totalFee, isUseTokenFee, isUsedPRVFee }: ISendData = useSelector(sendDataSelector);
+    const { totalFee, isUseTokenFee, isUsedPRVFee, disabledForm }: ISendData = useSelector(sendDataSelector);
     const handleSend = async (values: { amount: string; toAddress: string; memo?: string }) => {
         try {
             const { amount, toAddress, memo = '' } = values;
-            if (!amount || !toAddress) {
+            if (!amount || !toAddress || disabledForm) {
                 return;
             }
             const fee = toString(totalFee);
@@ -41,7 +41,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             });
             const paymentInfos: PaymentInfoModel[] = [
                 {
-                    paymentAddressStr: account.key.keySet.paymentAddressKeySerialized,
+                    paymentAddressStr: toAddress,
                     amount: new BigNumber(floor(originalAmount)).toString(),
                     message: memo,
                 },
