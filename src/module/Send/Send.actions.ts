@@ -363,7 +363,7 @@ export const actionFetchFee = ({
 }) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
     const selectedPrivacy = selectedPrivacySelector(state);
-    const api2URL = apiURL2Selector(state);
+    // const api2URL = apiURL2Selector(state);
     const { isFetching, init } = sendSelector(state);
     let feeEst = MAX_FEE_PER_TX;
     let feePTokenEst: any = 0;
@@ -393,19 +393,19 @@ export const actionFetchFee = ({
         //     await dispatch(actionFetchUserFees({ address, amount, memo }));
         //   }
         // }
-        if (selectedPrivacy?.isToken) {
-            try {
-                const payload = {
-                    Prv: feeEst,
-                    TokenID: selectedPrivacy?.tokenId,
-                };
-                let feePTokenEstData: any = await apiGetEstimateFeeFromChain(api2URL, payload);
-                feePTokenEst = feePTokenEstData;
-                minFeePTokenEst = feePTokenEstData;
-            } catch (error) {
-                console.debug(error);
-            }
-        }
+        // if (selectedPrivacy?.isToken) {
+        //     try {
+        //         const payload = {
+        //             Prv: feeEst,
+        //             TokenID: selectedPrivacy?.tokenId,
+        //         };
+        //         let feePTokenEstData: any = await apiGetEstimateFeeFromChain(api2URL, payload);
+        //         feePTokenEst = feePTokenEstData;
+        //         minFeePTokenEst = feePTokenEstData;
+        //     } catch (error) {
+        //         console.debug(error);
+        //     }
+        // }
     } catch (error) {
         throw error;
     } finally {

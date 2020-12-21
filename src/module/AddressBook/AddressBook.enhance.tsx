@@ -22,7 +22,7 @@ export interface IPropsAddrBook {
 
 export interface IProps {
     onGoBack?: () => any;
-    onSelectedAddrBook?: (addressBook: IAddressBook) => any;
+    onSelectedAddrBook?: any;
 }
 
 export interface IMergeProps extends TInner, IProps {}

@@ -44,6 +44,7 @@ export interface ISendData {
     inputMemo: string;
     inputAddress: string;
     titleBtnSubmit: string;
+    disabledForm: boolean;
 }
 
 export interface ISendReducer {

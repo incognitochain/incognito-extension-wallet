@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
@@ -8,6 +8,7 @@ import { historyCacheByTxIdSelector, ICacheHistoryTokenSelector, IHistoryItem, H
 import { serverSelector } from 'src/module/Preload';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { IConfirmTxLanguage } from 'src/i18n';
+import { route as routeDetail } from 'src/module/Token/features/Detail';
 
 const Styled = styled.div`
     p.title {
@@ -18,6 +19,7 @@ const Styled = styled.div`
 
 const ConfirmTx = () => {
     const { state }: { state: any } = useLocation();
+    const history = useHistory();
     const { txId }: { txId: string } = state;
     const server = useSelector(serverSelector);
     const confirmLanguage: IConfirmTxLanguage = useSelector(translateByFieldSelector)('send.confirm');
@@ -52,7 +54,7 @@ const ConfirmTx = () => {
     ];
     return (
         <Styled>
-            <Header title={confirmLanguage.headerTitle} />
+            <Header onGoBack={() => history.push(routeDetail)} title={confirmLanguage.headerTitle} />
             <p className="title fw-bold fs-supermedium center-text">{confirmLanguage.sent}</p>
             {itemsFactories.map((item: IHistoryItem) => (
                 <HistoryItem key={item.title} {...item} />

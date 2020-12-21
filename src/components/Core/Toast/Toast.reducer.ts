@@ -27,6 +27,7 @@ const initialState: IToastReducer = {
     toggle: false,
 };
 
+// eslint-disable-next-line no-unused-vars
 const reducer: (state: IToastReducer, action: { type: string; payload: any }) => any = (
     state = initialState,
     action,
