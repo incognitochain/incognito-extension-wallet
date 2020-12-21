@@ -20,6 +20,7 @@ const SearchBox = (props: IProps) => {
             componentProps={{
                 placeholder: title,
                 autoFocus: true,
+                className: 'fw-medium fs-medium',
             }}
         />
     );

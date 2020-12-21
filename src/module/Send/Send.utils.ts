@@ -1,7 +1,7 @@
 import floor from 'lodash/floor';
 import format from 'src/utils/format';
 import BigNumber from 'bignumber.js';
-import { walletServices } from 'incognito-js/build/web/browser';
+import { keyServices } from 'incognito-js/build/web/browser';
 import { ISelectedPrivacy } from 'src/module/Token';
 import { COINS } from 'src/constants';
 import { IRootState } from 'src/redux/interface';
@@ -113,7 +113,9 @@ export const getSendData = ({
     const inputMemo = selector(state, FORM_CONFIGS.memo);
     const valid = isValid(FORM_CONFIGS.formName)(state);
     const submitting = isSubmitting(FORM_CONFIGS.formName)(state);
-    const isIncognitoAddress = walletServices.checkPaymentAddress(inputAddress) || selectedPrivacy.isNativeToken;
+    const isIncognitoAddress = isEmpty(inputAddress)
+        ? false
+        : keyServices.checkPaymentAddress(inputAddress) || selectedPrivacy.isNativeToken;
     const disabledForm = !valid || submitting || !fee || isFetching || !isAddressValidated || !isValidETHAddress;
     return {
         fee,

@@ -4,7 +4,6 @@ import { Header } from 'src/components';
 import { IAddressBookLanguage } from 'src/i18n/interface';
 import styled from 'styled-components';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { Link } from 'react-router-dom';
 import { ArrowDownIcon, ArrowUpIcon } from 'src/components/Icons';
 import withAddressBook, { IPropsAddrBook, IMergeProps } from './AddressBook.enhance';
 import { IAddressBook } from './AddressBook.interface';
@@ -66,7 +65,6 @@ const AddressBook = (props: IMergeProps & any) => {
             {addressBook.map((item: { data: IAddressBook[]; title: string }) => (
                 <Item key={item.title} item={item} onSelectedAddrBook={onSelectedAddrBook} />
             ))}
-            <Link to="/create-address-book">Create</Link>
         </Styled>
     );
 };
