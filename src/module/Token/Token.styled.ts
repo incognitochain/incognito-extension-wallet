@@ -46,6 +46,6 @@ export const TokenStyled = styled(Link)`
         }
     }
     .extra-bottom {
-        margin-top: 15px;
+        margin-top: 10px;
     }
 `;

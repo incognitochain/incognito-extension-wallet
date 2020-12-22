@@ -5,8 +5,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 16px;
-    height: 16px;
+    width: 13px;
+    height: 13px;
 `;
 
 const OpenLink = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {

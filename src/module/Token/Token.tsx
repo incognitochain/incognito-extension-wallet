@@ -17,7 +17,7 @@ export const Name = React.memo((props: ITokenChildProps) => {
     const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
     return (
         <NameStyled className={classNameCustom}>
-            <TextStyled className={`fw-medium  ellipsis ${classNameTextCustom}`}>{token.name}</TextStyled>
+            <TextStyled className={`fw-medium fs-medium  ellipsis ${classNameTextCustom}`}>{token.name}</TextStyled>
             {token?.isVerified && <VerifiedIcon />}
         </NameStyled>
     );
@@ -32,9 +32,9 @@ export const Amount = React.memo((props: ITokenChildProps) => {
     }
     return (
         <AmountStyled className={classNameCustom}>
-            <TextStyled className={`fw-medium right-text ellipsis ${classNameTextCustom}`}>{`${token.formatAmount} ${
-                token.symbol || token?.pSymbol
-            }`}</TextStyled>
+            <TextStyled className={`fw-medium fs-medium right-text ellipsis ${classNameTextCustom}`}>{`${
+                token.formatAmount
+            } ${token.symbol || token?.pSymbol}`}</TextStyled>
         </AmountStyled>
     );
 });

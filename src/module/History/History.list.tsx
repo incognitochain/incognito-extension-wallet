@@ -24,7 +24,7 @@ const Styled = styled.div`
         justify-content: space-between;
         align-items: center;
         :first-child {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
     }
 `;
@@ -34,8 +34,8 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
     return (
         <Link to={`/history/${history.txId}`} className="history-item">
             <div className="hook">
-                <p className="fw-medium">{history.type}</p>
-                <p className="fw-medium">{history.amountFormated}</p>
+                <p className="fw-medium fs-medium">{history.type}</p>
+                <p className="fw-medium fs-medium">{history.amountFormated}</p>
             </div>
             <div className="hook">
                 <p className="sub-text">{history.timeFormated}</p>

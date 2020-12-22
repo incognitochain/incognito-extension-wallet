@@ -5,8 +5,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 18px;
-    height: 12px;
+    width: 20px;
+    height: 10px;
 `;
 
 const Infinite = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {

@@ -67,7 +67,7 @@ const TotalShield = React.memo(() => {
     return (
         <div className="total-shield">
             <p className="fs-avglarge fw-medium center-text">{`$${totalShield.formatTotalAmountUSD}`}</p>
-            <Button title={btnShield} />
+            <Button title={btnShield} disabled />
         </div>
     );
 });

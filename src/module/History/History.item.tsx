@@ -11,7 +11,7 @@ const Styled = styled.div`
         display: flex;
         flex-direction: row;
         align-items: 'center';
-        margin-bottom: 30px;
+        margin-bottom: 15px;
         justify-content: space-between;
     }
     .confirm-tx-item label {
@@ -21,10 +21,10 @@ const Styled = styled.div`
         flex-basis: 65%;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
-
     .confirm-tx-item .hook span {
-        max-width: 150px;
+        max-width: 135px;
     }
 `;
 
@@ -45,7 +45,7 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
     return (
         <Styled>
             <div className="confirm-tx-item">
-                <p>{title}</p>
+                <p className="sub-text">{title}</p>
                 <div className="hook">
                     <span className="ellipsis">{desc}</span>
                     {!!copyData && <CopyIcon onClick={handleCopy} />}

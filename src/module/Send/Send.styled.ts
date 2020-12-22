@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLORS } from 'src/styles';
+import { COLORS, IGlobalStyle } from 'src/styles';
 
 export const Styled = styled.div`
     form {
@@ -16,12 +16,12 @@ export const Styled = styled.div`
     }
     .fee-types .fee-type {
         background-color: ${COLORS.colorGreyLight};
-        border-radius: 4px;
+        border-radius: 5px;
         color: ${COLORS.black};
         padding: 3px 5px;
         &.selected {
             color: ${COLORS.white};
-            background-color: ${COLORS.black};
+            background-color: ${(props: IGlobalStyle) => props.theme.button};
         }
         :last-child {
             margin-left: 5px;

@@ -4,8 +4,9 @@ import { Field } from 'redux-form';
 import { Button, Header } from 'src/components';
 import { InputField } from 'src/components/ReduxForm';
 import { ISendLanguage } from 'src/i18n';
-import { translateByFieldSelector } from 'src/module/Configs';
+import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField/InputField.constant';
+import { ITheme } from 'src/styles';
 import withSend, { IMergeProps } from './Send.enhance';
 import { sendDataSelector, sendSelector } from './Send.selector';
 import { ISelectedPrivacy, selectedPrivacySelector } from '../Token';
@@ -28,7 +29,7 @@ const FeeType = React.memo((props: IFeeTypes) => {
     return (
         <button
             type="button"
-            className={`fee-type ${selected ? 'selected' : ''} fs-small`}
+            className={`fee-type ${selected ? 'selected' : ''} fs-small fw-regular`}
             onClick={handleChangeFeeTypes}
         >
             {symbol}
@@ -65,6 +66,7 @@ const EstimateFee = React.memo(() => {
 const Send = (props: IMergeProps) => {
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
+    const theme: ITheme = useSelector(themeSelector);
     const { titleBtnSubmit, disabledForm }: ISendData = useSelector(sendDataSelector);
     const {
         handleSubmit,
@@ -78,7 +80,7 @@ const Send = (props: IMergeProps) => {
         onGoBack,
     } = props;
     return (
-        <Styled>
+        <Styled theme={theme}>
             <Header
                 onGoBack={onGoBack}
                 title={`${translate.headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`}

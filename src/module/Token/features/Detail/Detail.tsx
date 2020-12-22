@@ -59,7 +59,7 @@ const TokenBalance = React.memo(() => {
     return (
         <div className="token-balance">
             <div className="hook-container">
-                <Amount tokenId={tokenId} classNameTextCustom="fw-bold fs-avglarge amount-token" showVerifiedToken />
+                <Amount tokenId={tokenId} classNameTextCustom="fw-medium fs-avglarge amount-token" showVerifiedToken />
                 {selectedPrivacy.isVerified && <VerifiedIcon />}
             </div>
             <div className="hook-container">
