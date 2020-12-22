@@ -3,6 +3,9 @@ import { IRootState } from 'src/redux/interface';
 import { ILanguage } from 'src/i18n';
 import { AccountInstance, PrivacyTokenInstance } from 'incognito-js/build/web/browser';
 import { actionSaveWallet, IWalletReducer, walletSelector } from 'src/module/Wallet';
+import { defaultAccountSelector } from 'src/module/Account/Account.selector';
+import { apiURLSelector } from 'src/module/Preload/Preload.selector';
+import { translateSelector } from 'src/module/Configs/Configs.selector';
 import {
     ACTION_FETCHED_PTOKEN_LIST,
     ACTION_FETCHED_PCUSTOMTOKEN_LIST,
@@ -14,17 +17,12 @@ import {
 } from './Token.constant';
 import { apiGetPTokenList, apiGetPCustomTokenList } from './Token.services';
 import { IPToken } from './Token.interface';
-import { translateSelector } from '../Configs';
-import { defaultAccountSelector } from '../Account';
-import { apiURLSelector, IPreloadReducer, preloadSelector } from '../Preload';
 import {
     bridgeTokensSelector,
     chainTokensSelector,
+    defaultTokensIdsSelector,
     followedTokensIdsSelector,
-    popularCoinIdsSeletor,
-    tokenSelector,
 } from './Token.selector';
-import { IEnvToken, ITokenReducer } from './Token.reducer';
 
 export const actionFetchedPTokenList = (payload: IPToken[]) => ({
     type: ACTION_FETCHED_PTOKEN_LIST,
@@ -94,26 +92,22 @@ export const actionSetFollowedTokens = (payload: { followed: string[] }) => ({
     payload,
 });
 
-export const actionFollowPopularToken = () => async (dispatch: Dispatch, getState: () => IRootState) => {
-    const state: IRootState = getState();
-    const preload: IPreloadReducer = preloadSelector(state);
-    const tokenState: ITokenReducer = tokenSelector(state);
-    const { mainnet } = preload.configs;
-    const field = mainnet ? 'mainnet' : 'testnet';
-    const envToken: IEnvToken = tokenState[field];
-    const { followedPopularIds } = envToken;
-    if (followedPopularIds) {
-        return;
+export const actionFollowDefaultToken = (account: AccountInstance) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    try {
+        if (!account) {
+            return;
+        }
+        const state: IRootState = getState();
+        const defaultTokens: string[] = defaultTokensIdsSelector(state);
+        defaultTokens.map((tokenId) => account.followTokenById(tokenId));
+    } catch (error) {
+        throw error;
+    } finally {
+        await actionSaveWallet()(dispatch, getState);
     }
-    const defaultAccount: AccountInstance = defaultAccountSelector(state);
-    const popularCoinIds = popularCoinIdsSeletor(state);
-    Object.entries(popularCoinIds).map((coin) => {
-        const [, tokenId] = coin;
-        defaultAccount.followTokenById(tokenId);
-        return coin;
-    });
-    dispatch(actionFollowedPopularTokenIds({ mainnet }));
-    await actionSaveWallet()(dispatch, getState);
 };
 
 export const actionGetPrivacyTokensBalance = () => async (dispatch: Dispatch, getState: () => IRootState) => {

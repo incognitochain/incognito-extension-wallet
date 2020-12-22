@@ -21,7 +21,7 @@ interface IInputProps {
 
 export const Input = (props: IInputProps) => {
     const { input: inputProps, componentProps } = props;
-    return <input type="text" {...inputProps} {...componentProps} />;
+    return <input type="text" autoComplete="off" {...inputProps} {...componentProps} />;
 };
 
 const InputField = (props: IInputFieldProps) => {

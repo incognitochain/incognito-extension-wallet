@@ -21,23 +21,27 @@ export const actionLoadWallet = (payload: WalletInstance) => ({
 });
 
 export const actionInitWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
-    let walletId;
-    const state: IRootState = getState();
-    const preload: IPreloadReducer = preloadSelector(state);
-    const { mainnet } = preload.configs;
-    const dataInit = await initWallet(mainnet ? MAINNET_WALLET_NAME : TESTNET_WALLET_NAME);
-    walletId = dataInit.walletId;
-    const { wallet } = dataInit;
-    const payload: IPayloadInitWallet = {
-        ...dataInit,
-        mainnet,
-    };
-    const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
-    const defaultAccount: AccountInstance = listAccount && listAccount[0];
-    dispatch(actionSetListAccount(listAccount));
-    dispatch(actionSelectAccount(defaultAccount.name));
-    dispatch(actionFetched(payload));
-    return walletId;
+    try {
+        let walletId;
+        const state: IRootState = getState();
+        const preload: IPreloadReducer = preloadSelector(state);
+        const { mainnet } = preload.configs;
+        const dataInit = await initWallet(mainnet ? MAINNET_WALLET_NAME : TESTNET_WALLET_NAME);
+        walletId = dataInit.walletId;
+        const { wallet } = dataInit;
+        const payload: IPayloadInitWallet = {
+            ...dataInit,
+            mainnet,
+        };
+        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+        const defaultAccount: AccountInstance = listAccount && listAccount[0];
+        dispatch(actionSetListAccount(listAccount));
+        dispatch(actionSelectAccount(defaultAccount.name));
+        dispatch(actionFetched(payload));
+        return walletId;
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const actionHandleLoadWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {

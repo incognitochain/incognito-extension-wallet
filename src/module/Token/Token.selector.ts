@@ -31,28 +31,31 @@ export const tokenSelector = createSelector(
 export const pTokensSelector = createSelector(
     tokenSelector,
     (tokenState) =>
-        tokenState.pTokens.map((pToken: IPTokenFromApi) => {
-            const pairPrv = new BigNumber(pToken.CurrentPrvPool).isGreaterThan(new BigNumber(0));
-            const change = pairPrv ? pToken?.PercentChangePrv1h : pToken?.PercentChange1h;
-            const token: IPToken = {
-                id: pToken.ID,
-                tokenId: pToken.TokenID,
-                symbol: pToken.Symbol,
-                pSymbol: pToken.PSymbol,
-                decimals: pToken.Decimals,
-                pDecimals: pToken.PDecimals,
-                currencyType: pToken.CurrencyType,
-                type: pToken.Type,
-                name: pToken.Name,
-                contractId: pToken.ContractID,
-                verified: pToken.Verified,
-                pricePrv: pToken.PricePrv,
-                priceUsd: pToken.PriceUsd,
-                pairPrv,
-                change,
-            };
-            return token;
-        }) || [],
+        tokenState.pTokens
+            .filter((pToken: IPTokenFromApi) => !!pToken?.PSymbol)
+            .map((pToken: IPTokenFromApi) => {
+                const pairPrv = new BigNumber(pToken.CurrentPrvPool).isGreaterThan(new BigNumber(0));
+                const change = pairPrv ? pToken?.PercentChangePrv1h : pToken?.PercentChange1h;
+                const token: IPToken = {
+                    id: pToken.ID,
+                    tokenId: pToken.TokenID,
+                    symbol: pToken.Symbol,
+                    pSymbol: pToken.PSymbol,
+                    decimals: pToken.Decimals,
+                    pDecimals: pToken.PDecimals,
+                    currencyType: pToken.CurrencyType,
+                    type: pToken.Type,
+                    name: pToken.Name,
+                    contractId: pToken.ContractID,
+                    verified: pToken.Verified,
+                    pricePrv: pToken.PricePrv,
+                    priceUsd: pToken.PriceUsd,
+                    pairPrv,
+                    change,
+                    default: pToken.Default,
+                };
+                return token;
+            }) || [],
 );
 
 export const pCustomTokensSelector = createSelector(
@@ -115,6 +118,10 @@ export const popularCoinIdsSeletor = createSelector(preloadSelector, (preload) =
     }
     return result;
 });
+
+export const defaultTokensIdsSelector = createSelector(pTokensSelector, (pTokens: IPToken[]) =>
+    pTokens.filter((token) => !!token.default).map((token) => token.tokenId),
+);
 
 export const getPrivacyDataByTokenIDSelector = createSelector(
     pCustomTokensSelector,

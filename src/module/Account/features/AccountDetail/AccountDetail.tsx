@@ -11,7 +11,14 @@ import styled from 'styled-components';
 import { actionFetchRemoveAccount } from 'src/module/Account';
 import { withLayout } from 'src/components/Layout';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+    .scroll-view {
+        max-height: 360px;
+    }
+    .btn-container {
+        margin-top: 30px;
+    }
+`;
 
 const AccountDetails = () => {
     const location: any = useLocation();
@@ -83,7 +90,7 @@ const AccountDetails = () => {
     return (
         <Styled>
             <Header title={`${account.name}'s ${translateAccountDetail.keychain}`} />
-            {renderItem()}
+            <div className="scroll-view">{renderItem()}</div>
             <Button onClick={handleRemoveKeychain} title={translateAccountDetail.delete} />
         </Styled>
     );

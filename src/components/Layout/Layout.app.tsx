@@ -10,7 +10,7 @@ interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     return (
-        <Styled className="wrapper">
+        <Styled className="app-container">
             <WrappedComponent {...props} />
         </Styled>
     );
