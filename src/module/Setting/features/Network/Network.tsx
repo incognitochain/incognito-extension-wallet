@@ -57,7 +57,7 @@ const Network = React.memo(() => {
             }),
         );
         await dispatch(actionSetServer(server));
-        window.location.assign('/');
+        window?.location?.reload();
     };
     return (
         <Styled>

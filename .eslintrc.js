@@ -53,5 +53,6 @@ module.exports = {
         'no-restricted-syntax': 'off',
         'no-continue': 'off',
         'no-nested-ternary': 'off',
+        'no-unused-expressions': 'off',
     },
 };
