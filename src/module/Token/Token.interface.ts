@@ -25,7 +25,7 @@ export interface IPTokenFromApi {
     PercentChangePrv1h: string;
     CurrentPrvPool: number;
     PricePrv: number;
-    volume24: number;
+    Volume24: number;
 }
 
 export interface IPToken {
@@ -44,6 +44,7 @@ export interface IPToken {
     pricePrv: number;
     change: string;
     pairPrv: boolean;
+    default: boolean;
 }
 
 export interface IPCustomTokenFromApi {
@@ -99,7 +100,6 @@ export interface ISelectedPrivacy {
     isBep2Token: boolean;
     symbol: string;
     name: string;
-    displayName: string;
     contractId: string;
     decimals: number;
     pDecimals: number;
@@ -125,6 +125,7 @@ export interface ISelectedPrivacy {
     ownerAddress: string;
     ownerEmail: string;
     ownerWebsite: string;
+    default: boolean;
 }
 
 export interface IBalanceProps {
@@ -159,7 +160,9 @@ interface ITokensFactories {
 }
 export interface IAllListTokenInner {
     tokensFactories: ITokensFactories[];
+    // eslint-disable-next-line no-unused-vars
     onToggleUnVerifiedTokens: (toggle: boolean) => void;
     toggleUnVerified: boolean;
+    // eslint-disable-next-line no-unused-vars
     renderItem: (tokenId: string) => any;
 }

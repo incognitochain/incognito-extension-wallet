@@ -27,7 +27,7 @@ const AccountItem = React.memo((props: IAccountItem) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const defaultAccount = useSelector(defaultAccountSelector);
-    const isSelected = defaultAccount.name === account.name;
+    const isSelected = defaultAccount?.name === account?.name;
     const handleNavDetail = (e: SyntheticEvent) => {
         e.preventDefault();
         history.push(route, {

@@ -149,11 +149,6 @@ export const GlobalStyled = createGlobalStyle`
     .left-text{
         text-align: left;
     }
-    .wrapper {
-        height: 100%;
-        width: 100%;
-        position: relative;
-    }
     .main-text {
         color: ${(props: IGlobalStyle) => props.theme.text};
     }
@@ -183,5 +178,10 @@ export const GlobalStyled = createGlobalStyle`
     }
     .icon {
         margin-left: 5px;
+    }
+    .scroll-view {
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
 `;

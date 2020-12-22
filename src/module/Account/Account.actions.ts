@@ -9,6 +9,7 @@ import {
     walletDataSelector,
     walletSelector,
 } from 'src/module//Wallet';
+import { actionFollowDefaultToken } from 'src/module/Token';
 import {
     ACTION_FETCHED,
     ACTION_FETCHING_CREATE_ACCOUNT,
@@ -22,7 +23,12 @@ import {
     ACTION_GET_ACCOUNT_BALANCE_FETCHING,
     ACTION_GET_ACCOUNT_BALANCE_FETCHED,
 } from './Account.constant';
-import { defaultAccountNameSelector, defaultAccountSelector } from './Account.selector';
+import {
+    defaultAccountNameSelector,
+    defaultAccountSelector,
+    createAccountSelector,
+    importAccountSelector,
+} from './Account.selector';
 
 export const actionFetched = (payload: any) => ({
     type: ACTION_FETCHED,
@@ -45,12 +51,17 @@ export const actionFetchCreateAccount = (accountName: string) => async (
     try {
         const state = getState();
         const wallet: WalletInstance = walletDataSelector(state);
+        const create = createAccountSelector(state);
+        if (create) {
+            return;
+        }
         await dispatch(actionFetchingCreateAccount());
         const account = await wallet.masterAccount.addAccount(accountName);
         if (!account) {
             throw new Error(`Can't not create account`);
         }
         await dispatch(actionFetchedCreateAccount(account));
+        actionFollowDefaultToken(account)(dispatch, getState);
     } catch (error) {
         throw error;
     } finally {
@@ -74,12 +85,17 @@ export const actionFetchImportAccount = (accountName: string, privateKey: string
     try {
         const state = getState();
         const wallet: WalletInstance = walletDataSelector(state);
+        const importing = importAccountSelector(state);
+        if (importing) {
+            return;
+        }
         await dispatch(actionFetchingImportAccount());
         const account = await wallet.masterAccount.importAccount(accountName, privateKey);
         if (!account) {
             throw new Error(`Can't not create account`);
         }
         await dispatch(actionFetchedImportAccount(account));
+        actionFollowDefaultToken(account)(dispatch, getState);
     } catch (error) {
         throw error;
     } finally {
@@ -95,10 +111,11 @@ export const actionFetchRemoveAccount = (accountName: string) => async (
         const state = getState();
         const wallet: WalletInstance = walletDataSelector(state);
         await wallet.masterAccount.removeAccount(accountName);
+        await actionSaveWallet()(dispatch, getState);
     } catch (error) {
         throw error;
     } finally {
-        actionSaveWallet()(dispatch, getState);
+        actionHandleLoadWallet()(dispatch, getState);
     }
 };
 

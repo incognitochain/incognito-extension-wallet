@@ -127,8 +127,7 @@ class SelectedPrivacy {
 
     ownerWebsite: string;
 
-    // eslint-disable-next-line react/static-property-placement
-    displayName: string;
+    default: boolean;
 
     constructor(pCustomTokenData: IPCustomToken | any, pTokenData: IPToken | any) {
         this.tokenId = pTokenData?.tokenId || pCustomTokenData?.tokenId || COINS.PRV.id;
@@ -143,7 +142,6 @@ class SelectedPrivacy {
         this.isBep2Token = this.isPrivateToken && this.currencyType === COINS.PRIVATE_TOKEN_CURRENCY_TYPE.BNB_BEP2;
         this.symbol = combineData.call(this, pTokenData?.symbol, pCustomTokenData?.symbol, COINS.PRV.symbol);
         this.name = combineData.call(this, pTokenData?.name, pCustomTokenData?.name, 'Privacy');
-        this.displayName = combineData.call(this, `Privacy ${pTokenData?.symbol}`, pCustomTokenData?.name, 'Privacy');
         this.contractId = pTokenData?.contractId;
         this.decimals = this.isPrivacyToken ? pTokenData?.decimals : this.isNativeToken ? COINS.PRV.pDecimals : 0;
         this.pDecimals = this.isPrivacyToken ? pTokenData.pDecimals : this.isNativeToken ? COINS.PRV.pDecimals : 0;
@@ -171,6 +169,7 @@ class SelectedPrivacy {
         this.ownerEmail = pCustomTokenData?.ownerEmail;
         this.ownerWebsite = pCustomTokenData?.ownerWebsite;
         this.formatBalanceByUsd = '0';
+        this.default = !!pTokenData?.default;
     }
 }
 export default SelectedPrivacy;

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { Button } from 'src/components';
 import { ILanguage } from 'src/i18n';
-import styled from 'styled-components';
 import {
     ListToken,
     Token,
@@ -15,36 +14,7 @@ import {
 import { route as routeAddToken } from 'src/module/Token/features/AddToken';
 import { translateSelector } from '../Configs';
 import withWallet from './Wallet.enhance';
-
-const Styled = styled.div`
-    position: relative;
-    height: 485px;
-    .list-token {
-        height: 300px;
-        overflow: scroll;
-    }
-    .list-token .token-container {
-        :last-child {
-            margin-bottom: 0;
-        }
-    }
-    .total-shield {
-        > p {
-            :nth-child(2) {
-                margin-top: 15px;
-            }
-        }
-        .btn-container {
-            margin: 30px 0;
-            width: 100%;
-        }
-    }
-    .btn-add-coin {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-    }
-`;
+import { Styled } from './Wallet.styled';
 
 const ListFollowToken = React.memo(() => {
     const listFollowTokenIds = useSelector(followedTokensIdsSelector)(false);
@@ -82,7 +52,7 @@ const AddCoin = React.memo(() => {
     );
 });
 
-const Wallet = () => {
+const Wallet = React.memo(() => {
     return (
         <Styled>
             <TotalShield />
@@ -90,6 +60,6 @@ const Wallet = () => {
             <AddCoin />
         </Styled>
     );
-};
+});
 
-export default withWallet(React.memo(Wallet));
+export default withWallet(Wallet);
