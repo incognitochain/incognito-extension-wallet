@@ -9,8 +9,7 @@ import { format } from 'src/utils';
 import convert from 'src/utils/convert';
 import { compact, reverse } from 'lodash';
 import BigNumber from 'bignumber.js';
-import { accountBalanceSelector, defaultAccountSelector } from 'src/module/Account/Account.selector';
-import { AccountInstance } from 'incognito-js/build/web/browser';
+import { accountBalanceSelector } from 'src/module/Account/Account.selector';
 import { getFormatAmountByUSD, getPrice } from './Token.utils';
 import SelectedPrivacy from './Token.model';
 import { ITokenReducer } from './Token.reducer';
@@ -79,23 +78,17 @@ export const pCustomTokensSelector = createSelector(
         }) || [],
 );
 
-export const followedTokensIdsSelector = createSelector(
-    defaultAccountSelector,
-    (defaultAccount: AccountInstance) => (excludePRV = true) => {
-        if (defaultAccount?.privacyTokenIds instanceof Array) {
-            const privacyTokenIds = reverse([...defaultAccount.privacyTokenIds]);
-            return excludePRV ? privacyTokenIds : [COINS.PRV.id, ...privacyTokenIds];
-        }
-        return [];
-    },
-);
-
 export const findPTokenBySymbolSelector = createSelector(pTokensSelector, (pTokens: IPToken[]) => (symbol: string) => {
     const token = pTokens.find((t) => t.symbol === symbol);
     return token?.tokenId;
 });
 
 export const followedTokensSelect = createSelector(tokenSelector, (token) => token.followed || []);
+
+export const followedTokensIdsSelector = createSelector(followedTokensSelect, (followed) => (excludePRV = true) => {
+    const privacyTokenIds = reverse([...followed].map((t) => t.tokenId));
+    return excludePRV ? privacyTokenIds : [COINS.PRV.id, ...privacyTokenIds];
+});
 export const popularCoinIdsSeletor = createSelector(preloadSelector, (preload) => {
     const { mainnet } = preload.configs;
     let result: { [symbol: string]: any } = {};

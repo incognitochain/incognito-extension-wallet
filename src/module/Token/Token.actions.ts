@@ -1,10 +1,10 @@
+import { isMainnetSelector, apiURLSelector } from 'src/module/Preload/Preload.selector';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { ILanguage } from 'src/i18n';
-import { AccountInstance, PrivacyTokenInstance } from 'incognito-js/build/web/browser';
-import { actionSaveWallet, IWalletReducer, walletSelector } from 'src/module/Wallet';
+import { AccountInstance, PrivacyTokenInstance, WalletInstance } from 'incognito-js/build/web/browser';
+import { actionSaveWallet, IWalletReducer, walletDataSelector, walletSelector } from 'src/module/Wallet';
 import { defaultAccountSelector } from 'src/module/Account/Account.selector';
-import { apiURLSelector } from 'src/module/Preload/Preload.selector';
 import { translateSelector } from 'src/module/Configs/Configs.selector';
 import {
     ACTION_FETCHED_PTOKEN_LIST,
@@ -16,7 +16,7 @@ import {
     ACTION_SET_SELECTED_TOKEN,
 } from './Token.constant';
 import { apiGetPTokenList, apiGetPCustomTokenList } from './Token.services';
-import { IPToken } from './Token.interface';
+import { IPToken, IFollowedToken } from './Token.interface';
 import {
     bridgeTokensSelector,
     chainTokensSelector,
@@ -87,7 +87,7 @@ export const actionFollowedPopularTokenIds = (payload: { mainnet: boolean }) => 
     payload,
 });
 
-export const actionSetFollowedTokens = (payload: { followed: string[] }) => ({
+export const actionSetFollowedTokens = (payload: { followed: IFollowedToken[] }) => ({
     type: ACTION_SET_FOLLOWED_TOKENS,
     payload,
 });
@@ -101,8 +101,17 @@ export const actionFollowDefaultToken = (account: AccountInstance) => async (
             return;
         }
         const state: IRootState = getState();
+        const wallet: WalletInstance = walletDataSelector(state);
+        const mainnet = isMainnetSelector(state);
+        let defaultAccount = wallet.masterAccount.getAccountByName(account.name);
         const defaultTokens: string[] = defaultTokensIdsSelector(state);
-        defaultTokens.map((tokenId) => account.followTokenById(tokenId));
+        defaultTokens.map((tokenId) => defaultAccount.followTokenById(tokenId));
+        dispatch(
+            actionSetFollowedTokens({
+                followed: defaultAccount.privacyTokenIds.map((t) => ({ tokenId: t, amount: 0 })),
+            }),
+        );
+        dispatch(actionFollowedPopularTokenIds({ mainnet }));
     } catch (error) {
         throw error;
     } finally {

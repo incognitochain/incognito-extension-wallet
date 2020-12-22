@@ -8,7 +8,13 @@ import { IServer } from 'src/services';
 import { loadSeparator } from 'src/utils/separator';
 import { preloadSelector } from './Preload.selector';
 import { IPreloadConfigs, IPreloadReducer } from './Preload.reducer';
-import { ACTION_FETCHING, ACTION_FETCHED, ACTION_SET_SERVER, ACTION_SET_CONFIGS } from './Preload.constant';
+import {
+    ACTION_FETCH_FAIL,
+    ACTION_FETCHING,
+    ACTION_FETCHED,
+    ACTION_SET_SERVER,
+    ACTION_SET_CONFIGS,
+} from './Preload.constant';
 
 export const actionFetching = () => ({
     type: ACTION_FETCHING,
@@ -17,6 +23,11 @@ export const actionFetching = () => ({
 export const actionFetched = (payload: any) => ({
     type: ACTION_FETCHED,
     payload,
+});
+
+export const actionFetchFail = (error: any) => ({
+    type: ACTION_FETCH_FAIL,
+    payload: error,
 });
 
 export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRootState) => {
@@ -56,10 +67,10 @@ export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRoo
             task = [...task, actionHandleLoadWallet()(dispatch, getState)];
         }
         await Promise.all(task);
+        await dispatch(actionFetched({}));
     } catch (error) {
-        console.debug(error);
-    } finally {
-        dispatch(actionFetched({}));
+        dispatch(actionFetchFail(error));
+        throw error;
     }
 };
 

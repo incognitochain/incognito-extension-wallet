@@ -3,7 +3,13 @@ import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { ENVS } from 'src/configs';
 import { IServer, MAINNET_SERVER, PRODUCTION_API } from 'src/services';
-import { ACTION_FETCHING, ACTION_FETCHED, ACTION_SET_CONFIGS, ACTION_SET_SERVER } from './Preload.constant';
+import {
+    ACTION_FETCHING,
+    ACTION_FETCHED,
+    ACTION_SET_CONFIGS,
+    ACTION_SET_SERVER,
+    ACTION_FETCH_FAIL,
+} from './Preload.constant';
 
 export interface IPreloadConfigs {
     chainURL: string;
@@ -17,11 +23,13 @@ export interface IPreloadReducer {
     isFetching: boolean;
     configs: IPreloadConfigs;
     server: IServer;
+    error: string;
 }
 
 const initialState: IPreloadReducer = {
-    isFetching: false,
+    isFetching: true,
     isFetched: false,
+    error: '',
     configs: {
         chainURL: MAINNET_SERVER.address,
         apiURL: PRODUCTION_API,
@@ -50,6 +58,15 @@ const preloadReducer = (
                 ...state,
                 isFetching: false,
                 isFetched: true,
+            };
+        }
+        case ACTION_FETCH_FAIL: {
+            const error = action.payload;
+            return {
+                ...state,
+                isFetching: false,
+                isFetched: false,
+                error: error?.message || JSON.stringify(error),
             };
         }
         case ACTION_SET_CONFIGS: {

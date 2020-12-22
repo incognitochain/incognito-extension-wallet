@@ -29,7 +29,7 @@ interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
     const dispatch = useDispatch();
-    const { isFetching }: IPreloadReducer = useSelector(preloadSelector);
+    const { isFetching, isFetched }: IPreloadReducer = useSelector(preloadSelector);
     const { loaded }: IWalletReducer = useSelector(walletSelector);
     const handlePreload = async () => {
         try {
@@ -56,6 +56,14 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
                     <br />
                     for your crypto...
                 </p>
+            </Styled>
+        );
+    }
+    if (!isFetched) {
+        return (
+            <Styled className="preloading-container">
+                <Spinner animation="grow" />
+                <p className="desc">Something went wrong!</p>
             </Styled>
         );
     }
