@@ -5,8 +5,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 18px;
 `;
 
 const AddressBook = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {

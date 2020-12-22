@@ -5,8 +5,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 `;
 
 const Scan = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {

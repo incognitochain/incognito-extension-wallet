@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { route as routeSetting } from 'src/module/Setting';
 
 const Styled = styled(Link)`
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 `;
 
 const Setting = React.memo(() => {

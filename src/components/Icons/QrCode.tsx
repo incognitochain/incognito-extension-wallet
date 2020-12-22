@@ -9,8 +9,8 @@ interface IProps {
 }
 
 const Styled = styled(Link)`
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
 `;
 
 const QrCode = (props: IProps) => {

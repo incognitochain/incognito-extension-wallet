@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { COLORS } from 'src/styles';
 
 export const Styled = styled.div`
-    margin-top: 30px;
+    margin-top: 15px;
     .input-container {
         position: relative;
         height: 40px;
@@ -23,12 +23,13 @@ export const Styled = styled.div`
         position: absolute;
         left: 0;
         top: 0;
-        background-color: ${COLORS.colorGreyLight};
+        background-color: ${COLORS.colorGrey};
         color: ${COLORS.black};
         width: 100%;
         height: 100%;
         border-radius: 8px;
         padding: 0 10px;
+        border: solid 0.5px ${COLORS.colorGreyLight};
         :focus {
             border: solid 1px ${COLORS.black};
         }

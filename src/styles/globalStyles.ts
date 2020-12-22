@@ -1,4 +1,4 @@
-import { ENVS } from 'src/configs';
+import { ENVS, isDev } from 'src/configs';
 import { createGlobalStyle } from 'styled-components';
 import { COLORS } from './colors';
 import { FONT_SIZES } from './fontSize';
@@ -65,7 +65,7 @@ export const GlobalStyled = createGlobalStyle`
         box-sizing: border-box;
         font-weight: 100;
         height:${(props: IGlobalStyle) => props.theme.height};
-        border: solid 0.5px;
+        border: ${isDev ? 'solid 0.5px' : 'none'};
         overflow: hidden;
         position: relative;
         font-size: ${FONT_SIZES.regular}px;

@@ -19,10 +19,12 @@ const Styled = styled.div`
     .text {
         margin-right: 15px;
         color: ${COLORS.colorGreyBold};
-        padding-left: 10px;
+        padding-left: 15px;
     }
     .btn-container {
-        height: 100%;
+        height: 36px;
+        margin-right: 2px;
+        padding: unset;
     }
 `;
 
