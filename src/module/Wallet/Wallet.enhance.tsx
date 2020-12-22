@@ -5,7 +5,6 @@ import { IWalletReducer, walletSelector } from 'src/module/Wallet';
 import {
     actionFollowDefaultToken,
     actionGetPrivacyTokensBalance,
-    actionSetFollowedTokens,
     IEnvToken,
     ITokenReducer,
     tokenSelector,
@@ -29,7 +28,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             if (!followedPopularIds) {
                 await dispatch(actionFollowDefaultToken(account));
             }
-            await dispatch(actionSetFollowedTokens({ followed: account.privacyTokenIds }));
             await Promise.all([dispatch(actionGetPrivacyTokensBalance()), dispatch(actionGetAccountBalance())]);
         } catch (error) {
             dispatch(

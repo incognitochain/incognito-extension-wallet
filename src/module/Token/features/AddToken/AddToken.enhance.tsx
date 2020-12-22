@@ -23,16 +23,20 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const defaultAccount: AccountInstance = useSelector(defaultAccountSelector);
     const getPrivacyDataByTokenID = useSelector(getPrivacyDataByTokenIDSelector);
     const dispatch = useDispatch();
-    const handleToggleFollowTokenById = (tokenId: string) => {
+    const handleToggleFollowTokenById = async (tokenId: string) => {
         try {
             const token: ISelectedPrivacy = getPrivacyDataByTokenID(tokenId);
             if (token.isFollowed) {
-                defaultAccount.unfollowTokenById(tokenId);
+                await defaultAccount.unfollowTokenById(tokenId);
             } else {
-                defaultAccount.followTokenById(tokenId);
+                await defaultAccount.followTokenById(tokenId);
             }
-            dispatch(actionSetFollowedTokens({ followed: defaultAccount.privacyTokenIds }));
-            dispatch(actionSaveWallet());
+            await dispatch(
+                actionSetFollowedTokens({
+                    followed: defaultAccount.privacyTokenIds.map((t) => ({ tokenId: t, amount: 0 })),
+                }),
+            );
+            await dispatch(actionSaveWallet());
         } catch (error) {
             dispatch(
                 actionToggleToast({
