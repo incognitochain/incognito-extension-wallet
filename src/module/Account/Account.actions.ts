@@ -170,9 +170,12 @@ export const actionGetAccountBalanceFetched = (payload: { accountName: string; a
     payload,
 });
 
-export const actionGetAccountBalance = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionGetAccountBalance = (defaultAccount?: AccountInstance | undefined) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
     const state: IRootState = getState();
-    const account: AccountInstance = defaultAccountSelector(state);
+    const account: AccountInstance = defaultAccount || defaultAccountSelector(state);
     const { loaded }: IWalletReducer = walletSelector(state);
     if (!account || !loaded) {
         return;

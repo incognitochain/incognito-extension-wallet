@@ -4,17 +4,23 @@ import { compose } from 'recompose';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withLayout } from 'src/components/Layout';
+import { defaultAccountSelector } from 'src/module/Account';
 import { actionFetchCacheHistory } from 'src/module/History';
 import { selectedTokenIdSelector } from 'src/module/Token';
+import { walletDataSelector } from 'src/module/Wallet';
+import { actionGetBalanceByTokenId } from 'src/redux/actions';
 
 interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
     const dispatch = useDispatch();
     const selectedPrivacyTokenId = useSelector(selectedTokenIdSelector);
+    const account = useSelector(defaultAccountSelector);
+    const wallet = useSelector(walletDataSelector);
     const fetchData = async () => {
         try {
             dispatch(actionFetchCacheHistory());
+            dispatch(actionGetBalanceByTokenId());
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -27,7 +33,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     };
     React.useEffect(() => {
         fetchData();
-    }, [selectedPrivacyTokenId]);
+    }, [selectedPrivacyTokenId, account, wallet]);
     return (
         <ErrorBoundary>
             <WrappedComponent {...props} />

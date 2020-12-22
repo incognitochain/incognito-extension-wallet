@@ -119,7 +119,10 @@ export const actionFollowDefaultToken = (account: AccountInstance) => async (
     }
 };
 
-export const actionGetPrivacyTokensBalance = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionGetPrivacyTokensBalance = (defaultAccount?: AccountInstance | undefined) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
     const state: IRootState = getState();
     const followed = followedTokensIdsSelector(state)();
     const { loaded }: IWalletReducer = walletSelector(state);
@@ -128,7 +131,7 @@ export const actionGetPrivacyTokensBalance = () => async (dispatch: Dispatch, ge
     }
     const bridgeTokens = bridgeTokensSelector(state);
     const chainTokens = chainTokensSelector(state);
-    const account: AccountInstance = defaultAccountSelector(state);
+    const account: AccountInstance = defaultAccount || defaultAccountSelector(state);
     followed.map(async (tokenId: string) => {
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
         return actionGetBalanceToken(token)(dispatch, getState);
@@ -139,3 +142,22 @@ export const actionSetSelectedToken = (payload: string) => ({
     type: ACTION_SET_SELECTED_TOKEN,
     payload,
 });
+
+export const actionGetBalanceByTokenId = (tokenId: string) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    try {
+        if (!tokenId) {
+            return;
+        }
+        const state = getState();
+        const account: AccountInstance = defaultAccountSelector(state);
+        const chainTokens = chainTokensSelector(state);
+        const bridgeTokens = bridgeTokensSelector(state);
+        const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
+        actionGetBalanceToken(token)(dispatch, getState);
+    } catch (error) {
+        throw error;
+    }
+};
