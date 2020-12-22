@@ -21,7 +21,7 @@
     },
     "version": "1.0",
     "web_accessible_resources": ["index.html", "/static/*", "/fonts/*", "/images/*", "favicon.ico"],
-    "content_security_policy": "script-src 'self' 'sha256-yl7YiBfgUz6rSqpzY4CRooLVoAt04iSsk4u1ZYrKHs4' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": "script-src 'self' 'sha256-16gebJTZK9hE8FC+iA3rY0LfUX+XhyKJluHQz2j01xg' 'unsafe-eval'; object-src 'self'",
     "permissions": [
         "tabs",
         "<all_urls>",
