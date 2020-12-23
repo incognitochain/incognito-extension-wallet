@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import QrReader from 'react-qr-reader';
 import { CloseIcon } from 'src/components/Icons';
 import { actionToggleModal } from 'src/components/Modal';
+import { BrowserQRCodeReader } from '@zxing/library';
 import { useDispatch } from 'react-redux';
-import { actionToggleToast, Button, TOAST_CONFIGS } from '../Core';
+import { isString } from 'lodash';
+import Spinner from 'react-bootstrap/esm/Spinner';
 
 const Styled = styled.div`
     .icon {
@@ -16,21 +17,81 @@ const Styled = styled.div`
     }
 `;
 
-const QrReaderComponent = (props: QrReader.props) => {
+interface IState {
+    codeReader: any;
+    hasWebcam: boolean;
+    hasWebcamPermissions: boolean;
+    error: string;
+}
+
+interface IProps {
+    // eslint-disable-next-line no-unused-vars
+    onScan: (value: string) => any;
+}
+
+const QrReaderComponent = (props: IProps & any) => {
     const dispatch = useDispatch();
-    let ref: any = React.useRef({});
-    const handleChooseImage = () => {
-        try {
-            ref?.current?.openImageDialog();
-        } catch (error) {
-            dispatch(actionToggleToast({ toggle: true, value: error, type: TOAST_CONFIGS.error }));
+    const [state, setState] = React.useState<IState>({
+        codeReader: null,
+        hasWebcam: false,
+        hasWebcamPermissions: false,
+        error: '',
+    });
+    let { codeReader, hasWebcam, hasWebcamPermissions, error } = state;
+    const { onScan }: IProps = props;
+
+    const checkPermission = async () => {
+        await window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        const devices = await window.navigator.mediaDevices.enumerateDevices();
+        const webcams = devices.filter((device) => device.kind === 'videoinput');
+        const userHasWebcam = webcams.length > 0;
+        if (!userHasWebcam) {
+            throw new Error('No webcam found');
+        }
+        const userHasWebcamPermissions = webcams.some((webcam) => webcam.label && webcam.label.length > 0);
+        if (!userHasWebcamPermissions) {
+            throw new Error('Not webcam permissions');
         }
     };
+    const initCamera = async () => {
+        if (!codeReader) {
+            codeReader = new BrowserQRCodeReader();
+            return setState({ ...state, codeReader });
+        }
+        try {
+            await codeReader.getVideoInputDevices();
+            await checkPermission();
+            const content = await codeReader.decodeFromInputVideoDevice(undefined, 'video');
+            const result = content.text;
+            if (isString(result)) {
+                onScan(result);
+            }
+        } catch (e: any) {
+            setState({ ...state, error: e?.message || 'Something went wrong!' });
+        }
+    };
+
+    const renderWebcamp = () => {
+        if (!codeReader) {
+            return <Spinner animation="border" />;
+        }
+        if (!hasWebcam || !hasWebcamPermissions || !!error) {
+            return <p>{error}</p>;
+        }
+        return null;
+    };
+
+    React.useEffect(() => {
+        initCamera();
+    }, [state]);
+
     return (
         <Styled>
             <CloseIcon onClick={() => dispatch(actionToggleModal({}))} />
-            <QrReader ref={ref} {...props} />
-            <Button title="Choose Image" onClick={handleChooseImage} />
+            <div className="webcamp-container">
+                {renderWebcamp()}
+                <video id="video" />
+            </div>
         </Styled>
     );
 };

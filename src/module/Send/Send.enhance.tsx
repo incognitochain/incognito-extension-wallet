@@ -83,21 +83,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         }
     };
 
-    const handleErrorQrCode = (error: any) => {
-        dispatch(
-            actionToggleToast({
-                toggle: true,
-                value: error,
-                type: TOAST_CONFIGS.error,
-            }),
-        );
-        dispatch(actionToggleModal({}));
-    };
-
     const onClickScan = () => {
         dispatch(
             actionToggleModal({
-                data: <QrReader onError={handleErrorQrCode} onScan={handleScanQrCode} delay={500} legacyMode />,
+                data: <QrReader onScan={handleScanQrCode} />,
                 visible: true,
             }),
         );
