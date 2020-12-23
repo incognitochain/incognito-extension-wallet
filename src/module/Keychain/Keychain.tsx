@@ -80,7 +80,7 @@ const Keychain = React.memo(() => {
         [],
     );
     return (
-        <Styled>
+        <Styled className="scroll-view">
             <Header title={translateKeychain.headerTitle} />
             <YourKeychains />
             {hookFactories.map((item) => (

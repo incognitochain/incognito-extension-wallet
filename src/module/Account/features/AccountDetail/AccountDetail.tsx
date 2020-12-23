@@ -12,9 +12,6 @@ import { actionFetchRemoveAccount } from 'src/module/Account';
 import { withLayout } from 'src/components/Layout';
 
 const Styled = styled.div`
-    .scroll-view {
-        max-height: 360px;
-    }
     .btn-container {
         margin-top: 30px;
     }
@@ -88,9 +85,9 @@ const AccountDetails = () => {
         }
     };
     return (
-        <Styled>
+        <Styled className="scroll-view">
             <Header title={`${account.name}'s ${translateAccountDetail.keychain}`} />
-            <div className="scroll-view">{renderItem()}</div>
+            {renderItem()}
             <Button onClick={handleRemoveKeychain} title={translateAccountDetail.delete} />
         </Styled>
     );

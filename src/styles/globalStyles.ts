@@ -183,5 +183,6 @@ export const GlobalStyled = createGlobalStyle`
         position: relative;
         overflow-x: hidden;
         overflow-y: scroll;
+        max-height: 490px;
     }
 `;
