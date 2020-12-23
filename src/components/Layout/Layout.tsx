@@ -8,7 +8,7 @@ interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     return (
-        <Styled className="layout-container">
+        <Styled className="layout-container scroll-view">
             <WrappedComponent {...props} />
         </Styled>
     );
