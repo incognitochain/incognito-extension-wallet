@@ -2,6 +2,8 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 /// <reference types="wallet-address-validator" />
+/// <reference types="react-detect-offline" />
+
 declare namespace NodeJS {
     interface ProcessEnv {
         readonly NODE_ENV: 'development' | 'production' | 'test';
@@ -69,3 +71,4 @@ declare module '*.module.sass' {
 }
 
 declare module 'wallet-address-validator';
+declare module 'react-detect-offline';

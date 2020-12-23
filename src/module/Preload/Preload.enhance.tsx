@@ -4,66 +4,42 @@ import { compose } from 'recompose';
 import styled from 'styled-components';
 import Spinner from 'react-bootstrap/esm/Spinner';
 import { IWalletReducer, walletSelector } from 'src/module/Wallet';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { Button } from 'src/components';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
-import { IPreloadReducer } from './Preload.reducer';
 import { preloadSelector } from './Preload.selector';
 
-const Styled = styled.div`
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    > p.desc {
-        text-align: center;
-        margin-top: 15px;
-    }
-`;
+const Styled = styled.div``;
 
 interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
     const dispatch = useDispatch();
-    const { isFetching, isFetched }: IPreloadReducer = useSelector(preloadSelector);
     const { loaded }: IWalletReducer = useSelector(walletSelector);
-    const handlePreload = async () => {
-        try {
-            await dispatch(actionPreloadApp());
-        } catch (error) {
-            dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    value: error,
-                    type: TOAST_CONFIGS.error,
-                }),
-            );
-        }
-    };
+    const { error, isFetching: preloading, isFetched: preloaded } = useSelector(preloadSelector);
+    const handlePreload = () => dispatch(actionPreloadApp());
     React.useEffect(() => {
         handlePreload();
     }, []);
-    if (isFetching || !loaded) {
+    if (preloading || !loaded || !preloaded) {
         return (
-            <Styled className="preloading-container">
+            <Styled className="preload-container">
                 <Spinner animation="grow" />
-                <p className="desc">
+                <p className="fw-medium fs-medium sub-text">
                     Entering incognito mode
                     <br />
                     for your crypto...
                 </p>
-            </Styled>
-        );
-    }
-    if (!isFetched) {
-        return (
-            <Styled className="preloading-container">
-                <Spinner animation="grow" />
-                <p className="desc">Something went wrong!</p>
+                {!!error && !preloaded && !preloading && (
+                    <>
+                        <p className="sub-text">
+                            Please check your connection or re-install the application
+                            <br />
+                            (only if you have a backup of your private keys) and try again.
+                        </p>
+                        {!!error && <p className="sub-text">{error}</p>}
+                        <Button title="Retry" />
+                    </>
+                )}
             </Styled>
         );
     }
