@@ -4,10 +4,33 @@ import { Provider } from 'react-redux';
 import { configStore, IConfigStore } from 'src/redux/index';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
+import { Detector } from 'react-detect-offline';
 import { withLayoutApp } from './components/Layout';
 import { withPreload } from './module/Preload';
 
 const { store, persistor }: IConfigStore = configStore();
+
+const LostConnect = React.memo(() => {
+    return (
+        <ErrorBoundary>
+            <div className="preload-container">
+                <p>Lost network!</p>
+            </div>
+        </ErrorBoundary>
+    );
+});
+
+const withNetwork = (WrappedComponent: React.FunctionComponent) => (props: any) => {
+    return (
+        <ErrorBoundary>
+            <Detector
+                render={({ online }: { online: boolean }) =>
+                    online ? <WrappedComponent {...props} /> : <LostConnect />
+                }
+            />
+        </ErrorBoundary>
+    );
+};
 
 const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     return (
@@ -21,4 +44,4 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose(enhance, withPreload, withLayoutApp);
+export default compose(enhance, withNetwork, withPreload, withLayoutApp);
