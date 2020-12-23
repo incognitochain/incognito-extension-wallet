@@ -48,11 +48,13 @@ module.exports = {
 
         'jsx-a11y/click-events-have-key-events': 'off',
         'jsx-a11y/no-static-element-interactions': 'off',
-
+        'jsx-a11y/media-has-caption': 'off',
+        
         'no-useless-catch': 'off',
         'no-restricted-syntax': 'off',
         'no-continue': 'off',
         'no-nested-ternary': 'off',
         'no-unused-expressions': 'off',
+        'consistent-return': 'off',
     },
 };
