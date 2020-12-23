@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { MdError, MdWarning, MdInfo, MdClose } from 'react-icons/md';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { COLORS } from 'src/styles';
 import { toastSelector } from './Toast.selector';
 import { TOAST_CONFIGS, TOAST_CONFIGS_CLASSNAME } from './Toast.reducer';
 import { actionToggleToast } from './Toast.actions';
@@ -11,7 +11,7 @@ const Styled = styled.div`
     position: absolute;
     right: 15px;
     left: 15px;
-    top: 10px;
+    top: 15px;
     visibility: hidden;
     padding: 15px;
     z-index: 1;
@@ -21,7 +21,7 @@ const Styled = styled.div`
     border-radius: 10px;
     &.show {
         visibility: visible;
-        animation: fadeInDown 0.5s, fadeOutUp 0.5s 2.5s;
+        animation: fadeInDown 0.5s, fadeOutUp 0.5s 4s;
         background-color: ${COLORS.colorGreyLight};
     }
     &.success {
@@ -33,17 +33,17 @@ const Styled = styled.div`
     &.warning {
         color: ${COLORS.orange};
     }
-    > p.desc {
-        font-size: ${FONT_SIZES.small}px;
-        line-height: ${FONT_SIZES.small + 3}px;
-        font-weight: 200;
-        margin-left: 10px;
+    p.fs-small {
+        margin-top: 10px;
     }
     .close-icon {
         position: absolute;
         top: 5px;
         right: 5px;
         cursor: pointer;
+    }
+    .scroll-view {
+        max-height: 100%;
     }
 `;
 
@@ -67,15 +67,20 @@ const Toast = () => {
 
     React.useEffect(() => {
         if (toggle) {
-            setTimeout(() => {
+            let timeoutId = setTimeout(() => {
                 handleCloseToast();
-            }, 3000);
+            }, 3900);
+            return () => {
+                clearTimeout(timeoutId);
+            };
         }
     }, [toggle]);
     return (
         <Styled className={className}>
-            {getIcons()}
-            <p className="desc">{value}</p>
+            <div className="scroll-view">
+                {getIcons()}
+                <p className="fs-small fw-small">{value}</p>
+            </div>
             <MdClose onClick={handleCloseToast} size={18} className="close-icon" />
         </Styled>
     );

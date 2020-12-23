@@ -1,3 +1,4 @@
+import { ERROR_CODE } from 'src/constants/error';
 import { IObject } from 'src/utils';
 import { ACTION_TOGGLE_TOAST } from './Toast.constant';
 
@@ -27,6 +28,24 @@ const initialState: IToastReducer = {
     toggle: false,
 };
 
+const getMessageError = (error: any) => {
+    let value = '';
+    try {
+        if (error instanceof Error) {
+            return error?.message;
+        }
+        const errorParse = JSON.parse(error);
+        const errorCode = errorParse?.Code;
+        if (errorCode) {
+            return ERROR_CODE[errorCode];
+        }
+        value = errorParse?.Message || errorParse?.Code;
+    } catch (e: any) {
+        value = 'Error';
+    }
+    return value;
+};
+
 // eslint-disable-next-line no-unused-vars
 const reducer: (state: IToastReducer, action: { type: string; payload: any }) => any = (
     state = initialState,
@@ -44,9 +63,7 @@ const reducer: (state: IToastReducer, action: { type: string; payload: any }) =>
                 value: any;
             } = action.payload;
             if (type === TOAST_CONFIGS.error) {
-                if (value instanceof Error) {
-                    value = value?.message || JSON.stringify(value);
-                }
+                value = getMessageError(value);
             }
             return {
                 ...state,
