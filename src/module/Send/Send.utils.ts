@@ -102,17 +102,19 @@ export const getSendData = ({
         isUseTokenFee,
         totalFee,
     });
-    let titleBtnSubmit = screen === 'Send' ? 'Send anonymously' : 'Unshield my crypto';
-    if (isFetching) {
-        titleBtnSubmit = 'Calculating fee...';
-    }
-
     const selector = formValueSelector(FORM_CONFIGS.formName);
     const inputAmount = selector(state, FORM_CONFIGS.amount);
     const inputAddress = selector(state, FORM_CONFIGS.toAddress);
     const inputMemo = selector(state, FORM_CONFIGS.memo);
     const valid = isValid(FORM_CONFIGS.formName)(state);
     const submitting = isSubmitting(FORM_CONFIGS.formName)(state);
+    let titleBtnSubmit = screen === 'Send' ? 'Send anonymously' : 'Unshield my crypto';
+    if (isFetching) {
+        titleBtnSubmit = 'Calculating fee...';
+    }
+    if (!isFetching && submitting) {
+        titleBtnSubmit = `Sending...`;
+    }
     const isIncognitoAddress = isEmpty(inputAddress)
         ? false
         : keyServices.checkPaymentAddress(inputAddress) || selectedPrivacy.isNativeToken;
