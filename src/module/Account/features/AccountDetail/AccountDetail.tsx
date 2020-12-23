@@ -85,7 +85,7 @@ const AccountDetails = () => {
         }
     };
     return (
-        <Styled className="scroll-view">
+        <Styled>
             <Header title={`${account.name}'s ${translateAccountDetail.keychain}`} />
             {renderItem()}
             <Button onClick={handleRemoveKeychain} title={translateAccountDetail.delete} />
