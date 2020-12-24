@@ -30,8 +30,7 @@ export const actionFetchCacheHistory = () => async (dispatch: Dispatch, getState
         await dispatch(actionFetchingCacheHistory());
         if (selectedPrivacy.isNativeToken) {
             histories = await account.nativeToken.getTxHistories();
-        }
-        if (selectedPrivacy.isPrivacyToken) {
+        } else {
             const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
             histories = await token.getTxHistories();
         }
