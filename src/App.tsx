@@ -9,10 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'src/components/Modal';
 import { ThemeProvider } from 'styled-components';
 import 'animate.css';
+import { Toast } from 'src/components';
+import { themeSelector } from 'src/module/Configs';
 import './reset.scss';
-import { Toast } from './components';
-import { HeaderApp } from './components/Header';
-import { themeSelector } from './module/Configs';
 import withApp from './App.enhance';
 
 const history = isDev ? createBrowserHistory() : createMemoryHistory(); // Instead of createBrowserHistory();
@@ -23,7 +22,6 @@ const App: React.FunctionComponent = () => {
         <ThemeProvider theme={theme}>
             <GlobalStyled />
             <Router history={history}>
-                <HeaderApp />
                 <Switch>
                     <Suspense fallback="...">
                         {routes.map((route: IRouteProps) => (

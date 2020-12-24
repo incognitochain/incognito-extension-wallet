@@ -4,9 +4,12 @@ import { IRouteProps } from '..';
 const walletRoute: IRouteProps = {
     path: '/',
     exact: true,
-    component: lazy(() => import('./Wallet')),
     name: 'Wallet',
     to: '/',
+    component: lazy(async () => {
+        const module: any = await import('./Wallet');
+        return module;
+    }),
 };
 
 export const route = '/';

@@ -4,6 +4,7 @@ import { SettingIcon } from 'src/components/Icons';
 import QrCode from 'src/components/Icons/QrCode';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { route as receiveRoute } from 'src/module/Account/features/Receive';
+import ErrorBoundary from '../ErrorBoundary';
 
 const Styled = styled.div`
     margin-bottom: 30px;
@@ -33,4 +34,12 @@ const HeaderApp = React.memo(() => {
     );
 });
 
-export default HeaderApp;
+const enhanceHeaderApp = (WrappedComponent: React.FunctionComponent) => (props: any) => {
+    return (
+        <ErrorBoundary>
+            <HeaderApp />
+            <WrappedComponent {...props} />
+        </ErrorBoundary>
+    );
+};
+export default enhanceHeaderApp;

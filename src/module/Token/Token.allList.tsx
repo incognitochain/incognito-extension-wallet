@@ -6,9 +6,6 @@ import ListToken from './Token.list';
 import { IAllListTokenInner } from './Token.interface';
 
 const Styled = styled.div`
-    overflow: scroll;
-    position: relative;
-    height: 435px;
     .hook {
         flex-direction: 'row';
         align-items: 'center';

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { withLayout } from 'src/components/Layout';
+import { withHeaderApp } from 'src/components/Header';
 import { defaultAccountSelector } from 'src/module/Account';
 import { actionFetchCacheHistory } from 'src/module/History';
 import { selectedTokenIdSelector } from 'src/module/Token';
@@ -12,7 +12,13 @@ import { actionGetBalanceByTokenId } from 'src/redux/actions';
 
 interface IProps {}
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
+interface TInner {
+    fetchData: () => any;
+}
+
+export interface IMergedProps extends IProps, TInner {}
+
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergedProps & any) => {
     const dispatch = useDispatch();
     const selectedPrivacyTokenId = useSelector(selectedTokenIdSelector);
     const account = useSelector(defaultAccountSelector);
@@ -36,9 +42,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     }, [selectedPrivacyTokenId, account, wallet]);
     return (
         <ErrorBoundary>
-            <WrappedComponent {...props} />
+            <WrappedComponent {...{ ...props, fetchData }} />
         </ErrorBoundary>
     );
 };
 
-export default compose<IProps, any>(withLayout, enhance);
+export default compose<TInner, any>(withHeaderApp, enhance);
