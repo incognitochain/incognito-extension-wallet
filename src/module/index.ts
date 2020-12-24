@@ -5,6 +5,7 @@ export interface IRouteProps extends RouteProps {
     name: string;
     to: string;
     path: string;
+    component: React.FunctionComponent | any;
 }
 
 let routes: IRouteProps[] = [];
@@ -12,7 +13,7 @@ let routes: IRouteProps[] = [];
 const context = require.context('./', true, /\.route.tsx?/);
 
 context.keys().forEach((path) => {
-    routes.push(require(`${path}`).default);
+    routes.push(context(`${path}`).default);
 });
 
 export default routes;

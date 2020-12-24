@@ -8,12 +8,14 @@ export interface TInner {
 }
 
 export interface IProps {
-    title: string;
+    title?: string;
     onGoBack?: () => void;
     rightHeader?: React.FunctionComponent;
     selectAccount?: boolean;
     canSearch?: boolean;
     customHeader?: React.FunctionComponent | React.ReactElement;
+    refreshPage?: boolean;
+    handleRefreshPage?: () => any;
 }
 
 export interface IMergeProps extends TInner, IProps {}
@@ -46,13 +48,15 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
         return (
             <div className="header-container flex">
-                <button
-                    type="button"
-                    onClick={onHandleToggleSearch}
-                    className="header-title fw-medium fs-medium ellipsis"
-                >
-                    {title}
-                </button>
+                {title && (
+                    <button
+                        type="button"
+                        onClick={onHandleToggleSearch}
+                        className="header-title fw-medium fs-medium ellipsis"
+                    >
+                        {title}
+                    </button>
+                )}
                 {customHeader && customHeader}
             </div>
         );
@@ -64,6 +68,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 toggleSearch,
                 renderHeaderTitle,
                 handleClick,
+                title,
             }}
         />
     );

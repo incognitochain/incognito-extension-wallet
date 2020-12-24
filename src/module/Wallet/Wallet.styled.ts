@@ -4,7 +4,7 @@ export const Styled = styled.div`
     position: relative;
     height: 485px;
     .list-token {
-        height: 300px;
+        height: 260px;
         overflow: scroll;
     }
     .list-token .token-container {

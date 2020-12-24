@@ -1,5 +1,4 @@
 import React from 'react';
-import { compose } from 'recompose';
 import styled from 'styled-components';
 
 const Styled = styled.div`
@@ -16,4 +15,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     );
 };
 
-export default compose<IProps & any, any>(enhance);
+export default enhance;

@@ -12,3 +12,4 @@ export { default as AddressBookIcon } from './AddressBook';
 export { default as ArrowUpIcon } from './ArrowUp';
 export { default as ArrowDownIcon } from './ArrowDown';
 export { default as CloseIcon } from './Close';
+export { default as RefreshIcon } from './Refresh';

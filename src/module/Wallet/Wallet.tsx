@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button } from 'src/components';
+import { Button, Header } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import {
     ListToken,
@@ -12,7 +12,7 @@ import {
     ITotalShielded,
 } from 'src/module/Token';
 import { route as routeAddToken } from 'src/module/Token/features/AddToken';
-import { translateSelector } from '../Configs';
+import { translateSelector } from 'src/module/Configs/Configs.selector';
 import withWallet from './Wallet.enhance';
 import { Styled } from './Wallet.styled';
 
@@ -52,9 +52,15 @@ const AddCoin = React.memo(() => {
     );
 });
 
-const Wallet = React.memo(() => {
+interface IProps {
+    handleLoadWallet: () => any;
+}
+
+const Wallet = React.memo((props: IProps) => {
+    const { handleLoadWallet } = props;
     return (
         <Styled>
+            <Header refreshPage handleRefreshPage={handleLoadWallet} />
             <TotalShield />
             <ListFollowToken />
             <AddCoin />

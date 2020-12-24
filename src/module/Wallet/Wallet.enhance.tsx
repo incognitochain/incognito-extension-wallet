@@ -12,9 +12,13 @@ import {
 import { actionGetAccountBalance, defaultAccountNameSelector } from 'src/module/Account';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { useDispatch, useSelector } from 'react-redux';
+import { withHeaderApp } from 'src/components/Header';
+import { compose } from 'redux';
 import { walletDataSelector } from './Wallet.selector';
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
+interface IProps {}
+
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     const dispatch = useDispatch();
     const defaultAccount: string = useSelector(defaultAccountNameSelector);
     const wallet: WalletInstance = useSelector(walletDataSelector);
@@ -24,15 +28,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const field = mainnet ? 'mainnet' : 'testnet';
     const envToken: IEnvToken = tokenState[field];
     const { followedPopularIds } = envToken;
-    const handleLoadWallet = async ({
-        accountName,
-        walletData,
-    }: {
-        accountName: string;
-        walletData: WalletInstance;
-    }) => {
+    const handleLoadWallet = async () => {
         try {
-            const account = walletData.masterAccount.getAccountByName(accountName);
+            const account = wallet.masterAccount.getAccountByName(defaultAccount);
             if (!followedPopularIds) {
                 await dispatch(actionFollowDefaultToken(account));
             }
@@ -56,9 +54,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         }
     };
     React.useEffect(() => {
-        handleLoadWallet({ accountName: defaultAccount, walletData: wallet });
+        handleLoadWallet();
     }, [wallet, defaultAccount]);
-    return <WrappedComponent {...props} />;
+
+    return <WrappedComponent {...{ ...props, handleLoadWallet }} />;
 };
 
-export default enhance;
+export default compose(withHeaderApp, enhance);

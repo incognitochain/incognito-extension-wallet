@@ -12,7 +12,7 @@ import { route as routeSend } from 'src/module/Send';
 import { useHistory } from 'react-router-dom';
 import { InfoIcon, VerifiedIcon } from 'src/components/Icons';
 import { route as routeWallet } from 'src/module/Wallet';
-import withDetail from './Detail.enhance';
+import withDetail, { IMergedProps } from './Detail.enhance';
 
 const Styled = styled.div`
     .token-balance {
@@ -80,7 +80,8 @@ export const GroupButton = React.memo(() => {
     return <Button title={translateDetail.btnSend} onClick={handleSend} />;
 });
 
-const Detail = React.memo(() => {
+const Detail = React.memo((props: IMergedProps & any) => {
+    const { fetchData }: IMergedProps = props;
     const token = useSelector(selectedPrivacySelector);
     const theme = useSelector(themeSelector);
     const history = useHistory();
@@ -90,6 +91,8 @@ const Detail = React.memo(() => {
                 onGoBack={() => history.push(routeWallet)}
                 title={token.name}
                 customHeader={<InfoIcon onClick={() => history.push(routeTokenInfo)} />}
+                refreshPage
+                handleRefreshPage={fetchData}
             />
             <TokenBalance />
             <GroupButton />
