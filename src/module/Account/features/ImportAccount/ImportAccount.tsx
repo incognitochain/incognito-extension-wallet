@@ -19,7 +19,6 @@ const ImportAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) =
                         componentProps={{
                             autoFocus: true,
                             placeholder: 'Keychain name',
-                            readOnly: readOnlyName,
                         }}
                         name="accountName"
                         label="Keychain name"

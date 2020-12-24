@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAccount, actionFetchImportAccount, listAccountNameSelector } from 'src/module/Account';
 import { change, reduxForm } from 'redux-form';
 import { randomName as handleRandomName } from 'src/utils/randomName';
-
 import { withLayout } from 'src/components/Layout';
 import { useHistory, useLocation } from 'react-router-dom';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
@@ -14,8 +13,6 @@ import { translateByFieldSelector } from 'src/module/Configs';
 
 export interface TOutter {
     disabledForm: boolean;
-    handleImportAccount: (values: { accountName: string; privateKey: string }) => void;
-    readOnlyName: boolean;
     randomName: string;
     handleChangeRandomName: () => void;
 }
@@ -35,10 +32,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     } = location.state;
     const accountNameList = useSelector(listAccountNameSelector);
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
-    const [state, setState] = React.useState({
-        readOnlyName: true,
-    });
-    const { readOnlyName } = state;
     const { isFormValid, isAccountExist, isPrivateKeyExist } = useAccount({
         form: FORM_CONFIGS,
     });
@@ -55,7 +48,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                 throw new Error('Account is exist');
             }
             const { accountName, privateKey } = values;
-            await dispatch(actionFetchImportAccount(trim(readOnlyName ? randomName : accountName), trim(privateKey)));
+            await dispatch(actionFetchImportAccount(trim(accountName), trim(privateKey)));
             if (typeof params?.onGoBack === 'function') {
                 params?.onGoBack();
             } else {
@@ -79,8 +72,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         }
     };
 
-    const handleChangeRandomName = () => setState({ ...state, readOnlyName: false });
-
     React.useEffect(() => {
         dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.accountName, randomName));
     }, []);
@@ -89,10 +80,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         <WrappedComponent
             {...{
                 ...props,
-                readOnlyName,
                 randomName,
                 handleImportAccount,
-                handleChangeRandomName,
                 disabledForm,
             }}
         />
