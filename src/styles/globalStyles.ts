@@ -72,6 +72,7 @@ export const GlobalStyled = createGlobalStyle`
         line-height: ${FONT_SIZES.regular + 3}px;
         font-weight: 100;
         margin: auto;
+        padding: 30px;
     }
     
     @font-face {

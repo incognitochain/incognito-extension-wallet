@@ -47,7 +47,7 @@ export const SettingItem = React.memo((props: ISettingItem) => {
         <Styled>
             <p className="title fw-medium">{title}</p>
             {child.map((item: ISettingChildItem) =>
-                item.toggle ? <ToggleItem key={item.desc} {...item} /> : <Item {...item} />,
+                item.toggle ? <ToggleItem key={item.desc} {...item} /> : <Item key={item.desc} {...item} />,
             )}
         </Styled>
     );

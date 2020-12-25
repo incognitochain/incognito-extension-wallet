@@ -29,7 +29,7 @@ const initialState: IToastReducer = {
 };
 
 const getMessageError = (error: any) => {
-    let value = '';
+    let value = JSON.stringify(error);
     try {
         if (error instanceof Error) {
             return error?.message;
@@ -37,11 +37,11 @@ const getMessageError = (error: any) => {
         const errorParse = JSON.parse(error);
         const errorCode = errorParse?.Code;
         if (errorCode) {
-            return ERROR_CODE[errorCode];
+            return `${errorCode} ${ERROR_CODE[errorCode] || ERROR_CODE.DEFAULT}`;
         }
-        value = errorParse?.Message || errorParse?.Code;
+        return;
     } catch (e: any) {
-        value = 'Error';
+        value = JSON.stringify(error || e);
     }
     return value;
 };
