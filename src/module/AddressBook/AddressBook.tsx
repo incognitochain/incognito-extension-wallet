@@ -69,9 +69,11 @@ const AddressBook = (props: IMergeProps & any) => {
     return (
         <Styled theme={theme}>
             <Header onGoBack={onGoBack} title={translate.headerTitle} />
-            {addressBook.map((item: { data: IAddressBook[]; title: string }) => (
-                <Item key={item.title} item={item} onSelectedAddrBook={onSelectedAddrBook} />
-            ))}
+            <div className="scroll-view">
+                {addressBook.map((item: { data: IAddressBook[]; title: string }) => (
+                    <Item key={item.title} item={item} onSelectedAddrBook={onSelectedAddrBook} />
+                ))}
+            </div>
         </Styled>
     );
 };

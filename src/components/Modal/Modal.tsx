@@ -23,6 +23,7 @@ const Styled = styled.div`
         height: ${(props: IGlobalStyle) => props.theme.height};
         background: ${(props: IGlobalStyle) => props.theme.body};
         padding: 30px;
+        overflow: hidden;
     }
 `;
 

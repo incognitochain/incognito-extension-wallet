@@ -5,7 +5,6 @@ import { configStore, IConfigStore } from 'src/redux/index';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { Detector } from 'react-detect-offline';
-import { withLayoutApp } from './components/Layout';
 import { withPreload } from './module/Preload';
 
 const { store, persistor }: IConfigStore = configStore();
@@ -44,4 +43,4 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose(enhance, withNetwork, withPreload, withLayoutApp);
+export default compose(enhance, withNetwork, withPreload);
