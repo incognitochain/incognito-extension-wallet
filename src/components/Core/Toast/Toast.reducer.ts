@@ -1,3 +1,4 @@
+import { isString } from 'lodash';
 import { ERROR_CODE } from 'src/constants/error';
 import { IObject } from 'src/utils';
 import { ACTION_TOGGLE_TOAST } from './Toast.constant';
@@ -29,10 +30,13 @@ const initialState: IToastReducer = {
 };
 
 const getMessageError = (error: any) => {
-    let value = JSON.stringify(error);
+    let value = '';
     try {
         if (error instanceof Error) {
             return error?.message;
+        }
+        if (isString(error)) {
+            return error;
         }
         const errorParse = JSON.parse(error);
         const errorCode = errorParse?.Code;
