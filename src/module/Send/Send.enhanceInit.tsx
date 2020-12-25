@@ -2,7 +2,7 @@ import React from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
 import { reset } from 'redux-form';
-import { SpinnerContainer } from 'src/components';
+import { actionToggleToast, SpinnerContainer, TOAST_CONFIGS } from 'src/components';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { accountBalanceSelector } from 'src/module/Account';
 import { isGettingBalanceByTokenIdSelector } from 'src/redux';
@@ -60,7 +60,7 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
             await handleFetchedMaxPrv(accountBalance);
             await handleFetchedMaxFeePToken(selectedPrivacy);
         } catch (error) {
-            console.debug(error);
+            dispatch(actionToggleToast({ toggle: true, value: error, type: TOAST_CONFIGS.error }));
         } finally {
             setInit(true);
         }
@@ -77,9 +77,8 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     React.useEffect(() => {
         initData();
     }, [selectedPrivacy?.tokenId, accountBalance]);
-
     if (!selectedPrivacy || !send.init || !init || isGettingBalance) {
-        return <SpinnerContainer animation="grow" />;
+        return <SpinnerContainer animation="border" />;
     }
     return (
         <ErrorBoundary>

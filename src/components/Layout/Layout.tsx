@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+    width: 100%;
+    height: 100%;
+`;
 
 interface IProps {}
 

@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { isEqual } from 'lodash';
 import { Dispatch } from 'redux';
@@ -10,6 +11,7 @@ import {
     walletSelector,
 } from 'src/module//Wallet';
 import { actionFollowDefaultToken } from 'src/module/Token';
+import { cachePromise } from 'src/services';
 import {
     ACTION_FETCHED,
     ACTION_FETCHING_CREATE_ACCOUNT,
@@ -187,7 +189,12 @@ export const actionGetAccountBalance = (defaultAccount?: AccountInstance | undef
                 accountName: account.name,
             }),
         );
-        accountBalance = (await account?.nativeToken?.getTotalBalance())?.toNumber();
+        const accountBalanceStr = await cachePromise(
+            `account-balance-${account.key.keySet.publicKeySerialized}`,
+            async () => account?.nativeToken?.getTotalBalance(),
+            10000,
+        );
+        accountBalance = new BigNumber(accountBalanceStr || '0').toNumber();
     } catch (error) {
         throw error;
     } finally {

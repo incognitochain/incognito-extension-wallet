@@ -46,7 +46,7 @@ const Styled = styled.div`
         }
     }
     .hook-container .amount-token {
-        max-width: 200px;
+        max-width: 250px;
     }
     .header-title {
         max-width: 100px;
