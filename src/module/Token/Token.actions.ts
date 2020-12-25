@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js';
 import { isMainnetSelector, apiURLSelector } from 'src/module/Preload/Preload.selector';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
@@ -6,6 +7,7 @@ import { AccountInstance, PrivacyTokenInstance, WalletInstance } from 'incognito
 import { actionSaveWallet, IWalletReducer, walletDataSelector, walletSelector } from 'src/module/Wallet';
 import { defaultAccountSelector } from 'src/module/Account/Account.selector';
 import { translateSelector } from 'src/module/Configs/Configs.selector';
+import { cachePromise } from 'src/services';
 import {
     ACTION_FETCHED_PTOKEN_LIST,
     ACTION_FETCHED_PCUSTOMTOKEN_LIST,
@@ -66,13 +68,19 @@ export const actionGetBalanceToken = (token: PrivacyTokenInstance) => async (
     const translate: ILanguage = translateSelector(state);
     const tokenTranslate = translate.token;
     const tokenId = token?.tokenId;
+    const account: AccountInstance = defaultAccountSelector(state);
     let amount;
     if (!tokenId) {
         throw new Error(tokenTranslate.error.tokenIdRequired);
     }
     dispatch(actionGetBalanceTokenFetching({ tokenId }));
-    const totalBalance = await token.getTotalBalance(tokenId);
-    amount = totalBalance.toNumber();
+    const totalBalance = await cachePromise(
+        `token-balance-${tokenId}-${account.key.keySet.publicKeySerialized}`,
+        () => token.getTotalBalance(tokenId),
+        10000,
+    );
+    const amountStr = totalBalance || '0';
+    amount = new BigNumber(amountStr).toNumber();
     dispatch(
         actionGetBalanceTokenFetched({
             tokenId,
