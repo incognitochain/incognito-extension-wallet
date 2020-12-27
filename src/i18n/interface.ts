@@ -92,6 +92,10 @@ export interface ISettingLanguage {
         title: string;
         desc: string;
     };
+    decimalDigits: {
+        title: string;
+        desc: string;
+    };
 }
 
 export interface IAccountLanguage {

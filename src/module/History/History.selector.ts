@@ -4,9 +4,10 @@ import { createSelector } from 'reselect';
 import { keySetAccountSelector } from 'src/module/Account';
 import { IRootState } from 'src/redux/interface';
 import { isEmpty } from 'lodash';
-import { format } from 'src/utils';
+import { convert, format } from 'src/utils';
 import { selectedPrivacySelector } from 'src/module/Token';
 import { COINS } from 'src/constants';
+import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
 import { getStatusData, getTypeData } from './History.utils';
 import { ICacheHistoryTokenSelector } from './History.interface';
 
@@ -23,7 +24,8 @@ export const historyCacheDataSelector = createSelector(
     historyCacheSelector,
     selectedPrivacySelector,
     keySetAccountSelector,
-    (historyState, selectedPrivacy, keySet) => {
+    decimalDigitsSelector,
+    (historyState, selectedPrivacy, keySet, decimalDigits) => {
         const { histories } = historyState;
         if (!histories) {
             return [];
@@ -61,16 +63,24 @@ export const historyCacheDataSelector = createSelector(
             const amountFormated = format.formatAmount({
                 originalAmount: new BigNumber(amount).toNumber(),
                 decimals: selectedPrivacy?.pDecimals,
+                decimalDigits,
+            });
+            const amountFormatedNoClip = format.formatAmount({
+                originalAmount: new BigNumber(amount).toNumber(),
+                decimals: selectedPrivacy?.pDecimals,
+                decimalDigits,
+                clipAmount: false,
             });
             const feeFormated = format.formatAmount({
                 originalAmount: new BigNumber(fee).toNumber(),
                 decimals: selectedPrivacy?.pDecimals,
                 decimalDigits: false,
+                clipAmount: false,
             });
             const { statusMessage } = getStatusData(history);
             const historyItem = {
                 ...history,
-                amountFormated,
+                amountFormated: convert.toNumber({ text: amountFormated }) === 0 ? '' : amountFormated,
                 timeFormated: format.formatUnixDateTime(history?.lockTime, 'MMM DD HH:mm A'),
                 feeFormated,
                 statusMessage,
@@ -87,6 +97,7 @@ export const historyCacheDataSelector = createSelector(
                 symbol,
                 feeSymbol,
                 paymentAddress,
+                amountFormatedNoClip,
             };
             return historyItem;
         });

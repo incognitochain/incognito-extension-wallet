@@ -179,7 +179,7 @@ const sendReducer = (
             // const maxFeePrvText = format.formatAmount({
             //   originalAmount: maxFeePrv,
             //   decimalDigits: false,
-            //   decimals: COINS.PRV.pDecimals,
+            //   decimals: COINS.PRV.pDecimal.s,
             //   clipAmount: false,
             // });
             return {

@@ -88,10 +88,8 @@ export const getSendData = ({
     //   : COINS.PRV.symbol;
     const feePDecimals = isUseTokenFee ? selectedPrivacy?.pDecimals : COINS.PRV.pDecimals;
     const fee = isUseTokenFee ? feePToken : feePrv;
-    const feeText = format.formatAmount({
-        originalAmount: fee,
-        decimalDigits: false,
-        clipAmount: false,
+    const feeText = format.toFixed({
+        number: convert.toHumanAmount({ originalAmount: fee, decimals: feePDecimals }),
         decimals: feePDecimals,
     });
     // const userFee = isUseTokenFee ? userFeePToken : userFeePrv;
@@ -235,11 +233,12 @@ export const getTotalFee = ({
         }
         totalFee = userFee.plus(feeEst || 0);
         totalFee = floor(totalFee.toNumber());
-        totalFeeText = format.formatAmount({
-            originalAmount: totalFee,
+        totalFeeText = format.toFixed({
+            number: convert.toHumanAmount({
+                originalAmount: totalFee,
+                decimals,
+            }),
             decimals,
-            clipAmount: false,
-            decimalDigits: false,
         });
     } catch (error) {
         throw error;

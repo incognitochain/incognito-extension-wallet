@@ -20,7 +20,7 @@ const ToggleItem = React.memo((props: ISettingChildItem) => {
     const { desc, onClick, toggleValue } = props;
     return (
         <div className="toggle-item">
-            <span className="item sub-text">{desc}</span>
+            <span className="item sub-text" dangerouslySetInnerHTML={{ __html: desc }} />
             <ToggleSwitch toggleValue={toggleValue} onToggle={onClick} />
         </div>
     );

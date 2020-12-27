@@ -45,7 +45,7 @@ const ConfirmTx = () => {
         },
         {
             title: confirmLanguage.amount,
-            desc: `${tx.amountFormated} ${tx.symbol}`,
+            desc: `${tx.amountFormatedNoClip} ${tx.symbol}`,
         },
         {
             title: confirmLanguage.fee,

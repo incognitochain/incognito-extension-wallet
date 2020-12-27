@@ -31,10 +31,10 @@ export const actionFetchedPTokenList = (payload: IPToken[]) => ({
     payload,
 });
 
-export const actionFetchPTokenList = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionFetchPTokenList = (noCache = false) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
     const apiURL = apiURLSelector(state);
-    const pTokens = await apiGetPTokenList(apiURL);
+    const pTokens = await apiGetPTokenList(apiURL, noCache);
     dispatch(actionFetchedPTokenList(pTokens));
 };
 
@@ -43,10 +43,13 @@ export const actionFetchedPCustomTokenList = (payload: IPToken[]) => ({
     payload,
 });
 
-export const actionFetchPCustomTokenList = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionFetchPCustomTokenList = (noCache = false) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
     const state = getState();
     const apiURL = apiURLSelector(state);
-    const pCustomTokens = await apiGetPCustomTokenList(apiURL);
+    const pCustomTokens = await apiGetPCustomTokenList(apiURL, noCache);
     dispatch(actionFetchedPCustomTokenList(pCustomTokens));
 };
 

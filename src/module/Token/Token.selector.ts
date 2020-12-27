@@ -4,12 +4,15 @@ import { createSelector } from 'reselect';
 import { COINS } from 'src/constants';
 import { IRootState } from 'src/redux/interface';
 import uniqBy from 'lodash/uniqBy';
+import toString from 'lodash/toString';
+import reverse from 'lodash/reverse';
+import compact from 'lodash/compact';
 import { preloadSelector } from 'src/module/Preload';
 import { format } from 'src/utils';
 import convert from 'src/utils/convert';
-import { compact, reverse } from 'lodash';
 import BigNumber from 'bignumber.js';
 import { accountBalanceSelector } from 'src/module/Account/Account.selector';
+import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
 import { getFormatAmountByUSD, getPrice } from './Token.utils';
 import SelectedPrivacy from './Token.model';
 import { ITokenReducer } from './Token.reducer';
@@ -123,7 +126,8 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
     followedTokensSelect,
     accountBalanceSelector,
     popularCoinIdsSeletor,
-    (pCustomTokens, pTokens, followedTokensIds, followed, accountBalance, coins) =>
+    decimalDigitsSelector,
+    (pCustomTokens, pTokens, followedTokensIds, followed, accountBalance, coins, decimalDigits) =>
         memoize((tokenID: string) => {
             const followedIds = followedTokensIds();
             const pTokenData = pTokens?.find((token: IPToken) => token?.tokenId === tokenID);
@@ -143,11 +147,13 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
             const formatAmount = format.formatAmount({
                 originalAmount: amount,
                 decimals: token.pDecimals,
+                decimalDigits,
             });
             const formatPriceByUsd = getFormatAmountByUSD({
                 amount: 1,
                 priceUsd: price.priceUsd,
-                decimals: tokenUSDT?.pDecimals,
+                tokenDecimals: token.pDecimals,
+                decimalDigits,
             });
             const formatBalanceByUsd = getFormatAmountByUSD({
                 amount: convert.toHumanAmount({
@@ -155,7 +161,8 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
                     decimals: token.pDecimals,
                 }),
                 priceUsd: price.priceUsd,
-                decimals: tokenUSDT?.pDecimals,
+                tokenDecimals: token.pDecimals,
+                decimalDigits,
             });
             const data = {
                 ...token,
@@ -210,7 +217,8 @@ export const totalShieldedTokensSelector = createSelector(
     getPrivacyDataByTokenIDSelector,
     followedTokensIdsSelector,
     pUSDTSelector,
-    (getPrivacyDataByTokenID, followedIds, USDT) => {
+    decimalDigitsSelector,
+    (getPrivacyDataByTokenID, followedIds, USDT, decimalDigits) => {
         const followed = followedIds(false);
         const tokens = followed.map((tokenId) => getPrivacyDataByTokenID(tokenId));
         const totalShieldedTokens = compact([...tokens]).reduce(
@@ -223,8 +231,8 @@ export const totalShieldedTokensSelector = createSelector(
             ) => {
                 const totalShieldByPRV = new BigNumber(prevValue.totalShieldByPRV);
                 const totalShieldByUSD = new BigNumber(prevValue.totalShieldByUSD);
-                const pricePrv = new BigNumber(currentValue?.pricePrv || 0);
-                const priceUsd = new BigNumber(currentValue?.priceUsd || 0);
+                const pricePrv = new BigNumber(toString(currentValue?.pricePrv || 0));
+                const priceUsd = new BigNumber(toString(currentValue?.priceUsd || 0));
                 const humanAmount = convert.toHumanAmount({
                     originalAmount: currentValue.amount,
                     decimals: currentValue.pDecimals,
@@ -251,10 +259,12 @@ export const totalShieldedTokensSelector = createSelector(
         const formatTotalAmountPRV = format.formatAmount({
             humanAmount: totalShieldByPRV,
             decimals: COINS.PRV.pDecimals,
+            decimalDigits,
         });
         const formatTotalAmountUSD = format.formatAmount({
             humanAmount: totalShieldByUSD,
             decimals: USDT.pDecimals,
+            decimalDigits,
         });
         return {
             formatTotalAmountPRV,

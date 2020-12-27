@@ -1,4 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { themeSelector } from 'src/module/Configs';
+import { ITheme, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 
 interface IProps {
@@ -40,10 +43,10 @@ const Styled = styled.div`
         transition: 0.4s;
     }
     input:checked + .slider {
-        background-color: #2196f3;
+        background-color: ${(props: IGlobalStyle) => props.theme.button};
     }
     input:focus + .slider {
-        box-shadow: 0 0 1px #2196f3;
+        box-shadow: 0 0 1px ${(props: IGlobalStyle) => props.theme.button};
     }
     input:checked + .slider:before {
         -webkit-transform: translateX(26px);
@@ -60,6 +63,7 @@ const Styled = styled.div`
 `;
 
 const ToggleSwitch = (props: IProps) => {
+    const theme: ITheme = useSelector(themeSelector);
     const { toggleValue, onToggle } = props;
     const handleOnClick = () => {
         if (typeof onToggle === 'function') {
@@ -67,7 +71,7 @@ const ToggleSwitch = (props: IProps) => {
         }
     };
     return (
-        <Styled className="switch" onClick={handleOnClick}>
+        <Styled theme={theme} className="switch" onClick={handleOnClick}>
             <input type="checkbox" readOnly checked={!!toggleValue} />
             <span className="slider round" />
         </Styled>

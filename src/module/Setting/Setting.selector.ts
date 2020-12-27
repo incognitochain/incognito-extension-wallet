@@ -7,3 +7,5 @@ export const settingSelector = createSelector(
 );
 
 export const devSettingSelector = createSelector(settingSelector, (setting) => setting.dev);
+
+export const decimalDigitsSelector = createSelector(settingSelector, (setting) => setting.decimalDigits);

@@ -67,7 +67,7 @@ const toOriginalAmount = ({
     return amount;
 };
 
-const toNumber = ({ text, autoCorrect = false }: { text: string; autoCorrect?: boolean }) => {
+const toNumber = ({ text, autoCorrect = true }: { text: string; autoCorrect?: boolean }) => {
     const number = replaceDecimals({
         text,
         autoCorrect,

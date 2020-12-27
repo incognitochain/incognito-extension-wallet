@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { defaultAccountNameSelector } from 'src/module/Account';
+import { defaultAccountNameSelector } from 'src/module/Account/Account.selector';
 import { Link } from 'react-router-dom';
 import { route } from './SelectAccount.route';
 
