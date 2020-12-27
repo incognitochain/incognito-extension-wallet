@@ -2,7 +2,7 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import { defaultAccountSelector, listAccountSelector } from 'src/module/Account/Account.selector';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
-import { isMainnetSelector } from 'src/module/Preload';
+import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
 
 export const addressBookSelector = createSelector(
     (state: IRootState) => state.addressBook,

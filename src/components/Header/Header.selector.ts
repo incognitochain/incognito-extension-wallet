@@ -13,3 +13,10 @@ export const keySearchSelector = createSelector(
         return trim(toLower(searchBoxValue)) || '';
     },
 );
+
+export const headerSelector = createSelector(
+    (state: IRootState) => state,
+    (state) => state.header,
+);
+
+export const refreshHeaderSelector = createSelector(headerSelector, (header) => !!header.refresh);
