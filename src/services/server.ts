@@ -72,4 +72,8 @@ export const TEST_NET_1_SERVER = {
     name: 'Testnet 1',
 };
 
-export const DEFAULT_LIST_SERVER = [LOCAL_SERVER, MAINNET_SERVER, TESTNET_SERVER];
+export const DEFAULT_LIST_SERVER = [
+    // LOCAL_SERVER,
+    MAINNET_SERVER,
+    TESTNET_SERVER,
+];

@@ -8,10 +8,10 @@ import { translateByFieldSelector } from 'src/module/Configs';
 import { route as addressBookRoute } from 'src/module/AddressBook';
 import { route as keychainRoute } from 'src/module/Keychain';
 import { chainURLSelector } from 'src/module/Preload';
-import { actionToggleHomeConfigs } from './Setting.actions';
+import { actionToggleDecimalDigits, actionToggleHomeConfigs } from './Setting.actions';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
-import { devSettingSelector } from './Setting.selector';
+import { devSettingSelector, settingSelector } from './Setting.selector';
 import { route as networkRoute } from './features/Network';
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
@@ -19,6 +19,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const handleToggleHomeConfigs = () => dispatch(actionToggleHomeConfigs());
     const chainURL = useSelector(chainURLSelector);
+    const { decimalDigits } = useSelector(settingSelector);
     const { stagingHomeConfigs } = useSelector(devSettingSelector);
     const settingFactories: ISettingItem[] = [
         {
@@ -43,6 +44,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         {
             title: translate.addressBook.title,
             child: [{ desc: translate.addressBook.desc, link: addressBookRoute }],
+        },
+        {
+            title: translate.decimalDigits.title,
+            child: [
+                {
+                    desc: translate.decimalDigits.desc,
+                    toggle: true,
+                    onClick: () => dispatch(actionToggleDecimalDigits()),
+                    toggleValue: decimalDigits,
+                },
+            ],
         },
     ];
     return (

@@ -16,6 +16,16 @@ import {
     ACTION_SET_CONFIGS,
 } from './Preload.constant';
 
+export const actionSetConfigs = (payload: IPreloadConfigs) => ({
+    type: ACTION_SET_CONFIGS,
+    payload,
+});
+
+export const actionSetServer = (payload: IServer) => ({
+    type: ACTION_SET_SERVER,
+    payload,
+});
+
 export const actionFetching = () => ({
     type: ACTION_FETCHING,
 });
@@ -73,13 +83,3 @@ export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRoo
         throw error;
     }
 };
-
-export const actionSetServer = (payload: IServer) => ({
-    type: ACTION_SET_SERVER,
-    payload,
-});
-
-export const actionSetConfigs = (payload: IPreloadConfigs) => ({
-    type: ACTION_SET_CONFIGS,
-    payload,
-});

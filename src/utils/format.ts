@@ -28,14 +28,14 @@ const removeTrailingZeroes = ({ amountString }: { amountString: string }) => {
 };
 
 interface IMaxDigits {
-    decimalDigits?: boolean;
-    clipAmount?: boolean;
+    decimalDigits: boolean;
+    clipAmount: boolean;
     decimals: number;
     humanAmount: number;
 }
 
 const getMaxDecimalDigits = (payload: IMaxDigits) => {
-    const { decimals, decimalDigits = true, clipAmount = true, humanAmount } = payload;
+    const { decimals, decimalDigits, clipAmount, humanAmount } = payload;
     let maxDigits = decimals;
     try {
         if (clipAmount) {

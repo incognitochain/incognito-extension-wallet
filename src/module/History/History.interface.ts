@@ -36,6 +36,7 @@ export interface ICacheHistoryTokenSelector extends TxHistoryModelParam {
     symbol: string;
     feeSymbol: string;
     paymentAddress: string;
+    amountFormatedNoClip: string;
 }
 
 export interface IHistoryItem {

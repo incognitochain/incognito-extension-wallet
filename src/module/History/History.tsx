@@ -43,7 +43,7 @@ const History = React.memo(() => {
         },
         {
             title: history.type,
-            desc: `${history.amountFormated} ${history.symbol}`,
+            desc: `${history.amountFormatedNoClip} ${history.symbol}`,
         },
         {
             title: historyLanguage.fee,

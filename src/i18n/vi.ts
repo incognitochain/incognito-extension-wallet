@@ -107,6 +107,10 @@ const en: ILanguage = {
             title: 'Keychain',
             desc: 'Manage your keychains',
         },
+        decimalDigits: {
+            title: 'Decimal Digits',
+            desc: 'Limit main asset displays to 5 decimal digits',
+        },
     },
     send: {
         headerTitle: 'Send',

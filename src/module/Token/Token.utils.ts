@@ -1,6 +1,5 @@
 import includes from 'lodash/includes';
 import toLower from 'lodash/toLower';
-import convert from 'src/utils/convert';
 import format from 'src/utils/format';
 import BigNumber from 'bignumber.js';
 import { IPToken, ISelectedPrivacy } from './Token.interface';
@@ -42,21 +41,20 @@ export const getPrice = ({ token, tokenUSDT }: { token: ISelectedPrivacy; tokenU
 interface IGetFormatAmountByUSD {
     amount: number;
     priceUsd: number;
-    decimals?: number;
+    tokenDecimals: number;
+    decimalDigits: boolean;
 }
 
+// eslint-disable-next-line no-unused-vars
 export const getFormatAmountByUSD: (payload: IGetFormatAmountByUSD) => string = (payload: IGetFormatAmountByUSD) => {
-    const { amount, priceUsd, decimals = 6 } = payload;
+    const { amount, priceUsd, decimalDigits, tokenDecimals } = payload;
     let formatAmount = '0';
     try {
-        const bnHumanAmount = new BigNumber(amount).multipliedBy(priceUsd).toNumber().toString();
-        const originalAmount = convert.toOriginalAmount({
-            humanAmount: String(bnHumanAmount),
-            decimals,
-        });
+        const bnHumanAmount = new BigNumber(amount).multipliedBy(priceUsd).toNumber();
         formatAmount = format.formatAmount({
-            originalAmount,
-            decimals,
+            humanAmount: bnHumanAmount,
+            decimals: tokenDecimals,
+            decimalDigits,
         });
     } catch (error) {
         formatAmount = '0';

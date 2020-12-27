@@ -30,6 +30,6 @@ export const cachePromise = async (key: string, promiseFunc: any, expiredTime?: 
         return cachedData;
     }
     const data = await promiseFunc();
-    cache(key, data, expiredTime || 40000);
+    cache(key, data, expiredTime || 10000);
     return data;
 };
