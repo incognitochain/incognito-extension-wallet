@@ -49,7 +49,7 @@ const Styled = styled.div`
         max-width: 250px;
     }
     .header-title {
-        max-width: 100px;
+        max-width: 200px;
     }
 `;
 
