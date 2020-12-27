@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Spinner from 'react-bootstrap/esm/Spinner';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
-import { VerifiedIcon } from 'src/components/Icons';
+import { LoadingIcon, VerifiedIcon } from 'src/components/Icons';
 import { replace, round } from 'lodash';
 import { COLORS } from 'src/styles';
 import { isGettingBalanceByTokenIdSelector } from 'src/redux';
@@ -24,11 +23,11 @@ export const Name = React.memo((props: ITokenChildProps) => {
 });
 
 export const Amount = React.memo((props: ITokenChildProps) => {
-    const { tokenId, classNameCustom, classNameTextCustom } = props;
+    const { tokenId, classNameCustom, classNameTextCustom, loadingIconProps } = props;
     const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
     const loadingBalance = useSelector(isGettingBalanceByTokenIdSelector)(token.tokenId);
     if (loadingBalance) {
-        return <Spinner animation="border" size="sm" />;
+        return <LoadingIcon {...loadingIconProps} />;
     }
     return (
         <AmountStyled className={classNameCustom}>

@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
-import { ArrowLeftIcon, RefreshIcon } from 'src/components/Icons';
+import { ArrowLeftIcon, RefreshIcon, LoadingIcon } from 'src/components/Icons';
+import { useSelector } from 'react-redux';
 import withHeader, { IMergeProps } from './Header.enhance';
+import { refreshHeaderSelector } from './Header.selector';
 
 const Styled = styled.div`
     display: flex;
@@ -24,6 +26,9 @@ const Styled = styled.div`
     .right {
         margin-left: auto;
     }
+    .refresh-container {
+        height: 21px;
+    }
 `;
 
 const Header = (props: IMergeProps & any) => {
@@ -33,9 +38,10 @@ const Header = (props: IMergeProps & any) => {
         handleClick,
         renderHeaderTitle,
         refreshPage,
-        handleRefreshPage,
+        onHandleRefreshPage,
         title,
     }: IMergeProps = props;
+    const refreshing: boolean = useSelector(refreshHeaderSelector);
     return (
         <Styled className="header">
             {title && (
@@ -48,14 +54,13 @@ const Header = (props: IMergeProps & any) => {
                 {rightHeader}
                 {selectAccount && <BtnSelectAccount />}
                 {refreshPage && (
-                    <RefreshIcon
-                        className="refresh-icon"
-                        onClick={() => {
-                            if (typeof handleRefreshPage === 'function') {
-                                handleRefreshPage();
-                            }
-                        }}
-                    />
+                    <div className="refresh-container">
+                        {refreshing ? (
+                            <LoadingIcon />
+                        ) : (
+                            <RefreshIcon className="refresh-icon" onClick={onHandleRefreshPage} />
+                        )}
+                    </div>
                 )}
             </div>
         </Styled>

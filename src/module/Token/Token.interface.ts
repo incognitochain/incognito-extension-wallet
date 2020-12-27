@@ -1,3 +1,5 @@
+import { ILoadingIconProps } from 'src/components/Icons/Loading';
+
 export interface IProps {}
 
 export interface IPTokenFromApi {
@@ -152,6 +154,7 @@ export interface ITokenChildProps {
     classNameCustom?: string;
     classNameTextCustom?: string;
     showVerifiedToken?: boolean;
+    loadingIconProps?: ILoadingIconProps;
 }
 
 interface ITokensFactories {

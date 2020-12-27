@@ -41,6 +41,7 @@ const Styled = styled.div`
         margin-left: unset;
     }
     .hook-container {
+        height: 43px;
         > :first-child {
             margin-right: 5px;
         }
@@ -59,7 +60,12 @@ const TokenBalance = React.memo(() => {
     return (
         <div className="token-balance">
             <div className="hook-container">
-                <Amount tokenId={tokenId} classNameTextCustom="fw-medium fs-avglarge amount-token" showVerifiedToken />
+                <Amount
+                    loadingIconProps={{ width: '30px', height: '30px' }}
+                    tokenId={tokenId}
+                    classNameTextCustom="fw-medium fs-avglarge amount-token"
+                    showVerifiedToken
+                />
                 {selectedPrivacy.isVerified && <VerifiedIcon />}
             </div>
             <div className="hook-container">
