@@ -4,6 +4,8 @@ const en: ILanguage = {
     general: {
         copied: 'Copied',
         copy: 'Copy',
+        lostNetwork: 'You are currently offline',
+        btnReload: 'Reload',
     },
     home: {
         title: 'Incognito Wallet',

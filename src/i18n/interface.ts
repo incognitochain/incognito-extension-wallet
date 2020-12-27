@@ -172,4 +172,6 @@ export interface ITokenLanguage {
 export interface IGeneralLanguage {
     copied: string;
     copy: string;
+    lostNetwork: string;
+    btnReload: string;
 }

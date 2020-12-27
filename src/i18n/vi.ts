@@ -4,6 +4,8 @@ const en: ILanguage = {
     general: {
         copied: 'Copied',
         copy: 'Copy',
+        lostNetwork: 'You are currently offline',
+        btnReload: 'Reload',
     },
     home: {
         title: 'Incognito Wallet',
@@ -109,7 +111,7 @@ const en: ILanguage = {
         },
         decimalDigits: {
             title: 'Decimal Digits',
-            desc: 'Limit main asset displays to 5 decimal digits',
+            desc: 'Limit main asset<br />displays to 5 decimal digits',
         },
     },
     send: {
