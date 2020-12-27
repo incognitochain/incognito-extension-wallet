@@ -1,19 +1,24 @@
 import React, { FunctionComponent } from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { configStore, IConfigStore } from 'src/redux/index';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { Detector } from 'react-detect-offline';
 import { withPreload } from './module/Preload';
+import { translateByFieldSelector } from './module/Configs';
+import { IGeneralLanguage } from './i18n';
+import { Button } from './components';
 
 const { store, persistor }: IConfigStore = configStore();
 
 const LostConnect = React.memo(() => {
+    const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     return (
         <ErrorBoundary>
             <div className="preload-container">
-                <p>Lost network!</p>
+                <p>{translate.lostNetwork}</p>
+                <Button title={translate.btnReload} />
             </div>
         </ErrorBoundary>
     );
