@@ -12,16 +12,8 @@ import { ICacheHistoryTokenSelector, IHistoryItem } from './History.interface';
 import { historyCacheByTxIdSelector } from './History.selector';
 
 const Styled = styled.div`
-    .hook-row {
-        margin-top: 15px;
-        > p {
-            :first-child {
-                flex: 1 0 20%;
-            }
-            :last-child {
-                flex: 1 0 60%;
-            }
-        }
+    .confirm-tx-item .hook span.desc-amount {
+        max-width: 190px;
     }
 `;
 
@@ -44,10 +36,12 @@ const History = React.memo(() => {
         {
             title: history.type,
             desc: `${history.amountFormatedNoClip} ${history.symbol}`,
+            descClassName: 'desc-amount',
         },
         {
             title: historyLanguage.fee,
             desc: `${history?.feeFormated} ${history.feeSymbol}`,
+            descClassName: 'desc-amount',
         },
         {
             title: historyLanguage.status,
