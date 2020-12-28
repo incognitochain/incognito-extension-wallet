@@ -11,7 +11,7 @@ interface IHistoryItem {
 }
 
 const Styled = styled.div`
-    max-height: 270px;
+    max-height: 250px;
     overflow: scroll;
     .history-item {
         margin-bottom: 30px;
