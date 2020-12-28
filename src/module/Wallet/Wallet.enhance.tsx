@@ -2,6 +2,8 @@ import React from 'react';
 import { WalletInstance } from 'incognito-js/build/web/browser';
 import { IPreloadReducer, preloadSelector } from 'src/module/Preload';
 import {
+    actionFetchPCustomTokenList,
+    actionFetchPTokenList,
     actionFollowDefaultToken,
     actionGetPrivacyTokensBalance,
     actionSetFollowedTokens,
@@ -28,7 +30,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const field = mainnet ? 'mainnet' : 'testnet';
     const envToken: IEnvToken = tokenState[field];
     const { followedPopularIds } = envToken;
-    const handleLoadWallet = async () => {
+    const handleLoadWallet = async (reload = false) => {
         try {
             const account = wallet.masterAccount.getAccountByName(defaultAccount);
             if (!followedPopularIds) {
@@ -51,6 +53,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     value: error,
                 }),
             );
+        } finally {
+            if (reload) {
+                dispatch(actionFetchPTokenList(true));
+                dispatch(actionFetchPCustomTokenList(true));
+            }
         }
     };
     React.useEffect(() => {

@@ -1,6 +1,11 @@
 import { ILanguage } from './interface';
 
-const en: ILanguage = {
+const language: ILanguage = {
+    preload: {
+        title1: `Entering incognito mode<br />for your crypto...`,
+        title2: `Please check your connection or<br />re-install the application<br />(only if you have a backup of your private keys) and try again.`,
+        btnRetry: 'Retry',
+    },
     general: {
         copied: 'Copied',
         copy: 'Copy',
@@ -159,4 +164,4 @@ const en: ILanguage = {
     },
 };
 
-export default en;
+export default language;

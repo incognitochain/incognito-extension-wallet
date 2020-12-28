@@ -121,6 +121,8 @@ export interface ISelectedPrivacy {
     formatAmount: string;
     formatPriceByUsd: string;
     formatBalanceByUsd: string;
+    formatPriceByPrv: string;
+    formatBalanceByPrv: string;
     networkName: string;
     rootNetworkName: string;
     ownerName: string;

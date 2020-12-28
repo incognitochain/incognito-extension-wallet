@@ -75,7 +75,7 @@ const toNumber = ({ text, autoCorrect = true }: { text: string; autoCorrect?: bo
     return new BigNumber(number).toNumber();
 };
 
-const toString = ({ text, autoCorrect = false }: { text: string; autoCorrect?: boolean }) => {
+const toString = ({ text, autoCorrect = true }: { text: string; autoCorrect?: boolean }) => {
     const number = replaceDecimals({
         text,
         autoCorrect,

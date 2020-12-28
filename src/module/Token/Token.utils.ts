@@ -43,11 +43,12 @@ interface IGetFormatAmountByUSD {
     priceUsd: number;
     tokenDecimals: number;
     decimalDigits: boolean;
+    clipAmount: boolean;
 }
 
 // eslint-disable-next-line no-unused-vars
 export const getFormatAmountByUSD: (payload: IGetFormatAmountByUSD) => string = (payload: IGetFormatAmountByUSD) => {
-    const { amount, priceUsd, decimalDigits, tokenDecimals } = payload;
+    const { amount, priceUsd, decimalDigits, tokenDecimals, clipAmount } = payload;
     let formatAmount = '0';
     try {
         const bnHumanAmount = new BigNumber(amount).multipliedBy(priceUsd).toNumber();
@@ -55,6 +56,7 @@ export const getFormatAmountByUSD: (payload: IGetFormatAmountByUSD) => string = 
             humanAmount: bnHumanAmount,
             decimals: tokenDecimals,
             decimalDigits,
+            clipAmount,
         });
     } catch (error) {
         formatAmount = '0';

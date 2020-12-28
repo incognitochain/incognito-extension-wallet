@@ -119,6 +119,10 @@ class SelectedPrivacy {
 
     formatPriceByUsd: string;
 
+    formatBalanceByPrv: string;
+
+    formatPriceByPrv: string;
+
     ownerName: string;
 
     ownerAddress: string;
@@ -164,11 +168,13 @@ class SelectedPrivacy {
         this.isFollowed = false;
         this.formatAmount = '0';
         this.formatPriceByUsd = '0';
+        this.formatBalanceByUsd = '0';
+        this.formatPriceByPrv = '0';
+        this.formatBalanceByPrv = '0';
         this.ownerName = pCustomTokenData?.ownerName;
         this.ownerAddress = pCustomTokenData?.ownerAddress;
         this.ownerEmail = pCustomTokenData?.ownerEmail;
         this.ownerWebsite = pCustomTokenData?.ownerWebsite;
-        this.formatBalanceByUsd = '0';
         this.default = !!pTokenData?.default;
     }
 }

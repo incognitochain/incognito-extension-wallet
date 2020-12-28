@@ -13,7 +13,7 @@ import convert from 'src/utils/convert';
 import BigNumber from 'bignumber.js';
 import { accountBalanceSelector } from 'src/module/Account/Account.selector';
 import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
-import { getFormatAmountByUSD, getPrice } from './Token.utils';
+import { getPrice } from './Token.utils';
 import SelectedPrivacy from './Token.model';
 import { ITokenReducer } from './Token.reducer';
 import {
@@ -144,24 +144,33 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
             const isFollowed = followedIds.some((tokenId: string) => tokenId === tokenID);
             const tokenUSDT = pTokens.find((t) => t?.tokenId === coins.USDT);
             const price = getPrice({ token, tokenUSDT });
+            const formatPriceByUsd = format.formatAmount({
+                humanAmount: price?.priceUsd,
+                decimals: token.pDecimals,
+                decimalDigits: false,
+            });
+            const formatPriceByPrv = format.formatAmount({
+                humanAmount: price?.pricePrv,
+                decimals: token.pDecimals,
+                decimalDigits: false,
+            });
             const formatAmount = format.formatAmount({
                 originalAmount: amount,
                 decimals: token.pDecimals,
                 decimalDigits,
             });
-            const formatPriceByUsd = getFormatAmountByUSD({
-                amount: 1,
-                priceUsd: price.priceUsd,
-                tokenDecimals: token.pDecimals,
+            const formatBalanceByUsd = format.formatAmount({
+                humanAmount: new BigNumber(convert.toString({ text: formatAmount }))
+                    .multipliedBy(convert.toString({ text: formatPriceByUsd }))
+                    .toNumber(),
+                decimals: token.pDecimals,
                 decimalDigits,
             });
-            const formatBalanceByUsd = getFormatAmountByUSD({
-                amount: convert.toHumanAmount({
-                    originalAmount: amount,
-                    decimals: token.pDecimals,
-                }),
-                priceUsd: price.priceUsd,
-                tokenDecimals: token.pDecimals,
+            const formatBalanceByPRV = format.formatAmount({
+                humanAmount: new BigNumber(convert.toString({ text: formatAmount }))
+                    .multipliedBy(convert.toString({ text: formatPriceByPrv }))
+                    .toNumber(),
+                decimals: token.pDecimals,
                 decimalDigits,
             });
             const data = {
@@ -172,6 +181,7 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
                 formatAmount,
                 formatPriceByUsd,
                 formatBalanceByUsd,
+                formatBalanceByPRV,
             };
             return data;
         }),
@@ -229,25 +239,15 @@ export const totalShieldedTokensSelector = createSelector(
                 },
                 currentValue: ISelectedPrivacy,
             ) => {
-                const totalShieldByPRV = new BigNumber(prevValue.totalShieldByPRV);
-                const totalShieldByUSD = new BigNumber(prevValue.totalShieldByUSD);
-                const pricePrv = new BigNumber(toString(currentValue?.pricePrv || 0));
-                const priceUsd = new BigNumber(toString(currentValue?.priceUsd || 0));
-                const humanAmount = convert.toHumanAmount({
-                    originalAmount: currentValue.amount,
-                    decimals: currentValue.pDecimals,
-                });
-                let currentPrvVal = pricePrv.multipliedBy(humanAmount);
-                if (currentPrvVal.isNaN()) {
-                    currentPrvVal = totalShieldByPRV;
-                }
-                let currentUsdVal = priceUsd.multipliedBy(humanAmount);
-                if (currentUsdVal.isNaN()) {
-                    currentUsdVal = totalShieldByUSD;
-                }
+                const totalShieldByPRV = new BigNumber(toString(prevValue.totalShieldByPRV));
+                const totalShieldByUSD = new BigNumber(toString(prevValue.totalShieldByUSD));
                 return {
-                    totalShieldByPRV: totalShieldByPRV.plus(currentPrvVal).toNumber(),
-                    totalShieldByUSD: totalShieldByUSD.plus(currentUsdVal).toNumber(),
+                    totalShieldByPRV: totalShieldByPRV
+                        .plus(convert.toString({ text: currentValue.formatBalanceByPrv }))
+                        .toNumber(),
+                    totalShieldByUSD: totalShieldByUSD
+                        .plus(convert.toString({ text: currentValue.formatBalanceByUsd }))
+                        .toNumber(),
                 };
             },
             {
