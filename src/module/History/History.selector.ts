@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 import { keySetAccountSelector } from 'src/module/Account';
 import { IRootState } from 'src/redux/interface';
 import { isEmpty } from 'lodash';
-import { convert, format } from 'src/utils';
+import { format } from 'src/utils';
 import { selectedPrivacySelector } from 'src/module/Token';
 import { COINS } from 'src/constants';
 import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
@@ -80,7 +80,7 @@ export const historyCacheDataSelector = createSelector(
             const { statusMessage } = getStatusData(history);
             const historyItem = {
                 ...history,
-                amountFormated: convert.toNumber({ text: amountFormated }) === 0 ? '' : amountFormated,
+                amountFormated,
                 timeFormated: format.formatUnixDateTime(history?.lockTime, 'MMM DD HH:mm A'),
                 feeFormated,
                 statusMessage,
