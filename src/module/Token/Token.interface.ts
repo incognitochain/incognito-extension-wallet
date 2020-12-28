@@ -155,6 +155,7 @@ export interface ITokenChildProps {
     classNameTextCustom?: string;
     showVerifiedToken?: boolean;
     loadingIconProps?: ILoadingIconProps;
+    showSymbol?: boolean;
 }
 
 interface ITokensFactories {

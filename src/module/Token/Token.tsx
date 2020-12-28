@@ -23,7 +23,7 @@ export const Name = React.memo((props: ITokenChildProps) => {
 });
 
 export const Amount = React.memo((props: ITokenChildProps) => {
-    const { tokenId, classNameCustom, classNameTextCustom, loadingIconProps } = props;
+    const { tokenId, classNameCustom, classNameTextCustom, loadingIconProps, showSymbol = true } = props;
     const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
     const loadingBalance = useSelector(isGettingBalanceByTokenIdSelector)(token.tokenId);
     if (loadingBalance) {
@@ -33,7 +33,7 @@ export const Amount = React.memo((props: ITokenChildProps) => {
         <AmountStyled className={classNameCustom}>
             <TextStyled className={`fw-medium fs-medium right-text ellipsis ${classNameTextCustom}`}>{`${
                 token.formatAmount
-            } ${token.symbol || token?.pSymbol}`}</TextStyled>
+            } ${showSymbol ? token.symbol || token?.pSymbol : ''}`}</TextStyled>
         </AmountStyled>
     );
 });
