@@ -44,4 +44,6 @@ export interface IHistoryItem {
     desc: string;
     copyData?: string;
     link?: string;
+    descClassName?: string;
+    titleClassName?: string;
 }

@@ -29,7 +29,7 @@ const Styled = styled.div`
 `;
 
 const HistoryItem = React.memo((props: IHistoryItem) => {
-    const { title, desc, copyData = '', link = '' } = props;
+    const { title, desc, copyData = '', link = '', descClassName = '', titleClassName = '' } = props;
     const dispatch = useDispatch();
     const handleCopy = () => {
         copy(copyData);
@@ -45,9 +45,9 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
     return (
         <Styled>
             <div className="confirm-tx-item">
-                <p className="sub-text">{title}</p>
+                <p className={`sub-text title ${titleClassName}`}>{title}</p>
                 <div className="hook">
-                    <span className="ellipsis">{desc}</span>
+                    <span className={`ellipsis desc ${descClassName}`}>{desc}</span>
                     {!!copyData && <CopyIcon onClick={handleCopy} />}
                     {!!link && <OpenLinkIcon onClick={handleOpenLink} />}
                 </div>
