@@ -25,8 +25,14 @@ export interface ILanguage {
     history: IHistoryLanguage;
     send: ISendLanguage;
     addressBook: IAddressBookLanguage;
+    preload: IPreloadLanguage;
 }
 
+export interface IPreloadLanguage {
+    title1: string;
+    title2: string;
+    btnRetry: string;
+}
 export interface IAddressBookLanguage {
     headerTitle: string;
     name: string;

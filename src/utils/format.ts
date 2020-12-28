@@ -43,6 +43,7 @@ const getMaxDecimalDigits = (payload: IMaxDigits) => {
                 maxDigits = 5;
             }
             if (humanAmount > 1) {
+                console.debug(`humanAmount`, humanAmount);
                 maxDigits = 4;
             }
             if (humanAmount > 1e3) {
