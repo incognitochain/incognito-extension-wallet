@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Header } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
-import { translateSelector } from '../Configs';
+import { translateSelector } from 'src/module/Configs/Configs.selector';
 import { SettingItem, ISettingItem } from './features/SettingItem';
 import withSetting from './Setting.enhance';
 import { IInner } from './Setting.interface';
