@@ -13,8 +13,8 @@ const Styled = styled.div`
     cursor: pointer;
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 40px;
+    height: 21px;
     input {
         opacity: 0;
         width: 0;
@@ -34,10 +34,10 @@ const Styled = styled.div`
     .slider:before {
         position: absolute;
         content: '';
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
+        height: 17px;
+        width: 17px;
+        left: 2px;
+        bottom: 2px;
         background-color: white;
         -webkit-transition: 0.4s;
         transition: 0.4s;
@@ -49,13 +49,11 @@ const Styled = styled.div`
         box-shadow: 0 0 1px ${(props: IGlobalStyle) => props.theme.button};
     }
     input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
+        transform: translateX(18px);
     }
     /* Rounded sliders */
     .slider.round {
-        border-radius: 34px;
+        border-radius: 10.5px;
     }
     .slider.round:before {
         border-radius: 50%;
