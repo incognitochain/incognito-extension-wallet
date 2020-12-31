@@ -77,10 +77,7 @@ export const Price = React.memo((props: ITokenChildProps) => {
     const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
     return (
         <BalanceStyled className={classNameCustom}>
-            <TextStyled className="sub-text ellipsis price">
-                {`$${token.formatPriceByUsd}`}
-                <PerChange tokenId={tokenId} />
-            </TextStyled>
+            <TextStyled className="sub-text ellipsis price">{`$${token.formatPriceByUsd}`}</TextStyled>
         </BalanceStyled>
     );
 });
