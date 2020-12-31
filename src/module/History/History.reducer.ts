@@ -5,6 +5,10 @@ import {
     ACTION_FETCHED_CACHE_HISTORY,
     ACTION_FETCHING_CACHE_HISTORY,
     LIMIT_RECEIVE_HISTORY_ITEM,
+    ACTION_FETCHING_RECEIVE_HISTORY,
+    ACTION_FETCHED_RECEIVE_HISTORY,
+    ACTION_FETCH_FAIL_RECEIVE_HISTORY,
+    ACTION_FREE_HISTORY,
 } from './History.constant';
 import { IHistoryReducer } from './History.interface';
 
@@ -53,6 +57,48 @@ const historyReducer = (
                     histories,
                 },
             };
+        }
+        case ACTION_FETCHING_RECEIVE_HISTORY: {
+            return {
+                ...state,
+                receiveHistory: {
+                    ...state.receiveHistory,
+                    isFetching: true,
+                    refreshing: action?.payload?.refreshing || false,
+                    notEnoughData: state.receiveHistory.notEnoughData,
+                },
+            };
+        }
+        case ACTION_FETCHED_RECEIVE_HISTORY: {
+            const { nextPage, data, oversize, refreshing, notEnoughData } = action?.payload;
+            return {
+                ...state,
+                receiveHistory: {
+                    ...state.receiveHistory,
+                    isFetching: false,
+                    isFetched: true,
+                    data: [...data],
+                    page: refreshing ? state?.receiveHistory?.page : nextPage,
+                    oversize,
+                    refreshing: false,
+                    notEnoughData,
+                },
+            };
+        }
+        case ACTION_FETCH_FAIL_RECEIVE_HISTORY: {
+            return {
+                ...state,
+                receiveHistory: {
+                    ...state.receiveHistory,
+                    isFetching: false,
+                    isFetched: false,
+                    refreshing: false,
+                    notEnoughData: false,
+                },
+            };
+        }
+        case ACTION_FREE_HISTORY: {
+            return { ...initialState };
         }
         default:
             return state;

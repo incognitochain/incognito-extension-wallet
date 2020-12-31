@@ -1,10 +1,22 @@
-import React from 'react';
-import { compose } from 'recompose';
+import React, { HTMLAttributes } from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
+import { TxHistoryItem } from './History.interface';
 
-interface IProps {}
+interface IProps {
+    histories: TxHistoryItem[];
+    handleOnEndReached?: () => any;
+    renderFooter?: React.ReactElement | React.FunctionComponent | any;
+}
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
+interface TInner {}
+
+export interface IMergeProps extends IProps, TInner {}
+
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & HTMLAttributes<HTMLElement>) => {
+    const { histories } = props;
+    if (!histories) {
+        return null;
+    }
     return (
         <ErrorBoundary>
             <WrappedComponent {...props} />
@@ -12,4 +24,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     );
 };
 
-export default compose<IProps, any>(enhance);
+export default enhance;

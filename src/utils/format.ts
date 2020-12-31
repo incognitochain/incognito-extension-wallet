@@ -43,7 +43,6 @@ const getMaxDecimalDigits = (payload: IMaxDigits) => {
                 maxDigits = 5;
             }
             if (humanAmount > 1) {
-                console.debug(`humanAmount`, humanAmount);
                 maxDigits = 4;
             }
             if (humanAmount > 1e3) {
@@ -121,8 +120,8 @@ const formatAmount = (payload: IAmount) => {
     return formatedAmount;
 };
 
-const formatUnixDateTime = (dateTime: number, formatPattern = 'MMM DD YYYY, HH:mm') =>
-    moment.unix(dateTime).format(formatPattern);
+const formatUnixDateTime = (dateTime: moment.MomentInput, formatPattern = 'MMM DD YYYY, HH:mm') =>
+    moment(dateTime).format(formatPattern);
 
 const number = (num: number) => {
     const fmt = {

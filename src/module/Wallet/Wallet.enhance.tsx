@@ -1,6 +1,9 @@
 import React from 'react';
 import { WalletInstance } from 'incognito-js/build/web/browser';
-import { IPreloadReducer, preloadSelector } from 'src/module/Preload';
+import { useDispatch, useSelector } from 'react-redux';
+import { compose } from 'redux';
+import { IPreloadReducer } from 'src/module/Preload';
+import { preloadSelector } from 'src/module/Preload/Preload.selector';
 import {
     actionFetchPCustomTokenList,
     actionFetchPTokenList,
@@ -9,13 +12,13 @@ import {
     actionSetFollowedTokens,
     IEnvToken,
     ITokenReducer,
-    tokenSelector,
 } from 'src/module/Token';
-import { actionGetAccountBalance, defaultAccountNameSelector } from 'src/module/Account';
+import { tokenSelector } from 'src/module/Token/Token.selector';
+import { actionGetAccountBalance } from 'src/module/Account';
+import { defaultAccountNameSelector, switchAccountSelector } from 'src/module/Account/Account.selector';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
-import { useDispatch, useSelector } from 'react-redux';
 import { withHeaderApp } from 'src/components/Header';
-import { compose } from 'redux';
+import { actionFreeHistory } from 'src/module/History';
 import { walletDataSelector } from './Wallet.selector';
 
 interface IProps {}
@@ -30,6 +33,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const field = mainnet ? 'mainnet' : 'testnet';
     const envToken: IEnvToken = tokenState[field];
     const { followedPopularIds } = envToken;
+    const switchAccount = useSelector(switchAccountSelector);
     const handleLoadWallet = async (reload = false) => {
         try {
             const account = wallet.masterAccount.getAccountByName(defaultAccount);
@@ -61,8 +65,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
     };
     React.useEffect(() => {
-        handleLoadWallet();
-    }, [wallet, defaultAccount]);
+        dispatch(actionFreeHistory());
+        if (!switchAccount) {
+            handleLoadWallet();
+        }
+    }, [wallet, defaultAccount, switchAccount]);
 
     return <WrappedComponent {...{ ...props, handleLoadWallet }} />;
 };

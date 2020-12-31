@@ -57,5 +57,6 @@ module.exports = {
         'no-unused-expressions': 'off',
         'consistent-return': 'off',
         'react/no-danger': 'off',
+        'no-console': 'off',
     },
 };

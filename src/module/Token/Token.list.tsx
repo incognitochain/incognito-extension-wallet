@@ -3,6 +3,7 @@ import React from 'react';
 interface IProps {
     data: any[];
     visible?: boolean;
+    // eslint-disable-next-line no-unused-vars
     renderItem: (tokenId: string) => any;
 }
 

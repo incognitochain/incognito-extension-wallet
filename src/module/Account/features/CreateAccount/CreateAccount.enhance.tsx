@@ -15,6 +15,7 @@ interface IProps {}
 export interface TOutter {
     disabledForm: boolean;
     getAccountValidator: () => any[];
+    // eslint-disable-next-line no-unused-vars
     handleCreateAccount: (props: any) => void;
 }
 
