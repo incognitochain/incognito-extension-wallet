@@ -180,4 +180,5 @@ export interface IGeneralLanguage {
     copy: string;
     lostNetwork: string;
     btnReload: string;
+    loadingTx: string;
 }

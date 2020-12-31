@@ -11,7 +11,7 @@ const Styled = styled.button`
 
 const Close = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
-        <Styled className="icon" {...props}>
+        <Styled className="icon close-icon" {...props}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/close.png`} alt="" />
         </Styled>
     );

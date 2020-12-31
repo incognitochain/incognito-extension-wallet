@@ -11,6 +11,7 @@ const language: ILanguage = {
         copy: 'Copy',
         lostNetwork: 'You are currently offline',
         btnReload: 'Reload',
+        loadingTx: `Please do not navigate away till this<br />window closes.`,
     },
     home: {
         title: 'Incognito Wallet',

@@ -20,6 +20,7 @@ import {
     ACTION_TOGGLE_FAST_FEE,
     ACTION_REMOVE_FEE_TYPE,
     ACTION_FETCH_FAIL_USER_FEES,
+    ACTION_SET_SENDING,
 } from './Send.constant';
 import { hasMultiLevelUsersFee, MAX_FEE_PER_TX } from './Send.utils';
 
@@ -71,6 +72,7 @@ const initialState: ISendReducer = {
     totalFeePToken: 0,
     totalFeePTokenText: '0',
     userFeePToken: 0,
+    sending: false,
 };
 
 const sendReducer = (
@@ -81,6 +83,12 @@ const sendReducer = (
     },
 ) => {
     switch (action.type) {
+        case ACTION_SET_SENDING: {
+            return {
+                ...state,
+                sending: !!action.payload,
+            };
+        }
         case ACTION_INIT: {
             return {
                 ...initialState,

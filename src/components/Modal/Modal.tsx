@@ -25,18 +25,32 @@ const Styled = styled.div`
         padding: 30px;
         overflow: hidden;
     }
+    .modal-loading-tx {
+        position: relative;
+        height: 100%;
+    }
 `;
 
 const Modal = () => {
     const modalState = useSelector(modalSelector);
     const theme = useSelector(themeSelector);
-    const { data, visible } = modalState;
+    const { data, visible, isLoadingModal } = modalState;
+    const renderModalContent = () => {
+        if (isLoadingModal) {
+            return (
+                <div className="modal-content-wrapper linear-bg">
+                    <div className="flex modal-loading-tx">{data}</div>
+                </div>
+            );
+        }
+        return <div className="modal-content-wrapper">{data}</div>;
+    };
     if (!visible) {
         return null;
     }
     return (
         <Styled className="modal-wrapper" theme={theme}>
-            <div className="modal-content-wrapper">{data}</div>
+            {renderModalContent()}
         </Styled>
     );
 };

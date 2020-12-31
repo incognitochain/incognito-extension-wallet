@@ -39,6 +39,7 @@ import {
     ACTION_REMOVE_FEE_TYPE,
     // ACTION_FETCH_FAIL_USER_FEES,
     FORM_CONFIGS,
+    ACTION_SET_SENDING,
 } from './Send.constant';
 import { ISendData, ISendReducer } from './Send.interface';
 
@@ -620,3 +621,8 @@ export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: ()
 //   type: ACTION_TOGGLE_FAST_FEE,
 //   payload,
 // });
+
+export const actionSetSending = (payload: boolean) => ({
+    type: ACTION_SET_SENDING,
+    payload,
+});

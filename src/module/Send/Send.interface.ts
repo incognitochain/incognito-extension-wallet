@@ -90,4 +90,5 @@ export interface ISendReducer {
     totalFeePToken: number;
     totalFeePTokenText: string;
     userFeePToken: number;
+    sending: false;
 }
