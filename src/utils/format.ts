@@ -120,7 +120,7 @@ const formatAmount = (payload: IAmount) => {
     return formatedAmount;
 };
 
-const formatUnixDateTime = (dateTime: moment.MomentInput, formatPattern = 'MMM DD YYYY, HH:mm') =>
+const formatUnixDateTime = (dateTime: moment.MomentInput, formatPattern = 'DD MMM hh:mm A') =>
     moment(dateTime).format(formatPattern);
 
 const number = (num: number) => {
