@@ -8,7 +8,7 @@ import { route as routeTokenInfo } from 'src/module/Token/features/TokenInfo';
 import { combineHistorySelector, HistoryList, receiveHistorySelector } from 'src/module/History';
 import { route as routeSend } from 'src/module/Send';
 import { useHistory } from 'react-router-dom';
-import { InfoIcon, LoadingIcon, VerifiedIcon } from 'src/components/Icons';
+import { InfoIcon, LoadingIcon } from 'src/components/Icons';
 import { route as routeWallet } from 'src/module/Wallet';
 import withDetail, { IMergedProps } from './Detail.enhance';
 import { Styled } from './Detail.styled';
@@ -26,7 +26,6 @@ const TokenBalance = React.memo(() => {
                     showVerifiedToken
                     showSymbol={false}
                 />
-                {selectedPrivacy.isVerified && <VerifiedIcon />}
             </div>
             <div className="hook-container">
                 <Balance tokenId={tokenId} classNameTextCustom="balance-token" />
