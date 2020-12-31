@@ -35,15 +35,14 @@ const getMessageError = (error: any) => {
         if (error instanceof Error) {
             return error?.message;
         }
-        if (isString(error)) {
-            return error;
-        }
         const errorParse = JSON.parse(error);
         const errorCode = errorParse?.Code;
         if (errorCode) {
             return `${errorCode} ${ERROR_CODE[errorCode] || ERROR_CODE.DEFAULT}`;
         }
-        return;
+        if (isString(error)) {
+            return error;
+        }
     } catch (e: any) {
         value = JSON.stringify(error || e);
     }
