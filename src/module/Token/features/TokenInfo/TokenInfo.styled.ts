@@ -23,4 +23,12 @@ export const Styled = styled.div`
     .extra .verified-container {
         margin-bottom: 15px;
     }
+    .extra .extra-item {
+        max-width: 100%;
+        p {
+            :first-child {
+                max-width: calc(100% - 20px);
+            }
+        }
+    }
 `;
