@@ -3,14 +3,10 @@ import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser'
 import { isEqual } from 'lodash';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import {
-    actionHandleLoadWallet,
-    actionSaveWallet,
-    IWalletReducer,
-    walletDataSelector,
-    walletSelector,
-} from 'src/module//Wallet';
+import { actionHandleLoadWallet, actionSaveWallet, IWalletReducer } from 'src/module//Wallet';
+import { walletDataSelector, walletSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFollowDefaultToken } from 'src/module/Token';
+import { actionFreeHistory } from 'src/module/History';
 import { cachePromise } from 'src/services';
 import {
     ACTION_FETCHED,
@@ -157,6 +153,7 @@ export const actionSwitchAccount = (accountName: string) => async (dispatch: Dis
     } catch (error) {
         throw error;
     } finally {
+        await dispatch(actionFreeHistory());
         await dispatch(actionSwitchAccountFetched());
     }
     return account;

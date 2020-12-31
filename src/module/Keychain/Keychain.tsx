@@ -7,7 +7,6 @@ import { actionSwitchAccount, defaultAccountSelector, listAccountSelector } from
 import { FaKey } from 'react-icons/fa';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { Link, useHistory } from 'react-router-dom';
-import { withLayout } from 'src/components/Layout';
 import { route } from 'src/module/Account/features/AccountDetail';
 import { IAccountItem, IHook } from './Keychain.interface';
 import { Styled } from './Keychain.styled';
@@ -31,7 +30,7 @@ const AccountItem = React.memo((props: IAccountItem) => {
     const handleNavDetail = (e: SyntheticEvent) => {
         e.preventDefault();
         history.push(route, {
-            account,
+            accountName: account.name,
         });
     };
     const handleSelectAccount = () => dispatch(actionSwitchAccount(account.name));
@@ -90,4 +89,4 @@ const Keychain = React.memo(() => {
     );
 });
 
-export default withLayout(Keychain);
+export default Keychain;

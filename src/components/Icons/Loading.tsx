@@ -24,7 +24,7 @@ const Styled: any = styled.div`
 const Loading = (props: ILoadingIconProps) => {
     const { width = '20px', height = '20px', spinnerProps } = props;
     return (
-        <Styled width={width} height={height}>
+        <Styled width={width} height={height} className="loading-icon">
             <Spinner animation={spinnerProps?.animation || 'border'} {...spinnerProps} />
         </Styled>
     );

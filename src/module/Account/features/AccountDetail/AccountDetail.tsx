@@ -8,7 +8,7 @@ import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
 import Item from 'src/module/Account/features/AccountItem';
 import styled from 'styled-components';
-import { actionFetchRemoveAccount } from 'src/module/Account';
+import { actionFetchRemoveAccount, getAccountByNameSelector } from 'src/module/Account';
 import { withLayout } from 'src/components/Layout';
 
 const Styled = styled.div`
@@ -23,7 +23,11 @@ const AccountDetails = () => {
     const dispatch = useDispatch();
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
     const translateAccountDetail = translate.accountDetail;
-    const { account }: { account: AccountInstance } = location.state;
+    const { accountName }: { accountName: string } = location.state;
+    const account: AccountInstance = useSelector(getAccountByNameSelector)(accountName);
+    if (!account) {
+        return null;
+    }
     const {
         paymentAddressKeySerialized,
         privateKeySerialized,
@@ -31,8 +35,7 @@ const AccountDetails = () => {
         validatorKey,
         publicKeySerialized,
     } = account.key.keySet;
-
-    const renderItem = React.useCallback(() => {
+    const renderItem = () => {
         const factories = [
             <Item
                 {...{
@@ -74,7 +77,7 @@ const AccountDetails = () => {
             />,
         ];
         return isDev ? devFactories : factories;
-    }, []);
+    };
 
     const handleRemoveKeychain = () => {
         try {

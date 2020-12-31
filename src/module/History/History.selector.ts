@@ -1,16 +1,19 @@
 import BigNumber from 'bignumber.js';
 import { TxHistoryModelParam, CONSTANT } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
-import { keySetAccountSelector } from 'src/module/Account';
+import isEmpty from 'lodash/isEmpty';
+import toString from 'lodash/toString';
 import { IRootState } from 'src/redux/interface';
-import { isEmpty } from 'lodash';
 import { format } from 'src/utils';
 import { selectedPrivacySelector } from 'src/module/Token';
 import { COINS } from 'src/constants';
 import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
-import { getStatusData, getTypeData } from './History.utils';
-import { ICacheHistoryTokenSelector } from './History.interface';
+import { paymentAddressSelector } from 'src/module/Account/Account.selector';
+import { HISTORY_FORMAT_TYPE } from './History.constant';
+import { getStatusData, getTypeData, combineReceiveAndCacheHistory } from './History.utils';
+import { TxCacheHistoryModel, TxHistoryReceiveModel } from './History.interface';
 
+const { TYPE } = CONSTANT.HISTORY;
 const { HISTORY_TYPE } = CONSTANT.TX_CONSTANT;
 
 export const historySelector = createSelector(
@@ -23,30 +26,33 @@ export const historyCacheSelector = createSelector(historySelector, (history) =>
 export const historyCacheDataSelector = createSelector(
     historyCacheSelector,
     selectedPrivacySelector,
-    keySetAccountSelector,
+    paymentAddressSelector,
     decimalDigitsSelector,
-    (historyState, selectedPrivacy, keySet, decimalDigits) => {
+    (historyState, selectedPrivacy, paymen, decimalDigits) => {
         const { histories } = historyState;
         if (!histories) {
             return [];
         }
-        const cacheHistory: ICacheHistoryTokenSelector[] = histories.map((history: TxHistoryModelParam) => {
-            const { historyType, nativeTokenInfo, privacyTokenInfo } = history;
+        const cacheHistory: TxCacheHistoryModel[] = histories.map((history) => {
+            const { historyType, nativeTokenInfo, privacyTokenInfo }: TxHistoryModelParam = history;
             let amount = '';
             let fee = '';
             let useNativeFee = false;
             let usePrivacyFee = false;
             let paymentAddress = '';
+            let type = historyType;
             if (historyType === HISTORY_TYPE.SEND_NATIVE_TOKEN) {
                 amount = nativeTokenInfo.amount;
                 fee = nativeTokenInfo.fee;
                 useNativeFee = true;
                 usePrivacyFee = false;
                 paymentAddress = nativeTokenInfo.paymentInfoList[0].paymentAddressStr || '';
+                type = TYPE.SEND;
             }
             if (historyType === HISTORY_TYPE.SEND_PRIVACY_TOKEN) {
                 amount = privacyTokenInfo?.amount || '';
                 paymentAddress = privacyTokenInfo?.paymentInfoList[0].paymentAddressStr || '';
+                type = TYPE.SEND;
                 if (isEmpty(nativeTokenInfo.fee)) {
                     useNativeFee = false;
                     usePrivacyFee = true;
@@ -78,17 +84,14 @@ export const historyCacheDataSelector = createSelector(
                 clipAmount: false,
             });
             const { statusMessage } = getStatusData(history);
+            const lockTime = history.lockTime * 1000;
             const historyItem = {
-                ...history,
+                txId: history.txId,
                 amountFormated,
-                timeFormated: format.formatUnixDateTime(history?.lockTime, 'MMM DD HH:mm A'),
+                timeFormated: format.formatUnixDateTime(lockTime, 'MMM DD HH:mm A'),
                 feeFormated,
                 statusMessage,
-                type: getTypeData(
-                    history?.historyType || HISTORY_TYPE.SEND_NATIVE_TOKEN,
-                    history,
-                    keySet.paymentAddressKeySerialized,
-                ),
+                type: getTypeData(type, history, paymentAddress),
                 isIncognitoTx: true,
                 fee,
                 amount,
@@ -98,6 +101,9 @@ export const historyCacheDataSelector = createSelector(
                 feeSymbol,
                 paymentAddress,
                 amountFormatedNoClip,
+                time: toString(history.lockTime),
+                formatType: HISTORY_FORMAT_TYPE.cache,
+                lockTime,
             };
             return historyItem;
         });
@@ -105,6 +111,55 @@ export const historyCacheDataSelector = createSelector(
     },
 );
 
-export const historyCacheByTxIdSelector = createSelector(historyCacheDataSelector, (history) => (txId: string) =>
-    history && history.find((h: ICacheHistoryTokenSelector) => h.txId === txId),
+export const getHistoryCacheByTxIdSelector = createSelector(historyCacheDataSelector, (history) => (txId: string) =>
+    history && history.find((h: TxCacheHistoryModel) => h.txId === txId),
+);
+
+export const receiveHistorySelector = createSelector(historySelector, (history) => history.receiveHistory);
+
+export const receiveHistoryDataSelector = createSelector(
+    receiveHistorySelector,
+    paymentAddressSelector,
+    selectedPrivacySelector,
+    decimalDigitsSelector,
+    (history, paymentAddress, selectedPrivacy, decimalDigits) => {
+        return history.data.map((h) => {
+            const type = getTypeData(h.typeCode, history, paymentAddress);
+            const amountFormated = format.formatAmount({
+                originalAmount: new BigNumber(h.amount).toNumber(),
+                decimals: selectedPrivacy?.pDecimals,
+                decimalDigits,
+            });
+            const amountFormatedNoClip = format.formatAmount({
+                originalAmount: new BigNumber(h.amount).toNumber(),
+                decimals: selectedPrivacy?.pDecimals,
+                decimalDigits,
+                clipAmount: false,
+            });
+            const { statusMessage } = getStatusData(h);
+            return {
+                ...h,
+                type,
+                amountFormated,
+                amountFormatedNoClip,
+                statusMessage,
+                formatType: HISTORY_FORMAT_TYPE.receive,
+                symbol: selectedPrivacy.symbol || selectedPrivacy.pSymbol,
+            };
+        });
+    },
+);
+
+export const combineHistorySelector = createSelector(
+    historyCacheDataSelector,
+    receiveHistoryDataSelector,
+    (cacheHistory, receiveHistory) =>
+        combineReceiveAndCacheHistory({
+            cacheHistory,
+            receiveHistory,
+        }),
+);
+
+export const getHistoryReceiveByTxIdSelector = createSelector(receiveHistoryDataSelector, (history) => (txId: string) =>
+    history && history.find((h: TxHistoryReceiveModel) => h.txId === txId),
 );

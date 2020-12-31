@@ -7,13 +7,3 @@ export interface IRouteProps extends RouteProps {
     path: string;
     component: React.FunctionComponent | any;
 }
-
-let routes: IRouteProps[] = [];
-
-const context = require.context('./', true, /\.route.tsx?/);
-
-context.keys().forEach((path) => {
-    routes.push(context(`${path}`).default);
-});
-
-export default routes;
