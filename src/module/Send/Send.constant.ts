@@ -24,3 +24,4 @@ export const FORM_CONFIGS = {
     fee: 'fee',
     memo: 'memo',
 };
+export const ACTION_SET_SENDING = '[send] Toggle sending tx';

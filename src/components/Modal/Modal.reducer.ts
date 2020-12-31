@@ -3,11 +3,13 @@ import { ACTION_TOGGLE_MODAL, ACTION_TOGGLE_LOADING_MODAL } from './Modal.consta
 export interface IModalReducer {
     visible: boolean;
     data: any;
+    isLoadingModal?: boolean;
 }
 
 const initialState: IModalReducer = {
     visible: false,
     data: null,
+    isLoadingModal: false,
 };
 
 const reducer = (

@@ -1,6 +1,14 @@
 import { ACTION_TOGGLE_MODAL } from './Modal.constant';
 
-export const actionToggleModal = ({ data = null, visible = false }: { data?: any; visible?: boolean }) => ({
+export const actionToggleModal = ({
+    data = null,
+    visible = false,
+    isLoadingModal = false,
+}: {
+    data?: any;
+    visible?: boolean;
+    isLoadingModal?: boolean;
+}) => ({
     type: ACTION_TOGGLE_MODAL,
-    payload: { data, visible },
+    payload: { data, visible, isLoadingModal },
 });

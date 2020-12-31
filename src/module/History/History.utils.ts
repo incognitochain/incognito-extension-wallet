@@ -185,7 +185,7 @@ export const handleFilterHistoryReceiveByTokenId = ({
                 }
                 const isMintedToken = !hasInputs && !!hasOutputs;
                 const lockTime = endsWith(history?.LockTime, 'Z') ? history?.LockTime : `${history?.LockTime}Z`;
-                const timeFormated = format.formatUnixDateTime(lockTime, 'MMM DD HH:mm A');
+                const timeFormated = format.formatUnixDateTime(lockTime, 'DD MMM hh:mm A');
                 return {
                     txId: history?.Hash,
                     isPrivacy: history?.IsPrivacy,

@@ -88,7 +88,7 @@ export const historyCacheDataSelector = createSelector(
             const historyItem = {
                 txId: history.txId,
                 amountFormated,
-                timeFormated: format.formatUnixDateTime(lockTime, 'MMM DD HH:mm A'),
+                timeFormated: format.formatUnixDateTime(lockTime, 'DD MMM hh:mm A'),
                 feeFormated,
                 statusMessage,
                 type: getTypeData(type, history, paymentAddress),

@@ -11,6 +11,8 @@ import BigNumber from 'bignumber.js';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { actionFetchCacheHistory } from 'src/module/History';
 import { floor } from 'lodash';
+import { actionToggleModal } from 'src/components/Modal';
+import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import { sendDataSelector } from './Send.selector';
 import { ISendData } from './Send.interface';
 import { route as routeConfirmTx } from './features/ConfirmTx';
@@ -34,6 +36,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             if (!amount || !toAddress || disabledForm) {
                 return;
             }
+            await dispatch(
+                actionToggleModal({
+                    visible: true,
+                    data: <LoadingTx />,
+                    isLoadingModal: true,
+                }),
+            );
             const fee = toString(totalFee);
             const originalAmount = convert.toOriginalAmount({
                 humanAmount: amount,
@@ -68,6 +77,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     type: TOAST_CONFIGS.error,
                 }),
             );
+        } finally {
+            await dispatch(actionToggleModal({}));
         }
     };
     return (
