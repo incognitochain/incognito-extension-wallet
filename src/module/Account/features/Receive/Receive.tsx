@@ -22,6 +22,7 @@ const Receive = () => {
             <QrCode
                 qrCodeProps={{
                     value: paymentAddress,
+                    size: 150,
                 }}
                 hook={
                     <div className="hook">
