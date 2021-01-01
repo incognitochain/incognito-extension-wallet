@@ -10,6 +10,9 @@ export const NameStyled = styled.div`
     .verified-icon {
         margin-left: 5px;
     }
+    > p.ellipsis {
+        max-width: calc(100% - 20px);
+    }
 `;
 
 export const TextStyled = styled.p``;
@@ -47,5 +50,8 @@ export const TokenStyled = styled(Link)`
     }
     .extra-bottom {
         margin-top: 10px;
+    }
+    &.token-basic .token-name {
+        max-width: calc(100% - 50px);
     }
 `;

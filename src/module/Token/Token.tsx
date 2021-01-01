@@ -15,7 +15,7 @@ export const Name = React.memo((props: ITokenChildProps) => {
     const { tokenId, classNameCustom, classNameTextCustom } = props;
     const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
     return (
-        <NameStyled className={classNameCustom}>
+        <NameStyled className={`token-name ${classNameCustom || ''}`}>
             <TextStyled className={`fw-medium fs-medium  ellipsis ${classNameTextCustom}`}>{token.name}</TextStyled>
             {token?.isVerified && <VerifiedIcon />}
         </NameStyled>

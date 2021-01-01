@@ -6,7 +6,7 @@ import withToken, { IMergePropsToken } from './Token.enhance';
 const TokenBasic = (props: IMergePropsToken) => {
     const { tokenId, handleOnClick, showAmount, showFollowed } = props;
     return (
-        <Styled to="#" className="token-container" onClick={handleOnClick}>
+        <Styled to="#" className="token-container token-basic" onClick={handleOnClick}>
             <div className="extra">
                 <Name classNameCustom="extra-item" tokenId={tokenId} />
                 {showAmount && <Amount classNameCustom="extra-item" tokenId={tokenId} />}
