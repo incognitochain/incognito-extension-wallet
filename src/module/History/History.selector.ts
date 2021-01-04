@@ -66,6 +66,7 @@ export const historyCacheDataSelector = createSelector(
             }
             const symbol = selectedPrivacy.symbol || selectedPrivacy.pSymbol;
             const feeSymbol = useNativeFee ? COINS.PRV.symbol : selectedPrivacy.symbol || selectedPrivacy.pSymbol;
+            const feePDecimals = useNativeFee ? COINS.PRV.pDecimals : selectedPrivacy.pDecimals;
             const amountFormated = format.formatAmount({
                 originalAmount: new BigNumber(amount).toNumber(),
                 decimals: selectedPrivacy?.pDecimals,
@@ -79,7 +80,7 @@ export const historyCacheDataSelector = createSelector(
             });
             const feeFormated = format.formatAmount({
                 originalAmount: new BigNumber(fee).toNumber(),
-                decimals: selectedPrivacy?.pDecimals,
+                decimals: feePDecimals,
                 decimalDigits: false,
                 clipAmount: false,
             });
