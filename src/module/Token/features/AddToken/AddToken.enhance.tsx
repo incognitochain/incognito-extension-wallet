@@ -1,7 +1,6 @@
 import React from 'react';
 import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { withLayout } from 'src/components/Layout';
 import {
     withAllListToken,
     getPrivacyDataByTokenIDSelector,
@@ -54,4 +53,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose<TInner, any>(withLayout, withAllListToken, enhance);
+export default compose<TInner, any>(withAllListToken, enhance);

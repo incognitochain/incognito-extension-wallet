@@ -184,7 +184,7 @@ export const GlobalStyled = createGlobalStyle`
         position: relative;
         overflow-x: hidden;
         overflow-y: scroll;
-        max-height: 540px;
+        max-height: 488px;
     }
     .linear-bg {
         background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.5), rgba(0,0,0,0.6)) !important;

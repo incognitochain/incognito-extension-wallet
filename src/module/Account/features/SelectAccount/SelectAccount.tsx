@@ -40,19 +40,21 @@ const SelectAccount = React.memo(() => {
     };
 
     return (
-        <Styled className="scroll-view">
+        <Styled>
             <Header title={translate.wallet.selectAccount.headerTitle} canSearch />
-            {result.map((account: AccountInstance) => (
-                <AccountItem
-                    title={account.name}
-                    desc={account.key.keySet.paymentAddressKeySerialized}
-                    hasCopy={false}
-                    hasQrCode={false}
-                    selectable
-                    onSelectAccount={() => handleSelectAccount(account.name)}
-                    key={account.name}
-                />
-            ))}
+            <div className="scroll-view">
+                {result.map((account: AccountInstance) => (
+                    <AccountItem
+                        title={account.name}
+                        desc={account.key.keySet.paymentAddressKeySerialized}
+                        hasCopy={false}
+                        hasQrCode={false}
+                        selectable
+                        onSelectAccount={() => handleSelectAccount(account.name)}
+                        key={account.name}
+                    />
+                ))}
+            </div>
         </Styled>
     );
 });

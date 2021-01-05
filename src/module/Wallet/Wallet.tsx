@@ -13,6 +13,7 @@ import {
 } from 'src/module/Token';
 import { route as routeAddToken } from 'src/module/Token/features/AddToken';
 import { translateSelector } from 'src/module/Configs/Configs.selector';
+import { route as routeShield } from 'src/module/Shield';
 import withWallet from './Wallet.enhance';
 import { Styled } from './Wallet.styled';
 
@@ -34,10 +35,11 @@ const TotalShield = React.memo(() => {
     const totalShield: ITotalShielded = useSelector(totalShieldedTokensSelector);
     const translate: ILanguage = useSelector(translateSelector);
     const { btnShield } = translate.wallet.blockShield;
+    const history = useHistory();
     return (
         <div className="total-shield">
             <p className="fs-avglarge fw-medium center-text">{`$${totalShield.formatTotalAmountUSD}`}</p>
-            <Button title={btnShield} disabled />
+            <Button title={btnShield} onClick={() => history.push(routeShield)} />
         </div>
     );
 });

@@ -140,7 +140,7 @@ class SelectedPrivacy {
         this.isNativeToken = this.tokenId === COINS.PRV.id || !this.isToken; // PRV
         this.isPrivateToken = pTokenData?.type === COINS.PRIVATE_TOKEN_TYPE.TOKEN; // ERC20 tokens, BEP2 tokens
         this.isPrivateCoin = pTokenData?.type === COINS.PRIVATE_TOKEN_TYPE.COIN; // pETH, pBTC, pTOMO,...
-        this.isPrivacyToken = !!pTokenData?.pSymbol; // pToken is private token (pETH <=> ETH, pBTC <=> BTC, ...)
+        this.isPrivacyToken = !!pTokenData?.pSymbol; // pToken is privacy token (pETH <=> ETH, pBTC <=> BTC, ...)
         this.isIncognitoToken = !this.isPrivacyToken && !this.isNativeToken; // is tokens were issued from users
         this.isErc20Token = this.isPrivateToken && this.currencyType === COINS.PRIVATE_TOKEN_CURRENCY_TYPE.ERC20;
         this.isBep2Token = this.isPrivateToken && this.currencyType === COINS.PRIVATE_TOKEN_CURRENCY_TYPE.BNB_BEP2;
