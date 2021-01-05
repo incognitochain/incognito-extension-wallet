@@ -12,6 +12,7 @@ const language: ILanguage = {
         lostNetwork: 'You are currently offline',
         btnReload: 'Reload',
         loadingTx: `Please do not navigate away till this<br />window closes.`,
+        btnRetry: 'Retry',
     },
     home: {
         title: 'Incognito Wallet',
@@ -162,6 +163,45 @@ const language: ILanguage = {
         external: 'External addresses',
         headerTitleCreate: 'Create',
         headerTitleEdit: 'Edit',
+    },
+    shield: {
+        headerTitle: 'Search coins',
+        placeholder: 'Search coins',
+        whyShield: {
+            headerTitle: 'Why shield?',
+            content: `
+            <p class='sub-text'>
+                To transact anonymously, first you have to shield your crypto. When
+                you send coins to be shielded, an identical – but 100% private –
+                version is generated. If you withdraw your coins from the Incognito
+                network, this privacy version will be burned, and the original will be
+                returned. All original coins are stored safely using the methods
+                below:
+            </p>
+            <p class='fw-bold'>Trustless bridge for Ethereum</p>
+            <p class='sub-text'>
+                For ETH and all ERC20 tokens, your crypto is safely secured in a
+                trustless smart contract.
+            </p
+            <p class='fw-bold'>Portal (upcoming)</p>
+            <p class='sub-text'>
+                For other coins, your crypto is stored in one of the wallets
+                maintained by the Incognito Core team. We’re working on a trustless
+                solution for this too, called Portal.
+            </p
+        `,
+        },
+        genShieldAddress: {
+            headerTitle: 'Shield',
+            title1: `Send to this shielding<br />address <p class='sub-text'>once only.</p>`,
+            title2: `Expires in: `,
+            title3: `Minimum: `,
+            title4: `Smaller amounts will not be processed.`,
+            title5: `If sending from an exchange, please take<br />withdrawal times into account.`,
+            title6: `It may be more reliable to use a normal<br />wallet as an intermediary.`,
+            error1: `We seem to have hit a snag. Simply<br />tap to try again.`,
+            error2: `If that doesn’t work,<br /> please come back in 60 minutes.`,
+        },
     },
 };
 

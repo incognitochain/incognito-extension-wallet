@@ -26,6 +26,7 @@ export interface ILanguage {
     send: ISendLanguage;
     addressBook: IAddressBookLanguage;
     preload: IPreloadLanguage;
+    shield: IShieldLanguage;
 }
 
 export interface IPreloadLanguage {
@@ -181,4 +182,25 @@ export interface IGeneralLanguage {
     lostNetwork: string;
     btnReload: string;
     loadingTx: string;
+    btnRetry: string;
+}
+
+export interface IShieldLanguage {
+    headerTitle: string;
+    placeholder: string;
+    whyShield: {
+        headerTitle: string;
+        content: string;
+    };
+    genShieldAddress: {
+        headerTitle: string;
+        title1: string;
+        title2: string;
+        title3: string;
+        title4: string;
+        title5: string;
+        title6: string;
+        error1: string;
+        error2: string;
+    };
 }

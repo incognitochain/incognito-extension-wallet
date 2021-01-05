@@ -133,11 +133,19 @@ const number = (num: number) => {
     return rs.isFinite() ? rs.toFormat(fmt) : num;
 };
 
+export const formatTime = (seconds: number) => {
+    let h = `0${Math.floor(seconds / 3600)}`.slice(-2);
+    let m = `0${Math.floor(seconds / 60) % 60}`.slice(-2);
+    let s = `0${seconds % 60}`.slice(-2);
+    return `${h}:${m}:${s}`;
+};
+
 const format = {
     formatAmount,
     formatUnixDateTime,
     number,
     toFixed,
+    formatTime,
 };
 
 export default format;

@@ -18,12 +18,13 @@ import {
     ACTION_SET_SELECTED_TOKEN,
 } from './Token.constant';
 import { apiGetPTokenList, apiGetPCustomTokenList } from './Token.services';
-import { IPToken, IFollowedToken } from './Token.interface';
+import { IPToken, IFollowedToken, ISelectedPrivacy } from './Token.interface';
 import {
     bridgeTokensSelector,
     chainTokensSelector,
     defaultTokensIdsSelector,
     followedTokensIdsSelector,
+    getPrivacyDataByTokenIDSelector,
 } from './Token.selector';
 
 export const actionFetchedPTokenList = (payload: IPToken[]) => ({
@@ -170,5 +171,20 @@ export const actionGetBalanceByTokenId = (tokenId: string) => async (
         actionGetBalanceToken(token)(dispatch, getState);
     } catch (error) {
         throw error;
+    }
+};
+
+export const actionFollowTokenById = (tokenId: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        const state = getState();
+        const account: AccountInstance = defaultAccountSelector(state);
+        const token: ISelectedPrivacy = getPrivacyDataByTokenIDSelector(state)(tokenId);
+        if (!token.isFollowed) {
+            account.followTokenById(tokenId);
+        }
+    } catch (error) {
+        throw error;
+    } finally {
+        actionSaveWallet()(dispatch, getState);
     }
 };

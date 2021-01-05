@@ -4,6 +4,7 @@ import { goServices, setConfig, storageService } from 'incognito-js/build/web/br
 import { actionHandleLoadWallet, actionInitWallet, IWalletReducer, walletSelector } from 'src/module/Wallet';
 import { ENVS } from 'src/configs';
 import { actionFetchPCustomTokenList, actionFetchPTokenList } from 'src/module/Token';
+import { v4 } from 'uuid';
 import { IServer } from 'src/services';
 import { loadSeparator } from 'src/utils/separator';
 import { preloadSelector } from './Preload.selector';
@@ -14,6 +15,7 @@ import {
     ACTION_FETCHED,
     ACTION_SET_SERVER,
     ACTION_SET_CONFIGS,
+    ACTION_SET_LOGIN,
 } from './Preload.constant';
 
 export const actionSetConfigs = (payload: IPreloadConfigs) => ({
@@ -40,6 +42,34 @@ export const actionFetchFail = (error: any) => ({
     payload: error,
 });
 
+export const actionSetLogin = (payload: { deviceId: string; deviceToken: string }) => ({
+    type: ACTION_SET_LOGIN,
+    payload,
+});
+
+export const actionLogin = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    const state = getState();
+    const preload: IPreloadReducer = preloadSelector(state);
+    const { configs } = preload;
+    let payload = {
+        deviceId: configs.deviceId || '',
+        deviceToken: configs.deviceToken || '',
+    };
+    try {
+        if (!configs.deviceId || !configs.deviceToken) {
+            let deviceId = v4();
+            payload = {
+                deviceId,
+                deviceToken: deviceId,
+            };
+            await dispatch(actionSetLogin(payload));
+        }
+    } catch (error) {
+        throw error;
+    }
+    return payload;
+};
+
 export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state: IRootState = getState();
     const preload: IPreloadReducer = preloadSelector(state);
@@ -61,10 +91,13 @@ export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRoo
             removeMethod: async (key: string) => localStorage.removeItem(key),
             namespace: 'EXTENSION_WALLET',
         });
-        await setConfig({
+        const { deviceId, deviceToken } = await actionLogin()(dispatch, getState);
+        setConfig({
             ...configs,
             wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
             logMethod: (message: string) => console.debug(`MESSAGE`, message),
+            deviceId,
+            deviceToken,
         });
         await goServices.implementGoMethodUseWasm();
         let task: any[] = [

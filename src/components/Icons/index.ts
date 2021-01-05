@@ -14,3 +14,4 @@ export { default as ArrowDownIcon } from './ArrowDown';
 export { default as CloseIcon } from './Close';
 export { default as RefreshIcon } from './Refresh';
 export { default as LoadingIcon } from './Loading';
+export { default as ClockWiseIcon } from './ClockWise';

@@ -1,3 +1,4 @@
+import { IShieldReducer } from 'src/module/Shield';
 import { IPreloadReducer } from 'src/module/Preload';
 import { ITokenReducer } from 'src/module/Token';
 import { IWalletReducer } from 'src/module/Wallet';
@@ -29,4 +30,5 @@ export interface IRootState {
     history: IHistoryReducer;
     addressBook: IAddressBookReducer;
     header: IHeaderReducer;
+    shield: IShieldReducer;
 }

@@ -10,6 +10,7 @@ import { IAllListTokenInner, ISelectedPrivacy } from './Token.interface';
 interface IProps {
     availableTokens?: ISelectedPrivacy[];
 }
+
 const enhance = (WrappedComp: React.FunctionComponent) => (props: IProps & IAllListTokenInner & any) => {
     const [toggleUnVerified, onToggleUnVerifiedTokens] = React.useState(false);
     const { availableTokens: tokens } = props;

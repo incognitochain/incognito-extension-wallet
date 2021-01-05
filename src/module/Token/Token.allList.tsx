@@ -25,7 +25,7 @@ const Styled = styled.div`
 const ListAllToken = (props: IAllListTokenInner) => {
     const { tokensFactories, onToggleUnVerifiedTokens, toggleUnVerified, renderItem } = props;
     return (
-        <Styled className="all-list-token">
+        <Styled className="all-list-token scroll-view">
             <ListToken {...tokensFactories[0]} renderItem={renderItem} />
             <Checkbox
                 onHandleChecked={() => onToggleUnVerifiedTokens(!toggleUnVerified)}

@@ -9,6 +9,7 @@ import {
     ACTION_SET_CONFIGS,
     ACTION_SET_SERVER,
     ACTION_FETCH_FAIL,
+    ACTION_SET_LOGIN,
 } from './Preload.constant';
 
 export interface IPreloadConfigs {
@@ -16,6 +17,8 @@ export interface IPreloadConfigs {
     apiURL: string;
     mainnet: boolean;
     wasmPath?: string;
+    deviceId?: string;
+    deviceToken?: string;
 }
 
 export interface IPreloadReducer {
@@ -35,6 +38,8 @@ const initialState: IPreloadReducer = {
         apiURL: PRODUCTION_API,
         mainnet: true,
         wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
+        deviceId: '',
+        deviceToken: '',
     },
     server: MAINNET_SERVER,
 };
@@ -84,6 +89,15 @@ const preloadReducer = (
             return {
                 ...state,
                 server,
+            };
+        }
+        case ACTION_SET_LOGIN: {
+            return {
+                ...state,
+                configs: {
+                    ...state.configs,
+                    ...action.payload,
+                },
             };
         }
         default:
