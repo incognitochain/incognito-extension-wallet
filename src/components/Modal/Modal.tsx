@@ -59,7 +59,7 @@ const Modal = (props: IProps) => {
         if (isLoadingModal) {
             return (
                 <div className="modal-content-wrapper linear-bg">
-                    <div className="flex modal-loading-tx">{data}</div>
+                    <div className="flex modal-loading-tx">{modalData}</div>
                 </div>
             );
         }
