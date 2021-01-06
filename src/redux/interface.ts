@@ -11,6 +11,7 @@ import { ISendReducer } from 'src/module/Send';
 import { IHistoryReducer } from 'src/module/History';
 import { IAddressBookReducer } from 'src/module/AddressBook';
 import { IHeaderReducer } from 'src/components/Header';
+import { IPasswordReducers } from 'src/module/Password';
 
 export interface IAction {
     type: string;
@@ -31,4 +32,5 @@ export interface IRootState {
     addressBook: IAddressBookReducer;
     header: IHeaderReducer;
     shield: IShieldReducer;
+    password: IPasswordReducers;
 }

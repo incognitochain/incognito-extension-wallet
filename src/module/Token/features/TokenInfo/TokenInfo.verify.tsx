@@ -56,7 +56,6 @@ const CoinInfoVerify = React.memo(() => {
                 onGoBack={() =>
                     dispatch(
                         actionToggleModal({
-                            visible: false,
                             data: null,
                         }),
                     )

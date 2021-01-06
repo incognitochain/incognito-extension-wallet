@@ -21,6 +21,7 @@ const Styled = styled.button`
     background-color: ${(props: { theme: ITheme }) => props.theme.button};
     color: ${(props: { theme: ITheme }) => props.theme.textButton};
     width: 100%;
+    font-weight regular;
     p.btn-title {
     }
     &.btn-disabled {

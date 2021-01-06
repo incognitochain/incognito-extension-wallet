@@ -1,42 +1,44 @@
 import { AccountInstance } from 'incognito-js/build/web/browser';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Header } from 'src/components';
-import { isDev } from 'src/configs';
+import React, { useMemo, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { toNumber } from 'lodash';
 import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
-import Item from 'src/module/Account/features/AccountItem';
 import styled from 'styled-components';
-import { actionFetchRemoveAccount, getAccountByNameSelector } from 'src/module/Account';
-import { withLayout } from 'src/components/Layout';
+import Item from './Detail';
 
-const Styled = styled.div`
-    .btn-container {
-        margin-top: 30px;
-    }
-`;
+interface IProps {
+    account: AccountInstance;
+}
 
-const AccountDetails = () => {
-    const location: any = useLocation();
-    const history = useHistory();
-    const dispatch = useDispatch();
+const Styled = styled.div``;
+
+const AccountDetails = (props: IProps) => {
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
     const translateAccountDetail = translate.accountDetail;
-    const { accountName }: { accountName: string } = location.state;
-    const account: AccountInstance = useSelector(getAccountByNameSelector)(accountName);
-    if (!account) {
-        return null;
-    }
+    const { account } = props;
     const {
         paymentAddressKeySerialized,
         privateKeySerialized,
         publicKeyCheckEncode,
         validatorKey,
-        publicKeySerialized,
+        viewingKeySerialized,
+        paymentAddress,
     } = account.key.keySet;
-    const renderItem = () => {
-        const factories = [
+
+    const shard = useMemo(() => {
+        const { publicKeyBytes } = paymentAddress;
+        const lastByte = publicKeyBytes[publicKeyBytes.length - 1];
+
+        return (toNumber(lastByte) % 8).toString();
+    }, [paymentAddress]);
+
+    const index = useMemo(() => {
+        return account.getIndex();
+    }, [account]);
+
+    const renderItem = useCallback(() => {
+        return [
             <Item
                 {...{
                     title: translateAccountDetail.title1,
@@ -58,42 +60,20 @@ const AccountDetails = () => {
                 }}
                 key={translateAccountDetail.title3}
             />,
-            <Item {...{ title: translateAccountDetail.title4, desc: '' }} key={translateAccountDetail.title4} />,
+            <Item
+                {...{ title: translateAccountDetail.title4, desc: viewingKeySerialized }}
+                key={translateAccountDetail.title4}
+            />,
             <Item
                 {...{ title: translateAccountDetail.title5, desc: validatorKey }}
                 key={translateAccountDetail.title5}
             />,
+            <Item {...{ title: translateAccountDetail.index, desc: index }} key={translateAccountDetail.index} />,
+            <Item {...{ title: translateAccountDetail.shard, desc: shard }} key={translateAccountDetail.shard} />,
         ];
-        const devFactories = [
-            ...factories,
-            <Item
-                {...{ title: translateAccountDetail.title6, desc: validatorKey }}
-                key={translateAccountDetail.title6}
-            />,
-            <Item {...{ title: translateAccountDetail.title7, desc: '' }} key={translateAccountDetail.title7} />,
-            <Item
-                {...{ title: translateAccountDetail.title8, desc: publicKeySerialized }}
-                key={translateAccountDetail.title8}
-            />,
-        ];
-        return isDev ? devFactories : factories;
-    };
+    }, []);
 
-    const handleRemoveKeychain = () => {
-        try {
-            dispatch(actionFetchRemoveAccount(account.name));
-            history.goBack();
-        } catch (error) {
-            console.debug(error);
-        }
-    };
-    return (
-        <Styled>
-            <Header title={`${account.name}'s ${translateAccountDetail.keychain}`} />
-            {renderItem()}
-            <Button onClick={handleRemoveKeychain} title={translateAccountDetail.delete} />
-        </Styled>
-    );
+    return <Styled className="scroll-view">{renderItem()}</Styled>;
 };
 
-export default withLayout(AccountDetails);
+export default AccountDetails;

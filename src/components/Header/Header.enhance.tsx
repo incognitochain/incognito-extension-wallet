@@ -14,7 +14,7 @@ export interface TInner {
 export interface IProps {
     title?: string;
     onGoBack?: () => void;
-    rightHeader?: React.FunctionComponent;
+    rightHeader?: any;
     selectAccount?: boolean;
     canSearch?: boolean;
     customHeader?: React.FunctionComponent | React.ReactElement;

@@ -15,3 +15,7 @@ export { default as CloseIcon } from './Close';
 export { default as RefreshIcon } from './Refresh';
 export { default as LoadingIcon } from './Loading';
 export { default as ClockWiseIcon } from './ClockWise';
+export { default as AddCircleIcon } from './AddCircle';
+export { default as TrashBinIcon } from './TrashBin';
+export { default as KeyIcon } from './Key';
+export { default as EyeIcon } from './Eye';

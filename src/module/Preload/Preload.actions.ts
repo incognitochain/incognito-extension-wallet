@@ -1,12 +1,11 @@
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { goServices, setConfig, storageService } from 'incognito-js/build/web/browser';
-import { actionHandleLoadWallet, actionInitWallet, IWalletReducer, walletSelector } from 'src/module/Wallet';
-import { ENVS } from 'src/configs';
-import { actionFetchPCustomTokenList, actionFetchPTokenList } from 'src/module/Token';
 import { v4 } from 'uuid';
+import { actionHandleLoadWallet, actionInitWallet, IWalletReducer, walletSelector } from 'src/module/Wallet';
+import { actionFetchPCustomTokenList, actionFetchPTokenList } from 'src/module/Token';
 import { IServer } from 'src/services';
 import { loadSeparator } from 'src/utils/separator';
+import { goServices, setConfig, storageService } from 'incognito-js/build/web/browser';
 import { preloadSelector } from './Preload.selector';
 import { IPreloadConfigs, IPreloadReducer } from './Preload.reducer';
 import {
@@ -16,7 +15,9 @@ import {
     ACTION_SET_SERVER,
     ACTION_SET_CONFIGS,
     ACTION_SET_LOGIN,
+    ACTION_FETCHED_SDK_CONFIG,
 } from './Preload.constant';
+import { ENVS } from '../../configs';
 
 export const actionSetConfigs = (payload: IPreloadConfigs) => ({
     type: ACTION_SET_CONFIGS,
@@ -81,6 +82,34 @@ export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRoo
     try {
         await dispatch(actionFetching());
         loadSeparator();
+        let task: any[] = [
+            actionFetchPTokenList()(dispatch, getState),
+            actionFetchPCustomTokenList()(dispatch, getState),
+        ];
+        if (!init) {
+            task = [...task, actionInitWallet()(dispatch, getState)];
+        } else {
+            task = [...task, actionHandleLoadWallet()(dispatch, getState)];
+        }
+        await Promise.all(task);
+        await dispatch(actionFetched({}));
+    } catch (error) {
+        dispatch(actionFetchFail(error));
+        throw error;
+    }
+};
+
+export const actionFetchedSdkConfig = (payload: any) => ({
+    type: ACTION_FETCHED_SDK_CONFIG,
+    payload,
+});
+
+export const actionFetchSdkConfig = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    const state: IRootState = getState();
+    const preload: IPreloadReducer = preloadSelector(state);
+    const { configs } = preload;
+    try {
+        await dispatch(actionFetching());
         storageService.implement({
             setMethod: async (key: string, data: any) => {
                 return localStorage.setItem(key, data);
@@ -100,17 +129,7 @@ export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRoo
             deviceToken,
         });
         await goServices.implementGoMethodUseWasm();
-        let task: any[] = [
-            actionFetchPTokenList()(dispatch, getState),
-            actionFetchPCustomTokenList()(dispatch, getState),
-        ];
-        if (!init) {
-            task = [...task, actionInitWallet()(dispatch, getState)];
-        } else {
-            task = [...task, actionHandleLoadWallet()(dispatch, getState)];
-        }
-        await Promise.all(task);
-        await dispatch(actionFetched({}));
+        await dispatch(actionFetchedSdkConfig({}));
     } catch (error) {
         dispatch(actionFetchFail(error));
         throw error;

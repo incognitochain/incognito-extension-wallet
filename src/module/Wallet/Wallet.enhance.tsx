@@ -51,11 +51,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 dispatch(actionGetAccountBalance(account)),
             ]);
         } catch (error) {
+            console.debug('ERROR', error);
             dispatch(
                 actionToggleToast({
                     type: TOAST_CONFIGS.error,
                     toggle: true,
-                    value: error,
+                    value: error.message,
                 }),
             );
         } finally {

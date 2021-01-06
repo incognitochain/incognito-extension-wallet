@@ -1,6 +1,5 @@
 import { Field, InjectedFormProps } from 'redux-form';
 import React from 'react';
-import Header from 'src/components/Header';
 import { Button } from 'src/components/Core';
 import InputField from 'src/components/ReduxForm/InputField';
 import { validator } from 'src/components/ReduxForm';
@@ -8,11 +7,10 @@ import withCreateAccount, { TOutter } from './CreateAccount.enhance';
 import { Styled } from './CreateAccount.styled';
 
 const CreateAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) => {
-    const { disabledForm, handleCreateAccount } = props;
+    const { disabledForm, handleCreateAccount, createError } = props;
     const { handleSubmit, submitting } = props;
     return (
         <Styled>
-            <Header title="Create keychain" />
             <form className="form-create-account" onSubmit={handleSubmit(handleCreateAccount)}>
                 <Field
                     component={InputField}
@@ -29,6 +27,7 @@ const CreateAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) =
                     disabled={disabledForm || submitting}
                     type="submit"
                 />
+                <div className="error-message">{createError}</div>
             </form>
         </Styled>
     );

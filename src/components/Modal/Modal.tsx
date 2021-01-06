@@ -1,9 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { last, isEmpty } from 'lodash';
 import { themeSelector } from 'src/module/Configs';
 import { COLORS, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
+import { Header } from 'src/components';
+import enhance from './Modal.enhance';
 import { modalSelector } from './Modal.selector';
+import { IProps } from './Modal.interface';
 
 const Styled = styled.div`
     position: fixed;
@@ -25,16 +29,32 @@ const Styled = styled.div`
         padding: 30px;
         overflow: hidden;
     }
+    .close-icon {
+        z-index: 2;
+        margin-left: auto;
+        font-size: 14px;
+    }
     .modal-loading-tx {
         position: relative;
         height: 100%;
     }
 `;
 
-const Modal = () => {
+const Modal = (props: IProps) => {
     const modalState = useSelector(modalSelector);
     const theme = useSelector(themeSelector);
-    const { data, visible, isLoadingModal } = modalState;
+
+    const { onClose } = props;
+
+    const { data } = modalState;
+    const lastModal = last(data);
+
+    if (isEmpty(data) || isEmpty(lastModal)) {
+        return null;
+    }
+
+    const { closeable, data: modalData, customModalStyle, title, isLoadingModal } = lastModal;
+
     const renderModalContent = () => {
         if (isLoadingModal) {
             return (
@@ -43,11 +63,14 @@ const Modal = () => {
                 </div>
             );
         }
-        return <div className="modal-content-wrapper">{data}</div>;
+        return (
+            <div className="modal-content-wrapper" style={customModalStyle}>
+                {!!title && <Header onGoBack={closeable ? onClose : undefined} title={title} />}
+                {modalData}
+            </div>
+        );
     };
-    if (!visible) {
-        return null;
-    }
+
     return (
         <Styled className="modal-wrapper" theme={theme}>
             {renderModalContent()}
@@ -55,4 +78,4 @@ const Modal = () => {
     );
 };
 
-export default React.memo(Modal);
+export default enhance(React.memo(Modal));

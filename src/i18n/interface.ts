@@ -27,6 +27,11 @@ export interface ILanguage {
     addressBook: IAddressBookLanguage;
     preload: IPreloadLanguage;
     shield: IShieldLanguage;
+    welcome: IWelcomeLanguage;
+    error: IErrorLanguage;
+    masterKey: IMasterKeyLanguage;
+    password: IPasswordLanguage;
+    modal: IModalLanguage;
 }
 
 export interface IPreloadLanguage {
@@ -34,6 +39,7 @@ export interface IPreloadLanguage {
     title2: string;
     btnRetry: string;
 }
+
 export interface IAddressBookLanguage {
     headerTitle: string;
     name: string;
@@ -134,7 +140,8 @@ export interface IAccountLanguage {
         title5: string;
         title6: string;
         title7: string;
-        title8: string;
+        index: string;
+        shard: string;
         keychain: string;
         delete: string;
     };
@@ -156,6 +163,15 @@ export interface IAccountLanguage {
 export interface IKeychainLanguage {
     headerTitle: string;
     yourKeychain: string;
+    addKeys: {
+        title: string;
+        addKeychain: string;
+        addKeyChainDesc: string;
+        importKeyChain: string;
+        addMasterKey: string;
+        createMasterKey: string;
+        importMasterKey: string;
+    };
 }
 
 export interface ITokenLanguage {
@@ -208,4 +224,96 @@ export interface IShieldLanguage {
         error1: string;
         error2: string;
     };
+}
+
+export interface INewUserLanguage {
+    title1: string;
+    title2: string;
+    createPass: string;
+    confirmCreatePass: string;
+    createKey: string;
+    importKey: string;
+    getStartedTitle: string;
+    getStartedDesc: string;
+    getStartedBtn: string;
+}
+
+export interface IForgotPassLanguage {
+    title1: string;
+    title2: string;
+    createPass: string;
+    confirmCreatePass: string;
+    createKey: string;
+    importKey: string;
+}
+
+export interface IOldUserLanguage {
+    title: string;
+    input: string;
+    btn: string;
+    forgotPass: string;
+}
+
+export interface IImportMnemonicLanguage {
+    title: string;
+    nameInput: string;
+    mnemonicInput: string;
+    btn: string;
+}
+
+export interface INewMasterKeyLanguage {
+    createMasterKeyName: string;
+    content: string;
+    content2: string;
+    createKey: string;
+}
+
+export interface IVerifyMnemonicLanguage {
+    title: string;
+    createBtn: string;
+    importBtn: string;
+}
+
+export interface IWelcomeLanguage {
+    newUser: INewUserLanguage;
+    oldUser: IOldUserLanguage;
+    forgotPass: IForgotPassLanguage;
+}
+
+export interface IShowMnemonicLanguage {
+    title: string;
+    newMnemonic: string;
+    newMnemonicBtn: string;
+    hiddenText: string;
+}
+
+export interface IPasswordLanguage {
+    enterPasswordInput: string;
+    enterPasswordBtn: string;
+}
+
+export interface IErrorLanguage {
+    invalidMasterKeyName: string;
+    invalidMnemonic: string;
+    tokenIdRequired: string;
+    invalidPassword: string;
+    invalidPasswordLength: string;
+}
+
+export interface IMasterKeyLanguage {
+    verifyMnemonic: IVerifyMnemonicLanguage;
+    importMnemonic: IImportMnemonicLanguage;
+    showMnemonic: IShowMnemonicLanguage;
+    newMasterKey: INewMasterKeyLanguage;
+    info: {
+        title: string;
+        revealPhrase: string;
+        viewKeys: string;
+        revealPhraseBtn: string;
+    };
+}
+
+export interface IModalLanguage {
+    addKeysModal: string;
+    createKeyModal: string;
 }

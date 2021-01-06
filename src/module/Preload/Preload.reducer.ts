@@ -10,6 +10,7 @@ import {
     ACTION_SET_SERVER,
     ACTION_FETCH_FAIL,
     ACTION_SET_LOGIN,
+    ACTION_FETCHED_SDK_CONFIG,
 } from './Preload.constant';
 
 export interface IPreloadConfigs {
@@ -22,6 +23,7 @@ export interface IPreloadConfigs {
 }
 
 export interface IPreloadReducer {
+    isFetchedSdk: boolean;
     isFetched: boolean;
     isFetching: boolean;
     configs: IPreloadConfigs;
@@ -30,6 +32,7 @@ export interface IPreloadReducer {
 }
 
 const initialState: IPreloadReducer = {
+    isFetchedSdk: false,
     isFetching: true,
     isFetched: false,
     error: '',
@@ -98,6 +101,13 @@ const preloadReducer = (
                     ...state.configs,
                     ...action.payload,
                 },
+            };
+        }
+        case ACTION_FETCHED_SDK_CONFIG: {
+            return {
+                ...state,
+                isFetching: false,
+                isFetchedSdk: true,
             };
         }
         default:

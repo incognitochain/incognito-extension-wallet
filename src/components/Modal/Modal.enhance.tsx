@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { compose } from 'recompose';
+import { useDispatch } from 'react-redux';
+import { IProps } from './Modal.interface';
+import { actionToggleModal } from './Modal.actions';
 
-interface IProps {}
+const enhance = (WrappedComponent: React.FunctionComponent<IProps>) => (props: IProps) => {
+    const dispatch = useDispatch();
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
-    return <WrappedComponent {...props} />;
+    const handleClose = useCallback(() => {
+        dispatch(actionToggleModal({}));
+    }, []);
+
+    return <WrappedComponent {...props} onClose={handleClose} />;
 };
 
 export default compose<IProps, any>(enhance);

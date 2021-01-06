@@ -63,14 +63,13 @@ export const GlobalStyled = createGlobalStyle`
         font-style: normal;
         font-display: swap;
         box-sizing: border-box;
-        font-weight: 100;
+        font-weight: 400;
         height:${(props: IGlobalStyle) => props.theme.height};
         border: ${isDev ? 'solid 0.5px' : 'none'};
         overflow: hidden;
         position: relative;
         font-size: ${FONT_SIZES.regular}px;
         line-height: ${FONT_SIZES.regular + 3}px;
-        font-weight: 100;
         margin: auto;
         padding: 30px;
     }
@@ -80,30 +79,30 @@ export const GlobalStyled = createGlobalStyle`
         src: url('${ENVS.REACT_APP_DOMAIN_URL}/fonts/SF-Pro-Display/SF-Pro-Display-Regular.otf'); 
         font-style: normal;
         font-display: swap;
-        font-weight: 100;
+        font-weight: 400;
     }
     @font-face {
         font-family: 'SF-Pro-Display';
         src: url('${ENVS.REACT_APP_DOMAIN_URL}/fonts/SF-Pro-Display/SF-Pro-Display-Bold.otf'); 
         font-style: normal;
         font-display: swap;
-        font-weight: 500;
+        font-weight: 700;
     }
     @font-face {
         font-family: 'SF-Pro-Display';
         src: url('${ENVS.REACT_APP_DOMAIN_URL}/fonts/SF-Pro-Display/SF-Pro-Display-Medium.otf'); 
         font-style: normal;
         font-display: swap;
-        font-weight: 200;
+        font-weight: 500;
     }
     .fw-regular{
-        font-weight: 100;
+        font-weight: 400;
     }
     .fw-medium{
-        font-weight: 200;
+        font-weight: 500;
     }
     .fw-bold {
-        font-weight: 500;
+        font-weight: 700;
     }
     .fs-small {
         font-size: ${FONT_SIZES.small}px;
@@ -188,5 +187,22 @@ export const GlobalStyled = createGlobalStyle`
     }
     .linear-bg {
         background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.5), rgba(0,0,0,0.6)) !important;
+     }
+    .hidden {
+        display: none;
+    }    
+    .error-message {
+        color: ${COLORS.orange};
+        font-size: 14px;
+        margin-top: 10px;
+    }
+    .p-l-15 {
+        padding-left: 15px;
+    }
+    .m-b-30 {
+        margin-bottom: 30px;
+    }
+    .m-t-50 {
+        margin-top: 50px;
     }
 `;

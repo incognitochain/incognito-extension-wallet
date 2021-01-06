@@ -1,5 +1,4 @@
 import { WalletInstance } from 'incognito-js/build/web/browser';
-import { ENVS } from 'src/configs';
 import { initIncognitoDB } from 'src/database/IncognitoDB';
 
 export const TABLE_NAME = 'wallet';
@@ -9,7 +8,6 @@ export const createWallet = async (wallet: any) => {
     try {
         const incognitoDB = await initIncognitoDB();
         stored = await incognitoDB.addValue(TABLE_NAME, wallet);
-        console.debug(`stored`, stored);
     } catch (error) {
         throw error;
     }
@@ -33,14 +31,12 @@ interface IWallet {
     name: string;
 }
 
-export const updateWallet = async (wallet: WalletInstance, walletId: number) => {
+export const updateWallet = async (wallet: WalletInstance, walletId: number, pass: string) => {
     let updated;
-    console.debug(`walletId`, walletId);
     try {
         const incognitoDB = await initIncognitoDB();
         const curWallet: IWallet = await incognitoDB.getValue(TABLE_NAME, walletId);
-        const encryptWallet = wallet.backup(ENVS.REACT_APP_PASSWORD_SECRET_KEY);
-        curWallet.encryptWallet = encryptWallet;
+        curWallet.encryptWallet = wallet.backup(pass);
         updated = await incognitoDB.updateByKey(TABLE_NAME, curWallet);
     } catch (error) {
         throw error;

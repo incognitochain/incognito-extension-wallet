@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAccount, actionFetchCreateAccount } from 'src/module/Account';
 import trim from 'lodash/trim';
-import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { reduxForm } from 'redux-form';
 import { withLayout } from 'src/components/Layout';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { IAccountLanguage } from 'src/i18n';
+import { actionClearAllModal } from 'src/components/Modal';
 
 interface IProps {}
 
 export interface TOutter {
-    disabledForm: boolean;
-    getAccountValidator: () => any[];
+    disabledForm?: boolean;
+    getAccountValidator?: () => any[];
     // eslint-disable-next-line no-unused-vars
-    handleCreateAccount: (props: any) => void;
+    handleCreateAccount?: (props: any) => void;
 }
 
 export const FORM_CONFIGS = {
@@ -25,7 +24,7 @@ export const FORM_CONFIGS = {
 };
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
-    const history = useHistory();
+    const [createError, setCreateError] = useState('');
     const dispatch = useDispatch();
     const { isFormValid, isAccountExist } = useAccount({
         form: FORM_CONFIGS,
@@ -42,25 +41,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                 throw new Error('Account is existed!');
             }
             await dispatch(actionFetchCreateAccount(trim(accountName)));
-            dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    value: translate.success.create,
-                    type: TOAST_CONFIGS.success,
-                }),
-            );
-            history.goBack();
+            dispatch(actionClearAllModal());
         } catch (e) {
-            dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    value: e?.message || translate.error.create,
-                    type: TOAST_CONFIGS.error,
-                }),
-            );
+            setCreateError(e?.message || translate.error.create);
         }
     };
-    return <WrappedComponent {...{ ...props, disabledForm, handleCreateAccount }} />;
+
+    return <WrappedComponent {...{ ...props, disabledForm, handleCreateAccount, createError }} />;
 };
 
 export default compose<IProps, TOutter>(

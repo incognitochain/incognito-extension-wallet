@@ -38,7 +38,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             }
             await dispatch(
                 actionToggleModal({
-                    visible: true,
                     data: <LoadingTx />,
                     isLoadingModal: true,
                 }),
