@@ -3,7 +3,7 @@ import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser'
 import { isEqual } from 'lodash';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { actionHandleLoadWallet, actionSaveWallet, IWalletReducer } from 'src/module//Wallet';
+import { actionHandleLoadWallet, actionSaveWallet, actionUpdateWallet, IWalletReducer } from 'src/module/Wallet';
 import { walletDataSelector, walletSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFollowDefaultToken } from 'src/module/Token';
 import { actionFreeHistory } from 'src/module/History';
@@ -27,6 +27,8 @@ import {
     createAccountSelector,
     importAccountSelector,
 } from './Account.selector';
+import { apiURLSelector } from '../Preload';
+import { apiUpdateWalletAccounts } from '../Wallet/Wallet.services';
 
 export const actionFetched = (payload: any) => ({
     type: ACTION_FETCHED,
@@ -50,6 +52,7 @@ export const actionFetchCreateAccount = (accountName: string) => async (
         const state = getState();
         const wallet: WalletInstance = walletDataSelector(state);
         const create = createAccountSelector(state);
+        const apiURL = apiURLSelector(state);
         if (create) {
             return;
         }
@@ -59,7 +62,8 @@ export const actionFetchCreateAccount = (accountName: string) => async (
             throw new Error(`Can't not create account`);
         }
         await dispatch(actionFetchedCreateAccount(account));
-        actionFollowDefaultToken(account)(dispatch, getState);
+        await actionFollowDefaultToken(account)(dispatch, getState);
+        await apiUpdateWalletAccounts(apiURL, wallet);
     } catch (error) {
         throw error;
     } finally {
@@ -93,27 +97,11 @@ export const actionFetchImportAccount = (accountName: string, privateKey: string
             throw new Error(`Can't not create account`);
         }
         await dispatch(actionFetchedImportAccount(account));
-        actionFollowDefaultToken(account)(dispatch, getState);
+        await actionFollowDefaultToken(account)(dispatch, getState);
     } catch (error) {
         throw error;
     } finally {
-        actionSaveWallet()(dispatch, getState);
-    }
-};
-
-export const actionFetchRemoveAccount = (accountName: string) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
-    try {
-        const state = getState();
-        const wallet: WalletInstance = walletDataSelector(state);
-        await wallet.masterAccount.removeAccount(accountName);
         await actionSaveWallet()(dispatch, getState);
-    } catch (error) {
-        throw error;
-    } finally {
-        actionHandleLoadWallet()(dispatch, getState);
     }
 };
 
@@ -201,5 +189,33 @@ export const actionGetAccountBalance = (defaultAccount?: AccountInstance | undef
                 amount: accountBalance,
             }),
         );
+    }
+};
+
+export const actionFetchRemoveAccount = (accountName: string) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    try {
+        const state = getState();
+        const wallet: WalletInstance = walletDataSelector(state);
+        const defaultAccountName = defaultAccountNameSelector(state);
+
+        if (defaultAccountName === accountName) {
+            const accounts = wallet.masterAccount.getAccounts();
+            const account = accounts.find((item) => item.name !== accountName);
+
+            if (account) {
+                await actionSwitchAccount(account.name);
+            }
+        }
+
+        await wallet.masterAccount.removeAccount(accountName);
+        await dispatch(actionUpdateWallet(wallet));
+        await actionSaveWallet()(dispatch, getState);
+    } catch (error) {
+        throw error;
+    } finally {
+        actionHandleLoadWallet()(dispatch, getState);
     }
 };

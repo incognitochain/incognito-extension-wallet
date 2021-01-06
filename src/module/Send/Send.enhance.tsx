@@ -71,7 +71,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                         }}
                     />
                 ),
-                visible: true,
             }),
         );
     };
@@ -87,7 +86,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         dispatch(
             actionToggleModal({
                 data: <QrReader onScan={handleScanQrCode} />,
-                visible: true,
             }),
         );
     };

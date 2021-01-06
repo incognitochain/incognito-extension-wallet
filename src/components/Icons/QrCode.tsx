@@ -1,28 +1,25 @@
-import React, { SyntheticEvent } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { ENVS } from 'src/configs';
 import styled from 'styled-components';
 
 interface IProps {
-    route?: string;
     onClick?: any;
 }
 
-const Styled = styled(Link)`
+const Styled = styled.span`
     width: 18px;
     height: 18px;
+
+    img {
+        width: 18px;
+        height: 18px;
+    }
 `;
 
 const QrCode = (props: IProps) => {
-    const { route = '#', onClick } = props;
-    const handleClick = (e: SyntheticEvent) => {
-        if (typeof onClick === 'function') {
-            e.preventDefault();
-            onClick();
-        }
-    };
+    const { onClick } = props;
     return (
-        <Styled to={route} onClick={handleClick}>
+        <Styled onClick={onClick}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/qrcode.png`} alt="" />
         </Styled>
     );

@@ -20,6 +20,15 @@ const language: ILanguage = {
     keychain: {
         headerTitle: 'Keychain',
         yourKeychain: 'Your keychains',
+        addKeys: {
+            title: 'Add keys',
+            addKeychain: 'Add a keychain',
+            addKeyChainDesc: 'Create new keychain in a master key',
+            importKeyChain: 'Import via private key',
+            addMasterKey: 'Add a master key',
+            createMasterKey: 'Create new master key',
+            importMasterKey: 'Import master key',
+        },
     },
     wallet: {
         headerTitle: 'Assets',
@@ -81,7 +90,8 @@ const language: ILanguage = {
             title5: 'Validator key',
             title6: 'Bls key',
             title7: 'Device token',
-            title8: 'Shard',
+            index: 'Index',
+            shard: 'Shard',
             keychain: 'keychain',
             delete: 'Delete',
         },
@@ -187,13 +197,13 @@ const language: ILanguage = {
             <p class='sub-text'>
                 For ETH and all ERC20 tokens, your crypto is safely secured in a
                 trustless smart contract.
-            </p
+            </p>
             <p class='fw-bold'>Portal (upcoming)</p>
             <p class='sub-text'>
                 For other coins, your crypto is stored in one of the wallets
                 maintained by the Incognito Core team. We’re working on a trustless
                 solution for this too, called Portal.
-            </p
+            </p>
         `,
         },
         genShieldAddress: {
@@ -207,6 +217,86 @@ const language: ILanguage = {
             error1: `We seem to have hit a snag. Simply<br />tap to try again.`,
             error2: `If that doesn’t work,<br /> please come back in 60 minutes.`,
         },
+    },
+    detail: {
+        headerTitle: '',
+        btnSend: 'Send',
+        btnReceive: 'Receive',
+    },
+    error: {
+        tokenIdRequired: 'Token id is required',
+        invalidMnemonic: 'That’s not quite right',
+        invalidMasterKeyName: 'Master key names must be alphanumeric. Please choose another.',
+        invalidPassword: 'That’s not quite right.',
+        invalidPasswordLength: 'Please provide a password of at least 10 characters',
+    },
+    welcome: {
+        newUser: {
+            title1: 'Encrypt access to your funds.',
+            title2: 'Create a password to protect this wallet. For your eyes only.',
+            createPass: 'Create password (min. 10 chars)',
+            confirmCreatePass: 'Enter the password again',
+            createKey: 'Create new key',
+            importKey: 'Import phrase',
+            getStartedTitle: 'Private is better.',
+            getStartedDesc: 'Time to turn on incognito mode for your crypto.',
+            getStartedBtn: 'Get started',
+        },
+        forgotPass: {
+            title1: 'Forgot your password?',
+            title2:
+                'You’ll need to generate a new wallet using a new password. Then you can either create a new master key to start again from fresh, or import a master key phrase to recover your existing funds.',
+            createPass: 'Create password (min. 10 chars)',
+            confirmCreatePass: 'Enter the password again',
+            createKey: 'Create new key',
+            importKey: 'Import phrase',
+        },
+        oldUser: {
+            title: 'Hello again.',
+            input: 'Enter your password',
+            btn: 'Go Incognito',
+            forgotPass: 'Forgot your password?',
+        },
+    },
+    password: {
+        enterPasswordInput: 'Enter your password',
+        enterPasswordBtn: 'OK',
+    },
+    masterKey: {
+        newMasterKey: {
+            createMasterKeyName: 'Enter a name for your master key',
+            content: 'The next screen will contain 12 special words that will allow you to recover your funds.',
+            content2:
+                'Be prepared to record them in a safe place.  If anyone gains access to them, they will gain access to your funds.',
+            createKey: "I'm ready",
+        },
+        verifyMnemonic: {
+            title: 'Click on these words in the correct order. If you make a mistake, click again to undo.',
+            createBtn: 'Create',
+            importBtn: 'Import',
+        },
+        importMnemonic: {
+            title: 'Import master key',
+            nameInput: 'Enter a name for your master key',
+            mnemonicInput: 'Enter your seed phrase',
+            btn: 'Import',
+        },
+        showMnemonic: {
+            title: 'Back up',
+            newMnemonic: 'Save these words in the correct order. Never share this phrase with anyone else.',
+            newMnemonicBtn: "I've saved my phrase",
+            hiddenText: 'Click to reveal.\n Back it up if you heaven’t!',
+        },
+        info: {
+            title: 'View keys',
+            revealPhrase: 'Reveal master key phrase',
+            viewKeys: 'View keychains',
+            revealPhraseBtn: 'Reveal phrase',
+        },
+    },
+    modal: {
+        addKeysModal: 'Add keys',
+        createKeyModal: 'Create keychain',
     },
 };
 

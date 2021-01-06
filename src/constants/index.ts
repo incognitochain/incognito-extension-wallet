@@ -9,3 +9,4 @@ export { default as COINS } from './coin';
 export { default as TRADING } from './trading';
 export { default as CONSTANT_URLS } from './url';
 export { default as CONSTANTS_CHAINS } from './chain';
+export { default as CONSTANT_COLORS } from './colors';

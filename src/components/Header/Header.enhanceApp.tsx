@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SettingIcon } from 'src/components/Icons';
-import QrCode from 'src/components/Icons/QrCode';
+import QrCode from 'src/components/QrCodeLink';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { route as receiveRoute } from 'src/module/Account/features/Receive';
 import ErrorBoundary from '../ErrorBoundary';

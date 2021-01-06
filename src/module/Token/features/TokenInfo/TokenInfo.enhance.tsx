@@ -107,7 +107,6 @@ const enhance = (WrappedComp: React.FunctionComponent) => (props: any) => {
     const handlePressVerifiedInfo = () =>
         dispatch(
             actionToggleModal({
-                visible: true,
                 data: <TokenInfoVerify />,
             }),
         );

@@ -1,11 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { Provider, useSelector } from 'react-redux';
-import { configStore, IConfigStore } from 'src/redux/index';
+import { configStore, IConfigStore } from 'src/redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { Detector } from 'react-detect-offline';
-import { withPreload } from './module/Preload';
 import { translateByFieldSelector } from './module/Configs';
 import { IGeneralLanguage } from './i18n';
 import { Button } from './components';
@@ -48,4 +47,4 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose(enhance, withNetwork, withPreload);
+export default compose(enhance, withNetwork);

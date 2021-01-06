@@ -1,6 +1,5 @@
 import { IObject } from 'src/utils';
 import en from './en';
-import vi from './vi';
 
 export * from './interface';
 
@@ -8,8 +7,6 @@ export const translateByLanguage = (language: string) => {
     switch (language) {
         case 'en':
             return en;
-        case 'vi':
-            return vi;
         default:
             return en;
     }

@@ -15,3 +15,5 @@ export const walletIdSelector = createSelector(walletSelector, preloadSelector, 
     const field = mainnet ? 'mainnet' : 'testnet';
     return wallet[field].walletId;
 });
+
+export const walletMnemonicSelector = createSelector(walletDataSelector, (wallet) => wallet.mnemonic);

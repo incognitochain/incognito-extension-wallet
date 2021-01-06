@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
+import logger from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import { persistStore, persistReducer } from 'redux-persist';
@@ -34,10 +35,10 @@ export const configStore = (preloadedState: any = {}) => {
         key: 'root',
         storage,
         whitelist: [],
-        blacklist: ['preload', 'wallet', 'account', 'token', 'setting', 'history', 'addressBook'],
+        blacklist: ['preload', 'wallet', 'account', 'token', 'setting', 'history', 'addressBook', 'password'],
     };
     const persistedReducer = persistReducer(persistConfig, rootReducers);
-    const middlewareEnhancer = applyMiddleware(thunk, saga);
+    const middlewareEnhancer = applyMiddleware(thunk, saga, logger);
     const composedEnhancers =
         ENVS.REACT_APP_MODE === 'development' ? composeWithDevTools(middlewareEnhancer) : middlewareEnhancer;
     const store: any = createStore(persistedReducer, preloadedState, composedEnhancers);

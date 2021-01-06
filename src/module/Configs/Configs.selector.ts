@@ -11,10 +11,17 @@ export const configsSelector = createSelector(
 
 export const translateSelector = createSelector(configsSelector, (configs) => translateByLanguage(configs.language));
 
+export const errorTranslateSelector = createSelector(
+    configsSelector,
+    (configs) => translateByLanguage(configs.language).error,
+);
+
 export const translateByFieldSelector = createSelector(configsSelector, (configs) => (field: string) => {
     const translate = translateByLanguage(configs.language);
     const ts: any = result(translate, field);
     return ts;
 });
+
+export const modalTranslateSelector = createSelector(translateSelector, (translate) => translate.modal);
 
 export const themeSelector = createSelector(configsSelector, (configs) => configs.theme);
