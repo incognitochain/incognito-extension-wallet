@@ -38,7 +38,7 @@ const OldUser = (props: IOldUserProps) => {
         <Layout header="">
             <Styled>
                 <div className="title">{dictionary.title}</div>
-                <form className="input-wrapper">
+                <form className="input-wrapper" onSubmit={onNext}>
                     <div>
                         <Input
                             autoComplete="new-password"
@@ -57,8 +57,8 @@ const OldUser = (props: IOldUserProps) => {
                         className="hidden"
                         readOnly
                     />
+                    <Button disabled={disabled} onClick={onNext} title={error || dictionary.btn} type="submit" />
                 </form>
-                <Button disabled={disabled} onClick={onNext} title={error || dictionary.btn} />
                 <div onClick={onForgot} className="forgot-pass">
                     {dictionary.forgotPass}
                 </div>

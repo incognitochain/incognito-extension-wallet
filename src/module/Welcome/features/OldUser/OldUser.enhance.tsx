@@ -20,7 +20,8 @@ const enhance = (WrappedComponent: any) => (props: IOldUserProps) => {
         setError('');
     }, []);
 
-    const handleLogin = async () => {
+    const handleLogin = async (event: any) => {
+        event.preventDefault();
         try {
             setLoading(true);
             await dispatch(actionLogin(pass));

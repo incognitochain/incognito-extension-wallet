@@ -22,7 +22,7 @@ const Styled = styled.div`
     top: 15px;
     visibility: hidden;
     padding: 15px;
-    z-index: 1;
+    z-index: 10001;
     display: flex;
     flex-direction: row;
     align-items: center;

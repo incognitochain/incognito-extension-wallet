@@ -14,7 +14,7 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
     const [pass, setPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const [isImport, setIsImport] = useState(false);
-    const [getStarted, setGetStarted] = useState(!isReset);
+    const [getStarted, setGetStarted] = useState(isReset);
     const dispatch = useDispatch();
 
     const appPassword = useSelector(newPasswordSelector);

@@ -20,6 +20,7 @@ const Styled = styled.div`
 
     .subtitle {
         margin-top: 15px;
+        margin-bottom: 30px;
         color: ${CONSTANT_COLORS.LIGHT_GREY};
     }
 `;

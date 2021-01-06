@@ -68,8 +68,7 @@ const Input = (props: IProps) => {
         return classes;
     }, [borderless, type]);
 
-    const handleTogglePassword = (e: any) => {
-        e.preventDefault();
+    const handleTogglePassword = () => {
         setInputType(inputType === 'password' ? 'text' : 'password');
     };
 

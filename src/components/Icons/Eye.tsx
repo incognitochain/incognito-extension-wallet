@@ -5,13 +5,13 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 24px;
-    height: 18px;
+    width: 20px;
+    height: 12.5px;
 `;
 
 const Eye = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
-        <Styled className="icon" {...props}>
+        <Styled className="icon" {...props} type="button">
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/eye.png`} alt="add-circle" />
         </Styled>
     );
