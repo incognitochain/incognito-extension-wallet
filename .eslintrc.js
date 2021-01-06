@@ -58,5 +58,6 @@ module.exports = {
         'consistent-return': 'off',
         'react/no-danger': 'off',
         'no-console': 'off',
+        'no-underscore-dangle': 'off',
     },
 };

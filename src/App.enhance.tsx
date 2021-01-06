@@ -40,8 +40,8 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     return (
         <ErrorBoundary>
             <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <WrappedComponent {...props} />
+                <PersistGate loading={<div>...</div>} persistor={persistor}>
+                    {!!store && <WrappedComponent {...props} />}
                 </PersistGate>
             </Provider>
         </ErrorBoundary>

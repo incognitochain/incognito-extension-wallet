@@ -3,6 +3,14 @@ import { TxHistoryModelParam } from 'incognito-js/build/web/browser';
 export interface IHistoryReducer {
     cacheHistory: ICacheHistoryToken;
     receiveHistory: IReceiveHistoryToken;
+    brideHistory: IBrideHistoryToken;
+    isFetching: boolean;
+    isFetched: boolean;
+}
+
+export interface IBrideHistoryToken {
+    data: TxBridgeHistoryModel[];
+    fetching: boolean;
 }
 
 export interface IReceiveHistoryToken {
@@ -23,12 +31,16 @@ export interface ICacheHistoryToken {
 }
 
 export interface IHistoryItem {
-    title: string;
-    desc: string;
+    title?: string;
+    desc?: string;
     copyData?: string;
     link?: string;
     descClassName?: string;
     titleClassName?: string;
+    descColor?: string;
+    customItem?: React.FunctionComponent | React.ReactElement | any;
+    disabled?: boolean;
+    message?: string;
 }
 
 export interface IReceiveHistoryTokenFetched {
@@ -40,7 +52,7 @@ export interface IReceiveHistoryTokenFetched {
 }
 
 export interface TxHistoryItem {
-    txId: string;
+    id: string;
     type: string;
     amountFormated: string;
     timeFormated: string;
@@ -50,6 +62,7 @@ export interface TxHistoryItem {
 }
 
 export interface TxCacheHistoryModel {
+    id: string;
     txId: string;
     amountFormated: string;
     timeFormated: string;
@@ -68,9 +81,11 @@ export interface TxCacheHistoryModel {
     time: string;
     formatType: number;
     lockTime: number;
+    statusColor: string;
 }
 
 export interface TxHistoryReceiveModel {
+    id: string;
     txId: string;
     time: string;
     isPrivacy: boolean;
@@ -92,4 +107,42 @@ export interface TxHistoryReceiveModel {
     statusMessage: string;
     formatType: number;
     symbol: string;
+    statusColor: string;
+}
+
+export interface TxBridgeHistoryModel {
+    id: string;
+    userID: number;
+    address: string;
+    expiredAt: string;
+    addressType: number;
+    status: number;
+    currencyType: number;
+    walletAddress: string;
+    userPaymentAddress: string;
+    requestedAmount: string;
+    receivedAmount: string;
+    incognitoAmount: string;
+    ethereumTx: string;
+    incognitoTx: string;
+    erc20TokenTx: string;
+    privacyTokenAddress: string;
+    erc20TokenAddress: string;
+    createdAt: string;
+    updatedAt: string;
+    decentralized: number;
+    outChainTx: string;
+    inChainTx: string;
+    statusMessage: string;
+    type: string;
+    amountFormated: string;
+    timeFormated: string;
+    formatType: number;
+    lockTime: number;
+    amountFormatedNoClip: string;
+    symbol: string;
+    expiredAtFormated: string;
+    statusColor: string;
+    memo: string;
+    statusDetail: string;
 }

@@ -9,10 +9,16 @@ import {
     ACTION_FETCHED_RECEIVE_HISTORY,
     ACTION_FETCH_FAIL_RECEIVE_HISTORY,
     ACTION_FREE_HISTORY,
+    ACTION_FETCHED_BRIDGE_HISTORY,
+    ACTION_FETCHING_BRIDGE_HISTORY,
+    ACTION_FETCHED_ALL_HISTORY,
+    ACTION_FETCHING_ALL_HISTORY,
 } from './History.constant';
 import { IHistoryReducer } from './History.interface';
 
 const initialState: IHistoryReducer = {
+    isFetching: false,
+    isFetched: false,
     cacheHistory: {
         fetching: false,
         histories: [],
@@ -27,6 +33,10 @@ const initialState: IHistoryReducer = {
         refreshing: true,
         tokenId: '',
         notEnoughData: false,
+    },
+    brideHistory: {
+        data: [],
+        fetching: false,
     },
 };
 
@@ -99,6 +109,39 @@ const historyReducer = (
         }
         case ACTION_FREE_HISTORY: {
             return { ...initialState };
+        }
+        case ACTION_FETCHING_BRIDGE_HISTORY: {
+            return {
+                ...state,
+                brideHistory: {
+                    ...state.brideHistory,
+                    fetching: true,
+                },
+            };
+        }
+        case ACTION_FETCHED_BRIDGE_HISTORY: {
+            const { histories } = action.payload;
+            return {
+                ...state,
+                brideHistory: {
+                    ...state.brideHistory,
+                    fetching: false,
+                    data: [...histories],
+                },
+            };
+        }
+        case ACTION_FETCHING_ALL_HISTORY: {
+            return {
+                ...initialState,
+                isFetching: true,
+            };
+        }
+        case ACTION_FETCHED_ALL_HISTORY: {
+            return {
+                ...state,
+                isFetched: true,
+                isFetching: false,
+            };
         }
         default:
             return state;

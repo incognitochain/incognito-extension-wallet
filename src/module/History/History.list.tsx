@@ -33,7 +33,7 @@ const Styled = styled.div`
 `;
 
 const HistoryItem = React.memo((props: TxHistoryItem) => {
-    const { txId, type, amountFormated, timeFormated, statusMessage } = props;
+    const { id, type, amountFormated, timeFormated, statusMessage } = props;
     const history = useHistory();
     return (
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -41,7 +41,7 @@ const HistoryItem = React.memo((props: TxHistoryItem) => {
             to="#"
             onClick={(e: SyntheticEvent) => {
                 e.preventDefault();
-                history.push(`/history/${txId}`, { history: props });
+                history.push(`/history/${id}`, { history: props });
             }}
             className="history-item"
         >
@@ -59,7 +59,6 @@ const HistoryItem = React.memo((props: TxHistoryItem) => {
 
 const History = React.memo((props: IMergeProps & any) => {
     const { histories, handleOnEndReached, renderFooter }: IMergeProps = props;
-    const ref: React.RefObject<HTMLDivElement> = React.useRef(null);
     const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
         if (scrollTop + clientHeight === scrollHeight) {
@@ -67,11 +66,11 @@ const History = React.memo((props: IMergeProps & any) => {
         }
     };
     return (
-        <Styled ref={ref} onScroll={handleScroll}>
+        <Styled onScroll={handleScroll}>
             {histories
                 .sort((a, b) => b.lockTime - a.lockTime)
                 .map((history: TxHistoryItem) => (
-                    <HistoryItem key={history.txId} {...history} />
+                    <HistoryItem key={history.id} {...history} />
                 ))}
             <div className={`footer ${!!renderFooter && 'flex has-child'}`}>{renderFooter && renderFooter}</div>
         </Styled>

@@ -1,4 +1,3 @@
-import uniqBy from 'lodash/uniqBy';
 import { format } from 'src/utils';
 import { BigNumber } from 'bignumber.js';
 import { COINS } from 'src/constants';
@@ -6,7 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 import { COLORS } from 'src/styles';
 import { CONSTANT } from 'incognito-js/build/web/browser';
 import endsWith from 'lodash/endsWith';
-import { TxHistoryReceiveModel, TxCacheHistoryModel } from './History.interface';
+import { TxHistoryReceiveModel, TxCacheHistoryModel, TxBridgeHistoryModel } from './History.interface';
 
 const { HISTORY } = CONSTANT;
 const {
@@ -19,15 +18,15 @@ const {
 const { TX_STATUS } = CONSTANT.TX_CONSTANT;
 
 const getStatusDataShield = (history: any) => {
-    const { statusCode, statusMessage } = history;
+    const { status, statusMessage } = history;
     let statusColor;
     if (history?.isDecentralized) {
-        if (STATUS_CODE_SHIELD_DECENTRALIZED.COMPLETE === statusCode) {
+        if (STATUS_CODE_SHIELD_DECENTRALIZED.COMPLETE === status) {
             statusColor = COLORS.green;
         } else {
             statusColor = COLORS.colorGreyBold;
         }
-    } else if (STATUS_CODE_SHIELD_CENTRALIZED.COMPLETE.includes(statusCode)) {
+    } else if (STATUS_CODE_SHIELD_CENTRALIZED.COMPLETE.includes(status)) {
         statusColor = COLORS.green;
     } else {
         statusColor = COLORS.colorGreyBold;
@@ -62,8 +61,8 @@ export const getStatusData = (history: any) => {
         const statusData = getStatusDataUnShield(history);
         return statusData;
     }
-    let statusMessage;
-    let statusColor;
+    let statusMessage = '';
+    let statusColor = '';
     switch (status) {
         case HISTORY.STATUS_TEXT.PENDING:
         case TX_STATUS.CONFIRMED:
@@ -91,12 +90,15 @@ export const getStatusData = (history: any) => {
     };
 };
 
-export const getTypeData = (type: number | undefined, history: any, paymentAddress: string) => {
+export const getTypeData = (type: number | undefined, history: any, paymentAddress?: string) => {
     let typeText = '';
     if (!type) {
         return typeText;
     }
     switch (type) {
+        case TYPE.SHIELD:
+            typeText = history?.address ? 'Shield' : 'Receive';
+            break;
         case TYPE.SEND: {
             const metaData: any = HISTORY.META_DATA_TYPE;
             const isUTXO = history?.memo === 'Defragment' && history?.toAddress === paymentAddress;
@@ -209,14 +211,8 @@ export const handleFilterHistoryReceiveByTokenId = ({
     return result;
 };
 
-export const combineReceiveAndCacheHistory = ({
-    cacheHistory,
-    receiveHistory,
-}: {
-    cacheHistory: TxCacheHistoryModel[];
-    receiveHistory: TxHistoryReceiveModel[];
-}) => {
-    let oCacheHistory = [...cacheHistory];
+export const filterCacheByReceive = (cacheHistory: TxCacheHistoryModel[], receiveHistory: TxHistoryReceiveModel[]) => {
+    let _cacheHistory = [...cacheHistory];
     try {
         receiveHistory.map((h) => {
             const metaData = h?.metaData;
@@ -236,17 +232,60 @@ export const combineReceiveAndCacheHistory = ({
                 txId = h.txId;
             }
             if (txId) {
-                oCacheHistory = [...oCacheHistory.filter((ch) => ch?.txId !== txId)];
+                _cacheHistory = [..._cacheHistory.filter((ch) => ch?.txId !== txId)];
             }
             return h;
         });
     } catch (error) {
-        console.debug('MERGE_RECEIVE_AND_LOCAL_HISTORY', error);
+        console.debug(error);
     }
-    let result = [...oCacheHistory, ...receiveHistory];
-    result = uniqBy(result, (h: TxCacheHistoryModel | TxHistoryReceiveModel) => h?.txId);
-    return result.map((h: TxCacheHistoryModel | TxHistoryReceiveModel) => ({
-        txId: h.txId,
+    return _cacheHistory;
+};
+
+export const filterReceiveByBridge = (
+    receiveHistory: TxHistoryReceiveModel[],
+    bridgeHistory: TxBridgeHistoryModel[],
+) => {
+    let _receiveHistory = [...receiveHistory];
+    try {
+        _receiveHistory = _receiveHistory.filter((h: TxHistoryReceiveModel) => {
+            const metaData = h?.metaData;
+            const typeOf = metaData?.Type;
+            switch (typeOf) {
+                case 25:
+                case 81: {
+                    const requestTxId = metaData?.RequestedTxID;
+                    const tx = bridgeHistory.find((bh) => bh.incognitoTx === requestTxId);
+                    if (tx) {
+                        return false;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+            return true;
+        });
+    } catch (error) {
+        console.debug(error);
+    }
+    return _receiveHistory;
+};
+
+export const handleCombineHistory = ({
+    cacheHistory,
+    receiveHistory,
+    bridgeHistory,
+}: {
+    cacheHistory: TxCacheHistoryModel[];
+    receiveHistory: TxHistoryReceiveModel[];
+    bridgeHistory: TxBridgeHistoryModel[];
+}) => {
+    const _cacheHistory = filterCacheByReceive(cacheHistory, receiveHistory);
+    const _receiveHistory = filterReceiveByBridge(receiveHistory, bridgeHistory);
+    const combineHistory = [..._cacheHistory, ..._receiveHistory, ...bridgeHistory];
+    return combineHistory.map((h: TxCacheHistoryModel | TxHistoryReceiveModel | TxBridgeHistoryModel) => ({
+        id: h.id,
         type: h.type,
         amountFormated: h.amountFormated,
         timeFormated: h.timeFormated,
