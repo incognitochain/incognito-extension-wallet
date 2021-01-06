@@ -11,7 +11,7 @@ const Styled = styled.button`
 
 const ArrowDown = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
-        <Styled {...props}>
+        <Styled className="icon" {...props}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/arrow-down.png`} alt="" />
         </Styled>
     );

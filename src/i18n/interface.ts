@@ -80,6 +80,11 @@ export interface IHistoryLanguage {
     time: string;
     toAddress: string;
     coin: string;
+    expiredAt: string;
+    inchainTxId: string;
+    outchainTxId: string;
+    shieldingAddress: string;
+    memo: string;
 }
 
 export interface ISettingLanguage {

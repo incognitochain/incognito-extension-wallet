@@ -148,6 +148,11 @@ const language: ILanguage = {
         time: 'Time',
         toAddress: 'To address',
         coin: 'Coin',
+        expiredAt: 'Expired At',
+        inchainTxId: 'Inchain TxID',
+        outchainTxId: 'Outchain TxID',
+        shieldingAddress: 'Shielding address',
+        memo: 'Memo',
     },
     addressBook: {
         headerTitle: 'Address book',
@@ -193,7 +198,7 @@ const language: ILanguage = {
         },
         genShieldAddress: {
             headerTitle: 'Shield',
-            title1: `Send to this shielding<br />address <p class='sub-text'>once only.</p>`,
+            title1: `Send to this shielding<br />address <span class='fw-bold'>once only.</span>`,
             title2: `Expires in: `,
             title3: `Minimum: `,
             title4: `Smaller amounts will not be processed.`,

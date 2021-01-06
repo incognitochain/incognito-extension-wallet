@@ -148,6 +148,11 @@ const language: ILanguage = {
         time: 'Time',
         toAddress: 'To address',
         coin: 'Coin',
+        expiredAt: 'Expired At',
+        inchainTxId: 'Inchain TxID',
+        outchainTxId: 'Outchain TxID',
+        shieldingAddress: 'Shielding address',
+        memo: 'Memo',
     },
     addressBook: {
         headerTitle: 'Address book',

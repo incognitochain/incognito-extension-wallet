@@ -10,6 +10,7 @@ import {
     actionFollowDefaultToken,
     actionGetPrivacyTokensBalance,
     actionSetFollowedTokens,
+    actionSetSelectedToken,
     IEnvToken,
     ITokenReducer,
 } from 'src/module/Token';
@@ -64,12 +65,18 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             }
         }
     };
-    React.useEffect(() => {
+    const handleInitData = () => {
         dispatch(actionFreeHistory());
+        dispatch(actionSetSelectedToken(''));
+    };
+    React.useEffect(() => {
         if (!switchAccount) {
             handleLoadWallet();
         }
     }, [wallet, defaultAccount, switchAccount]);
+    React.useEffect(() => {
+        handleInitData();
+    }, []);
 
     return <WrappedComponent {...{ ...props, handleLoadWallet }} />;
 };

@@ -4,6 +4,9 @@ import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/module/Account';
 import { bridgeTokensSelector, chainTokensSelector, selectedPrivacySelector, ISelectedPrivacy } from 'src/module/Token';
+import BridgeHistoryModel from 'incognito-js/build/web/browser/src/models/bridge/bridgeHistory';
+import { camelCaseKeys } from 'src/utils/object';
+import toString from 'lodash/toString';
 import { IReceiveHistoryToken, IReceiveHistoryTokenFetched, TxHistoryReceiveModel } from './History.interface';
 import { handleFilterHistoryReceiveByTokenId } from './History.utils';
 import {
@@ -14,8 +17,17 @@ import {
     ACTION_FETCHED_CACHE_HISTORY,
     ACTION_FREE_HISTORY,
     MAX_LIMIT_RECEIVE_HISTORY_ITEM,
+    ACTION_FETCHING_BRIDGE_HISTORY,
+    ACTION_FETCHED_BRIDGE_HISTORY,
+    ACTION_FETCHING_ALL_HISTORY,
+    ACTION_FETCHED_ALL_HISTORY,
 } from './History.constant';
-import { historyCacheSelector, receiveHistorySelector } from './History.selector';
+import {
+    historyBridgeSelector,
+    historyCacheSelector,
+    receiveHistorySelector,
+    historySelector,
+} from './History.selector';
 
 export const actionFreeHistory = () => ({
     type: ACTION_FREE_HISTORY,
@@ -134,4 +146,74 @@ export const actionFetchReceiveHistory = (refreshing = false) => async (
         await dispatch(actionFetchFailReceiveHistory());
     }
     return data;
+};
+
+// Bridge history
+
+export const actionFetchingBridgeHistory = () => ({
+    type: ACTION_FETCHING_BRIDGE_HISTORY,
+});
+
+export const actionFetchedBridgeHistory = (payload: { histories: BridgeHistoryModel[] }) => ({
+    type: ACTION_FETCHED_BRIDGE_HISTORY,
+    payload,
+});
+
+export const actionFetchBridgeHistory = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    let histories: any[] = [];
+    const state = getState();
+    const historyBridge = historyBridgeSelector(state);
+    const account: AccountInstance = defaultAccountSelector(state);
+    const selectedPrivacy = selectedPrivacySelector(state);
+    const bridgeTokens = bridgeTokensSelector(state);
+    const chainTokens = chainTokensSelector(state);
+    if (historyBridge.fetching || !selectedPrivacy.isDeposable || !selectedPrivacy.isWithdrawable) {
+        return;
+    }
+    try {
+        await dispatch(actionFetchingBridgeHistory());
+        const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
+        histories = await token.bridgeGetHistory();
+    } catch (error) {
+        throw error;
+    } finally {
+        await dispatch(
+            actionFetchedBridgeHistory({
+                histories: histories.map((data: any) => ({
+                    ...camelCaseKeys(data),
+                    id: toString(data.ID),
+                })),
+            }),
+        );
+    }
+    return histories;
+};
+
+export const actionFetchingAllHistory = () => ({
+    type: ACTION_FETCHING_ALL_HISTORY,
+});
+
+export const actionFetchedAllHistory = () => ({
+    type: ACTION_FETCHED_ALL_HISTORY,
+});
+
+export const actionFetchAllHistory = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        const state = getState();
+        const history = historySelector(state);
+        const { isFetching } = history;
+        if (isFetching) {
+            return;
+        }
+        await dispatch(actionFetchingAllHistory());
+        await Promise.all([
+            actionFetchCacheHistory()(dispatch, getState),
+            actionFetchBridgeHistory()(dispatch, getState),
+            actionFetchReceiveHistory(true)(dispatch, getState),
+        ]);
+    } catch (error) {
+        throw error;
+    } finally {
+        dispatch(actionFetchedAllHistory());
+    }
 };
