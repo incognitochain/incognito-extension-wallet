@@ -64,9 +64,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     }, [selectedPrivacyTokenId, history, receiveHistory]);
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, fetchData, handleOnEndReached }} />
+            <WrappedComponent
+                {...{
+                    ...props,
+                    handleRefresh: fetchData,
+                    showReloadBalance: true,
+                    showConnectStatus: true,
+                    handleOnEndReached,
+                }}
+            />
         </ErrorBoundary>
     );
 };
 
-export default compose<TInner, any>(withHeaderApp, enhance);
+export default compose<TInner, any>(enhance, withHeaderApp);

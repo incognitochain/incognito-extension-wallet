@@ -46,7 +46,7 @@ export const GroupButton = React.memo(() => {
 });
 
 const Detail = React.memo((props: IMergedProps & any) => {
-    const { fetchData, handleOnEndReached }: IMergedProps = props;
+    const { handleOnEndReached }: IMergedProps = props;
     const token = useSelector(selectedPrivacySelector);
     const theme = useSelector(themeSelector);
     const histories = useSelector(combineHistorySelector);
@@ -59,8 +59,6 @@ const Detail = React.memo((props: IMergedProps & any) => {
                 onGoBack={() => history.push(routeWallet)}
                 title={token.name}
                 customHeader={<InfoIcon onClick={() => history.push(routeTokenInfo)} />}
-                refreshPage
-                handleRefreshPage={fetchData}
             />
             <TokenBalance />
             <GroupButton />

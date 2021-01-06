@@ -19,3 +19,4 @@ export { default as AddCircleIcon } from './AddCircle';
 export { default as TrashBinIcon } from './TrashBin';
 export { default as KeyIcon } from './Key';
 export { default as EyeIcon } from './Eye';
+export { default as ConnectStatus } from './ConnectStatus';
