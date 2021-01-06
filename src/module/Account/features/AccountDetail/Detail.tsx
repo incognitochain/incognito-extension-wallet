@@ -4,7 +4,7 @@ import { FaCopy, FaQrcode } from 'react-icons/fa';
 import copy from 'copy-to-clipboard';
 import { COLORS, FONT_SIZES } from 'src/styles';
 import { useDispatch } from 'react-redux';
-import { actionToggleToast, QrCodeModal, TOAST_CONFIGS } from 'src/components';
+import { actionToggleToast, CopyIcon, QrCodeIcon, QrCodeModal, TOAST_CONFIGS } from 'src/components';
 import { actionToggleModal } from 'src/components/Modal';
 import { CONSTANT_COLORS } from '../../../../constants';
 
@@ -36,7 +36,8 @@ const Styled = styled.div`
         margin-top: 15px;
         padding: 10px;
         color: ${CONSTANT_COLORS.LIGHT_GREY};
-        background-color: ${CONSTANT_COLORS.GREY};
+        background-color: ${CONSTANT_COLORS.GREY2};
+        border-color: ${CONSTANT_COLORS.GREY};
     }
     .hook .icons {
         display: flex;
@@ -78,8 +79,8 @@ const Detail = (props: IProps) => {
             <div className="hook">
                 <p className="decs ellipsis">{desc}</p>
                 <div className="icons">
-                    <FaQrcode color={COLORS.colorGreyBold} onClick={handleShowQrCode} />
-                    <FaCopy color={COLORS.colorGreyBold} onClick={handleCopy} />
+                    <QrCodeIcon onClick={handleShowQrCode} />
+                    <CopyIcon onClick={handleCopy} />
                 </div>
             </div>
         </Styled>

@@ -25,11 +25,11 @@ const AccountItem = React.memo((props: IAccountItem) => {
 
     const handleSelectAccount = () => dispatch(actionSwitchAccount(account.name));
     return (
-        <div onClick={handleSelectAccount} className={`account-item ${isSelected ? 'selected' : ''}`}>
+        <div onClick={handleSelectAccount} className={`account-item fs-medium ${isSelected ? 'selected' : ''}`}>
             <p className="account-name ellipsis">{account.name}</p>
             <Row>
                 <p>{displayAddress}</p>
-                <TrashBinIcon onClick={handleRemoveKeychain} />
+                <TrashBinIcon className="delete-icon" onClick={handleRemoveKeychain} />
             </Row>
         </div>
     );

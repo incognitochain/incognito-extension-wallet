@@ -23,6 +23,11 @@ export const Styled = styled.div`
 
     .wallet-name {
         font-size: 18px;
+        line-height: 24px;
+        max-width: 180px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     .wallet-reveal {
@@ -55,5 +60,9 @@ export const Styled = styled.div`
         &:not(last-child) {
             margin-bottom: 30px;
         }
+    }
+    .delete-icon {
+        margin-left: 10px;
+        margin-top: -2px;
     }
 `;
