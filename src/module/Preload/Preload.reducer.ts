@@ -11,6 +11,8 @@ import {
     ACTION_FETCH_FAIL,
     ACTION_SET_LOGIN,
     ACTION_FETCHED_SDK_CONFIG,
+    ACTION_UPDATE_REQUEST_FROM_DAPP,
+    ACTION_CLEAR_REQUEST_FROM_DAPP,
 } from './Preload.constant';
 
 export interface IPreloadConfigs {
@@ -22,6 +24,11 @@ export interface IPreloadConfigs {
     deviceToken?: string;
 }
 
+export interface IRequestDApp {
+    name?: string;
+    origin?: string;
+}
+
 export interface IPreloadReducer {
     isFetchedSdk: boolean;
     isFetched: boolean;
@@ -29,6 +36,7 @@ export interface IPreloadReducer {
     configs: IPreloadConfigs;
     server: IServer;
     error: string;
+    requestDApp: IRequestDApp | null;
 }
 
 const initialState: IPreloadReducer = {
@@ -45,6 +53,7 @@ const initialState: IPreloadReducer = {
         deviceToken: '',
     },
     server: MAINNET_SERVER,
+    requestDApp: null,
 };
 
 const preloadReducer = (
@@ -108,6 +117,19 @@ const preloadReducer = (
                 ...state,
                 isFetching: false,
                 isFetchedSdk: true,
+            };
+        }
+        case ACTION_UPDATE_REQUEST_FROM_DAPP: {
+            const { payload } = action;
+            return {
+                ...state,
+                requestDApp: payload,
+            };
+        }
+        case ACTION_CLEAR_REQUEST_FROM_DAPP: {
+            return {
+                ...state,
+                requestDApp: null,
             };
         }
         default:

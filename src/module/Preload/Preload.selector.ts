@@ -12,6 +12,8 @@ export const isMainnetSelector = createSelector(preloadSelector, (preload) => pr
 
 export const serverSelector = createSelector(preloadSelector, (preload) => preload.server || {});
 
+export const requestDAppSelector = createSelector(preloadSelector, (preload) => preload.requestDApp);
+
 export const apiURLSelector = createSelector(serverSelector, (server) => server.apiURL);
 
 export const apiURL2Selector = createSelector(serverSelector, (server) => server.api2URL);

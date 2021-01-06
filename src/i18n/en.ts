@@ -133,6 +133,8 @@ const language: ILanguage = {
     },
     send: {
         headerTitle: 'Send',
+        forceSendHeaderTitle: 'Confirm transaction',
+        cancel: 'Cancel',
         amount: 'Enter amount',
         toAddress: 'To',
         incognitoAddress: 'Enter address',
@@ -297,6 +299,13 @@ const language: ILanguage = {
     modal: {
         addKeysModal: 'Add keys',
         createKeyModal: 'Create keychain',
+    },
+    connect: {
+        headerTitle: 'Connect to pDEX',
+    },
+    disconnect: {
+        headerTitle: 'Manage connections',
+        subTitle: 'This app will no longer be able to view the balance of the address you disconnect.',
     },
 };
 

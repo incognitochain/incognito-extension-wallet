@@ -27,4 +27,18 @@ export const Styled = styled.div`
             margin-left: 5px;
         }
     }
+    .force-balance {
+        color: ${COLORS.newGrey};
+    }
+`;
+
+export const Row = styled.div`
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    .btn-container {
+        width: 127px;
+        margin: 30px 0px;
+        margin-left: inherit;
+    }
 `;

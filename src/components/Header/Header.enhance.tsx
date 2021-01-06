@@ -19,6 +19,8 @@ export interface IProps {
     canSearch?: boolean;
     customHeader?: React.FunctionComponent | React.ReactElement;
     refreshPage?: boolean;
+    connectPage?: boolean;
+    connected?: boolean;
     handleRefreshPage?: () => any;
 }
 

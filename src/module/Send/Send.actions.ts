@@ -40,8 +40,9 @@ import {
     // ACTION_FETCH_FAIL_USER_FEES,
     FORM_CONFIGS,
     ACTION_SET_SENDING,
+    ACTION_UPDATE_DATA_FORCE_SEND,
 } from './Send.constant';
-import { ISendData, ISendReducer } from './Send.interface';
+import { IDataForceSend, ISendData, ISendReducer } from './Send.interface';
 
 export const actionInitFetched = (payload: {
     screen: string;
@@ -624,5 +625,10 @@ export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: ()
 
 export const actionSetSending = (payload: boolean) => ({
     type: ACTION_SET_SENDING,
+    payload,
+});
+
+export const actionUpdateDataForceSend = (payload?: IDataForceSend) => ({
+    type: ACTION_UPDATE_DATA_FORCE_SEND,
     payload,
 });

@@ -57,13 +57,14 @@ const AddCoin = React.memo(() => {
 interface IProps {
     // eslint-disable-next-line no-unused-vars
     handleLoadWallet: (reload?: boolean) => any;
+    connected: boolean;
 }
 
 const Wallet = React.memo((props: IProps) => {
-    const { handleLoadWallet } = props;
+    const { handleLoadWallet, connected } = props;
     return (
         <Styled>
-            <Header refreshPage handleRefreshPage={() => handleLoadWallet(true)} />
+            <Header refreshPage connectPage connected={connected} handleRefreshPage={() => handleLoadWallet(true)} />
             <TotalShield />
             <ListFollowToken />
             <AddCoin />

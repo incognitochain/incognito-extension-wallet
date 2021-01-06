@@ -21,7 +21,7 @@
     },
     "version": "1.0",
     "web_accessible_resources": ["index.html", "/static/*", "/fonts/*", "/images/*", "favicon.ico"],
-    "content_security_policy": "script-src 'self' 'sha256-1dXASL263+JTsWsoQ6kmP8rvMFysHWvBL9awZo9GAI0' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": "script-src 'self' 'sha256-fpYryybDbXGbHn4AxjUN54ddDSE1mFZNEAgvY/3Hgjo=' 'unsafe-eval'; object-src 'self'",
     "permissions": [
         "tabs",
         "<all_urls>",
@@ -33,6 +33,20 @@
         "unlimitedStorage",
         "desktopCapture",
         "pageCapture",
-        "tabCapture"
+        "tabCapture",
+        "activeTab",
+        "webRequest"
+    ],
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
+        "persistent": true
+    },
+    "content_scripts": [
+        {
+          "matches": ["file://*/*", "http://*/*", "https://*/*"],
+          "js": ["content.js"]
+        }
     ]
 }

@@ -32,6 +32,8 @@ export interface ILanguage {
     masterKey: IMasterKeyLanguage;
     password: IPasswordLanguage;
     modal: IModalLanguage;
+    connect: IConnectLanguage;
+    disconnect: IDisconnectLanguage;
 }
 
 export interface IPreloadLanguage {
@@ -68,6 +70,8 @@ export interface IConfirmTxLanguage {
 
 export interface ISendLanguage {
     headerTitle: string;
+    forceSendHeaderTitle: string;
+    cancel: string;
     amount: string;
     toAddress: string;
     incognitoAddress: string;
@@ -172,6 +176,15 @@ export interface IKeychainLanguage {
         createMasterKey: string;
         importMasterKey: string;
     };
+}
+
+export interface IConnectLanguage {
+    headerTitle: string;
+}
+
+export interface IDisconnectLanguage {
+    headerTitle: string;
+    subTitle: string;
 }
 
 export interface ITokenLanguage {

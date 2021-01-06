@@ -21,10 +21,11 @@ import {
     ACTION_REMOVE_FEE_TYPE,
     ACTION_FETCH_FAIL_USER_FEES,
     ACTION_SET_SENDING,
+    ACTION_UPDATE_DATA_FORCE_SEND,
 } from './Send.constant';
 import { hasMultiLevelUsersFee, MAX_FEE_PER_TX } from './Send.utils';
 
-const initialState: ISendReducer = {
+const defaultState: ISendReducer = {
     isFetching: false,
     isFetched: false,
     minFeePrv: 0,
@@ -75,8 +76,13 @@ const initialState: ISendReducer = {
     sending: false,
 };
 
+const initialState: ISendReducer = {
+    ...defaultState,
+    defaultForceSend: undefined,
+};
+
 const sendReducer = (
-    state = initialState,
+    state = { ...initialState },
     action: {
         type: string;
         payload: any;
@@ -91,7 +97,8 @@ const sendReducer = (
         }
         case ACTION_INIT: {
             return {
-                ...initialState,
+                ...state,
+                ...defaultState,
             };
         }
         case ACTION_INIT_FETCHED: {
@@ -136,7 +143,7 @@ const sendReducer = (
             }
             return {
                 ...state,
-                types: [...initialState.types, action.payload],
+                types: [...defaultState.types, action.payload],
             };
         }
         case ACTION_REMOVE_FEE_TYPE: {
@@ -270,6 +277,13 @@ const sendReducer = (
                 [totalFeeField]: totalFee,
                 [totalFeeTextField]: totalFeeText,
                 [userFeeField]: userFee,
+            };
+        }
+        case ACTION_UPDATE_DATA_FORCE_SEND: {
+            const { payload } = action;
+            return {
+                ...state,
+                defaultForceSend: payload,
             };
         }
         default:

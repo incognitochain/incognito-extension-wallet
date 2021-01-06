@@ -21,10 +21,14 @@ import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { withHeaderApp } from 'src/components/Header';
 import { actionFreeHistory } from 'src/module/History';
 import { walletDataSelector } from './Wallet.selector';
+import enhanceDApp from './Wallet.enhanceDApp';
+import withBalance, { IEnhanceBalanceProps } from '../Account/Acount.enhanceBalance';
 
 interface IProps {}
+interface IMergeProps extends IEnhanceBalanceProps, IProps {}
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergeProps & any) => {
+    const { loadBalance } = props;
     const dispatch = useDispatch();
     const defaultAccount: string = useSelector(defaultAccountNameSelector);
     const wallet: WalletInstance = useSelector(walletDataSelector);
@@ -49,6 +53,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             await Promise.all([
                 dispatch(actionGetPrivacyTokensBalance(account)),
                 dispatch(actionGetAccountBalance(account)),
+                loadBalance(),
             ]);
         } catch (error) {
             console.debug('ERROR', error);
@@ -82,4 +87,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     return <WrappedComponent {...{ ...props, handleLoadWallet }} />;
 };
 
-export default compose(withHeaderApp, enhance);
+export default compose(withHeaderApp, withBalance, enhance, enhanceDApp);

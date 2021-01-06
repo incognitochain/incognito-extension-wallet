@@ -7,7 +7,7 @@ import { IServer } from 'src/services';
 import { loadSeparator } from 'src/utils/separator';
 import { goServices, setConfig, storageService } from 'incognito-js/build/web/browser';
 import { preloadSelector } from './Preload.selector';
-import { IPreloadConfigs, IPreloadReducer } from './Preload.reducer';
+import { IPreloadConfigs, IPreloadReducer, IRequestDApp } from './Preload.reducer';
 import {
     ACTION_FETCH_FAIL,
     ACTION_FETCHING,
@@ -16,6 +16,8 @@ import {
     ACTION_SET_CONFIGS,
     ACTION_SET_LOGIN,
     ACTION_FETCHED_SDK_CONFIG,
+    ACTION_UPDATE_REQUEST_FROM_DAPP,
+    ACTION_CLEAR_REQUEST_FROM_DAPP,
 } from './Preload.constant';
 import { ENVS } from '../../configs';
 
@@ -135,3 +137,12 @@ export const actionFetchSdkConfig = () => async (dispatch: Dispatch, getState: (
         throw error;
     }
 };
+
+export const actionUpdateRequestFromDApp = (payload: IRequestDApp | null) => ({
+    type: ACTION_UPDATE_REQUEST_FROM_DAPP,
+    payload,
+});
+
+export const actionClearRequestFromDApp = () => ({
+    type: ACTION_CLEAR_REQUEST_FROM_DAPP,
+});

@@ -23,6 +23,7 @@ export interface TInner {
 }
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
+    const { forceSendFinish } = props;
     const dispatch = useDispatch();
     const history = useHistory();
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
@@ -65,10 +66,14 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                 throw new Error(`Failed`);
             }
             await dispatch(actionFetchCacheHistory());
+            // send success
+            forceSendFinish(null, tx);
             history.push(routeConfirmTx, {
                 txId: tx.txId,
             });
         } catch (error) {
+            // send fail
+            forceSendFinish(error, null);
             dispatch(
                 actionToggleToast({
                     toggle: true,

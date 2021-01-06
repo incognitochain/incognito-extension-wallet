@@ -6,6 +6,7 @@ import { FONT_SIZES } from './fontSize';
 export interface ITheme {
     body: string;
     text: string;
+    inverseText: string;
     subText: string;
     toggleBorder: string;
     gradient: string;
@@ -24,6 +25,7 @@ export interface IGlobalStyle {
 export const lightTheme: ITheme = {
     body: COLORS.white,
     text: COLORS.black,
+    inverseText: COLORS.white,
     subText: COLORS.colorGreyBold,
     toggleBorder: COLORS.white,
     gradient: 'linear-gradient(#39598A, #79D7ED)',
@@ -38,6 +40,7 @@ export const lightTheme: ITheme = {
 export const darkTheme: ITheme = {
     body: '#363537',
     text: '#FAFAFA',
+    inverseText: COLORS.black,
     subText: COLORS.colorGreyLight,
     toggleBorder: '#6B8096',
     gradient: 'linear-gradient(#091236, #1E215D)',
@@ -100,6 +103,9 @@ export const GlobalStyled = createGlobalStyle`
     }
     .fw-medium{
         font-weight: 500;
+    }
+    .fw-normal{
+        font-weight: 200;
     }
     .fw-bold {
         font-weight: 700;

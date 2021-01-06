@@ -9,6 +9,8 @@ export interface IInputFieldProps {
     input: WrappedFieldInputProps;
     componentProps: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
     inputType?: number;
+    subtitle?: boolean;
+    suffix?: string;
     onClickMax?: () => any;
     onClickAddressBook?: () => any;
     onClickScan?: () => any;
@@ -25,8 +27,26 @@ export const Input = (props: IInputProps) => {
 };
 
 const InputField = (props: IInputFieldProps) => {
-    const { meta, input, componentProps, inputType, onClickMax, onClickAddressBook, onClickScan } = props;
+    const {
+        meta,
+        input,
+        componentProps,
+        inputType,
+        subtitle,
+        suffix,
+        onClickMax,
+        onClickAddressBook,
+        onClickScan,
+    } = props;
     const { error, warning } = meta;
+    const renderError = () => {
+        return (
+            <>
+                {(error && <p className="error fs-small fw-regular">{error}</p>) ||
+                    (warning && <p className="warning fs-small fw-regular">{warning}</p>)}
+            </>
+        );
+    };
     const renderInput = () => {
         switch (inputType) {
             case INPUT_FIELD.amount:
@@ -50,6 +70,19 @@ const InputField = (props: IInputFieldProps) => {
                         </div>
                     </div>
                 );
+            case INPUT_FIELD.leftTitle:
+                return (
+                    <div className="wrapper large-margin-top">
+                        <p className="sub-title fw-medium fs-medium">{subtitle}</p>
+                        <div className="input-wrapper">
+                            <div className="input-wrap-suffix input-amount align-right">
+                                <Input {...{ input, componentProps }} />
+                                <p>{suffix}</p>
+                            </div>
+                            {renderError()}
+                        </div>
+                    </div>
+                );
             default:
                 return (
                     <div className="input-container">
@@ -61,8 +94,7 @@ const InputField = (props: IInputFieldProps) => {
     return (
         <Styled>
             {renderInput()}
-            {(error && <p className="error fs-small fw-regular">{error}</p>) ||
-                (warning && <p className="warning fs-small fw-regular">{warning}</p>)}
+            {inputType !== INPUT_FIELD.leftTitle && renderError()}
         </Styled>
     );
 };
