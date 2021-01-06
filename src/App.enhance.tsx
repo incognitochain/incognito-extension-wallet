@@ -8,6 +8,7 @@ import { Detector } from 'react-detect-offline';
 import { translateByFieldSelector } from './module/Configs';
 import { IGeneralLanguage } from './i18n';
 import { Button } from './components';
+import withBackground from './AppBackground.enhance';
 
 const { store, persistor }: IConfigStore = configStore();
 
@@ -47,4 +48,4 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose(enhance, withNetwork);
+export default compose(enhance, withNetwork, withBackground);

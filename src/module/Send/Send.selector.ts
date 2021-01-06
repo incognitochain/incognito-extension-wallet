@@ -19,3 +19,5 @@ export const sendDataSelector = createSelector(
             state,
         }),
 );
+
+export const forceSendDataSelector = createSelector(sendSelector, (send) => send.defaultForceSend);

@@ -107,11 +107,14 @@ export const getSendData = ({
     const valid = isValid(FORM_CONFIGS.formName)(state);
     const submitting = isSubmitting(FORM_CONFIGS.formName)(state);
     let titleBtnSubmit = screen === 'Send' ? 'Send anonymously' : 'Unshield my crypto';
+    let forceSendTitleBtnSubmit = screen === 'Send' ? 'Confirm' : 'Unshield my crypto';
     if (isFetching) {
         titleBtnSubmit = 'Calculating fee...';
+        forceSendTitleBtnSubmit = 'Calculating fee...';
     }
     if (!isFetching && submitting) {
         titleBtnSubmit = `Sending...`;
+        forceSendTitleBtnSubmit = `Sending...`;
     }
     const isIncognitoAddress = isEmpty(inputAddress)
         ? false
@@ -147,6 +150,7 @@ export const getSendData = ({
         inputMemo,
 
         titleBtnSubmit,
+        forceSendTitleBtnSubmit,
 
         disabledForm,
 

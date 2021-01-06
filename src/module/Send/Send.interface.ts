@@ -44,6 +44,7 @@ export interface ISendData {
     inputMemo: string;
     inputAddress: string;
     titleBtnSubmit: string;
+    forceSendTitleBtnSubmit: string;
     disabledForm: boolean;
 }
 
@@ -91,4 +92,13 @@ export interface ISendReducer {
     totalFeePTokenText: string;
     userFeePToken: number;
     sending: false;
+    defaultForceSend?: IDataForceSend;
+}
+
+export interface IDataForceSend {
+    accountName: string;
+    toAddress: string;
+    amount: string;
+    memo?: string;
+    tokenId: string;
 }

@@ -24,4 +24,13 @@ export const FORM_CONFIGS = {
     fee: 'fee',
     memo: 'memo',
 };
+
+export const FORCE_SEND_FORM_CONFIGS = {
+    formName: 'force-send-form-send',
+    amount: 'amount',
+    toAddress: 'toAddress',
+    fee: 'fee',
+    memo: 'memo',
+};
 export const ACTION_SET_SENDING = '[send] Toggle sending tx';
+export const ACTION_UPDATE_DATA_FORCE_SEND = '[send] Update data force send';

@@ -11,6 +11,7 @@ import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { isString, toString } from 'lodash';
 import { route as routeDetail } from 'src/module/Token/features/Detail';
 import { useHistory } from 'react-router-dom';
+import { withHeaderApp } from 'src/components/Header';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -19,8 +20,14 @@ import { actionFetchFeeByMax } from './Send.actions';
 import withInit from './Send.enhanceInit';
 import withFee from './Send.enhanceFee';
 import { FORM_CONFIGS } from './Send.constant';
+import withForceSend, { TInner as TInnerForceSend } from './Send.withForceSend';
 
-export interface IMergeProps extends InjectedFormProps<any, any>, TInnerAddress, TInnerAmount, TInnerSend {
+export interface IMergeProps
+    extends InjectedFormProps<any, any>,
+        TInnerAddress,
+        TInnerAmount,
+        TInnerSend,
+        TInnerForceSend {
     onClickMax: () => any;
     // eslint-disable-next-line no-unused-vars
     onChangeField: (value: string, field: any) => any;
@@ -30,6 +37,7 @@ export interface IMergeProps extends InjectedFormProps<any, any>, TInnerAddress,
 }
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
+    const { clearForceSendData, clearCurrentRequest } = props;
     const history = useHistory();
     const dispatch = useDispatch();
     const handleStandardizedAddress = (value: string) => standardizedAddress(value);
@@ -91,6 +99,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     };
 
     const onGoBack = () => {
+        clearForceSendData && clearForceSendData();
+        clearCurrentRequest && clearCurrentRequest();
         history.push(routeDetail);
     };
 
@@ -112,10 +122,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
 
 export default compose<IMergeProps, any>(
     withLayout,
+    withHeaderApp,
     reduxForm({
         form: FORM_CONFIGS.formName,
     }),
     withInit,
+    withForceSend,
     withFee,
     withValAddress,
     withValAmount,

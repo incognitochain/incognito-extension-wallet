@@ -14,7 +14,6 @@ const history = isDev ? createBrowserHistory() : createMemoryHistory(); // Inste
 const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     const pass = useSelector(passwordSelector);
     const walletId = useSelector(walletIdSelector);
-
     const isAuthenticated = !!pass && walletId >= 0;
 
     if (!isAuthenticated) {

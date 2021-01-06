@@ -10,9 +10,12 @@ interface IProps {
 }
 
 const Styled = styled.button`
+    &.wrapper {
+        display: flex;
+    }
     .icon {
         margin-right: 5px;
-        width: 18px;
+        min-width: 18px;
         height: 18px;
     }
 `;
@@ -20,7 +23,7 @@ const Styled = styled.button`
 const Checkbox = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     const { onHandleChecked, label, checked } = props;
     return (
-        <Styled className="checkbox flex" onClick={onHandleChecked}>
+        <Styled className="checkbox wrapper" onClick={onHandleChecked}>
             <div className="icon">
                 <img
                     src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/${!checked ? 'checkbox' : 'checked-box'}.png`}

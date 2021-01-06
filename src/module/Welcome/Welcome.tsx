@@ -14,7 +14,6 @@ const Styled = styled.div`
 
 const Welcome = (props: IProps) => {
     const { isInitWallet, isReset, onForgot } = props;
-
     const renderContent = () => {
         if (isReset || !isInitWallet) {
             return <NewUser isReset={isReset} />;

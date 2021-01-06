@@ -112,9 +112,11 @@
     },
     "scripts": {
         "start": "node scripts/start.js",
-        "build": "node scripts/build.js",
+        "build": "yarn build:background && yarn build:extension",
         "test": "node scripts/test.js",
-        "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix"
+        "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet --fix",
+        "build:background": "rollup --config",
+        "build:extension": "node scripts/build.js"
     },
     "eslintConfig": {
         "extends": [
@@ -166,6 +168,9 @@
         "prettier": "^2.2.1",
         "react-hot-loader": "^4.13.0",
         "redux-devtools-extension": "^2.13.8",
+        "rollup": "^2.35.1",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
         "webpack": "^5.3.2",
         "webpack-env": "^0.8.0",
         "wepack-cli": "^0.0.1-security"

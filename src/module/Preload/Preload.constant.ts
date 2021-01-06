@@ -6,3 +6,5 @@ export const ACTION_FETCHED_INIT_DB = `[preload] Fetched init incognito database
 export const ACTION_SET_CONFIGS = `[preload] Set configs`;
 export const ACTION_SET_SERVER = `[preload] Set server`;
 export const ACTION_SET_LOGIN = `[preload] Set login`;
+export const ACTION_UPDATE_REQUEST_FROM_DAPP = `[preload] Update request from DAPP`;
+export const ACTION_CLEAR_REQUEST_FROM_DAPP = `[preload] Clear request from DAPP`;
