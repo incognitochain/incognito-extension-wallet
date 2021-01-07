@@ -1,3 +1,4 @@
+import { shieldSelector } from 'src/module/Shield/Shield.selector';
 import { AccountInstance, PrivacyTokenInstance } from 'incognito-js/build/web/browser';
 import { defaultAccountSelector } from 'src/module/Account/Account.selector';
 import { IRootState } from 'src/redux/interface';
@@ -37,7 +38,9 @@ export const actionFetch = ({ tokenId }: { tokenId: string }) => async (
         const selectedPrivacy = getPrivacyDataByTokenIDSelector(state)(tokenId);
         const brideTokens = bridgeTokensSelector(state);
         const chainTokens = chainTokensSelector(state);
-        if (!selectedPrivacy || !selectedPrivacy.isDeposable) {
+        const shieldState = shieldSelector(state);
+        const { isFetching } = shieldState;
+        if (!selectedPrivacy || !selectedPrivacy.isDeposable || isFetching) {
             return;
         }
         await dispatch(actionFetching());
