@@ -14,12 +14,13 @@ const {
     STATUS_CODE_UNSHIELD_CENTRALIZED,
     STATUS_CODE_UNSHIELD_DECENTRALIZED,
     TYPE,
+    STATUS_TEXT,
 } = HISTORY;
 const { TX_STATUS } = CONSTANT.TX_CONSTANT;
 
-const getStatusDataShield = (history: any) => {
+const getStatusDataShield = (history: TxBridgeHistoryModel) => {
     const { status, statusMessage } = history;
-    let statusColor;
+    let statusColor = '';
     if (history?.isDecentralized) {
         if (STATUS_CODE_SHIELD_DECENTRALIZED.COMPLETE === status) {
             statusColor = COLORS.green;
@@ -64,20 +65,20 @@ export const getStatusData = (history: any) => {
     let statusMessage = '';
     let statusColor = '';
     switch (status) {
-        case HISTORY.STATUS_TEXT.PENDING:
+        case STATUS_TEXT.PENDING:
         case TX_STATUS.CONFIRMED:
             statusMessage = 'Pending';
             break;
-        case HISTORY.STATUS_TEXT.SUCCESS:
+        case STATUS_TEXT.SUCCESS:
         case TX_STATUS.SUCCESS:
             statusMessage = 'Complete';
             statusColor = COLORS.green;
             break;
-        case HISTORY.STATUS_TEXT.FAILED:
+        case STATUS_TEXT.FAILED:
         case TX_STATUS.FAILED:
             statusMessage = 'Failed';
             break;
-        case HISTORY.STATUS_TEXT.EXPIRED:
+        case STATUS_TEXT.EXPIRED:
             statusMessage = 'Expired';
             break;
         default:

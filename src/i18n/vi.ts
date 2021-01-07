@@ -167,6 +167,7 @@ const language: ILanguage = {
         shieldingAddress: 'Shielding address',
         memo: 'Memo',
         contract: 'Contract',
+        resume: 'Resume',
     },
     addressBook: {
         headerTitle: 'Address book',

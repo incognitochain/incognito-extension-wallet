@@ -30,19 +30,6 @@ export interface ICacheHistoryToken {
     histories: TxHistoryModelParam[];
 }
 
-export interface IHistoryItem {
-    title?: string;
-    desc?: string;
-    copyData?: string;
-    link?: string;
-    descClassName?: string;
-    titleClassName?: string;
-    descColor?: string;
-    customItem?: React.FunctionComponent | React.ReactElement | any;
-    disabled?: boolean;
-    message?: string;
-}
-
 export interface IReceiveHistoryTokenFetched {
     nextPage: number;
     data: TxHistoryReceiveModel[];
@@ -145,4 +132,6 @@ export interface TxBridgeHistoryModel {
     statusColor: string;
     memo: string;
     statusDetail: string;
+    canRetryExpiredDeposit: boolean;
+    isDecentralized: boolean;
 }

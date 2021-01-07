@@ -132,7 +132,7 @@ const historyReducer = (
         }
         case ACTION_FETCHING_ALL_HISTORY: {
             return {
-                ...initialState,
+                ...state,
                 isFetching: true,
             };
         }

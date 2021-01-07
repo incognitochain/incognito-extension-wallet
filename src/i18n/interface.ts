@@ -96,6 +96,7 @@ export interface IHistoryLanguage {
     shieldingAddress: string;
     memo: string;
     contract: string;
+    resume: string;
 }
 
 export interface ISettingLanguage {

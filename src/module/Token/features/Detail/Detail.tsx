@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import { Button, Header } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import { themeSelector, translateSelector } from 'src/module/Configs';
-import { Amount, Balance, ISelectedPrivacy, selectedPrivacySelector, PerChange } from 'src/module/Token';
+import { Amount, Balance, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { route as routeTokenInfo } from 'src/module/Token/features/TokenInfo';
-import { combineHistorySelector, HistoryList, receiveHistorySelector } from 'src/module/History';
+import { combineHistorySelector, HistoryList, historySelector, receiveHistorySelector } from 'src/module/History';
 import { route as routeSend } from 'src/module/Send';
 import { useHistory } from 'react-router-dom';
 import { InfoIcon, LoadingIcon } from 'src/components/Icons';
@@ -46,9 +46,10 @@ const Detail = React.memo((props: IMergedProps & any) => {
     const { handleOnEndReached }: IMergedProps = props;
     const token = useSelector(selectedPrivacySelector);
     const theme = useSelector(themeSelector);
+    const { isFetching, isFetched } = useSelector(historySelector);
     const histories = useSelector(combineHistorySelector);
     const { oversize, page } = useSelector(receiveHistorySelector);
-    const shouldRenderFooter = !oversize && page !== 1;
+    const shouldRenderFooter = isFetched && !isFetching && !oversize && page !== 1;
     const history = useHistory();
     return (
         <Styled theme={theme}>
@@ -60,6 +61,7 @@ const Detail = React.memo((props: IMergedProps & any) => {
             <TokenBalance />
             <GroupButton />
             <HistoryList
+                loading={!isFetched && isFetching}
                 handleOnEndReached={handleOnEndReached}
                 histories={histories}
                 renderFooter={shouldRenderFooter && <LoadingIcon />}

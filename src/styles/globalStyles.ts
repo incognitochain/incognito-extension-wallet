@@ -211,6 +211,16 @@ export const GlobalStyled = createGlobalStyle`
     .m-t-50 {
         margin-top: 50px;
     }
+    .center-abs-ver {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .center-abs-hor {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 `;
 
 export const Row = styled.div`
