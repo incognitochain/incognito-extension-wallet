@@ -35,8 +35,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const { notEnoughData, oversize } = receiveHistory;
     const fetchData = async () => {
         try {
-            dispatch(actionFetchAllHistory());
-            dispatch(actionGetBalanceByTokenId());
+            await Promise.all([dispatch(actionFetchAllHistory()), dispatch(actionGetBalanceByTokenId())]);
         } catch (error) {
             dispatch(
                 actionToggleToast({
