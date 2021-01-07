@@ -166,6 +166,7 @@ const language: ILanguage = {
         outchainTxId: 'Outchain TxID',
         shieldingAddress: 'Shielding address',
         memo: 'Memo',
+        contract: 'Contract',
     },
     addressBook: {
         headerTitle: 'Address book',

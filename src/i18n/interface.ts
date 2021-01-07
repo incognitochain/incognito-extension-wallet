@@ -95,6 +95,7 @@ export interface IHistoryLanguage {
     outchainTxId: string;
     shieldingAddress: string;
     memo: string;
+    contract: string;
 }
 
 export interface ISettingLanguage {

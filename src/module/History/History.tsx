@@ -175,6 +175,10 @@ const History = React.memo(() => {
                         desc: history?.memo,
                     },
                     {
+                        title: historyLanguage.contract,
+                        desc: history?.erc20TokenAddress,
+                    },
+                    {
                         customItem: (
                             <div className="shield-address">
                                 <p className="fw-medium">{historyLanguage.shieldingAddress}</p>
