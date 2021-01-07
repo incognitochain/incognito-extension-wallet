@@ -161,7 +161,7 @@ const language: ILanguage = {
         time: 'Time',
         toAddress: 'To address',
         coin: 'Coin',
-        expiredAt: 'Expired At',
+        expiredAt: 'Expired at',
         inchainTxId: 'Inchain TxID',
         outchainTxId: 'Outchain TxID',
         shieldingAddress: 'Shielding address',
