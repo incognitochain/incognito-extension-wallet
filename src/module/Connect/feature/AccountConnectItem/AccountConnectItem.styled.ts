@@ -20,6 +20,6 @@ export const Styled = styled.div`
         align-items: center;
         justify-content: space-between;
         overflow: hidden;
-        margin-top: 10px;
+        margin-top: 15px;
     }
 `;

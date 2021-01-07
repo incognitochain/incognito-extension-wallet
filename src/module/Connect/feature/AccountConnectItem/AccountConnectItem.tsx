@@ -15,11 +15,11 @@ const AccountConnectItem = React.memo((props: IProps) => {
     const prvBalance = useSelector(getPrivacyDataByTokenIDSelector)(PRV_ID);
     const account = useSelector(defaultAccountSelector);
     const paymentAddress = useSelector(paymentAddressSelector);
-    const renderAccountName = () => <p className="account-name fs-medium fw-normal">{account?.name}</p>;
+    const renderAccountName = () => <p className="account-name fs-medium fw-medium">{account?.name}</p>;
     const renderAccountContent = () => (
         <Styled className="wrap-content">
-            <p className="account-amount fs-regular fw-normal">{`${prvBalance.amount} PRV `}</p>
-            <p className="payment-address ellipsis">{paymentAddress}</p>
+            <p className="account-amount fs-regular fw-medium ellipsis">{`${prvBalance.amount} PRV `}</p>
+            <p className="payment-address  fs-regular fw-medium ellipsis">{paymentAddress}</p>
         </Styled>
     );
     const renderLoading = () => (

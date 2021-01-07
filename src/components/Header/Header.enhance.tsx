@@ -1,14 +1,10 @@
 import React, { HTMLAttributes } from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { delay } from 'src/utils';
-import { actionSetRefreshPage } from './Header.actions';
 import SearchBox from './Header.searchBox';
 
 export interface TInner {
     handleClick: () => void;
     renderHeaderTitle: () => void;
-    onHandleRefreshPage: () => any;
 }
 
 export interface IProps {
@@ -18,17 +14,12 @@ export interface IProps {
     selectAccount?: boolean;
     canSearch?: boolean;
     customHeader?: React.FunctionComponent | React.ReactElement;
-    refreshPage?: boolean;
-    connectPage?: boolean;
-    connected?: boolean;
-    handleRefreshPage?: () => any;
 }
 
 export interface IMergeProps extends TInner, IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & HTMLAttributes<HTMLElement>) => {
-    const dispatch = useDispatch();
-    const { canSearch = false, onGoBack, title, customHeader, handleRefreshPage } = props;
+    const { canSearch = false, onGoBack, title, customHeader } = props;
     const [state, setState] = React.useState({
         toggleSearch: false,
     });
@@ -68,18 +59,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             </div>
         );
     };
-    const onHandleRefreshPage = async () => {
-        if (typeof handleRefreshPage === 'function') {
-            try {
-                await dispatch(actionSetRefreshPage(true));
-                await Promise.all([handleRefreshPage(), delay()]);
-            } catch (error) {
-                throw error;
-            } finally {
-                dispatch(actionSetRefreshPage(false));
-            }
-        }
-    };
     return (
         <WrappedComponent
             {...{
@@ -88,7 +67,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 renderHeaderTitle,
                 handleClick,
                 title,
-                onHandleRefreshPage,
             }}
         />
     );

@@ -84,7 +84,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
         handleInitData();
     }, []);
 
-    return <WrappedComponent {...{ ...props, handleLoadWallet }} />;
+    return (
+        <WrappedComponent
+            {...{ ...props, handleRefresh: handleLoadWallet, showReloadBalance: true, showConnectStatus: true }}
+        />
+    );
 };
 
-export default compose(withHeaderApp, withBalance, enhance, enhanceDApp);
+export default compose(enhanceDApp, withBalance, enhance, withHeaderApp);

@@ -2,11 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
-import { ArrowLeftIcon, RefreshIcon, LoadingIcon } from 'src/components/Icons';
-import { useSelector } from 'react-redux';
-import ConnectStatus from 'src/components/Icons/ConnectStatus';
+import { ArrowLeftIcon } from 'src/components/Icons';
 import withHeader, { IMergeProps } from './Header.enhance';
-import { refreshHeaderSelector } from './Header.selector';
 
 const Styled = styled.div`
     display: flex;
@@ -38,18 +35,7 @@ const Styled = styled.div`
 `;
 
 const Header = (props: IMergeProps & any) => {
-    const {
-        rightHeader,
-        selectAccount,
-        handleClick,
-        renderHeaderTitle,
-        refreshPage,
-        connectPage,
-        connected,
-        onHandleRefreshPage,
-        title,
-    }: IMergeProps = props;
-    const refreshing: boolean = useSelector(refreshHeaderSelector);
+    const { rightHeader, selectAccount, handleClick, renderHeaderTitle, title }: IMergeProps = props;
     return (
         <Styled className="header">
             {title && (
@@ -62,16 +48,6 @@ const Header = (props: IMergeProps & any) => {
                 {rightHeader}
                 {selectAccount && <BtnSelectAccount />}
             </div>
-            {refreshPage && (
-                <div className="refresh-container">
-                    {connectPage && connected && <ConnectStatus />}
-                    {refreshing ? (
-                        <LoadingIcon />
-                    ) : (
-                        <RefreshIcon className="refresh-icon" onClick={onHandleRefreshPage} />
-                    )}
-                </div>
-            )}
         </Styled>
     );
 };
