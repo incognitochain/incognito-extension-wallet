@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaCopy, FaQrcode } from 'react-icons/fa';
-import copy from 'copy-to-clipboard';
-import { COLORS, FONT_SIZES } from 'src/styles';
-import { useDispatch } from 'react-redux';
-import { actionToggleToast, CopyIcon, QrCodeIcon, QrCodeModal, TOAST_CONFIGS } from 'src/components';
+import { FONT_SIZES } from 'src/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { CopyIcon, QrCodeIcon, QrCodeModal } from 'src/components';
 import { actionToggleModal } from 'src/components/Modal';
-import { CONSTANT_COLORS } from '../../../../constants';
+import { CONSTANT_COLORS } from 'src/constants';
+import { translateSelector } from 'src/module/Configs';
 
 export interface IProps {
     title: string | number;
@@ -55,16 +54,8 @@ const Styled = styled.div`
 const Detail = (props: IProps) => {
     const { title, desc } = props;
     const dispatch = useDispatch();
-    const handleCopy = () => {
-        copy(desc.toString());
-        dispatch(
-            actionToggleToast({
-                toggle: true,
-                value: 'Copied',
-                type: TOAST_CONFIGS.success,
-            }),
-        );
-    };
+    const translate = useSelector(translateSelector).general;
+
     const handleShowQrCode = () =>
         dispatch(
             actionToggleModal({
@@ -80,7 +71,7 @@ const Detail = (props: IProps) => {
                 <p className="decs ellipsis">{desc}</p>
                 <div className="icons">
                     <QrCodeIcon onClick={handleShowQrCode} />
-                    <CopyIcon onClick={handleCopy} />
+                    <CopyIcon tooltip={translate.copied} text={desc.toString()} />
                 </div>
             </div>
         </Styled>

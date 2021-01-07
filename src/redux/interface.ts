@@ -12,6 +12,7 @@ import { IHistoryReducer } from 'src/module/History';
 import { IAddressBookReducer } from 'src/module/AddressBook';
 import { IHeaderReducer } from 'src/components/Header';
 import { IPasswordReducers } from 'src/module/Password';
+import { ITooltipReducer } from 'src/module/Tooltip';
 
 export interface IAction {
     type: string;
@@ -33,4 +34,5 @@ export interface IRootState {
     header: IHeaderReducer;
     shield: IShieldReducer;
     password: IPasswordReducers;
+    tooltip: ITooltipReducer;
 }
