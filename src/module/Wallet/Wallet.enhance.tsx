@@ -56,7 +56,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
                 loadBalance(),
             ]);
         } catch (error) {
-            console.debug('ERROR', error);
             dispatch(
                 actionToggleToast({
                     type: TOAST_CONFIGS.error,

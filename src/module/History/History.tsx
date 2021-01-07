@@ -177,6 +177,7 @@ const History = React.memo(() => {
                     {
                         title: historyLanguage.contract,
                         desc: history?.erc20TokenAddress,
+                        copyData: history?.erc20TokenAddress,
                     },
                     {
                         customItem: (
