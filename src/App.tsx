@@ -8,10 +8,11 @@ import 'animate.css';
 import './reset.scss';
 import { createBrowserHistory, createMemoryHistory } from 'history';
 import { Router } from 'react-router';
-import { Toast } from './components';
+import MainRoute from 'src/module/MainRoute';
+import { Toast } from 'src/components';
+import { TooltipContainer } from 'src/module/Tooltip';
 import { themeSelector } from './module/Configs';
 import withApp from './App.enhance';
-import MainRoute from './module/MainRoute/MainRoute';
 import { isDev } from './configs';
 
 const history = isDev ? createBrowserHistory() : createMemoryHistory(); // Instead of createBrowserHistory();
@@ -25,6 +26,7 @@ const App: React.FunctionComponent = () => {
                 <MainRoute />
                 <Modal />
                 <Toast />
+                <TooltipContainer />
             </Router>
         </ThemeProvider>
     );
