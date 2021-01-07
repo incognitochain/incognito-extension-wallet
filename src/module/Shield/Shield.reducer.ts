@@ -11,7 +11,7 @@ import {
 } from './Shield.constant';
 
 const initialState: IShieldReducer = {
-    isFetching: true,
+    isFetching: false,
     isFetched: false,
     data: {
         min: '0',

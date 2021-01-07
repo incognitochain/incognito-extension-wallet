@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
+import { selectedTokenIdSelector } from 'src/module/Token';
 import { actionFetch as actionGenShieldAddr, actionFreeShield } from 'src/module/Shield';
 
 interface IProps {}
@@ -14,11 +14,11 @@ interface TInner {
 export interface IMergedProps extends IProps, TInner {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
-    const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
+    const tokenId: string = useSelector(selectedTokenIdSelector);
     const dispatch = useDispatch();
     const handleGenShieldAddr = async () => {
         try {
-            dispatch(actionGenShieldAddr({ tokenId: selectedPrivacy.tokenId }));
+            dispatch(actionGenShieldAddr({ tokenId }));
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -30,11 +30,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
     };
     React.useEffect(() => {
-        handleGenShieldAddr();
+        if (tokenId) {
+            handleGenShieldAddr();
+        }
         return () => {
             dispatch(actionFreeShield());
         };
-    }, [selectedPrivacy]);
+    }, [tokenId]);
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, handleGenShieldAddr }} />
