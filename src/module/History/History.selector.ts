@@ -184,7 +184,7 @@ export const historyBridgeDataSelector = createSelector(
                 decimalDigits,
                 clipAmount: false,
             });
-            const expiredAtFormated = format.formatUnixDateTime(expiredAt);
+            const expiredAtFormated = isDecentralized ? '' : format.formatUnixDateTime(expiredAt);
             return {
                 ...historyDt,
                 statusMessage,
