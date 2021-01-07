@@ -3,11 +3,22 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/module/Account';
-import { bridgeTokensSelector, chainTokensSelector, selectedPrivacySelector, ISelectedPrivacy } from 'src/module/Token';
+import {
+    selectedTokenIdSelector,
+    bridgeTokensSelector,
+    chainTokensSelector,
+    selectedPrivacySelector,
+    ISelectedPrivacy,
+} from 'src/module/Token';
 import BridgeHistoryModel from 'incognito-js/build/web/browser/src/models/bridge/bridgeHistory';
 import { camelCaseKeys } from 'src/utils/object';
 import toString from 'lodash/toString';
-import { IReceiveHistoryToken, IReceiveHistoryTokenFetched, TxHistoryReceiveModel } from './History.interface';
+import {
+    IReceiveHistoryToken,
+    IReceiveHistoryTokenFetched,
+    TxBridgeHistoryModel,
+    TxHistoryReceiveModel,
+} from './History.interface';
 import { handleFilterHistoryReceiveByTokenId } from './History.utils';
 import {
     ACTION_FETCHING_RECEIVE_HISTORY,
@@ -27,6 +38,7 @@ import {
     historyCacheSelector,
     receiveHistorySelector,
     historySelector,
+    getHistoryBridgeByIdSelector,
 } from './History.selector';
 
 export const actionFreeHistory = () => ({
@@ -207,13 +219,31 @@ export const actionFetchAllHistory = () => async (dispatch: Dispatch, getState: 
         }
         await dispatch(actionFetchingAllHistory());
         await Promise.all([
-            actionFetchCacheHistory()(dispatch, getState),
             actionFetchBridgeHistory()(dispatch, getState),
             actionFetchReceiveHistory(true)(dispatch, getState),
+            actionFetchCacheHistory()(dispatch, getState),
         ]);
     } catch (error) {
         throw error;
     } finally {
         dispatch(actionFetchedAllHistory());
+    }
+};
+
+export const actionRetryShieldBridgeToken = (id: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        const state = getState();
+        const account: AccountInstance = defaultAccountSelector(state);
+        const bridgeTokens = bridgeTokensSelector(state);
+        const chainTokens = chainTokensSelector(state);
+        const tokenId: string = selectedTokenIdSelector(state);
+        const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
+        const history: TxBridgeHistoryModel | undefined = getHistoryBridgeByIdSelector(state)(id);
+        if (!history || !history.canRetryExpiredDeposit) {
+            return;
+        }
+        await token.bridgeRetryHistory({ ...history, id: Number(id) });
+    } catch (error) {
+        throw error;
     }
 };

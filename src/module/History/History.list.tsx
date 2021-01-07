@@ -1,8 +1,8 @@
 import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
-import withHistory, { IMergeProps } from './History.enhance';
-
+import ErrorBoundary from 'src/components/ErrorBoundary';
+import { LoadingIcon } from 'src/components';
 import { TxHistoryItem } from './History.interface';
 
 const Styled = styled.div`
@@ -57,6 +57,29 @@ const HistoryItem = React.memo((props: TxHistoryItem) => {
     );
 });
 
+interface IProps {
+    histories: TxHistoryItem[];
+    handleOnEndReached?: () => any;
+    renderFooter?: React.ReactElement | React.FunctionComponent | any;
+    loading?: boolean;
+}
+
+interface TInner {}
+
+interface IMergeProps extends IProps, TInner {}
+
+const withHistoryList = (WrappedComponent: React.FunctionComponent) => (props: IMergeProps & any) => {
+    const { loading }: IMergeProps = props;
+    if (loading) {
+        return <LoadingIcon center />;
+    }
+    return (
+        <ErrorBoundary>
+            <WrappedComponent {...props} />
+        </ErrorBoundary>
+    );
+};
+
 const History = React.memo((props: IMergeProps & any) => {
     const { histories, handleOnEndReached, renderFooter }: IMergeProps = props;
     const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -77,4 +100,4 @@ const History = React.memo((props: IMergeProps & any) => {
     );
 });
 
-export default withHistory(History);
+export default withHistoryList(History);

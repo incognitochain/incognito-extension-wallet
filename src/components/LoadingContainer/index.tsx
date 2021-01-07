@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { LoadingIcon } from '../Icons';
+import { LoadingIcon } from 'src/components/Icons';
 
 const Styled = styled.div`
     position: relative;

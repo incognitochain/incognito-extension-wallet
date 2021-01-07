@@ -1,3 +1,4 @@
+import memoize from 'lodash/memoize';
 import BigNumber from 'bignumber.js';
 import { TxHistoryModelParam, CONSTANT } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
@@ -12,7 +13,7 @@ import { HISTORY_FORMAT_TYPE } from './History.constant';
 import { getStatusData, getTypeData, handleCombineHistory } from './History.utils';
 import { TxBridgeHistoryModel, TxCacheHistoryModel, TxHistoryReceiveModel } from './History.interface';
 
-const { TYPE } = CONSTANT.HISTORY;
+const { TYPE, STATUS_CODE_SHIELD_CENTRALIZED } = CONSTANT.HISTORY;
 const { HISTORY_TYPE } = CONSTANT.TX_CONSTANT;
 
 export const historySelector = createSelector(
@@ -112,8 +113,9 @@ export const historyCacheDataSelector = createSelector(
     },
 );
 
-export const getHistoryCacheByTxIdSelector = createSelector(historyCacheDataSelector, (history) => (txId: string) =>
-    history && history.find((h: TxCacheHistoryModel) => h.txId === txId),
+export const getHistoryCacheByTxIdSelector = createSelector(
+    (state: IRootState) => historyCacheDataSelector(state),
+    (history) => memoize((txId: string) => history && history.find((h: TxCacheHistoryModel) => h.txId === txId)),
 );
 
 export const receiveHistorySelector = createSelector(historySelector, (history) => history.receiveHistory);
@@ -152,8 +154,8 @@ export const receiveHistoryDataSelector = createSelector(
     },
 );
 
-export const getHistoryReceiveByTxIdSelector = createSelector(receiveHistoryDataSelector, (history) => (txId: string) =>
-    history && history.find((h: TxHistoryReceiveModel) => h.txId === txId),
+export const getHistoryReceiveByTxIdSelector = createSelector(receiveHistoryDataSelector, (history) =>
+    memoize((txId: string) => history && history.find((h: TxHistoryReceiveModel) => h.txId === txId)),
 );
 
 export const historyBridgeSelector = createSelector(historySelector, (history) => history.brideHistory);
@@ -164,13 +166,13 @@ export const historyBridgeDataSelector = createSelector(
     decimalDigitsSelector,
     (history, selectedPrivacy, decimalDigits) => {
         return history.data.map((h: TxBridgeHistoryModel) => {
-            const { updatedAt, incognitoAmount, expiredAt, decentralized } = h;
-            const depositTmpAddress = h.addressType === TYPE.SHIELD && h.address;
+            const { status, address, addressType, updatedAt, incognitoAmount, expiredAt, decentralized } = h;
+            const depositTmpAddress = addressType === TYPE.SHIELD && address;
             const isShieldTx = !!depositTmpAddress;
             const isDecentralized = decentralized === 1;
             const historyDt = { ...h, isShieldTx, isDecentralized };
             const { statusMessage, statusColor } = getStatusData(historyDt);
-            const type = getTypeData(h.addressType, h);
+            const type = getTypeData(addressType, h);
             const timeFormated = format.formatUnixDateTime(updatedAt);
             const lockTime = new Date(updatedAt).getTime();
             const amountFormated = format.formatAmount({
@@ -185,6 +187,10 @@ export const historyBridgeDataSelector = createSelector(
                 clipAmount: false,
             });
             const expiredAtFormated = isDecentralized ? '' : format.formatUnixDateTime(expiredAt);
+            const canRetryExpiredDeposit =
+                !isDecentralized &&
+                addressType === TYPE.SHIELD &&
+                STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status);
             return {
                 ...historyDt,
                 statusMessage,
@@ -197,13 +203,14 @@ export const historyBridgeDataSelector = createSelector(
                 symbol: selectedPrivacy.symbol || selectedPrivacy.pSymbol,
                 expiredAtFormated,
                 statusColor,
+                canRetryExpiredDeposit,
             };
         });
     },
 );
 
-export const getHistoryBridgeByIdSelector = createSelector(historyBridgeDataSelector, (history) => (id: string) =>
-    history.find((h) => h.id === id),
+export const getHistoryBridgeByIdSelector = createSelector(historyBridgeDataSelector, (history) =>
+    memoize((id: string) => history.find((h) => h.id === id)),
 );
 
 export const combineHistorySelector = createSelector(
