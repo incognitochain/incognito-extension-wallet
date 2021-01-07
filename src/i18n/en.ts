@@ -154,7 +154,7 @@ const language: ILanguage = {
         },
     },
     history: {
-        headerTitle: 'History',
+        headerTitle: 'Transaction details',
         id: 'ID',
         fee: 'Fee',
         status: 'Status',
