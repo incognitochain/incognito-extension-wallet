@@ -31,7 +31,8 @@ const EstimateFee = React.memo(() => {
     );
 });
 
-const FormForceSend = (props: IMergeProps) => {
+const FormForceSend = (props: IMergeProps & any) => {
+    const { originUrl } = props;
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const theme: ITheme = useSelector(themeSelector);
@@ -40,6 +41,7 @@ const FormForceSend = (props: IMergeProps) => {
     return (
         <Styled theme={theme}>
             <Header onGoBack={onGoBack} title={translate.forceSendHeaderTitle} />
+            <p className="sub-text origin-url fw-regular fs-regular">{originUrl}</p>
             <p className="force-balance fw-regular fs-regular">{`${translate.balance}: ${selectedPrivacy.formatAmount} ${selectedPrivacy.symbol}`}</p>
             <form onSubmit={handleSubmit(handleSend)}>
                 <Field
@@ -54,7 +56,7 @@ const FormForceSend = (props: IMergeProps) => {
                     validate={validateAmount}
                 />
                 <EstimateFee />
-                <Field
+                {/* <Field
                     component={InputField}
                     name={FORM_CONFIGS.memo}
                     inputType={INPUT_FIELD.leftTitle}
@@ -62,7 +64,7 @@ const FormForceSend = (props: IMergeProps) => {
                         placeholder: translate.placeholderMemo,
                     }}
                     subtitle={translate.memo}
-                />
+                /> */}
                 <Row>
                     <Button title={translate.cancel} type="button" onClick={onGoBack} />
                     <Button title={forceSendTitleBtnSubmit} disabled={disabledForm} type="submit" />

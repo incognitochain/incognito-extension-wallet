@@ -21,7 +21,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
             const pass: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.GET_PASS_WORK, {});
             if (pass) dispatch(actionLogin(pass));
         } catch (error) {
-            /* Ignored error */
             console.debug('LOAD PASSWORK WITH ERROR:', error);
         }
     };

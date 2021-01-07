@@ -16,6 +16,8 @@ export const Row = styled.div`
         display: flex;
         flex-direction: row;
         align-items: center;
+        height: 25px;
+        width: 100%;
         &.margin-top {
             margin-top: 10px;
         }
@@ -24,6 +26,9 @@ export const Row = styled.div`
         }
         &.margin-left {
             margin-left: 5px;
+        }
+        &.force-height {
+            height: 30px;
         }
     }
     p.status {

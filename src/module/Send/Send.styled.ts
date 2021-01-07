@@ -28,7 +28,12 @@ export const Styled = styled.div`
         }
     }
     .force-balance {
+        margin-top: 55px;
         color: ${COLORS.newGrey};
+    }
+    .origin-url {
+        position: absolute;
+        top: 85px;
     }
 `;
 
@@ -37,7 +42,7 @@ export const Row = styled.div`
     display: flex;
     justify-content: space-between;
     .btn-container {
-        width: 127px;
+        width: 145px;
         margin: 30px 0px;
         margin-left: inherit;
     }

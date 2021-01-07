@@ -12,6 +12,7 @@ import { isString, toString } from 'lodash';
 import { route as routeDetail } from 'src/module/Token/features/Detail';
 import { useHistory } from 'react-router-dom';
 import { withHeaderApp } from 'src/components/Header';
+import withConnect from 'src/App.enhanceConnect';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -114,6 +115,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     onClickAddressBook,
                     onClickScan,
                     onGoBack,
+                    showConnectStatus: true,
                 }}
             />
         </ErrorBoundary>
@@ -122,7 +124,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
 
 export default compose<IMergeProps, any>(
     withLayout,
-    withHeaderApp,
     reduxForm({
         form: FORM_CONFIGS.formName,
     }),
@@ -132,5 +133,7 @@ export default compose<IMergeProps, any>(
     withValAddress,
     withValAmount,
     withSend,
+    withConnect,
     enhance,
+    withHeaderApp,
 );
