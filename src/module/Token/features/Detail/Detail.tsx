@@ -27,10 +27,7 @@ const TokenBalance = React.memo(() => {
                     showSymbol={false}
                 />
             </div>
-            <div className="hook-container">
-                <Balance tokenId={tokenId} classNameTextCustom="balance-token" />
-                <PerChange tokenId={tokenId} />
-            </div>
+            <Balance tokenId={tokenId} classNameTextCustom="balance-token" />
         </div>
     );
 });
