@@ -27,7 +27,6 @@ export const initWallet = async (walletName: string, pass: string) => {
 
 export const loadWallet = async (walletId: number, pass: string) => {
     let wallet;
-    console.log('SANG TEST: ', walletId);
     const walletData = await researchWallet(walletId);
     const { encryptWallet } = walletData;
     if (!encryptWallet) {
