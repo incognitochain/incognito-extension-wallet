@@ -1,5 +1,5 @@
 import { ENVS, isDev } from 'src/configs';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { COLORS } from './colors';
 import { FONT_SIZES } from './fontSize';
 
@@ -210,5 +210,14 @@ export const GlobalStyled = createGlobalStyle`
     }
     .m-t-50 {
         margin-top: 50px;
+    }
+`;
+
+export const Row = styled.div`
+    display: flex;
+    flex-direction: row;
+    .center {
+        align-items: center;
+        justify-content: center;
     }
 `;
