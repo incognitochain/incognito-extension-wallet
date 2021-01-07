@@ -9,7 +9,8 @@ const language: ILanguage = {
     general: {
         copied: 'Copied',
         copy: 'Copy',
-        lostNetwork: 'You are currently offline',
+        lostNetwork:
+            'Your internet connection is currently<br />unstable. Please check your network<br />settings and try again.',
         btnReload: 'Reload',
         loadingTx: `Please do not navigate away till this<br />window closes.`,
         btnRetry: 'Retry',
@@ -83,7 +84,7 @@ const language: ILanguage = {
             copied: 'Copied',
         },
         accountDetail: {
-            title1: 'Your incognito address',
+            title1: 'Incognito address',
             title2: 'Private key',
             title3: 'Public key',
             title4: 'Readonly key',
@@ -287,13 +288,13 @@ const language: ILanguage = {
             title: 'Back up',
             newMnemonic: 'Save these words in the correct order. Never share this phrase with anyone else.',
             newMnemonicBtn: "I've saved my phrase",
-            hiddenText: 'Click to reveal.\n Back it up if you heaven’t!',
+            hiddenText: 'Click to reveal.\n Back it up if you haven’t!',
         },
         info: {
             title: 'View keys',
             revealPhrase: 'Reveal master key phrase',
             viewKeys: 'View keychains',
-            revealPhraseBtn: 'Reveal phrase',
+            revealPhraseBtn: 'View keys',
         },
     },
     modal: {

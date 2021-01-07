@@ -5,10 +5,11 @@ import { configStore, IConfigStore } from 'src/redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { compose } from 'recompose';
 import { Detector } from 'react-detect-offline';
+import { LostConnectIcon } from 'src/components/Icons';
 import { translateByFieldSelector } from './module/Configs';
 import { IGeneralLanguage } from './i18n';
-import { Button } from './components';
 import withBackground from './AppBackground.enhance';
+import { Styled } from './App.styled';
 
 const { store, persistor }: IConfigStore = configStore();
 
@@ -17,8 +18,8 @@ const LostConnect = React.memo(() => {
     return (
         <ErrorBoundary>
             <div className="preload-container">
-                <p>{translate.lostNetwork}</p>
-                <Button title={translate.btnReload} />
+                <LostConnectIcon />
+                <p dangerouslySetInnerHTML={{ __html: translate.lostNetwork }} />
             </div>
         </ErrorBoundary>
     );
@@ -41,7 +42,7 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
         <ErrorBoundary>
             <Provider store={store}>
                 <PersistGate loading={<div>...</div>} persistor={persistor}>
-                    {!!store && <WrappedComponent {...props} />}
+                    <Styled>{!!store && <WrappedComponent {...props} />}</Styled>
                 </PersistGate>
             </Provider>
         </ErrorBoundary>

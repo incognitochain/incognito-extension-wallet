@@ -9,7 +9,8 @@ const language: ILanguage = {
     general: {
         copied: 'Copied',
         copy: 'Copy',
-        lostNetwork: 'You are currently offline',
+        lostNetwork:
+            'Your internet connection is currently<br />unstable. Please check your network<br />settings and try again.',
         btnReload: 'Reload',
         loadingTx: `Please do not navigate away till this<br />window closes.`,
         btnRetry: 'Retry',
