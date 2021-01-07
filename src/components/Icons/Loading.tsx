@@ -1,12 +1,11 @@
 import React from 'react';
-import Spinner, { SpinnerProps } from 'react-bootstrap/esm/Spinner';
+import { ENVS } from 'src/configs';
 import styled from 'styled-components';
 
 export interface ILoadingIconProps {
     width?: string;
     height?: string;
     center?: boolean;
-    spinnerProps?: SpinnerProps;
 }
 
 const Styled: any = styled.div`
@@ -26,10 +25,10 @@ const Styled: any = styled.div`
 `;
 
 const Loading = (props: ILoadingIconProps) => {
-    const { width = '20px', height = '20px', center, spinnerProps } = props;
+    const { width = '20px', height = '20px', center } = props;
     return (
         <Styled width={width} height={height} className={`loading-icon ${center ? 'loading-center' : ''}`}>
-            <Spinner animation={spinnerProps?.animation || 'border'} {...spinnerProps} />
+            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/loading.gif`} alt="loading" />
         </Styled>
     );
 };
