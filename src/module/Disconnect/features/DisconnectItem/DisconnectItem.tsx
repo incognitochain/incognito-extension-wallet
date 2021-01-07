@@ -1,5 +1,9 @@
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { PRV_ID } from 'src/constants/coin';
+import { defaultAccountSelector } from 'src/module/Account';
+import { getPrivacyDataByTokenIDSelector } from 'src/module/Token';
 import withEnhance from './DisconnectItem.enhance';
 import { Styled, Row } from './DisconnectItem.styled';
 
@@ -11,6 +15,7 @@ interface IProps {
 
 const DisconnectItem = React.memo((props: IProps & any) => {
     const { account, paymentAddress, connected, handleDisconnet } = props;
+    const prvBalance = useSelector(getPrivacyDataByTokenIDSelector)(PRV_ID);
     const renderButtonDisconnect = () => (
         <div onClick={handleDisconnet}>
             <p className="status fw-regular">Diconnect</p>
@@ -18,18 +23,14 @@ const DisconnectItem = React.memo((props: IProps & any) => {
     );
     return (
         <Styled className="wrapper">
-            <Row className="space-between">
-                <Row>
-                    <p className="account-name fw-medium">{account.name}</p>
-                    <Row className="margin-left">
-                        <p className="payment-address fw-medium">(</p>
-                        <p className="payment-address ellipsis fw-medium">{paymentAddress}</p>
-                        <p className="payment-address fw-medium">)</p>
-                    </Row>
-                </Row>
+            <Row className="space-between force-height">
+                <p className="account-name fw-medium fs-medium">{account.name}</p>
                 {connected && renderButtonDisconnect()}
             </Row>
-            <p className="bottom-status">Active</p>
+            <Row className="space-between">
+                <p className="account-amount fs-regular fw-medium ellipsis">{`${prvBalance.amount} PRV `}</p>
+                <p className="payment-address fs-regular fw-medium ellipsis">{paymentAddress}</p>
+            </Row>
         </Styled>
     );
 });
