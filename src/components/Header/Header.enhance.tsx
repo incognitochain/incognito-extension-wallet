@@ -50,7 +50,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     <button
                         type="button"
                         onClick={onHandleToggleSearch}
-                        className="header-title fw-medium fs-medium ellipsis"
+                        className={`header-title fw-medium fs-medium ellipsis ${canSearch ? 'sub-text' : ''}`}
                     >
                         {title}
                     </button>

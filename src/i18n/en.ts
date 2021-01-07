@@ -36,7 +36,7 @@ const language: ILanguage = {
         selectAccount: {
             headerTitle: 'Search keychains',
         },
-        addCoin: 'Add a coin +',
+        addCoin: 'Manage coin list',
         error: {
             walletNotExisted: 'Wallet is not exist',
         },
@@ -47,12 +47,12 @@ const language: ILanguage = {
     },
     token: {
         followToken: {
-            headerTitle: 'Add a coin',
+            headerTitle: 'Manage coin list',
             addManually: 'Add manually +',
             dontSeeYourCoin: `Don't see your coin?`,
         },
         addToken: {
-            headerTitle: 'Add a coin',
+            headerTitle: 'Search a coin',
             added: 'Added',
         },
         detail: {
