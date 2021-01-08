@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { isDev } from 'src/configs';
+import { ENVS, isDev } from 'src/configs';
 import APP_CONSTANT from 'src/constants/app';
 import { actionUpdateDataForceSend } from 'src/module/Send/Send.actions';
 import { IRequestDApp } from 'src/module/Preload';
@@ -18,7 +18,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     };
     const loadPasswork = async () => {
         try {
-            const pass: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.GET_PASS_WORK, {});
+            let pass: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.GET_PASS_WORK, {});
+            if (isDev) {
+                pass = ENVS.REACT_APP_PASSWORD_SECRET_KEY;
+            }
             if (pass) dispatch(actionLogin(pass));
         } catch (error) {
             console.debug('LOAD PASSWORK WITH ERROR:', error);

@@ -239,10 +239,28 @@ export const actionRetryShieldBridgeToken = (id: string) => async (dispatch: Dis
         const tokenId: string = selectedTokenIdSelector(state);
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
         const history: TxBridgeHistoryModel | undefined = getHistoryBridgeByIdSelector(state)(id);
-        if (!history || !history.canRetryExpiredDeposit) {
+        if (!history || !history.canRetryExpiredShield) {
             return;
         }
         await token.bridgeRetryHistory({ ...history, id: Number(id) });
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const actionRemoveShieldBridgeToken = (id: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        const state = getState();
+        const account: AccountInstance = defaultAccountSelector(state);
+        const bridgeTokens = bridgeTokensSelector(state);
+        const chainTokens = chainTokensSelector(state);
+        const tokenId: string = selectedTokenIdSelector(state);
+        const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
+        const history: TxBridgeHistoryModel | undefined = getHistoryBridgeByIdSelector(state)(id);
+        if (!history || !history.canRemoveExpiredOrPendingShield) {
+            return;
+        }
+        return await token.bridgeRemoveHistory({ ...history, id: Number(id) });
     } catch (error) {
         throw error;
     }

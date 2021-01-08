@@ -9,6 +9,7 @@ interface IENVS {
     REACT_APP_HOME_CONFIG: string;
     REACT_APP_VERSION: string;
     REACT_APP_WALLET_NAME: string;
+    REACT_APP_TOGGLE_REDUX_LOGGER: string;
 }
 
 const defaultEnvs = {
@@ -20,6 +21,7 @@ const defaultEnvs = {
     REACT_APP_HOME_CONFIG: 'staging',
     REACT_APP_VERSION: '1.0',
     REACT_APP_WALLET_NAME: '',
+    REACT_APP_TOGGLE_REDUX_LOGGER: 'false',
 };
 
 export const getEnvs = () => {
@@ -43,3 +45,5 @@ export const getEnvs = () => {
 export const ENVS: IENVS = getEnvs();
 
 export const isDev: boolean = ENVS.REACT_APP_MODE === 'development';
+
+export const isToggleReduxLogger = ENVS.REACT_APP_TOGGLE_REDUX_LOGGER === 'true';

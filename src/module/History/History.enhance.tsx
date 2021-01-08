@@ -2,11 +2,12 @@ import React, { HTMLAttributes } from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { translateByFieldSelector } from 'src/module/Configs';
 import QrCode from 'src/components/QrCode';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { IHistoryLanguage } from 'src/i18n';
 import { serverSelector } from 'src/module/Preload';
 import { IHistoryItem } from 'src/module/History/features/HistoryItem/HistoryItem.interface';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { TxBridgeHistoryModel, TxCacheHistoryModel, TxHistoryItem, TxHistoryReceiveModel } from './History.interface';
 import {
     getHistoryBridgeByIdSelector,
@@ -14,24 +15,32 @@ import {
     getHistoryReceiveByTxIdSelector,
 } from './History.selector';
 import { HISTORY_FORMAT_TYPE } from './History.constant';
+import { actionRemoveShieldBridgeToken } from './History.actions';
 
 interface IProps {}
 
 interface TInner {
     historyLanguage: IHistoryLanguage;
     historyFactories: IHistoryItem[];
+    handleRemoveTxHistory?: any;
+    removingBridgeTx?: boolean;
+    canRemoveExpiredOrPendingShield?: boolean;
 }
 
 export interface IMergeProps extends IProps, TInner {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & HTMLAttributes<HTMLElement>) => {
     const { state }: any = useLocation();
+    const { id }: { id: string } = useParams();
     const { history: h }: { history: TxHistoryItem } = state;
     const historyLanguage: IHistoryLanguage = useSelector(translateByFieldSelector)('history');
     const server = useSelector(serverSelector);
+    const dispatch = useDispatch();
+    const { goBack } = useHistory();
     const getHistoryCacheByTxId = useSelector(getHistoryCacheByTxIdSelector);
     const getHistoryReceiveByTxId = useSelector(getHistoryReceiveByTxIdSelector);
     const getHistoryBridgeById = useSelector(getHistoryBridgeByIdSelector);
+    const [removingBridgeTx, setRemoveBridgeTx] = React.useState(false);
     if (!h) {
         return null;
     }
@@ -187,10 +196,49 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
         return [];
     };
+    const handleRemoveTxHistory = async () => {
+        try {
+            if (removingBridgeTx) {
+                return;
+            }
+            await setRemoveBridgeTx(true);
+            const removed: any = await dispatch(actionRemoveShieldBridgeToken(h?.id));
+            if (removed) {
+                goBack();
+                dispatch(
+                    actionToggleToast({
+                        value: 'Canceled',
+                        type: TOAST_CONFIGS.success,
+                        toggle: true,
+                    }),
+                );
+            }
+        } catch (error) {
+            dispatch(
+                actionToggleToast({
+                    value: error,
+                    type: TOAST_CONFIGS.error,
+                    toggle: true,
+                }),
+            );
+        } finally {
+            await setRemoveBridgeTx(false);
+        }
+    };
     const historyFactories: IHistoryItem[] = getHistoryFactories();
+    const bridgeHistory = getHistoryBridgeById(id);
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, historyFactories, historyLanguage }} />
+            <WrappedComponent
+                {...{
+                    ...props,
+                    historyFactories,
+                    historyLanguage,
+                    handleRemoveTxHistory,
+                    canRemoveExpiredOrPendingShield: !!bridgeHistory?.canRemoveExpiredOrPendingShield,
+                    removingBridgeTx,
+                }}
+            />
         </ErrorBoundary>
     );
 };
