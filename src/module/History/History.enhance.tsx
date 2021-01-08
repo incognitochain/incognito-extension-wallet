@@ -86,6 +86,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                         title: historyLanguage.coin,
                         desc: history.symbol,
                     },
+                    {
+                        title: historyLanguage.memo,
+                        desc: history.memo,
+                    },
                 ];
             }
             case HISTORY_FORMAT_TYPE.receive: {
