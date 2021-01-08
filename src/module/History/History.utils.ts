@@ -66,11 +66,11 @@ export const getStatusData = (history: any) => {
     let statusColor = '';
     switch (status) {
         case STATUS_TEXT.PENDING:
-        case TX_STATUS.CONFIRMED:
+        case TX_STATUS.SUCCESS:
             statusMessage = 'Pending';
             break;
         case STATUS_TEXT.SUCCESS:
-        case TX_STATUS.SUCCESS:
+        case TX_STATUS.CONFIRMED:
             statusMessage = 'Complete';
             statusColor = COLORS.green;
             break;
@@ -199,7 +199,7 @@ export const handleFilterHistoryReceiveByTokenId = ({
                     privacyCustomTokenProofDetail: history?.PrivacyCustomTokenProofDetail,
                     isMintedToken,
                     typeCode: type,
-                    status: TX_STATUS.SUCCESS,
+                    status: TX_STATUS.CONFIRMED,
                     isHistoryReceived: true,
                     timeFormated,
                     lockTime: new Date(lockTime).getTime(),
