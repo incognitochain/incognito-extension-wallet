@@ -132,6 +132,7 @@ export interface TxBridgeHistoryModel {
     statusColor: string;
     memo: string;
     statusDetail: string;
-    canRetryExpiredDeposit: boolean;
+    canRetryExpiredShield: boolean;
     isDecentralized: boolean;
+    canRemoveExpiredOrPendingShield: boolean;
 }

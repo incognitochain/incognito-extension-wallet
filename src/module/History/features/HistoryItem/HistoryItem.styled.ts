@@ -1,24 +1,24 @@
 import styled from 'styled-components';
 
 export const Styled = styled.div`
-    .confirm-tx-item {
+    .history-tx-item {
         display: flex;
         flex-direction: row;
         align-items: 'center';
         margin-bottom: 15px;
         justify-content: space-between;
     }
-    .confirm-tx-item label {
+    .history-tx-item label {
         flex-basis: 30%;
     }
-    .confirm-tx-item .hook {
+    .history-tx-item .hook {
         position: relative;
         flex-basis: 65%;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-    .confirm-tx-item .hook span {
+    .history-tx-item .hook span {
         max-width: 135px;
     }
     .toggle-message {
@@ -33,7 +33,7 @@ export const Styled = styled.div`
     .arrow-icon {
         right: 0;
     }
-    .confirm-tx-item .shield-hook {
+    .history-tx-item .shield-hook {
         justify-content: unset;
     }
     .shield-hook .btn-retry-shield {

@@ -13,7 +13,7 @@ import { HISTORY_FORMAT_TYPE } from './History.constant';
 import { getStatusData, getTypeData, handleCombineHistory } from './History.utils';
 import { TxBridgeHistoryModel, TxCacheHistoryModel, TxHistoryReceiveModel } from './History.interface';
 
-const { TYPE, STATUS_CODE_SHIELD_CENTRALIZED } = CONSTANT.HISTORY;
+const { TYPE, STATUS_CODE_SHIELD_CENTRALIZED, STATUS_CODE_SHIELD_DECENTRALIZED } = CONSTANT.HISTORY;
 const { HISTORY_TYPE } = CONSTANT.TX_CONSTANT;
 
 export const historySelector = createSelector(
@@ -187,10 +187,16 @@ export const historyBridgeDataSelector = createSelector(
                 clipAmount: false,
             });
             const expiredAtFormated = isDecentralized ? '' : format.formatUnixDateTime(expiredAt);
-            const canRetryExpiredDeposit =
+            const canRetryExpiredShield =
                 !isDecentralized &&
                 addressType === TYPE.SHIELD &&
                 STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status);
+            const canRemoveExpiredOrPendingShield =
+                addressType === TYPE.SHIELD &&
+                (STATUS_CODE_SHIELD_CENTRALIZED.PENDING === status ||
+                    STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status) ||
+                    STATUS_CODE_SHIELD_DECENTRALIZED.PENDING === status ||
+                    STATUS_CODE_SHIELD_DECENTRALIZED.TIMED_OUT === status);
             return {
                 ...historyDt,
                 statusMessage,
@@ -203,7 +209,8 @@ export const historyBridgeDataSelector = createSelector(
                 symbol: selectedPrivacy.symbol || selectedPrivacy.pSymbol,
                 expiredAtFormated,
                 statusColor,
-                canRetryExpiredDeposit,
+                canRetryExpiredShield,
+                canRemoveExpiredOrPendingShield,
             };
         });
     },

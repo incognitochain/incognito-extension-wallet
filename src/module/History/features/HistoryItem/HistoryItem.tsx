@@ -20,7 +20,7 @@ const RetryShield = React.memo(() => {
     const { id } = params;
     const history: TxBridgeHistoryModel | undefined = useSelector(getHistoryBridgeByIdSelector)(id);
     const [retry, setRetry] = React.useState(false);
-    if (!history || !history.canRetryExpiredDeposit) {
+    if (!history || !history.canRetryExpiredShield) {
         return null;
     }
     const handleRetryShield = async () => {
@@ -93,7 +93,7 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
     }
     return (
         <Styled>
-            <div className="confirm-tx-item">
+            <div className="history-tx-item">
                 <p className={`sub-text title ${titleClassName}`}>{title}</p>
                 <div className={`hook  ${retryShield ? 'shield-hook' : ''}`}>
                     <span className={`ellipsis desc ${descClassName}`} style={{ color: descColor }}>

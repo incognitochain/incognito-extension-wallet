@@ -1,13 +1,14 @@
 import React from 'react';
-import { Header } from 'src/components';
+import { Header, LoadingIcon } from 'src/components';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { themeSelector } from 'src/module/Configs/Configs.selector';
 import HistoryItem from 'src/module/History/features/HistoryItem';
+import TrashBin from 'src/components/Icons/TrashBin';
 import withHistory, { IMergeProps } from './History.enhance';
 
 const Styled = styled.div`
-    .confirm-tx-item .hook span.desc-amount {
+    .history-tx-item .hook span.desc-amount {
         max-width: 190px;
     }
     .shield-address {
@@ -22,11 +23,28 @@ const Styled = styled.div`
 `;
 
 const History = React.memo((props: IMergeProps & any) => {
-    const { historyFactories, historyLanguage }: IMergeProps = props;
+    const {
+        historyFactories,
+        historyLanguage,
+        handleRemoveTxHistory,
+        removingBridgeTx,
+        canRemoveExpiredOrPendingShield,
+    }: IMergeProps = props;
     const theme = useSelector(themeSelector);
     return (
         <Styled theme={theme}>
-            <Header title={historyLanguage.headerTitle} />
+            <Header
+                title={historyLanguage.headerTitle}
+                rightHeader={
+                    canRemoveExpiredOrPendingShield ? (
+                        removingBridgeTx ? (
+                            <LoadingIcon />
+                        ) : (
+                            <TrashBin onClick={handleRemoveTxHistory} />
+                        )
+                    ) : null
+                }
+            />
             <div className="scroll-view">
                 {historyFactories.map((item, index) => (
                     <HistoryItem key={item?.title || index} {...item} />
