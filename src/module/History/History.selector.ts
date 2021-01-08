@@ -33,7 +33,7 @@ export const historyCacheDataSelector = createSelector(
             return [];
         }
         const cacheHistory: TxCacheHistoryModel[] = histories.map((history) => {
-            const { historyType, nativeTokenInfo, privacyTokenInfo }: TxHistoryModelParam = history;
+            const { historyType, nativeTokenInfo, privacyTokenInfo, memo = '' }: TxHistoryModelParam = history;
             let amount = '';
             let fee = '';
             let useNativeFee = false;
@@ -106,6 +106,7 @@ export const historyCacheDataSelector = createSelector(
                 formatType: HISTORY_FORMAT_TYPE.cache,
                 lockTime,
                 statusColor,
+                memo,
             };
             return historyItem;
         });

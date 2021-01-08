@@ -69,6 +69,7 @@ export interface TxCacheHistoryModel {
     formatType: number;
     lockTime: number;
     statusColor: string;
+    memo: string;
 }
 
 export interface TxHistoryReceiveModel {

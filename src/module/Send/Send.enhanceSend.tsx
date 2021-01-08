@@ -57,10 +57,19 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             ];
             let tx;
             if (selectedPrivacy.isNativeToken) {
-                tx = await account.nativeToken.transfer(paymentInfos, fee);
+                tx = await account.nativeToken.transfer({
+                    paymentInfoList: paymentInfos,
+                    nativeFee: fee,
+                    memo,
+                });
             } else {
                 const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
-                tx = await token.transfer(paymentInfos, isUsedPRVFee ? fee : '', isUseTokenFee ? fee : '');
+                tx = await token.transfer({
+                    paymentInfoList: paymentInfos,
+                    nativeFee: isUsedPRVFee ? fee : '',
+                    privacyFee: isUseTokenFee ? fee : '',
+                    memo,
+                });
             }
             if (!tx) {
                 throw new Error(`Failed`);
