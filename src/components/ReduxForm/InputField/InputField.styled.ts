@@ -4,10 +4,17 @@ import { COLORS } from 'src/styles';
 export const Styled = styled.div`
     margin-top: 15px;
     .wrapper {
-        display: flex;
-        flex-direction: row;
-        &.large-margin-top {
-            margin-top: 25px;
+        .input-container > input {
+            text-align: right;
+            padding-right: 40px;
+        }
+        .input-container .suffix {
+            right: 10px;
+            z-index: 2;
+            max-width: 40px;
+        }
+        .input-not-suffix > input {
+            padding-right: 10px;
         }
     }
     .input-wrapper {
@@ -17,6 +24,9 @@ export const Styled = styled.div`
             margin-top: 10px;
         }
     }
+    .align-right {
+        text-align: right;
+    }
     .input-container {
         position: relative;
         height: 40px;
@@ -24,9 +34,7 @@ export const Styled = styled.div`
         flex: 1;
     }
     .sub-title {
-        margin-right: 25px;
-        margin-top: 10px;
-        width: 41px;
+        width: 70px;
     }
     > p {
         margin-top: 10px;
@@ -65,8 +73,16 @@ export const Styled = styled.div`
         border: solid 0.5px ${COLORS.colorGreyLight};
     }
     .input-wrap-suffix > input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        padding: 0 10px;
+        background-color: ${COLORS.colorGrey};
         color: ${COLORS.black};
-        background-color: ${COLORS.transparent};
+        border: solid 0.5px ${COLORS.colorGreyLight};
     }
     .input-wrap-suffix > p {
         margin-left: 3px;

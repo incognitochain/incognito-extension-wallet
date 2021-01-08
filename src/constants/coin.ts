@@ -12,7 +12,7 @@ const POPULAR_COIN_IDS = [POPULAR_COIN.XMR, POPULAR_COIN.BNB, POPULAR_COIN.USDT,
 
 export const PRV_ID = '0000000000000000000000000000000000000000000000000000000000000004';
 
-const PRV = {
+export const PRV = {
     id: PRV_ID,
     name: 'Privacy',
     displayName: 'Privacy',

@@ -7,6 +7,7 @@ import { ISendLanguage } from 'src/i18n';
 import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField/InputField.constant';
 import { ITheme } from 'src/styles';
+import { ellipsisCenter } from 'src/utils';
 import { IMergeProps } from './Send.enhance';
 import { sendDataSelector, sendSelector } from './Send.selector';
 import { ISelectedPrivacy, selectedPrivacySelector } from '../Token';
@@ -36,7 +37,7 @@ const FormForceSend = (props: IMergeProps & any) => {
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const theme: ITheme = useSelector(themeSelector);
-    const { forceSendTitleBtnSubmit, disabledForm }: ISendData = useSelector(sendDataSelector);
+    const { forceSendTitleBtnSubmit, disabledForm, inputMemo, inputAddress }: ISendData = useSelector(sendDataSelector);
     const { handleSubmit, handleSend, validateAmount, onGoBack } = props;
     return (
         <Styled theme={theme}>
@@ -51,20 +52,36 @@ const FormForceSend = (props: IMergeProps & any) => {
                     componentProps={{
                         disabled: true,
                     }}
-                    subtitle="Send"
+                    subtitle="Amount"
                     suffix={selectedPrivacy.symbol}
                     validate={validateAmount}
                 />
-                <EstimateFee />
-                {/* <Field
+                <Field
                     component={InputField}
-                    name={FORM_CONFIGS.memo}
+                    name={FORM_CONFIGS.toAddress}
                     inputType={INPUT_FIELD.leftTitle}
                     componentProps={{
-                        placeholder: translate.placeholderMemo,
+                        disabled: true,
+                        value: ellipsisCenter({
+                            str: inputAddress || '',
+                            limit: 10,
+                        }),
                     }}
-                    subtitle={translate.memo}
-                /> */}
+                    subtitle="Address"
+                />
+                {!!inputMemo && (
+                    <Field
+                        component={InputField}
+                        name={FORM_CONFIGS.memo}
+                        inputType={INPUT_FIELD.leftTitle}
+                        componentProps={{
+                            placeholder: translate.placeholderMemo,
+                            disabled: true,
+                        }}
+                        subtitle={translate.memo}
+                    />
+                )}
+                <EstimateFee />
                 <Row>
                     <Button title={translate.cancel} type="button" onClick={onGoBack} />
                     <Button title={forceSendTitleBtnSubmit} disabled={disabledForm} type="submit" />

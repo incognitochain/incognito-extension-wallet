@@ -1,9 +1,10 @@
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { PRV_ID } from 'src/constants/coin';
+import { PRV, PRV_ID } from 'src/constants/coin';
 import { defaultAccountSelector } from 'src/module/Account';
 import { getPrivacyDataByTokenIDSelector } from 'src/module/Token';
+import convert from 'src/utils/convert';
 import withEnhance from './DisconnectItem.enhance';
 import { Styled, Row } from './DisconnectItem.styled';
 
@@ -28,7 +29,10 @@ const DisconnectItem = React.memo((props: IProps & any) => {
                 {connected && renderButtonDisconnect()}
             </Row>
             <Row className="space-between">
-                <p className="account-amount fs-regular fw-medium ellipsis">{`${prvBalance.amount} PRV `}</p>
+                <p className="account-amount fs-regular fw-medium ellipsis">{`${convert.toHumanAmount({
+                    originalAmount: prvBalance.amount || 0,
+                    decimals: PRV.pDecimals,
+                })} PRV `}</p>
                 <p className="payment-address fs-regular fw-medium ellipsis">{paymentAddress}</p>
             </Row>
         </Styled>

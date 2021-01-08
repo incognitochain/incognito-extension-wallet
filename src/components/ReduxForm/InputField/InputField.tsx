@@ -42,8 +42,10 @@ const InputField = (props: IInputFieldProps) => {
     const renderError = () => {
         return (
             <>
-                {(error && <p className="error fs-small fw-regular">{error}</p>) ||
-                    (warning && <p className="warning fs-small fw-regular">{warning}</p>)}
+                {(error && <p className={`error fs-small fw-regular ${suffix ? 'align-right' : ''}`}>{error}</p>) ||
+                    (warning && (
+                        <p className={`warning fs-small fw-regular ${suffix ? 'align-right' : ''}`}>{warning}</p>
+                    ))}
             </>
         );
     };
@@ -72,14 +74,13 @@ const InputField = (props: IInputFieldProps) => {
                 );
             case INPUT_FIELD.leftTitle:
                 return (
-                    <div className="wrapper large-margin-top">
-                        <p className="sub-title fw-medium fs-medium">{subtitle}</p>
-                        <div className="input-wrapper">
-                            <div className="input-wrap-suffix input-amount align-right">
+                    <div className="wrapper">
+                        <div className="flex">
+                            <p className="sub-title fw-medium fs-medium ellipsis">{subtitle}</p>
+                            <div className={`input-container input-address ${!suffix ? 'input-not-suffix' : ''}`}>
                                 <Input {...{ input, componentProps }} />
-                                <p>{suffix}</p>
+                                {suffix && <p className="center-abs-ver suffix ellipsis">{suffix}</p>}
                             </div>
-                            {renderError()}
                         </div>
                     </div>
                 );
@@ -94,7 +95,7 @@ const InputField = (props: IInputFieldProps) => {
     return (
         <Styled>
             {renderInput()}
-            {inputType !== INPUT_FIELD.leftTitle && renderError()}
+            {renderError()}
         </Styled>
     );
 };
