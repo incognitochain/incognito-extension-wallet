@@ -27,7 +27,7 @@ import withBalance, { IEnhanceBalanceProps } from '../Account/Acount.enhanceBala
 interface IProps {}
 interface IMergeProps extends IEnhanceBalanceProps, IProps {}
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergeProps & any) => {
+export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergeProps & any) => {
     const { loadBalance } = props;
     const dispatch = useDispatch();
     const defaultAccount: string = useSelector(defaultAccountNameSelector);
@@ -53,7 +53,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
             await Promise.all([
                 dispatch(actionGetPrivacyTokensBalance(account)),
                 dispatch(actionGetAccountBalance(account)),
-                loadBalance(),
+                loadBalance && loadBalance(),
             ]);
         } catch (error) {
             dispatch(
@@ -90,4 +90,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
     );
 };
 
-export default compose(enhanceDApp, withBalance, enhance, withHeaderApp);
+export default compose(withBalance, enhance, withHeaderApp, enhanceDApp);

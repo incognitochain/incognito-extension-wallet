@@ -8,6 +8,7 @@ import { isDev } from 'src/configs';
 import APP_CONSTANT from 'src/constants/app';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import { getActiveTabs } from 'src/utils/app';
+import Spinner from 'react-bootstrap/esm/Spinner';
 import { actionClearRequestFromDApp as clearRequestFromDApp, IRequestDApp, requestDAppSelector } from '../Preload';
 
 interface IProps {}
@@ -51,7 +52,7 @@ const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProp
         // check is connect
         handleCheckConnectAccount();
     }, []);
-    if (requestDApp) return <div />;
+    if (requestDApp) return <Spinner animation="grow" />;
     return <WrappedComponent {...{ ...props, connected }} />;
 };
 
