@@ -32,7 +32,6 @@ const initialState: IHistoryReducer = {
         limit: LIMIT_RECEIVE_HISTORY_ITEM,
         refreshing: true,
         tokenId: '',
-        notEnoughData: false,
         accountSerialNumbers: [],
     },
     brideHistory: {
@@ -76,7 +75,6 @@ const historyReducer = (
                     ...state.receiveHistory,
                     isFetching: true,
                     refreshing: action?.payload?.refreshing || false,
-                    notEnoughData: state.receiveHistory.notEnoughData,
                 },
             };
         }
@@ -104,7 +102,6 @@ const historyReducer = (
                     isFetching: false,
                     isFetched: false,
                     refreshing: false,
-                    notEnoughData: false,
                 },
             };
         }

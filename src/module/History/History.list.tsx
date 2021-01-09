@@ -10,8 +10,10 @@ const Styled = styled.div`
     overflow: scroll;
     .history-item {
         margin-bottom: 30px;
+    }
+    .histories-container .history-item {
         :last-child {
-            margin-bottom: unset;
+            margin-bottom: 15px;
         }
     }
     .history-item .hook {
@@ -25,6 +27,7 @@ const Styled = styled.div`
     .footer {
         &.has-child {
             min-height: 25px;
+            margin-bottom: 15px;
         }
     }
     .loading-icon {
@@ -90,11 +93,13 @@ const History = React.memo((props: IMergeProps & any) => {
     };
     return (
         <Styled onScroll={handleScroll}>
-            {histories
-                .sort((a, b) => b.lockTime - a.lockTime)
-                .map((history: TxHistoryItem) => (
-                    <HistoryItem key={history.id} {...history} />
-                ))}
+            <div className="histories-container">
+                {histories
+                    .sort((a, b) => b.lockTime - a.lockTime)
+                    .map((history: TxHistoryItem) => (
+                        <HistoryItem key={history.id} {...history} />
+                    ))}
+            </div>
             <div className={`footer ${!!renderFooter && 'flex has-child'}`}>{renderFooter && renderFooter}</div>
         </Styled>
     );

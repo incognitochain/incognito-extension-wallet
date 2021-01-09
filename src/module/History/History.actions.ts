@@ -141,7 +141,7 @@ export const actionFetchReceiveHistory = (refreshing = false) => async (
                 ),
             ];
         }
-        let [{ serialNumberList }, histories] = await Promise.all(task);
+        let [histories, { serialNumberList }] = await Promise.all(task);
         accountSerialNumbers = [...serialNumberList];
         data = [...histories];
         data = refreshing ? [...data, ...oldData] : [...oldData, ...data];
@@ -156,7 +156,6 @@ export const actionFetchReceiveHistory = (refreshing = false) => async (
         };
         await dispatch(actionFetchedReceiveHistory(payload));
     } catch (error) {
-        data = [];
         await dispatch(actionFetchFailReceiveHistory());
     }
     return data;

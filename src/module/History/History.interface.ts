@@ -22,7 +22,6 @@ export interface IReceiveHistoryToken {
     limit: number;
     refreshing: boolean;
     tokenId: string;
-    notEnoughData: boolean;
     accountSerialNumbers: any[];
 }
 
