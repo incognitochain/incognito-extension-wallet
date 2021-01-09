@@ -5,12 +5,7 @@ import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withHeaderApp } from 'src/components/Header';
 import { defaultAccountSelector, switchAccountSelector } from 'src/module/Account';
-import {
-    actionFetchAllHistory,
-    actionFetchReceiveHistory,
-    historySelector,
-    receiveHistorySelector,
-} from 'src/module/History';
+import { actionFetchAllHistory, actionFetchReceiveHistory, receiveHistoryDataSelector } from 'src/module/History';
 import { selectedTokenIdSelector } from 'src/module/Token';
 import { walletDataSelector } from 'src/module/Wallet';
 import { actionGetBalanceByTokenId } from 'src/redux/actions';
@@ -30,9 +25,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const account = useSelector(defaultAccountSelector);
     const switchAccount = useSelector(switchAccountSelector);
     const wallet = useSelector(walletDataSelector);
-    const history = useSelector(historySelector);
-    const receiveHistory = useSelector(receiveHistorySelector);
-    const { notEnoughData, oversize } = receiveHistory;
+    const receiveHistory = useSelector(receiveHistoryDataSelector);
+    const { shouldLoadmore, notEnoughData } = receiveHistory;
     const fetchData = async () => {
         try {
             await Promise.all([dispatch(actionFetchAllHistory()), dispatch(actionGetBalanceByTokenId())]);
@@ -47,7 +41,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
     };
     const handleOnEndReached = () => {
-        if (!notEnoughData && !oversize) {
+        if (shouldLoadmore) {
             dispatch(actionFetchReceiveHistory());
         }
     };
@@ -57,10 +51,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
     }, [selectedPrivacyTokenId, account, wallet, switchAccount]);
     React.useEffect(() => {
-        if (notEnoughData && history.isFetched && !history.isFetching) {
+        if (notEnoughData) {
             dispatch(actionFetchReceiveHistory());
         }
-    }, [selectedPrivacyTokenId, history, receiveHistory]);
+    }, [notEnoughData]);
     return (
         <ErrorBoundary>
             <WrappedComponent

@@ -50,32 +50,37 @@ export const getHistoryCacheByTxIdSelector = createSelector(
     (history) => memoize((txId: string) => history && history.find((h: TxCacheHistoryModel) => h.txId === txId)),
 );
 // receive
-export const receiveHistorySelector = createSelector(historySelector, (history) => ({
-    ...history.receiveHistory,
-    notEnoughData: history.receiveHistory.data.length < 5,
-}));
+export const receiveHistorySelector = createSelector(historySelector, (history) => history.receiveHistory);
 
 export const receiveHistoryDataSelector = createSelector(
     receiveHistorySelector,
     selectedPrivacySelector,
     decimalDigitsSelector,
     (historyReceive, selectedPrivacy, decimalDigits) => {
-        let { data: histories, accountSerialNumbers } = historyReceive;
-        return histories
-            .filter((history) => {
-                const receivedAmounts = history?.ReceivedAmounts;
-                const isTokenExisted = Object.keys(receivedAmounts)?.includes(selectedPrivacy.tokenId);
-                return isTokenExisted;
-            })
-            .map((history) =>
-                getHistoryReceiveData({
-                    history,
-                    accountSerialNumbers,
-                    selectedPrivacy,
-                    decimalDigits,
-                }),
-            )
-            .filter((history) => !!history.amount && history.typeCode === TYPE.RECEIVE);
+        let { data, accountSerialNumbers, isFetched, isFetching, oversize, refreshing } = historyReceive;
+        const loadedData = !refreshing && !isFetching && isFetched && !oversize;
+        const shouldLoadmore = loadedData && data.length >= 5;
+        const notEnoughData = loadedData && data.length < 5;
+        return {
+            ...historyReceive,
+            data: data
+                .filter((history) => {
+                    const receivedAmounts = history?.ReceivedAmounts;
+                    const isTokenExisted = Object.keys(receivedAmounts)?.includes(selectedPrivacy.tokenId);
+                    return isTokenExisted;
+                })
+                .map((history) =>
+                    getHistoryReceiveData({
+                        history,
+                        accountSerialNumbers,
+                        selectedPrivacy,
+                        decimalDigits,
+                    }),
+                )
+                .filter((history) => !!history.amount && history.typeCode === TYPE.RECEIVE),
+            shouldLoadmore,
+            notEnoughData,
+        };
     },
 );
 
@@ -95,7 +100,7 @@ export const getHistoryReceiveDetailSelector = createSelector(
 );
 
 export const getHistoryReceiveByTxIdSelector = createSelector(receiveHistoryDataSelector, (history) =>
-    memoize((id: string) => history && history.find((h: TxHistoryReceiveModel) => h.id === id)),
+    memoize((id: string) => history && history.data.find((h: TxHistoryReceiveModel) => h.id === id)),
 );
 // bridge
 export const historyBridgeSelector = createSelector(historySelector, (history) => history.brideHistory);
@@ -137,7 +142,7 @@ export const combineHistorySelector = createSelector(
     (cacheHistory, receiveHistory, bridgeHistory) =>
         handleCombineHistory({
             cacheHistory,
-            receiveHistory,
+            receiveHistory: receiveHistory.data,
             bridgeHistory,
         }),
 );

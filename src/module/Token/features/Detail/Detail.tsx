@@ -5,7 +5,7 @@ import { ILanguage } from 'src/i18n';
 import { themeSelector, translateSelector } from 'src/module/Configs';
 import { Amount, Balance, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { route as routeTokenInfo } from 'src/module/Token/features/TokenInfo';
-import { combineHistorySelector, HistoryList, historySelector, receiveHistorySelector } from 'src/module/History';
+import { combineHistorySelector, HistoryList, historySelector, receiveHistoryDataSelector } from 'src/module/History';
 import { route as routeSend } from 'src/module/Send';
 import { useHistory } from 'react-router-dom';
 import { InfoIcon, LoadingIcon } from 'src/components/Icons';
@@ -48,8 +48,7 @@ const Detail = React.memo((props: IMergedProps & any) => {
     const theme = useSelector(themeSelector);
     const { isFetching, isFetched } = useSelector(historySelector);
     const histories = useSelector(combineHistorySelector);
-    const { oversize, page } = useSelector(receiveHistorySelector);
-    const shouldRenderFooter = isFetched && !isFetching && !oversize && page !== 1;
+    const { isFetching: isLoadingReceive, refreshing: isRefreshingReceive } = useSelector(receiveHistoryDataSelector);
     const history = useHistory();
     return (
         <Styled theme={theme}>
@@ -64,7 +63,7 @@ const Detail = React.memo((props: IMergedProps & any) => {
                 loading={!isFetched && isFetching}
                 handleOnEndReached={handleOnEndReached}
                 histories={histories}
-                renderFooter={shouldRenderFooter && <LoadingIcon />}
+                renderFooter={!isRefreshingReceive && isLoadingReceive && <LoadingIcon />}
             />
         </Styled>
     );
