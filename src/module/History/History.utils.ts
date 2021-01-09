@@ -416,7 +416,7 @@ export const getHistoryBridgeData = ({
             status,
             address,
             addressType,
-            updatedAt,
+            createdAt,
             incognitoAmount,
             expiredAt,
             decentralized,
@@ -431,8 +431,8 @@ export const getHistoryBridgeData = ({
             status,
         });
         const type = getTypeData(addressType, history);
-        const timeFormated = format.formatUnixDateTime(updatedAt);
-        const lockTime = new Date(updatedAt).getTime();
+        const timeFormated = format.formatUnixDateTime(createdAt);
+        const lockTime = new Date(createdAt).getTime();
         const amountFormated = format.formatAmount({
             originalAmount: new BigNumber(incognitoAmount).toNumber(),
             decimals: selectedPrivacy.pDecimals,
