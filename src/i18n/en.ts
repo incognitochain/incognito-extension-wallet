@@ -168,6 +168,7 @@ const language: ILanguage = {
         memo: 'Memo',
         contract: 'Contract',
         resume: 'Resume',
+        retryCentralizedMsg: 'Your request has been sent, we will process it soon. The history status will be updated',
     },
     addressBook: {
         headerTitle: 'Address book',

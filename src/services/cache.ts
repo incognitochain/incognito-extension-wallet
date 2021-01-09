@@ -24,7 +24,7 @@ export const clearCache = (key: string) => {
     delete caches[key];
 };
 
-export const cachePromise = async (key: string, promiseFunc: any, expiredTime?: number) => {
+export const cachePromise = async (key: string, promiseFunc: () => Promise<any>, expiredTime?: number) => {
     const cachedData = getCache(key);
     if (cachedData !== null) {
         return cachedData;

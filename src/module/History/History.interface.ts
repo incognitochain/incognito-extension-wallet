@@ -1,28 +1,29 @@
 import { TxHistoryModelParam } from 'incognito-js/build/web/browser';
 
 export interface IHistoryReducer {
+    isFetching: boolean;
+    isFetched: boolean;
     cacheHistory: ICacheHistoryToken;
     receiveHistory: IReceiveHistoryToken;
     brideHistory: IBrideHistoryToken;
-    isFetching: boolean;
-    isFetched: boolean;
 }
 
 export interface IBrideHistoryToken {
-    data: TxBridgeHistoryModel[];
+    data: any[];
     fetching: boolean;
 }
 
 export interface IReceiveHistoryToken {
     isFetching: boolean;
     isFetched: boolean;
-    data: TxHistoryReceiveModel[];
+    data: any[];
     oversize: boolean;
     page: number;
     limit: number;
     refreshing: boolean;
     tokenId: string;
     notEnoughData: boolean;
+    accountSerialNumbers: any[];
 }
 
 export interface ICacheHistoryToken {
@@ -32,10 +33,9 @@ export interface ICacheHistoryToken {
 
 export interface IReceiveHistoryTokenFetched {
     nextPage: number;
-    data: TxHistoryReceiveModel[];
+    data: any[];
     oversize: boolean;
     refreshing: boolean;
-    notEnoughData: boolean;
 }
 
 export interface TxHistoryItem {
@@ -65,7 +65,6 @@ export interface TxCacheHistoryModel {
     feeSymbol: string;
     paymentAddress: string;
     amountFormatedNoClip: string;
-    time: string;
     formatType: number;
     lockTime: number;
     statusColor: string;
@@ -75,7 +74,6 @@ export interface TxCacheHistoryModel {
 export interface TxHistoryReceiveModel {
     id: string;
     txId: string;
-    time: string;
     isPrivacy: boolean;
     amount: string;
     tokenId: string;
@@ -85,17 +83,16 @@ export interface TxHistoryReceiveModel {
     isMintedToken: boolean;
     type: string;
     status: number;
-    isHistoryReceived: boolean;
     typeCode: number;
     lockTime: number;
     amountFormated: string;
     amountFormatedNoClip: string;
     timeFormated: string;
-    feeFormated: string;
     statusMessage: string;
     formatType: number;
     symbol: string;
     statusColor: string;
+    memo: string;
 }
 
 export interface TxBridgeHistoryModel {

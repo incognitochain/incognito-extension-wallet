@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { LoadingIcon, RefreshIcon, SettingIcon } from 'src/components/Icons';
+import { SettingIcon } from 'src/components/Icons';
 import QrCode from 'src/components/QrCodeLink';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { route as receiveRoute } from 'src/module/Account/features/Receive';
@@ -8,15 +8,17 @@ import ConnectStatus from 'src/components/Icons/ConnectStatus';
 import { useDispatch, useSelector } from 'react-redux';
 import { ITheme } from 'src/styles';
 import { delay } from 'src/utils';
-import ErrorBoundary from '../ErrorBoundary';
-import { refreshHeaderSelector } from './Header.selector';
+import ErrorBoundary from 'src/components/ErrorBoundary';
+import Refresh from 'src/components/Refresh';
 import { actionSetRefreshPage } from './Header.actions';
+import { refreshHeaderSelector } from './Header.selector';
 
 const Styled = styled.div`
     margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 24px;
     .menu {
         display: flex;
         align-items: center;
@@ -44,25 +46,16 @@ interface IProps {
     handleRefresh: () => any;
 }
 
-interface IReloadProps {
-    handleRefresh: () => any;
-}
-
-const RefreshBalance = React.memo((props: IReloadProps & any) => {
-    const { handleRefresh } = props;
-    const refreshing: boolean = useSelector(refreshHeaderSelector);
-    return <>{refreshing ? <LoadingIcon /> : <RefreshIcon className="refresh-icon" onClick={handleRefresh} />}</>;
-});
-
 const HeaderApp = React.memo((props: IProps & any) => {
     const { showConnectStatus, showReloadBalance, handleRefresh } = props;
+    const refreshing = useSelector(refreshHeaderSelector);
     return (
         <Styled>
             <Row>
                 <div className="menu">
                     <SettingIcon />
                 </div>
-                {!!showReloadBalance && <RefreshBalance handleRefresh={handleRefresh} />}
+                {!!showReloadBalance && <Refresh handleRefresh={handleRefresh} refreshing={refreshing} />}
                 {!!showConnectStatus && <ConnectStatus />}
             </Row>
             <div className="menu">

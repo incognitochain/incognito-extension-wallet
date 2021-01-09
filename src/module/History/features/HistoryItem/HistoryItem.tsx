@@ -30,6 +30,15 @@ const RetryShield = React.memo(() => {
             }
             await setRetry(true);
             await dispatch(actionRetryShieldBridgeToken(id));
+            if (!history.isDecentralized) {
+                dispatch(
+                    actionToggleToast({
+                        type: TOAST_CONFIGS.success,
+                        value: historyLanguage.retryCentralizedMsg,
+                        toggle: true,
+                    }),
+                );
+            }
             useHistoryHooks.goBack();
         } catch (error) {
             dispatch(
