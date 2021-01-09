@@ -97,6 +97,7 @@ export interface IHistoryLanguage {
     memo: string;
     contract: string;
     resume: string;
+    retryCentralizedMsg: string;
 }
 
 export interface ISettingLanguage {

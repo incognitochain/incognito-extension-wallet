@@ -6,7 +6,7 @@ interface IProps {}
 
 const Styled = styled.button`
     width: 19px;
-    height: 21px;
+    height: 20px;
 `;
 
 const Refresh = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {

@@ -33,6 +33,7 @@ const initialState: IHistoryReducer = {
         refreshing: true,
         tokenId: '',
         notEnoughData: false,
+        accountSerialNumbers: [],
     },
     brideHistory: {
         data: [],
@@ -80,7 +81,7 @@ const historyReducer = (
             };
         }
         case ACTION_FETCHED_RECEIVE_HISTORY: {
-            const { nextPage, data, oversize, refreshing, notEnoughData } = action?.payload;
+            const { nextPage, data, oversize, refreshing, accountSerialNumbers } = action?.payload;
             return {
                 ...state,
                 receiveHistory: {
@@ -91,7 +92,7 @@ const historyReducer = (
                     page: refreshing ? state?.receiveHistory?.page : nextPage,
                     oversize,
                     refreshing: false,
-                    notEnoughData,
+                    accountSerialNumbers,
                 },
             };
         }
@@ -120,13 +121,13 @@ const historyReducer = (
             };
         }
         case ACTION_FETCHED_BRIDGE_HISTORY: {
-            const { histories } = action.payload;
+            const { data } = action.payload;
             return {
                 ...state,
                 brideHistory: {
                     ...state.brideHistory,
                     fetching: false,
-                    data: [...histories],
+                    data: [...data],
                 },
             };
         }

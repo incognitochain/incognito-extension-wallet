@@ -11,7 +11,7 @@ const Styled = styled.button`
 
 const TrashBin = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     return (
-        <Styled className="icon" {...props}>
+        <Styled className="icon trash-bin-icon" {...props}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/trash_bin.png`} alt="trash_bin" />
         </Styled>
     );

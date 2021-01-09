@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { themeSelector } from 'src/module/Configs/Configs.selector';
 import HistoryItem from 'src/module/History/features/HistoryItem';
 import TrashBin from 'src/components/Icons/TrashBin';
+import RefreshComponent from 'src/components/Refresh';
 import withHistory, { IMergeProps } from './History.enhance';
 
 const Styled = styled.div`
@@ -20,31 +21,42 @@ const Styled = styled.div`
             margin: 30px 0;
         }
     }
+    .remove-history-container .trash-bin-icon {
+        width: 20px;
+        height: 19px;
+    }
 `;
 
-const History = React.memo((props: IMergeProps & any) => {
+const RightHeader = React.memo((props: IMergeProps & any) => {
     const {
-        historyFactories,
-        historyLanguage,
         handleRemoveTxHistory,
         removingBridgeTx,
         canRemoveExpiredOrPendingShield,
-    }: IMergeProps = props;
+        handleRefreshHistory,
+        refreshing,
+    } = props;
+    return (
+        <div className="history-right-header flex">
+            <RefreshComponent handleRefresh={handleRefreshHistory} refreshing={refreshing} />
+            <div className="remove-history-container">
+                {canRemoveExpiredOrPendingShield ? (
+                    removingBridgeTx ? (
+                        <LoadingIcon />
+                    ) : (
+                        <TrashBin onClick={handleRemoveTxHistory} />
+                    )
+                ) : null}
+            </div>
+        </div>
+    );
+});
+
+const History = React.memo((props: IMergeProps & any) => {
+    const { historyFactories, historyLanguage }: IMergeProps = props;
     const theme = useSelector(themeSelector);
     return (
         <Styled theme={theme}>
-            <Header
-                title={historyLanguage.headerTitle}
-                rightHeader={
-                    canRemoveExpiredOrPendingShield ? (
-                        removingBridgeTx ? (
-                            <LoadingIcon />
-                        ) : (
-                            <TrashBin onClick={handleRemoveTxHistory} />
-                        )
-                    ) : null
-                }
-            />
+            <Header title={historyLanguage.headerTitle} rightHeader={<RightHeader {...props} />} />
             <div className="scroll-view">
                 {historyFactories.map((item, index) => (
                     <HistoryItem key={item?.title || index} {...item} />

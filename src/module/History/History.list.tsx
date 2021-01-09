@@ -6,7 +6,7 @@ import { LoadingIcon } from 'src/components';
 import { TxHistoryItem } from './History.interface';
 
 const Styled = styled.div`
-    max-height: 250px;
+    max-height: 304px;
     overflow: scroll;
     .history-item {
         margin-bottom: 30px;

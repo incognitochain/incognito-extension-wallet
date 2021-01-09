@@ -3,9 +3,12 @@ import { BigNumber } from 'bignumber.js';
 import { COINS } from 'src/constants';
 import isEmpty from 'lodash/isEmpty';
 import { COLORS } from 'src/styles';
-import { CONSTANT } from 'incognito-js/build/web/browser';
+import { CONSTANT, TxHistoryModelParam } from 'incognito-js/build/web/browser';
 import endsWith from 'lodash/endsWith';
+import toString from 'lodash/toString';
 import { TxHistoryReceiveModel, TxCacheHistoryModel, TxBridgeHistoryModel } from './History.interface';
+import { ISelectedPrivacy } from '../Token';
+import { HISTORY_FORMAT_TYPE } from './History.constant';
 
 const { HISTORY } = CONSTANT;
 const {
@@ -16,7 +19,7 @@ const {
     TYPE,
     STATUS_TEXT,
 } = HISTORY;
-const { TX_STATUS } = CONSTANT.TX_CONSTANT;
+const { TX_STATUS, HISTORY_TYPE } = CONSTANT.TX_CONSTANT;
 
 const getStatusDataShield = (history: TxBridgeHistoryModel) => {
     const { status, statusMessage } = history;
@@ -137,7 +140,7 @@ export const getTypeHistoryReceive = ({
                     const accountSerialNumber = accountSerialNumbers[key];
                     const isExisted = serialNumbers?.includes(accountSerialNumber);
                     if (isExisted) {
-                        return HISTORY.TYPE.SEND;
+                        return TYPE.SEND;
                     }
                 }
             }
@@ -146,70 +149,6 @@ export const getTypeHistoryReceive = ({
         }
     }
     return type;
-};
-
-export const handleFilterHistoryReceiveByTokenId = ({
-    tokenId,
-    histories,
-    accountSerialNumbers,
-}: {
-    tokenId: string;
-    histories: any[];
-    accountSerialNumbers: any[];
-}) => {
-    let result = histories;
-    try {
-        result = result
-            .filter((history) => {
-                const receivedAmounts = history?.ReceivedAmounts;
-                const isTokenExisted = Object.keys(receivedAmounts)?.includes(tokenId);
-                return isTokenExisted;
-            })
-            .map((history) => {
-                const receivedAmounts = history?.ReceivedAmounts;
-                const serialNumbers = history?.InputSerialNumbers[tokenId] || [];
-                const metaData = history?.Metadata ? JSON.parse(history?.Metadata) : null;
-                let amount = new BigNumber('0');
-                let type = getTypeHistoryReceive({ accountSerialNumbers, serialNumbers });
-                let hasOutputs = false;
-                let hasInputs = !isEmpty(serialNumbers[tokenId]);
-                try {
-                    for (let id in receivedAmounts) {
-                        if (id === tokenId) {
-                            const item = receivedAmounts[id][0];
-                            amount = new BigNumber(item?.CoinDetails?.Value);
-                            id !== COINS.PRV.id ? (hasOutputs = true) : false;
-                            break;
-                        }
-                    }
-                } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.debug('ERROR', error);
-                }
-                const isMintedToken = !hasInputs && !!hasOutputs;
-                const lockTime = endsWith(history?.LockTime, 'Z') ? history?.LockTime : `${history?.LockTime}Z`;
-                const timeFormated = format.formatUnixDateTime(lockTime);
-                return {
-                    txId: history?.Hash,
-                    isPrivacy: history?.IsPrivacy,
-                    amount: amount.toString(),
-                    tokenId,
-                    serialNumbers,
-                    metaData,
-                    privacyCustomTokenProofDetail: history?.PrivacyCustomTokenProofDetail,
-                    isMintedToken,
-                    typeCode: type,
-                    status: TX_STATUS.CONFIRMED,
-                    isHistoryReceived: true,
-                    timeFormated,
-                    lockTime: new Date(lockTime).getTime(),
-                };
-            })
-            .filter((history) => !!history.amount && history.typeCode === TYPE.RECEIVE);
-    } catch (error) {
-        throw error;
-    }
-    return result;
 };
 
 export const filterCacheByReceive = (cacheHistory: TxCacheHistoryModel[], receiveHistory: TxHistoryReceiveModel[]) => {
@@ -294,4 +233,244 @@ export const handleCombineHistory = ({
         formatType: h.formatType,
         lockTime: h.lockTime,
     }));
+};
+
+// Get history details
+
+export const getHistoryCacheData = ({
+    history,
+    selectedPrivacy,
+    decimalDigits,
+}: {
+    selectedPrivacy: ISelectedPrivacy;
+    history: TxHistoryModelParam;
+    decimalDigits: boolean;
+}) => {
+    const { historyType, nativeTokenInfo, privacyTokenInfo, memo = '' } = history;
+    let amount = '';
+    let fee = '';
+    let useNativeFee = false;
+    let usePrivacyFee = false;
+    let paymentAddress = '';
+    let type = historyType;
+    if (historyType === HISTORY_TYPE.SEND_NATIVE_TOKEN) {
+        amount = nativeTokenInfo.amount;
+        fee = nativeTokenInfo.fee;
+        useNativeFee = true;
+        usePrivacyFee = false;
+        paymentAddress = nativeTokenInfo.paymentInfoList[0].paymentAddressStr || '';
+        type = TYPE.SEND;
+    }
+    if (historyType === HISTORY_TYPE.SEND_PRIVACY_TOKEN) {
+        amount = privacyTokenInfo?.amount || '';
+        paymentAddress = privacyTokenInfo?.paymentInfoList[0].paymentAddressStr || '';
+        type = TYPE.SEND;
+        if (isEmpty(nativeTokenInfo.fee)) {
+            useNativeFee = false;
+            usePrivacyFee = true;
+            fee = privacyTokenInfo?.fee || '';
+        }
+        if (isEmpty(privacyTokenInfo?.fee)) {
+            useNativeFee = true;
+            usePrivacyFee = false;
+            fee = nativeTokenInfo.fee;
+        }
+    }
+    const symbol = selectedPrivacy.symbol || selectedPrivacy.pSymbol;
+    const feeSymbol = useNativeFee ? COINS.PRV.symbol : selectedPrivacy.symbol || selectedPrivacy.pSymbol;
+    const feePDecimals = useNativeFee ? COINS.PRV.pDecimals : selectedPrivacy.pDecimals;
+    const amountFormated = format.formatAmount({
+        originalAmount: new BigNumber(amount).toNumber(),
+        decimals: selectedPrivacy?.pDecimals,
+        decimalDigits,
+    });
+    const amountFormatedNoClip = format.formatAmount({
+        originalAmount: new BigNumber(amount).toNumber(),
+        decimals: selectedPrivacy?.pDecimals,
+        decimalDigits,
+        clipAmount: false,
+    });
+    const feeFormated = format.formatAmount({
+        originalAmount: new BigNumber(fee).toNumber(),
+        decimals: feePDecimals,
+        decimalDigits: false,
+        clipAmount: false,
+    });
+    const { statusMessage, statusColor } = getStatusData(history);
+    const lockTime = history.lockTime * 1000;
+    const historyItem = {
+        id: history.txId,
+        txId: history.txId,
+        amountFormated,
+        timeFormated: format.formatUnixDateTime(lockTime),
+        feeFormated,
+        statusMessage,
+        type: getTypeData(type, history, paymentAddress),
+        isIncognitoTx: true,
+        fee,
+        amount,
+        useNativeFee,
+        usePrivacyFee,
+        symbol,
+        feeSymbol,
+        paymentAddress,
+        amountFormatedNoClip,
+        time: toString(history.lockTime),
+        formatType: HISTORY_FORMAT_TYPE.cache,
+        lockTime,
+        statusColor,
+        memo,
+    };
+    return historyItem;
+};
+
+export const getHistoryReceiveData = ({
+    selectedPrivacy,
+    history,
+    accountSerialNumbers,
+    decimalDigits,
+}: {
+    selectedPrivacy: ISelectedPrivacy;
+    history: any;
+    accountSerialNumbers: any[];
+    decimalDigits: boolean;
+}) => {
+    try {
+        const { tokenId } = selectedPrivacy;
+        const receivedAmounts = history?.ReceivedAmounts;
+        const serialNumbers = history?.InputSerialNumbers[tokenId] || [];
+        const metaData = history?.Metadata ? JSON.parse(history?.Metadata) : null;
+        let amount = new BigNumber('0');
+        let typeCode = getTypeHistoryReceive({ accountSerialNumbers, serialNumbers });
+        let hasOutputs = false;
+        let hasInputs = !isEmpty(serialNumbers[tokenId]);
+        try {
+            for (let id in receivedAmounts) {
+                if (id === tokenId) {
+                    const item = receivedAmounts[id][0];
+                    amount = new BigNumber(item?.CoinDetails?.Value);
+                    id !== COINS.PRV.id ? (hasOutputs = true) : false;
+                    break;
+                }
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.debug('ERROR', error);
+        }
+        const isMintedToken = !hasInputs && !!hasOutputs;
+        const lockTime = endsWith(history?.LockTime, 'Z') ? history?.LockTime : `${history?.LockTime}Z`;
+        const timeFormated = format.formatUnixDateTime(lockTime);
+        const type = getTypeData(typeCode, history);
+        const amountFormated = format.formatAmount({
+            originalAmount: amount.toNumber(),
+            decimals: selectedPrivacy?.pDecimals,
+            decimalDigits,
+        });
+        const amountFormatedNoClip = format.formatAmount({
+            originalAmount: amount.toNumber(),
+            decimals: selectedPrivacy?.pDecimals,
+            decimalDigits,
+            clipAmount: false,
+        });
+        const { statusMessage, statusColor } = getStatusData({ status: TX_STATUS.CONFIRMED });
+        return {
+            id: history?.Hash,
+            txId: history?.Hash,
+            isPrivacy: history?.IsPrivacy,
+            amount: amount.toString(),
+            tokenId,
+            serialNumbers,
+            metaData,
+            privacyCustomTokenProofDetail: history?.PrivacyCustomTokenProofDetail,
+            isMintedToken,
+            type,
+            status: TX_STATUS.CONFIRMED,
+            typeCode,
+            lockTime: new Date(lockTime).getTime(),
+            amountFormated,
+            amountFormatedNoClip,
+            timeFormated,
+            statusMessage,
+            formatType: HISTORY_FORMAT_TYPE.receive,
+            symbol: selectedPrivacy.symbol || selectedPrivacy.pSymbol,
+            statusColor,
+            memo: history?.Info,
+        };
+    } catch (error) {
+        console.debug(`ERROR`, error);
+        throw error;
+    }
+};
+
+export const getHistoryBridgeData = ({
+    selectedPrivacy,
+    history,
+    decimalDigits,
+}: {
+    selectedPrivacy: ISelectedPrivacy;
+    history: any;
+    decimalDigits: boolean;
+}) => {
+    try {
+        const {
+            status,
+            address,
+            addressType,
+            updatedAt,
+            incognitoAmount,
+            expiredAt,
+            decentralized,
+            statusMessage,
+        } = history;
+        const depositTmpAddress = addressType === TYPE.SHIELD && address;
+        const isShieldTx = !!depositTmpAddress;
+        const isDecentralized = decentralized === 1;
+        const { statusColor } = getStatusData({
+            isShieldTx,
+            isDecentralized,
+            status,
+        });
+        const type = getTypeData(addressType, history);
+        const timeFormated = format.formatUnixDateTime(updatedAt);
+        const lockTime = new Date(updatedAt).getTime();
+        const amountFormated = format.formatAmount({
+            originalAmount: new BigNumber(incognitoAmount).toNumber(),
+            decimals: selectedPrivacy.pDecimals,
+            decimalDigits,
+        });
+        const amountFormatedNoClip = format.formatAmount({
+            originalAmount: new BigNumber(incognitoAmount).toNumber(),
+            decimals: selectedPrivacy?.pDecimals,
+            decimalDigits,
+            clipAmount: false,
+        });
+        const expiredAtFormated = isDecentralized ? '' : format.formatUnixDateTime(expiredAt);
+        const canRetryExpiredShield =
+            !isDecentralized &&
+            addressType === TYPE.SHIELD &&
+            STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status);
+        const canRemoveExpiredOrPendingShield =
+            addressType === TYPE.SHIELD &&
+            (STATUS_CODE_SHIELD_CENTRALIZED.PENDING === status ||
+                STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status) ||
+                STATUS_CODE_SHIELD_DECENTRALIZED.PENDING === status ||
+                STATUS_CODE_SHIELD_DECENTRALIZED.TIMED_OUT === status);
+        return {
+            ...history,
+            statusMessage,
+            type,
+            timeFormated,
+            lockTime,
+            amountFormated: amountFormated === '0' ? '' : amountFormated,
+            amountFormatedNoClip,
+            formatType: HISTORY_FORMAT_TYPE.bridge,
+            symbol: selectedPrivacy.symbol || selectedPrivacy.pSymbol,
+            expiredAtFormated,
+            statusColor,
+            canRetryExpiredShield,
+            canRemoveExpiredOrPendingShield,
+        };
+    } catch (error) {
+        throw error;
+    }
 };

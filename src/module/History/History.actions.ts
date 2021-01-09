@@ -1,5 +1,6 @@
+import { cachePromise } from 'src/services/cache';
 import uniqBy from 'lodash/uniqBy';
-import { AccountInstance, historyServices } from 'incognito-js/build/web/browser';
+import { AccountInstance, cacheServices } from 'incognito-js/build/web/browser';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/module/Account';
@@ -10,16 +11,9 @@ import {
     selectedPrivacySelector,
     ISelectedPrivacy,
 } from 'src/module/Token';
-import BridgeHistoryModel from 'incognito-js/build/web/browser/src/models/bridge/bridgeHistory';
 import { camelCaseKeys } from 'src/utils/object';
 import toString from 'lodash/toString';
-import {
-    IReceiveHistoryToken,
-    IReceiveHistoryTokenFetched,
-    TxBridgeHistoryModel,
-    TxHistoryReceiveModel,
-} from './History.interface';
-import { handleFilterHistoryReceiveByTokenId } from './History.utils';
+import { IReceiveHistoryToken, IReceiveHistoryTokenFetched, TxBridgeHistoryModel } from './History.interface';
 import {
     ACTION_FETCHING_RECEIVE_HISTORY,
     ACTION_FETCHED_RECEIVE_HISTORY,
@@ -69,7 +63,7 @@ export const actionFetchCacheHistory = () => async (dispatch: Dispatch, getState
         const bridgeTokens = bridgeTokensSelector(state);
         const chainTokens = chainTokensSelector(state);
         await dispatch(actionFetchingCacheHistory());
-        await historyServices.checkCachedHistories();
+        await cacheServices.checkCachedHistories();
         if (selectedPrivacy.isNativeToken) {
             histories = await account.nativeToken.getTxHistories();
         } else {
@@ -113,7 +107,7 @@ export const actionFetchReceiveHistory = (refreshing = false) => async (
     const bridgeTokens = bridgeTokensSelector(state);
     const chainTokens = chainTokensSelector(state);
     const account: AccountInstance = defaultAccountSelector(state);
-    let data: TxHistoryReceiveModel[] = [];
+    let data: any[] = [];
     const receiveHistory: IReceiveHistoryToken = receiveHistorySelector(state);
     const { isFetching, oversize, page, limit, data: oldData } = receiveHistory;
     if (isFetching || (oversize && !refreshing) || !selectedPrivacy?.tokenId) {
@@ -125,33 +119,40 @@ export const actionFetchReceiveHistory = (refreshing = false) => async (
         const curSkip = refreshing ? 0 : curPage * limit;
         const nextPage = curPage + 1;
         const curLimit = refreshing && page > 0 ? MAX_LIMIT_RECEIVE_HISTORY_ITEM : limit;
-        let histories: any[] = [];
         let accountSerialNumbers: any[] = [];
+        let task: any[] = [];
         if (selectedPrivacy.isNativeToken) {
-            histories = await account.nativeToken.getTransactionByReceiver({ skip: curSkip, limit: curLimit });
-            const { serialNumberList } = await account.nativeToken.deriveSerialNumbers(selectedPrivacy.tokenId);
-            accountSerialNumbers = [...serialNumberList];
+            task = [
+                account.nativeToken.getTransactionByReceiver({ skip: curSkip, limit: curLimit }),
+                cachePromise(
+                    `${account.key.keySet.publicKeySerialized}-${selectedPrivacy.tokenId}-serial-number-list`,
+                    () => account.nativeToken.deriveSerialNumbers(selectedPrivacy.tokenId),
+                    400000,
+                ),
+            ];
         } else {
             const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
-            histories = await token.getTransactionByReceiver({ skip: curSkip, limit: curLimit });
-            const { serialNumberList } = await token.deriveSerialNumbers(selectedPrivacy.tokenId);
-            accountSerialNumbers = [...serialNumberList];
+            task = [
+                token.getTransactionByReceiver({ skip: curSkip, limit: curLimit }),
+                cachePromise(
+                    `${account.key.keySet.publicKeySerialized}-${selectedPrivacy.tokenId}-serial-number-list`,
+                    () => token.deriveSerialNumbers(selectedPrivacy.tokenId),
+                    400000,
+                ),
+            ];
         }
-        data = handleFilterHistoryReceiveByTokenId({
-            tokenId: selectedPrivacy?.tokenId,
-            histories,
-            accountSerialNumbers,
-        });
+        let [{ serialNumberList }, histories] = await Promise.all(task);
+        accountSerialNumbers = [...serialNumberList];
+        data = [...histories];
         data = refreshing ? [...data, ...oldData] : [...oldData, ...data];
-        data = uniqBy(data, (h) => h?.txId) || [];
-        const isOversize = histories?.length < curLimit;
-        const notEnoughData = data?.length < 5;
+        data = uniqBy(data, (h) => h?.Hash) || [];
+        const isOversize = histories.length < curLimit;
         let payload = {
             nextPage,
             data,
             oversize: isOversize,
             refreshing,
-            notEnoughData,
+            accountSerialNumbers,
         };
         await dispatch(actionFetchedReceiveHistory(payload));
     } catch (error) {
@@ -167,13 +168,13 @@ export const actionFetchingBridgeHistory = () => ({
     type: ACTION_FETCHING_BRIDGE_HISTORY,
 });
 
-export const actionFetchedBridgeHistory = (payload: { histories: BridgeHistoryModel[] }) => ({
+export const actionFetchedBridgeHistory = (payload: { data: any[] }) => ({
     type: ACTION_FETCHED_BRIDGE_HISTORY,
     payload,
 });
 
 export const actionFetchBridgeHistory = () => async (dispatch: Dispatch, getState: () => IRootState) => {
-    let histories: any[] = [];
+    let data: any[] = [];
     const state = getState();
     const historyBridge = historyBridgeSelector(state);
     const account: AccountInstance = defaultAccountSelector(state);
@@ -186,20 +187,20 @@ export const actionFetchBridgeHistory = () => async (dispatch: Dispatch, getStat
     try {
         await dispatch(actionFetchingBridgeHistory());
         const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
-        histories = await token.bridgeGetHistory();
+        data = await token.bridgeGetHistory();
     } catch (error) {
         throw error;
     } finally {
         await dispatch(
             actionFetchedBridgeHistory({
-                histories: histories.map((data: any) => ({
-                    ...camelCaseKeys(data),
-                    id: toString(data.ID),
+                data: data.map((history: any) => ({
+                    ...camelCaseKeys(history),
+                    id: toString(history?.ID),
                 })),
             }),
         );
     }
-    return histories;
+    return data;
 };
 
 export const actionFetchingAllHistory = () => ({
