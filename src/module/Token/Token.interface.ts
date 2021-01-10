@@ -119,6 +119,7 @@ export interface ISelectedPrivacy {
     isFollowed: boolean;
     amount: number;
     formatAmount: string;
+    formatAmountNoClip: string;
     formatPriceByUsd: string;
     formatBalanceByUsd: string;
     formatPriceByPrv: string;

@@ -35,6 +35,9 @@ export const Styled = styled.div`
         position: absolute;
         top: 85px;
     }
+    .error-block {
+        margin-top: 10px;
+    }
 `;
 
 export const Row = styled.div`

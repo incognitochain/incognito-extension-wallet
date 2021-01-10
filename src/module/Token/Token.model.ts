@@ -115,6 +115,8 @@ class SelectedPrivacy {
 
     formatAmount: string;
 
+    formatAmountNoClip: string;
+
     formatBalanceByUsd: string;
 
     formatPriceByUsd: string;
@@ -167,6 +169,7 @@ class SelectedPrivacy {
         this.amount = 0;
         this.isFollowed = false;
         this.formatAmount = '0';
+        this.formatAmountNoClip = '0';
         this.formatPriceByUsd = '0';
         this.formatBalanceByUsd = '0';
         this.formatPriceByPrv = '0';

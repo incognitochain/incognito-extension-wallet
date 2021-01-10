@@ -159,6 +159,12 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
                 decimals: token.pDecimals,
                 decimalDigits,
             });
+            const formatAmountNoClip = format.formatAmount({
+                originalAmount: amount,
+                decimals: token.pDecimals,
+                decimalDigits,
+                clipAmount: false,
+            });
             const formatBalanceByUsd = format.formatAmount({
                 humanAmount: new BigNumber(convert.toString({ text: formatAmount }))
                     .multipliedBy(convert.toString({ text: formatPriceByUsd }))
@@ -179,6 +185,7 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
                 isFollowed,
                 amount,
                 formatAmount,
+                formatAmountNoClip,
                 formatPriceByUsd,
                 formatBalanceByUsd,
                 formatBalanceByPRV,
