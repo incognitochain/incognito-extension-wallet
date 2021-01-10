@@ -221,6 +221,15 @@ export const GlobalStyled = createGlobalStyle`
         left: 50%;
         transform: translateX(-50%);
     }
+    .success {
+        color: ${COLORS.green};
+    }
+    .error {
+        color: ${COLORS.red};
+    }
+    .warning {
+        color: ${COLORS.orange};
+    }
 `;
 
 export const Row = styled.div`

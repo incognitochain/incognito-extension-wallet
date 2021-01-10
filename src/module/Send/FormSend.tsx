@@ -48,6 +48,18 @@ const FeeTypes = React.memo(() => {
     );
 });
 
+const ErrorBlock = React.memo(() => {
+    const { errorMessage }: ISendData = useSelector(sendDataSelector);
+    if (!errorMessage) {
+        return null;
+    }
+    return (
+        <div className="error-block">
+            <p className="error fs-small">{errorMessage}</p>
+        </div>
+    );
+});
+
 const EstimateFee = React.memo(() => {
     const { totalFeeText }: ISendData = useSelector(sendDataSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
@@ -85,7 +97,7 @@ const FormSend = (props: IMergeProps) => {
                 onGoBack={onGoBack}
                 title={`${translate.headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`}
             />
-            <p className="balance">{`${translate.balance}: ${selectedPrivacy.formatAmount}`}</p>
+            <p className="balance">{`${translate.balance}: ${selectedPrivacy.formatAmountNoClip}`}</p>
             <form onSubmit={handleSubmit(handleSend)}>
                 <Field
                     component={InputField}
@@ -119,6 +131,7 @@ const FormSend = (props: IMergeProps) => {
                     }}
                 />
                 <EstimateFee />
+                <ErrorBlock />
                 <Button title={titleBtnSubmit} disabled={disabledForm} type="submit" />
             </form>
         </Styled>

@@ -1,3 +1,4 @@
+import { ERROR_MESSAGE } from 'src/constants/error';
 import floor from 'lodash/floor';
 import format from 'src/utils/format';
 import BigNumber from 'bignumber.js';
@@ -57,6 +58,7 @@ export const getSendData = ({
     const {
         actived,
         isFetching,
+        isFetched,
         totalFeePrv,
         // userFeePrv,
         totalFeePrvText,
@@ -70,19 +72,22 @@ export const getSendData = ({
         minAmountText,
         isAddressValidated,
         isValidETHAddress,
+        maxFeePToken,
+        maxFeePrv,
         // userFees,
         // fast2x,
         // feePrvText,
         // feePTokenText,
         // minFeePTokenText,
         // minFeePrvText,
-        // maxFeePTokenText,
-        // maxFeePrvText,
+        maxFeePTokenText,
+        maxFeePrvText,
         // amountText,
         // rate,
     } = send;
     // const { amount } = selectedPrivacy;
     const isUseTokenFee = actived !== COINS.PRV.id;
+    const isUsedPRVFee = !isUseTokenFee;
     // const feeUnit = isUseTokenFee
     //   ? selectedPrivacy?.symbol || selectedPrivacy.pSymbol
     //   : COINS.PRV.symbol;
@@ -100,6 +105,9 @@ export const getSendData = ({
         isUseTokenFee,
         totalFee,
     });
+    const maxFee = isUseTokenFee ? maxFeePToken : maxFeePrv;
+    const maxFeeText = isUseTokenFee ? maxFeePTokenText : maxFeePrvText;
+    const errorMessage = !isFetching && isFetched && totalFee > maxFee ? ERROR_MESSAGE.INSUFFICIENT_BALANCE : '';
     const selector = formValueSelector(FORM_CONFIGS.formName);
     const inputAmount = selector(state, FORM_CONFIGS.amount);
     const inputAddress = selector(state, FORM_CONFIGS.toAddress);
@@ -125,48 +133,32 @@ export const getSendData = ({
         feeText,
         feeUnitByTokenId: actived,
         feePDecimals,
-
         totalFee,
         totalFeeText,
-
+        maxFee,
+        maxFeeText,
+        errorMessage,
         minAmount,
         minAmountText,
-
         maxAmount,
         maxAmountText,
-
-        isUsedPRVFee: !isUseTokenFee,
+        isUsedPRVFee,
         isUseTokenFee,
-
         isUnShield: screen === 'UnShield',
         isSend: screen === 'Send',
-
         // hasMultiLevel: userFees?.hasMultiLevel,
-
         isIncognitoAddress,
-
         inputAmount,
         inputAddress,
         inputMemo,
-
         titleBtnSubmit,
         forceSendTitleBtnSubmit,
-
         disabledForm,
-
         // amount,
         // isUseTokenFee,
         // feeUnit,
         // feePDecimals,
         // userFee,
-
-        // totalFee,
-        // totalFeeText,
-
-        // minAmount,
-        // minAmountText,
-        // maxAmount,
-        // maxAmountText,
 
         // fee,
         // titleBtnSubmit,

@@ -31,6 +31,9 @@ export interface ISendData {
     feeText: string;
     totalFee: number;
     totalFeeText: string;
+    maxFee: number;
+    maxFeeText: string;
+    errorMessage: string;
     minAmount: number;
     minAmountText: string;
     maxAmount: number;

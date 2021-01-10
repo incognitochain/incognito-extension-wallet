@@ -32,18 +32,6 @@ const Styled = styled.div`
         animation: fadeInDown 0.5s, fadeOutUp 0.5s 4s;
         background-color: ${COLORS.colorGreyLight};
     }
-    &.success {
-        color: ${COLORS.green};
-    }
-    &.error {
-        color: ${COLORS.red};
-    }
-    &.warning {
-        color: ${COLORS.orange};
-    }
-    p.fs-small {
-        /* margin-top: 10px; */
-    }
     .close-icon {
         position: absolute;
         top: 5px;
@@ -84,10 +72,10 @@ const Toast = () => {
         }
     }, [toggle]);
     return (
-        <Styled className={className}>
+        <Styled>
             <div className="scroll-view">
                 {/* {getIcons()} */}
-                <p className="fs-small fw-small">{value}</p>
+                <p className={`${className} fs-small`}>{value}</p>
             </div>
             <MdClose onClick={handleCloseToast} size={18} className="close-icon" />
         </Styled>
