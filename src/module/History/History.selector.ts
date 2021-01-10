@@ -59,25 +59,26 @@ export const receiveHistoryDataSelector = createSelector(
     (historyReceive, selectedPrivacy, decimalDigits) => {
         let { data, accountSerialNumbers, isFetched, isFetching, oversize, refreshing } = historyReceive;
         const loadedData = !refreshing && !isFetching && isFetched && !oversize;
-        const shouldLoadmore = loadedData && data.length >= 5;
-        const notEnoughData = loadedData && data.length < 5;
+        const _data = data
+            .filter((history) => {
+                const receivedAmounts = history?.ReceivedAmounts;
+                const isTokenExisted = Object.keys(receivedAmounts)?.includes(selectedPrivacy.tokenId);
+                return isTokenExisted;
+            })
+            .map((history) =>
+                getHistoryReceiveData({
+                    history,
+                    accountSerialNumbers,
+                    selectedPrivacy,
+                    decimalDigits,
+                }),
+            )
+            .filter((history) => !!history.amount && history.typeCode === TYPE.RECEIVE);
+        const shouldLoadmore = loadedData && _data.length >= 5;
+        const notEnoughData = loadedData && _data.length < 5;
         return {
             ...historyReceive,
-            data: data
-                .filter((history) => {
-                    const receivedAmounts = history?.ReceivedAmounts;
-                    const isTokenExisted = Object.keys(receivedAmounts)?.includes(selectedPrivacy.tokenId);
-                    return isTokenExisted;
-                })
-                .map((history) =>
-                    getHistoryReceiveData({
-                        history,
-                        accountSerialNumbers,
-                        selectedPrivacy,
-                        decimalDigits,
-                    }),
-                )
-                .filter((history) => !!history.amount && history.typeCode === TYPE.RECEIVE),
+            data: [..._data],
             shouldLoadmore,
             notEnoughData,
         };
