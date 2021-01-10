@@ -16,6 +16,8 @@ export interface ITheme {
     minWidth: string;
     maxWidth: string;
     height: string;
+    tooltipBg: string;
+    tooltipText: string;
 }
 
 export interface IGlobalStyle {
@@ -35,6 +37,8 @@ export const lightTheme: ITheme = {
     minWidth: '320px',
     maxWidth: '375px',
     height: '600px',
+    tooltipBg: COLORS.black,
+    tooltipText: COLORS.white,
 };
 
 export const darkTheme: ITheme = {
@@ -50,6 +54,8 @@ export const darkTheme: ITheme = {
     minWidth: '320px',
     maxWidth: '375px',
     height: '600px',
+    tooltipBg: COLORS.white,
+    tooltipText: COLORS.black,
 };
 
 export const DEFAULT_THEME = lightTheme;

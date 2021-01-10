@@ -239,6 +239,7 @@ export interface IShieldLanguage {
         title6: string;
         error1: string;
         error2: string;
+        tooltip: string;
     };
 }
 

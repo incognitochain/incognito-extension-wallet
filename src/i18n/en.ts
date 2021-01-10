@@ -222,6 +222,7 @@ const language: ILanguage = {
             title6: `It may be more reliable to use a normal<br />wallet as an intermediary.`,
             error1: `We seem to have hit a snag. Simply<br />tap to try again.`,
             error2: `If that doesn’t work,<br /> please come back in 60 minutes.`,
+            tooltip: 'Make sure you have selected the right coin',
         },
     },
     detail: {

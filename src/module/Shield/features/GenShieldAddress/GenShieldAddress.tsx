@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Header } from 'src/components';
 import QrCode from 'src/components/QrCode';
 import { IGeneralLanguage, IShieldLanguage } from 'src/i18n';
@@ -7,7 +7,8 @@ import { translateByFieldSelector } from 'src/module/Configs';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { shieldSelector } from 'src/module/Shield/Shield.selector';
 import { useCountDown } from 'src/utils/useHooks';
-import { ClockWiseIcon, LoadingIcon } from 'src/components/Icons';
+import { ClockWiseIcon, InfoIcon, LoadingIcon } from 'src/components/Icons';
+import { actionShowTooltip } from 'src/module/Tooltip';
 import withGenShieldAddress, { IMergedProps } from './GenShieldAddress.enhance';
 import { Styled } from './GenShieldAddress.styled';
 
@@ -32,7 +33,9 @@ const GenShieldAddress = (props: IMergedProps & any) => {
     const { headerTitle, title1, title2, title3, title4, title5, title6 } = translate.genShieldAddress;
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const { data, isFetching, isFetched } = useSelector(shieldSelector);
+    const infoIconRef: any = React.useRef({});
     const hasError = !isFetched && !isFetching;
+    const dispatch = useDispatch();
     const { address, min } = data;
     const [remainTime] = useCountDown({ time: 7200 });
     const renderMain = () => {
@@ -80,9 +83,23 @@ const GenShieldAddress = (props: IMergedProps & any) => {
             </div>
         );
     };
+    const handleShowTooltip = () =>
+        dispatch(
+            actionShowTooltip({
+                text: (
+                    <p className="fs-small" style={{ width: '230px' }}>
+                        {translate.genShieldAddress.tooltip}
+                    </p>
+                ),
+                ref: infoIconRef ? infoIconRef.current : null,
+            }),
+        );
     return (
         <Styled>
-            <Header title={`${headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`} />
+            <Header
+                title={`${headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`}
+                customHeader={<InfoIcon ref={infoIconRef} onClick={handleShowTooltip} />}
+            />
             {renderMain()}
         </Styled>
     );
