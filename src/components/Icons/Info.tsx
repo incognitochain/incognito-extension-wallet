@@ -9,12 +9,12 @@ const Styled = styled.button`
     height: 16px;
 `;
 
-const Info = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+const Info = React.forwardRef((props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>, ref: any) => {
     return (
-        <Styled className="icon" {...props}>
+        <Styled className="icon" ref={ref} {...props}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/info.png`} alt="" />
         </Styled>
     );
-};
+});
 
 export default Info;
