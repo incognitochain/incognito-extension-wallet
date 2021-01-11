@@ -94,6 +94,9 @@ const GenShieldAddress = (props: IMergedProps & any) => {
                 ref: infoIconRef ? infoIconRef.current : null,
             }),
         );
+    React.useEffect(() => {
+        handleShowTooltip();
+    }, []);
     return (
         <Styled>
             <Header

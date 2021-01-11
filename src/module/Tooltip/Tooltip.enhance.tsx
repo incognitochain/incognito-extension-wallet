@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { compose } from 'recompose';
 import { useDispatch } from 'react-redux';
+import useOutsideRef from 'src/utils/useOutsideRef';
 import { ITooltipProps } from './Tooltip.interface';
 import { actionRemoveTooltip } from './Tooltip.actions';
 
@@ -33,6 +34,12 @@ const enhance = (WrappedComponent: React.FunctionComponent<ITooltipProps>) => (p
     const { data } = props;
     const { id, text, timeout, ref, width, height, margin } = data;
     const dispatch = useDispatch();
+
+    const handleClickOutsideRef = () => {
+        dispatch(actionRemoveTooltip(id));
+    };
+
+    useOutsideRef(ref, handleClickOutsideRef);
 
     useEffect(() => {
         if (timeout && timeout > 0) {
