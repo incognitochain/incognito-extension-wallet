@@ -9,13 +9,13 @@ import { AccountInstance, PaymentInfoModel } from 'incognito-js/build/web/browse
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
-import { actionFetchCacheHistory } from 'src/module/History';
 import { floor } from 'lodash';
 import { actionToggleModal } from 'src/components/Modal';
 import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import { sendDataSelector } from './Send.selector';
 import { ISendData } from './Send.interface';
 import { route as routeConfirmTx } from './features/ConfirmTx';
+import { getErrorMsgSend } from './Send.utils';
 
 export interface TInner {
     // eslint-disable-next-line no-unused-vars
@@ -74,22 +74,22 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             if (!tx) {
                 throw new Error(`Failed`);
             }
-            await dispatch(actionFetchCacheHistory());
             // send success
-            forceSendFinish(null, tx);
             history.push(routeConfirmTx, {
-                txId: tx.txId,
+                history: tx,
             });
+            forceSendFinish(null, tx);
         } catch (error) {
-            // send fail
-            forceSendFinish(error, null);
+            const errorMsg = getErrorMsgSend(error);
             dispatch(
                 actionToggleToast({
                     toggle: true,
-                    value: error?.message || JSON.stringify(error),
+                    value: errorMsg,
                     type: TOAST_CONFIGS.error,
                 }),
             );
+            // send fail
+            forceSendFinish(error, null);
         } finally {
             await dispatch(actionToggleModal({}));
         }

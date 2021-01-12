@@ -18,13 +18,14 @@ import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressVa
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
 import { standardizedAddress } from './Send.utils';
 import { actionFetchFeeByMax } from './Send.actions';
-import withInit from './Send.enhanceInit';
+import withInit, { TInnerInit } from './Send.enhanceInit';
 import withFee from './Send.enhanceFee';
 import { FORM_CONFIGS } from './Send.constant';
 import withForceSend, { TInner as TInnerForceSend } from './Send.withForceSend';
 
 export interface IMergeProps
     extends InjectedFormProps<any, any>,
+        TInnerInit,
         TInnerAddress,
         TInnerAmount,
         TInnerSend,

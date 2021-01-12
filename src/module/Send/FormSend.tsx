@@ -7,6 +7,7 @@ import { ISendLanguage } from 'src/i18n';
 import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField/InputField.constant';
 import { ITheme } from 'src/styles';
+import LoadingContainer from 'src/components/LoadingContainer';
 import { IMergeProps } from './Send.enhance';
 import { sendDataSelector, sendSelector } from './Send.selector';
 import { ISelectedPrivacy, selectedPrivacySelector } from '../Token';
@@ -81,6 +82,7 @@ const FormSend = (props: IMergeProps) => {
     const theme: ITheme = useSelector(themeSelector);
     const { titleBtnSubmit, disabledForm }: ISendData = useSelector(sendDataSelector);
     const {
+        isInitForm,
         handleSubmit,
         handleSend,
         validateAddress,
@@ -91,49 +93,59 @@ const FormSend = (props: IMergeProps) => {
         onClickScan,
         onGoBack,
     } = props;
+    const renderForm = () => {
+        if (isInitForm) {
+            return <LoadingContainer />;
+        }
+        return (
+            <>
+                <p className="balance">{`${translate.balance}: ${selectedPrivacy.formatAmountNoClip}`}</p>
+                <form onSubmit={handleSubmit(handleSend)}>
+                    <Field
+                        component={InputField}
+                        name={FORM_CONFIGS.amount}
+                        inputType={INPUT_FIELD.amount}
+                        componentProps={{
+                            placeholder: translate.amount,
+                            autoFocus: true,
+                        }}
+                        onClickMax={onClickMax}
+                        validate={validateAmount}
+                    />
+                    <Field
+                        component={InputField}
+                        name={FORM_CONFIGS.toAddress}
+                        componentProps={{
+                            placeholder: translate.incognitoAddress,
+                            onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                                onChangeField(e.target.value, FORM_CONFIGS.toAddress),
+                        }}
+                        inputType={INPUT_FIELD.address}
+                        onClickAddressBook={onClickAddressBook}
+                        onClickScan={onClickScan}
+                        validate={validateAddress}
+                    />
+                    <Field
+                        component={InputField}
+                        name={FORM_CONFIGS.memo}
+                        componentProps={{
+                            placeholder: translate.placeholderMemo,
+                        }}
+                    />
+                    <EstimateFee />
+                    <ErrorBlock />
+                    <Button title={titleBtnSubmit} disabled={disabledForm} type="submit" />
+                </form>
+            </>
+        );
+    };
     return (
         <Styled theme={theme}>
             <Header
                 onGoBack={onGoBack}
                 title={`${translate.headerTitle} ${selectedPrivacy.symbol || selectedPrivacy.pSymbol}`}
             />
-            <p className="balance">{`${translate.balance}: ${selectedPrivacy.formatAmountNoClip}`}</p>
-            <form onSubmit={handleSubmit(handleSend)}>
-                <Field
-                    component={InputField}
-                    name={FORM_CONFIGS.amount}
-                    inputType={INPUT_FIELD.amount}
-                    componentProps={{
-                        placeholder: translate.amount,
-                        autoFocus: true,
-                    }}
-                    onClickMax={onClickMax}
-                    validate={validateAmount}
-                />
-                <Field
-                    component={InputField}
-                    name={FORM_CONFIGS.toAddress}
-                    componentProps={{
-                        placeholder: translate.incognitoAddress,
-                        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-                            onChangeField(e.target.value, FORM_CONFIGS.toAddress),
-                    }}
-                    inputType={INPUT_FIELD.address}
-                    onClickAddressBook={onClickAddressBook}
-                    onClickScan={onClickScan}
-                    validate={validateAddress}
-                />
-                <Field
-                    component={InputField}
-                    name={FORM_CONFIGS.memo}
-                    componentProps={{
-                        placeholder: translate.placeholderMemo,
-                    }}
-                />
-                <EstimateFee />
-                <ErrorBlock />
-                <Button title={titleBtnSubmit} disabled={disabledForm} type="submit" />
-            </form>
+            {renderForm()}
         </Styled>
     );
 };

@@ -6,6 +6,7 @@ const Styled = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+    justify-content: center;
 `;
 
 const LoadingContainer = () => {

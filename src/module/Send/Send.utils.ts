@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE } from 'src/constants/error';
+import { ERROR_MESSAGE, ERROR_CODE } from 'src/constants/error';
 import floor from 'lodash/floor';
 import format from 'src/utils/format';
 import BigNumber from 'bignumber.js';
@@ -259,4 +259,13 @@ export const standardizedAddress = (address: string) => {
         newAddress = address.substring(0, indexParams);
     }
     return removeAllSpace(newAddress);
+};
+
+export const getErrorMsgSend = (error: any) => {
+    if (error instanceof Error) {
+        return error?.message || '';
+    }
+    const code = error?.Code;
+    const errorCode = code ? `ERROR_CODE(${error?.Code})` : '';
+    return `${ERROR_CODE[code] || ERROR_CODE.DEFAULT} ${errorCode}`;
 };

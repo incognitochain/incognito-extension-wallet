@@ -34,7 +34,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             dispatch(
                 actionToggleToast({
                     toggle: true,
-                    value: error?.message || JSON.stringify(error),
+                    value: error,
                     type: TOAST_CONFIGS.error,
                 }),
             );
