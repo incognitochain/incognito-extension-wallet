@@ -1,18 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import {
-    // MdError,
-    //  MdWarning,
-    //  MdInfo,
-    MdClose,
-} from 'react-icons/md';
+import { MdClose } from 'react-icons/md';
 import { COLORS } from 'src/styles';
 import { toastSelector } from './Toast.selector';
-import {
-    //  TOAST_CONFIGS,
-    TOAST_CONFIGS_CLASSNAME,
-} from './Toast.reducer';
+import { TOAST_CONFIGS_CLASSNAME } from './Toast.reducer';
 import { actionToggleToast } from './Toast.actions';
 
 const Styled = styled.div`
@@ -46,21 +38,8 @@ const Styled = styled.div`
 const Toast = () => {
     const dispatch = useDispatch();
     const { value, type, toggle } = useSelector(toastSelector);
-    const className = `${TOAST_CONFIGS_CLASSNAME[String(type)]} ${toggle ? 'show' : ''}`;
-    // const getIcons = () => {
-    //     switch (type) {
-    //         case TOAST_CONFIGS.error:
-    //             return <MdError size={16} />;
-    //         case TOAST_CONFIGS.success:
-    //             return <MdInfo size={16} />;
-    //         case TOAST_CONFIGS.warning:
-    //             return <MdWarning size={16} />;
-    //         default:
-    //             return <MdInfo size={16} />;
-    //     }
-    // };
+    const className = `${TOAST_CONFIGS_CLASSNAME[String(type)]}`;
     const handleCloseToast = () => dispatch(actionToggleToast({ toggle: false }));
-
     React.useEffect(() => {
         if (toggle) {
             let timeoutId = setTimeout(() => {
@@ -72,9 +51,8 @@ const Toast = () => {
         }
     }, [toggle]);
     return (
-        <Styled>
+        <Styled className={`${toggle ? 'show' : ''}`}>
             <div className="scroll-view">
-                {/* {getIcons()} */}
                 <p className={`${className} fs-small`}>{value}</p>
             </div>
             <MdClose onClick={handleCloseToast} size={18} className="close-icon" />

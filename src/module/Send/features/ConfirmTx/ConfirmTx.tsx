@@ -4,12 +4,13 @@ import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
-import { getHistoryCacheByTxIdSelector } from 'src/module/History';
+import { getHistoryCacheDetailSelector } from 'src/module/History';
 import HistoryItem, { IHistoryItem } from 'src/module/History/features/HistoryItem';
 import { serverSelector } from 'src/module/Preload';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { IConfirmTxLanguage } from 'src/i18n';
 import { route as routeDetail } from 'src/module/Token/features/Detail';
+import { TxHistoryModelParam } from 'incognito-js/build/web/browser';
 
 const Styled = styled.div`
     p.confirm-title {
@@ -20,18 +21,18 @@ const Styled = styled.div`
 
 const ConfirmTx = () => {
     const { state }: { state: any } = useLocation();
-    const history = useHistory();
-    const { txId }: { txId: string } = state;
+    const historyState = useHistory();
+    const { history }: { history: TxHistoryModelParam } = state;
     const server = useSelector(serverSelector);
     const confirmLanguage: IConfirmTxLanguage = useSelector(translateByFieldSelector)('send.confirm');
-    const tx: any = useSelector(getHistoryCacheByTxIdSelector)(txId);
+    const tx: any = useSelector(getHistoryCacheDetailSelector)(history);
     if (!tx || !confirmLanguage) {
         return <Redirect to="/" />;
     }
     const itemsFactories: IHistoryItem[] = [
         {
             title: confirmLanguage.txId,
-            desc: txId,
+            desc: tx.txId,
             copyData: tx.txId,
             link: `${server.exploreChainURL}/tx/${tx.txId}`,
         },
@@ -55,7 +56,7 @@ const ConfirmTx = () => {
     ];
     return (
         <Styled>
-            <Header onGoBack={() => history.push(routeDetail)} title={confirmLanguage.headerTitle} />
+            <Header onGoBack={() => historyState.push(routeDetail)} title={confirmLanguage.headerTitle} />
             <p className="confirm-title fw-bold fs-supermedium center-text">{confirmLanguage.sent}</p>
             {itemsFactories.map((item: IHistoryItem) => (
                 <HistoryItem key={item.title} {...item} />

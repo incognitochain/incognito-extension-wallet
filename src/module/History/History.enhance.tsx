@@ -19,7 +19,12 @@ import {
 import { HISTORY_FORMAT_TYPE } from './History.constant';
 import { actionRemoveShieldBridgeToken } from './History.actions';
 import {} from 'incognito-js/build/web/browser';
-import { cacheServices, bridgeServices, rpcClient, TxHistoryModelParam } from 'incognito-js/build/web/browser';
+import {
+    checkCachedHistoryById,
+    getBridgeHistoryById,
+    rpcClient,
+    TxHistoryModelParam,
+} from 'incognito-js/build/web/browser';
 import { delay } from 'src/utils';
 import { camelCaseKeys } from 'src/utils/object';
 
@@ -73,7 +78,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             switch (h.formatType) {
                 case HISTORY_FORMAT_TYPE.cache:
                     {
-                        const historyCache: TxHistoryModelParam = await cacheServices.checkCachedHistoryById(id);
+                        const historyCache: TxHistoryModelParam = await checkCachedHistoryById(id);
                         const history = getHistoryCacheDetail(historyCache);
                         _historyData = history;
                         await setHistoryFactories([
@@ -156,7 +161,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 }
                 case HISTORY_FORMAT_TYPE.bridge: {
                     const historyBridge: TxBridgeHistoryModel = getHistoryBridgeById(id);
-                    const historyData: any = await bridgeServices.getBridgeHistoryById({
+                    const historyData: any = await getBridgeHistoryById({
                         id: Number(id),
                         currencyType: historyBridge.currencyType,
                     });

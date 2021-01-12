@@ -1,6 +1,6 @@
 import { cachePromise } from 'src/services/cache';
 import uniqBy from 'lodash/uniqBy';
-import { AccountInstance, cacheServices } from 'incognito-js/build/web/browser';
+import { AccountInstance, checkCachedHistories } from 'incognito-js/build/web/browser';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/module/Account';
@@ -63,7 +63,7 @@ export const actionFetchCacheHistory = () => async (dispatch: Dispatch, getState
         const bridgeTokens = bridgeTokensSelector(state);
         const chainTokens = chainTokensSelector(state);
         await dispatch(actionFetchingCacheHistory());
-        await cacheServices.checkCachedHistories();
+        await checkCachedHistories();
         if (selectedPrivacy.isNativeToken) {
             histories = await account.nativeToken.getTxHistories();
         } else {

@@ -60,7 +60,7 @@ export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IM
                 actionToggleToast({
                     type: TOAST_CONFIGS.error,
                     toggle: true,
-                    value: error.message,
+                    value: error,
                 }),
             );
         } finally {

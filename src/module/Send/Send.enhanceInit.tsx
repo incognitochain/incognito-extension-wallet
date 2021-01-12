@@ -2,7 +2,7 @@ import React from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
 import { reset } from 'redux-form';
-import { actionToggleToast, SpinnerContainer, TOAST_CONFIGS } from 'src/components';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { accountBalanceSelector } from 'src/module/Account';
 import { isGettingBalanceByTokenIdSelector } from 'src/redux';
@@ -13,6 +13,10 @@ import { FORM_CONFIGS } from './Send.constant';
 import { actionInit, actionInitEstimateFee, actionFetchedMaxFeePrv, actionFetchedMaxFeePToken } from './Send.actions';
 import { sendSelector } from './Send.selector';
 
+export interface TInnerInit {
+    isInitForm: boolean;
+}
+
 const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const [init, setInit] = React.useState(false);
@@ -20,6 +24,7 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     const accountBalance: number = useSelector(accountBalanceSelector);
     const isGettingBalance = useSelector(isGettingBalanceByTokenIdSelector)(selectedPrivacy.tokenId);
     const send = useSelector(sendSelector);
+    const isInitForm = !selectedPrivacy || !send.init || !init || isGettingBalance;
     const handleFetchedMaxPrv = async (accBalance: number) =>
         dispatch(
             actionFetchedMaxFeePrv({
@@ -65,7 +70,6 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
             setInit(true);
         }
     };
-
     React.useEffect(() => {
         handleFetchedMaxPrv(accountBalance);
     }, [accountBalance]);
@@ -77,12 +81,9 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     React.useEffect(() => {
         initData();
     }, [selectedPrivacy?.tokenId, accountBalance]);
-    if (!selectedPrivacy || !send.init || !init || isGettingBalance) {
-        return <SpinnerContainer animation="border" />;
-    }
     return (
         <ErrorBoundary>
-            <WrappedComp {...props} />
+            <WrappedComp {...{ ...props, isInitForm }} />
         </ErrorBoundary>
     );
 };

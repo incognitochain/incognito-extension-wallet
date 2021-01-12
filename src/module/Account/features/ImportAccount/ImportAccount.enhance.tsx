@@ -61,11 +61,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     type: TOAST_CONFIGS.success,
                 }),
             );
-        } catch (e) {
+        } catch (error) {
             dispatch(
                 actionToggleToast({
                     toggle: true,
-                    value: e?.message || translate.error.import,
+                    value: error,
                     type: TOAST_CONFIGS.error,
                 }),
             );

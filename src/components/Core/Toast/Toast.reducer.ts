@@ -1,7 +1,5 @@
-import { isString } from 'lodash';
-import { ERROR_CODE } from 'src/constants/error';
+import isString from 'lodash/isString';
 import { IObject } from 'src/utils';
-import { isJsonString } from 'src/utils/json';
 import { ACTION_TOGGLE_TOAST } from './Toast.constant';
 
 export const TOAST_CONFIGS = {
@@ -36,18 +34,11 @@ const getMessageError = (error: any) => {
         if (error instanceof Error) {
             return error?.message;
         }
-        if (isJsonString(error)) {
-            const errorParse = JSON.parse(error);
-            const errorCode = errorParse?.Code;
-            if (errorCode) {
-                return `${ERROR_CODE[errorCode] || ERROR_CODE.DEFAULT} ${errorCode ? `ERROR_CODE(${errorCode})` : ''}`;
-            }
-        }
         if (isString(error)) {
             return error;
         }
     } catch (e: any) {
-        value = error;
+        value = error?.message;
     }
     return value;
 };
