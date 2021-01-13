@@ -2,12 +2,12 @@ import { ERROR_MESSAGE, ERROR_CODE } from 'src/constants/error';
 import floor from 'lodash/floor';
 import format from 'src/utils/format';
 import BigNumber from 'bignumber.js';
-import { keyServices } from 'incognito-js/build/web/browser';
+import { keyServices, SDKError } from 'incognito-js/build/web/browser';
 import { ISelectedPrivacy } from 'src/module/Token';
 import { COINS } from 'src/constants';
 import { IRootState } from 'src/redux/interface';
 import { formValueSelector, isSubmitting, isValid } from 'redux-form';
-import { isEmpty } from 'lodash';
+import { isEmpty, toString } from 'lodash';
 import convert from 'src/utils/convert';
 import { FORM_CONFIGS } from './Send.constant';
 import { IUserFeesData, ISendReducer } from './Send.interface';
@@ -262,10 +262,12 @@ export const standardizedAddress = (address: string) => {
 };
 
 export const getErrorMsgSend = (error: any) => {
+    if (error?.code || error?.Code) {
+        const code = error?.code || toString(error?.Code);
+        const message = ERROR_CODE[code] || ERROR_CODE.DEFAULT;
+        return `${message} ERROR_CODE(${code})`;
+    }
     if (error instanceof Error) {
         return error?.message || '';
     }
-    const code = error?.Code;
-    const errorCode = code ? `ERROR_CODE(${error?.Code})` : '';
-    return `${ERROR_CODE[code] || ERROR_CODE.DEFAULT} ${errorCode}`;
 };
