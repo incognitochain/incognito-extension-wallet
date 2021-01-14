@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
-import { Button, Layout } from 'src/components/Core';
+import { AppIcon, Button, Layout } from 'src/components/Core';
 import { CONSTANT_COLORS } from 'src/constants';
 
 interface IProps {
@@ -32,6 +32,7 @@ const GetStarted = (props: IProps) => {
     return (
         <Layout header="">
             <Styled>
+                <AppIcon />
                 <div className="title">{dictionary.getStartedTitle}</div>
                 <div className="subtitle">{dictionary.getStartedDesc}</div>
                 <Button onClick={onGetStarted} title={dictionary.getStartedBtn} />

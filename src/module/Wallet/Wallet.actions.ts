@@ -11,6 +11,7 @@ import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wall
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import { walletDataSelector, walletIdSelector, walletSelector } from './Wallet.selector';
 import { IDataInitWallet, IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
+import { actionResetFollowDefaultToken } from '../Token';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -52,6 +53,7 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
             dispatch(actionFetched(payload));
             dispatch(actionCreatePassword(''));
             dispatch(actionChangePassword(pass));
+            dispatch(actionResetFollowDefaultToken(mainnet));
         });
 
         return walletId;

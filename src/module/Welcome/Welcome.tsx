@@ -1,22 +1,17 @@
 import React from 'react';
-import { AppIcon } from 'src/components';
 import styled from 'styled-components';
 import NewUser from './features/NewUser';
 import OldUser from './features/OldUser';
 import enhance from './Welcome.enhance';
 import { IProps } from './Welcome.interface';
 
-const Styled = styled.div`
-    .content {
-        margin-top: 30px;
-    }
-`;
+const Styled = styled.div``;
 
 const Welcome = (props: IProps) => {
-    const { isInitWallet, isReset, onForgot } = props;
+    const { isInitWallet, isReset, onForgot, onBack } = props;
     const renderContent = () => {
         if (isReset || !isInitWallet) {
-            return <NewUser isReset={isReset} />;
+            return <NewUser isReset={isReset} onBack={onBack} />;
         }
 
         return <OldUser onForgot={onForgot} />;
@@ -24,8 +19,7 @@ const Welcome = (props: IProps) => {
 
     return (
         <Styled>
-            <AppIcon />
-            <div className="content">{renderContent()}</div>
+            <div>{renderContent()}</div>
         </Styled>
     );
 };

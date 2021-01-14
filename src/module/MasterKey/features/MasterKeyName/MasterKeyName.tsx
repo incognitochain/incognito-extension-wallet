@@ -13,7 +13,7 @@ const Styled = styled.div`
     }
 
     .input-wrapper {
-        margin: 30px 0;
+        margin-bottom: 30px;
 
         > div:first-child {
             margin-bottom: 15px;

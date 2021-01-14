@@ -6,6 +6,7 @@ const Styled = styled.div`
     height: 50px;
     background-color: #000;
     border-radius: 50%;
+    margin-bottom: 30px;
 `;
 
 const AppIcon = () => {

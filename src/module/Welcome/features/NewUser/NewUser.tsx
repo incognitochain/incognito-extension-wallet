@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
-import { Button, Input, Layout } from 'src/components/Core';
+import { AppIcon, Button, Input, Layout } from 'src/components/Core';
 import { CONSTANT_COLORS } from 'src/constants';
 import enhance from './NewUser.enhance';
 import { INewUserProps } from './NewUser.interface';
+import { Header } from '../../../../components';
 
 const Styled = styled.div`
     .title {
@@ -43,12 +44,14 @@ const Styled = styled.div`
 `;
 
 const NewUser = (props: INewUserProps) => {
-    const { isReset, disabled, onChangePass, onChangeConfirmPass, onImport, onCreate, error } = props;
+    const { isReset, disabled, onChangePass, onChangeConfirmPass, onImport, onCreate, error, onBack } = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = isReset ? translate.welcome.forgotPass : translate.welcome.newUser;
     return (
         <Layout header="">
             <Styled>
+                {isReset && <Header title=" " onGoBack={onBack} />}
+                <AppIcon />
                 <div className="title">{dictionary.title1}</div>
                 <div className="subtitle">{dictionary.title2}</div>
                 <form className="input-wrapper">

@@ -13,6 +13,7 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
     const showQrCodeModal = useCallback(() => {
         dispatch(
             actionToggleModal({
+                title: ' ',
                 data: <QrCodeModal value={mnemonic} />,
                 closeable: true,
             }),
