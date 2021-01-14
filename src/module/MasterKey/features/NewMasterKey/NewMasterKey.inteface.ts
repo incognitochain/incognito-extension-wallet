@@ -5,4 +5,5 @@ export interface IProps {
     onCreate: () => void;
     masterKeyName: string;
     mnemonic: string;
+    onBack: () => void;
 }

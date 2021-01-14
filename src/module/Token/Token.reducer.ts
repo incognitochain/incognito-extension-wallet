@@ -12,6 +12,7 @@ import {
     ACTION_GET_BALANCE_TOKEN_FETCHING,
     ACTION_GET_BALANCE_TOKEN_FETCHED,
     ACTION_SET_SELECTED_TOKEN,
+    ACTION_RESET_FOLLOWED_POPULAR_TOKEN,
 } from './Token.constant';
 
 export interface IEnvToken {
@@ -75,6 +76,18 @@ const tokenReducer = (
                 [field]: {
                     ...stateField,
                     followedPopularIds: true,
+                },
+            };
+        }
+        case ACTION_RESET_FOLLOWED_POPULAR_TOKEN: {
+            const mainnet = action.payload;
+            const field = mainnet ? 'mainnet' : 'testnet';
+            const stateField: IEnvToken = state[field];
+            return {
+                ...state,
+                [field]: {
+                    ...stateField,
+                    followedPopularIds: false,
                 },
             };
         }

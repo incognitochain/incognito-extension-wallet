@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
-import { Button, Input, Layout } from 'src/components/Core';
+import { AppIcon, Button, Input, Layout } from 'src/components/Core';
 import { CONSTANT_COLORS } from 'src/constants';
 import enhance from './OldUser.enhance';
 import { IOldUserProps } from './OldUser.interface';
@@ -37,6 +37,7 @@ const OldUser = (props: IOldUserProps) => {
     return (
         <Layout header="">
             <Styled>
+                <AppIcon />
                 <div className="title">{dictionary.title}</div>
                 <form className="input-wrapper" onSubmit={onNext}>
                     <div>

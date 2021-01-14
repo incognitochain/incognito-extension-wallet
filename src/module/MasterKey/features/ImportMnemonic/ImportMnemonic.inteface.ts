@@ -6,4 +6,5 @@ export interface IProps {
     onChangeName: (e: any) => void;
     onVerify: () => void;
     isDisabled: boolean;
+    onBack: () => void;
 }

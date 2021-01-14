@@ -17,7 +17,13 @@ const enhance = (WrappedComponent: any) => () => {
         setIsReset(true);
     }, []);
 
-    return <WrappedComponent isReset={isReset} isInitWallet={isInitWallet} onForgot={handleForgot} />;
+    const handleBack = useCallback(() => {
+        setIsReset(false);
+    }, []);
+
+    return (
+        <WrappedComponent isReset={isReset} isInitWallet={isInitWallet} onForgot={handleForgot} onBack={handleBack} />
+    );
 };
 
 export default compose<IProps, any>(withLayout, enhance);

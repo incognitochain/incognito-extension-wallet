@@ -64,11 +64,11 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
     }
 
     if (isImport) {
-        return <ImportMnemonic />;
+        return <ImportMnemonic onBack={() => setIsImport(false)} />;
     }
 
     if (appPassword) {
-        return <NewMasterKey />;
+        return <NewMasterKey onBack={() => dispatch(actionCreatePassword(''))} />;
     }
 
     return (

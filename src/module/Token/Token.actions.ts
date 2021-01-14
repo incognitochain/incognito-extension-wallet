@@ -16,6 +16,7 @@ import {
     ACTION_FOLLOWED_POPULAR_TOKEN,
     ACTION_SET_FOLLOWED_TOKENS,
     ACTION_SET_SELECTED_TOKEN,
+    ACTION_RESET_FOLLOWED_POPULAR_TOKEN,
 } from './Token.constant';
 import { apiGetPTokenList, apiGetPCustomTokenList } from './Token.services';
 import { IPToken, IFollowedToken, ISelectedPrivacy } from './Token.interface';
@@ -128,6 +129,11 @@ export const actionFollowDefaultToken = (account: AccountInstance) => async (
         throw error;
     }
 };
+
+export const actionResetFollowDefaultToken = (payload: boolean) => ({
+    type: ACTION_RESET_FOLLOWED_POPULAR_TOKEN,
+    payload,
+});
 
 export const actionGetPrivacyTokensBalance = (defaultAccount?: AccountInstance | undefined) => async (
     dispatch: Dispatch,

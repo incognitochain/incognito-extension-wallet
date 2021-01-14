@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { Button, Input, TextArea } from 'src/components';
+import { AppIcon, Button, Header, Input, TextArea } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
 import { CONSTANT_COLORS } from 'src/constants';
@@ -26,12 +26,14 @@ const Styled = styled.div`
 `;
 
 const ImportMnemonic = (props: IProps) => {
-    const { onChangeName, onChangeMnemonic, error, onVerify, isDisabled } = props;
+    const { onChangeName, onChangeMnemonic, error, onVerify, isDisabled, onBack } = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = translate.masterKey.importMnemonic;
 
     return (
         <Styled>
+            <Header onGoBack={onBack} title=" " />
+            <AppIcon />
             <div className="title">{dictionary.title}</div>
             <form className="form" autoComplete="off">
                 <div className="input">
