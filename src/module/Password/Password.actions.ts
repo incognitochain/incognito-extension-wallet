@@ -29,7 +29,7 @@ export const actionLogin = (newPass: string) => async (dispatch: Dispatch, getSt
     dispatch(loginEvent(newPass));
     if (isDev) return;
     await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.UPDATE_PASS_WORK, {
-        passwork: newPass,
+        password: newPass,
     });
 };
 

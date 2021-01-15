@@ -8,15 +8,21 @@ import { isDev } from 'src/configs';
 import APP_CONSTANT from 'src/constants/app';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import { getActiveTabs } from 'src/utils/app';
-import Spinner from 'react-bootstrap/esm/Spinner';
 import { actionClearRequestFromDApp as clearRequestFromDApp, IRequestDApp, requestDAppSelector } from '../Preload';
+import { LoadingContainer } from '../Preload/Preload.enhance';
+import { IPreloadLanguage } from '../../i18n';
+import { translateByFieldSelector } from '../Configs';
 
-interface IProps {}
+interface IProps {
+    loadedBalance: boolean;
+}
 
 const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
+    const { loadedBalance } = props;
     const history = useHistory();
     const dispatch = useDispatch();
     const requestDApp: IRequestDApp | null = useSelector(requestDAppSelector);
+    const translate: IPreloadLanguage = useSelector(translateByFieldSelector)('preload');
     const [connected, setConnected] = React.useState<boolean>(false);
     const handleCheckConnectAccount = async () => {
         const tabs: any = await getActiveTabs();
@@ -27,6 +33,7 @@ const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProp
         setConnected(isConnected);
     };
     React.useEffect(() => {
+        if (!loadedBalance) return;
         if (requestDApp) {
             switch (requestDApp?.name) {
                 // move to connect account
@@ -46,13 +53,14 @@ const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProp
             }
             dispatch(clearRequestFromDApp());
         }
-    }, [requestDApp]);
+    }, [requestDApp, loadedBalance]);
     React.useEffect(() => {
         if (isDev) return;
-        // check is connect
-        handleCheckConnectAccount();
+        handleCheckConnectAccount().then(); // check is connect
     }, []);
-    if (requestDApp) return <Spinner animation="grow" />;
+    if (requestDApp && !loadedBalance) {
+        return <LoadingContainer title={translate.title1} subTitle={translate.title2} />;
+    }
     return <WrappedComponent {...{ ...props, connected }} />;
 };
 

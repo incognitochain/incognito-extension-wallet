@@ -73,7 +73,7 @@ export const actionLogin = () => async (dispatch: Dispatch, getState: () => IRoo
     return payload;
 };
 
-export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionFetch = (accountName?: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state: IRootState = getState();
     const preload: IPreloadReducer = preloadSelector(state);
     const walletState: IWalletReducer = walletSelector(state);
@@ -91,7 +91,7 @@ export const actionFetch = () => async (dispatch: Dispatch, getState: () => IRoo
         if (!init) {
             task = [...task, actionInitWallet()(dispatch, getState)];
         } else {
-            task = [...task, actionHandleLoadWallet()(dispatch, getState)];
+            task = [...task, actionHandleLoadWallet(accountName)(dispatch, getState)];
         }
         await Promise.all(task);
         await dispatch(actionFetched({}));

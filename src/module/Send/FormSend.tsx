@@ -82,7 +82,7 @@ const FormSend = (props: IMergeProps) => {
     const theme: ITheme = useSelector(themeSelector);
     const { titleBtnSubmit, disabledForm }: ISendData = useSelector(sendDataSelector);
     const {
-        isInitForm,
+        isInitingForm,
         handleSubmit,
         handleSend,
         validateAddress,
@@ -94,7 +94,7 @@ const FormSend = (props: IMergeProps) => {
         onGoBack,
     } = props;
     const renderForm = () => {
-        if (isInitForm) {
+        if (isInitingForm) {
             return <LoadingContainer />;
         }
         return (

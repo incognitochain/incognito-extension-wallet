@@ -20,9 +20,8 @@ const enhanceConnect = (WrappedComponent: React.FunctionComponent) => (props: IP
         setConnected(isConnected);
     };
     React.useEffect(() => {
-        if (isDev) return;
-        // check is connect
-        handleCheckConnectAccount();
+        if (isDev) return; // check is connect
+        handleCheckConnectAccount().then();
     }, []);
     return (
         <WrappedComponent

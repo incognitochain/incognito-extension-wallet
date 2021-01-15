@@ -14,7 +14,7 @@ import { actionInit, actionInitEstimateFee, actionFetchedMaxFeePrv, actionFetche
 import { sendSelector } from './Send.selector';
 
 export interface TInnerInit {
-    isInitForm: boolean;
+    isInitingForm: boolean;
 }
 
 const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
@@ -24,7 +24,7 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     const accountBalance: number = useSelector(accountBalanceSelector);
     const isGettingBalance = useSelector(isGettingBalanceByTokenIdSelector)(selectedPrivacy.tokenId);
     const send = useSelector(sendSelector);
-    const isInitForm = !selectedPrivacy || !send.init || !init || isGettingBalance;
+    const isInitingForm = !selectedPrivacy || !send.init || !init || isGettingBalance;
     const handleFetchedMaxPrv = async (accBalance: number) =>
         dispatch(
             actionFetchedMaxFeePrv({
@@ -83,7 +83,7 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     }, [selectedPrivacy?.tokenId, accountBalance]);
     return (
         <ErrorBoundary>
-            <WrappedComp {...{ ...props, isInitForm }} />
+            <WrappedComp {...{ ...props, isInitingForm }} />
         </ErrorBoundary>
     );
 };

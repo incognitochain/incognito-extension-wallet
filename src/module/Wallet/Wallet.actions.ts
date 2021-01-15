@@ -92,13 +92,16 @@ export const actionInitWallet = () => async (dispatch: Dispatch, getState: () =>
     }
 };
 
-export const actionHandleLoadWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+export const actionHandleLoadWallet = (accountName?: string) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
     const state: IRootState = getState();
     const preload: IPreloadReducer = preloadSelector(state);
     const walletState: IWalletReducer = walletSelector(state);
     const apiUrl = apiURLSelector(state);
     const pass = passwordSelector(state);
-    const defaultAccountName: string = defaultAccountNameSelector(state);
+    const defaultAccountName: string = accountName || defaultAccountNameSelector(state);
     const { mainnet } = preload.configs;
     const field = mainnet ? 'mainnet' : 'testnet';
     const { walletId } = walletState[field];

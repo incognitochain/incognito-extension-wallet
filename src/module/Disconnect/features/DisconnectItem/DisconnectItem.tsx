@@ -15,10 +15,10 @@ interface IProps {
 }
 
 const DisconnectItem = React.memo((props: IProps & any) => {
-    const { account, paymentAddress, connected, handleDisconnet } = props;
+    const { account, paymentAddress, connected, handleDisconnect } = props;
     const prvBalance = useSelector(getPrivacyDataByTokenIDSelector)(PRV_ID);
     const renderButtonDisconnect = () => (
-        <div onClick={handleDisconnet}>
+        <div onClick={handleDisconnect}>
             <p className="status fw-regular">Diconnect</p>
         </div>
     );

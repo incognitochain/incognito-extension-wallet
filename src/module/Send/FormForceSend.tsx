@@ -33,12 +33,11 @@ const EstimateFee = React.memo(() => {
 });
 
 const FormForceSend = (props: IMergeProps & any) => {
-    const { originUrl } = props;
+    const { originUrl, handleSubmit, handleSend, validateAmount, validateAddress, onGoBack } = props;
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const theme: ITheme = useSelector(themeSelector);
     const { forceSendTitleBtnSubmit, disabledForm, inputMemo, inputAddress }: ISendData = useSelector(sendDataSelector);
-    const { handleSubmit, handleSend, validateAmount, onGoBack } = props;
     return (
         <Styled theme={theme}>
             <Header onGoBack={onGoBack} title={translate.forceSendHeaderTitle} />
@@ -67,6 +66,7 @@ const FormForceSend = (props: IMergeProps & any) => {
                             limit: 10,
                         }),
                     }}
+                    validate={validateAddress}
                     subtitle="Address"
                 />
                 {!!inputMemo && (

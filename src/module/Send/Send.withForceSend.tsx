@@ -19,13 +19,14 @@ export interface TInner {
 }
 
 const enhanceForceSend = (WrappedComponent: React.FunctionComponent) => (props: TInner & any) => {
-    const forceSendData: IDataForceSend | null | undefined = useSelector(forceSendDataSelector);
+    const { isInitingForm } = props;
+    const forceSendData = useSelector(forceSendDataSelector);
     const dispatch = useDispatch();
     const handleClearForceSendData = () => dispatch(actionUpdateDataForceSend(undefined));
     // send finish => fail or success => update background.js
-    const handleForceSendFinish = (error: any, txInfo: any) => {
+    const handleForceSendFinish = async (error: any, txInfo: any) => {
         if (isDev) return;
-        sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.SEND_TX_FINISH, { error, txInfo });
+        await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.SEND_TX_FINISH, { error, txInfo });
     };
     // clear current request in background.js when tap back
     const handleClearCurrentRequest = async (error: any, txInfo: any) => {
@@ -33,15 +34,15 @@ const enhanceForceSend = (WrappedComponent: React.FunctionComponent) => (props: 
         await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.CLEAR_SEND_CURRENT_REQUEST, { error, txInfo });
     };
     React.useEffect(() => {
-        if (forceSendData) {
+        if (forceSendData && !isInitingForm) {
             dispatch(actionSetSelectedToken(forceSendData.tokenId));
             dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.amount, forceSendData.amount));
             dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.toAddress, forceSendData.toAddress));
-            if (forceSendData.toAddress) {
+            if (forceSendData?.toAddress) {
                 dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.memo, forceSendData.memo));
             }
         }
-    }, []);
+    }, [isInitingForm]);
     return (
         <ErrorBoundary>
             <WrappedComponent
