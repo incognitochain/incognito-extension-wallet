@@ -176,13 +176,16 @@ const requestConnectAccount = async (sender) => {
     postCurrentRequestToExtension();
 };
 
-const checkIsConnected = (tab) => {
+const checkIsConnected = (tab, accountName) => {
     try {
         const origin = getOriginalURL(tab)
         if (!origin) return false;
         let isConnect = false;
         Object.keys(requestAccount).forEach(connectOrigin => {
-            if (connectOrigin === origin && requestAccount[origin]) isConnect = true
+            if (connectOrigin === origin
+              && requestAccount[origin]
+              && requestAccount[origin]?.name === accountName
+            ) isConnect = true
         });
         return isConnect;
     } catch (error) {
@@ -211,7 +214,7 @@ const handleDisconnectAccount = (origin) => {
             Object.keys(requestAccount).forEach(connectOrigin => {
                 if (connectOrigin === origin && requestAccount[origin]) {
                     delete requestAccount[origin];
-                    postMessageDisableAccount(origin);
+                    postMessageDisableAccount(origin).then();
                 }
             });
         }
@@ -265,19 +268,20 @@ const handleSendTxFinish = async (data) => {
 };
 
 const handleCancelSendTx = async () => {
-    if (!currentRequest) return;
-    const { origin } = currentRequest;
-    const tab = await getTabWithOrigin(origin);
-    currentRequest = null;
-    if (!tab) return;
-    currentRequest = null; 
-    const params = { 
-        name: INCOGNITO_EXTENSION_SEND_DATA, 
-        key: CONTENT_LISTEN.CANCEL_SEND_TX, 
-        origin,
-        data: { error, txInfo }
-    }
-    tabSendMessage(tab.id, params);
+    try {
+        if (!currentRequest) return;
+        const { origin } = currentRequest;
+        const tab = await getTabWithOrigin(origin);
+        currentRequest = null;
+        if (!tab) return;
+        currentRequest = null;
+        const params = {
+            name: INCOGNITO_EXTENSION_SEND_DATA,
+            key: CONTENT_LISTEN.CANCEL_SEND_TX,
+            origin,
+        }
+        tabSendMessage(tab.id, params);
+    } catch (e) {/*Ignored error*/}
 };
 
 const handleCheckConnectAccount = async (sender) => {
@@ -322,13 +326,13 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
             break;
         }
         case BACKGROUND_LISTEN.CHECK_IS_CONNECTED: {
-            const { tab } = data;
-            return sendResponse(checkIsConnected(tab))
+            const { tab, accountName } = data;
+            return sendResponse(checkIsConnected(tab, accountName))
         }
         case BACKGROUND_LISTEN.DISCONNECT_ACCOUNT: {
             const { origin } = data;
             handleDisconnectAccount(origin)
-            return sendResponse(checkIsConnected(origin));
+            break;
         }
         // send tx finish
         case BACKGROUND_LISTEN.SEND_TX_FINISH: {
