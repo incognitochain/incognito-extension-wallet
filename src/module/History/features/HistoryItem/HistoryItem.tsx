@@ -112,9 +112,10 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
                     {!!link && <OpenLinkIcon onClick={handleOpenLink} />}
                 </div>
             </div>
-            {toggle && <p className="fs-small sub-text message">{message}</p>}
+            {!!message && toggle && (
+                <p className="fs-small sub-text message" dangerouslySetInnerHTML={{ __html: message }} />
+            )}
         </Styled>
     );
 });
-
 export default React.memo(HistoryItem);
