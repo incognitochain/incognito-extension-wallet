@@ -17,9 +17,6 @@ const Styled = styled.button`
         .word {
             color: ${CONSTANT_COLORS.BLACK};
         }
-        .index {
-            color: ${CONSTANT_COLORS.LIGHT_GREY};
-        }
     }
 
     > div.selected-word {
@@ -40,7 +37,6 @@ const Word = (props: ISelectableWord & IProps) => {
     return (
         <Styled onClick={handleClick}>
             <div className={isSelected ? 'selected-word' : ''}>
-                <span className="index">{index + 1} </span>
                 <span className="word">{text}</span>
             </div>
         </Styled>
