@@ -7,6 +7,7 @@ import { IWalletReducer, walletSelector } from 'src/module/Wallet';
 import { Button } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { IPreloadLanguage } from 'src/i18n';
+import { forceSendDataSelector } from 'src/module/Send/Send.selector';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
 import { preloadSelector } from './Preload.selector';
 
@@ -18,28 +19,52 @@ const Styled = styled.div`
 
 interface IProps {}
 
+interface ILoadingContainerProps {
+    showMessage?: boolean;
+    message?: string;
+    title: string;
+    subTitle: string;
+    buttonTitle?: string;
+    onClick?: () => void;
+}
+
+export const LoadingContainer = React.memo((props: ILoadingContainerProps) => {
+    const { showMessage, message, title, subTitle, buttonTitle, onClick } = props;
+    return (
+        <Styled className="preload-container">
+            <Spinner animation="grow" />
+            <p className="fw-medium fs-medium sub-text" dangerouslySetInnerHTML={{ __html: title }} />
+            {!!showMessage && (
+                <>
+                    <p className="sub-text" dangerouslySetInnerHTML={{ __html: subTitle }} />
+                    {!!message && <p className="sub-text">{message}</p>}
+                    {onClick && !!buttonTitle && <Button title={buttonTitle} onClick={onClick} />}
+                </>
+            )}
+        </Styled>
+    );
+});
+
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
     const dispatch = useDispatch();
     const { loaded }: IWalletReducer = useSelector(walletSelector);
-    const { error, isFetching: preloading, isFetched: preloaded } = useSelector(preloadSelector);
     const translate: IPreloadLanguage = useSelector(translateByFieldSelector)('preload');
-    const handlePreload = () => dispatch(actionPreloadApp());
+    const { error, isFetching: preloading, isFetched: preloaded } = useSelector(preloadSelector);
+    const forceSendData = useSelector(forceSendDataSelector);
+    const handlePreload = () => dispatch(actionPreloadApp(forceSendData?.accountName));
     React.useEffect(() => {
         handlePreload();
     }, []);
     if (preloading || !loaded || !preloaded) {
         return (
-            <Styled className="preload-container">
-                <Spinner animation="grow" />
-                <p className="fw-medium fs-medium sub-text" dangerouslySetInnerHTML={{ __html: translate.title1 }} />
-                {!!error && !preloaded && !preloading && (
-                    <>
-                        <p className="sub-text" dangerouslySetInnerHTML={{ __html: translate.title2 }} />
-                        {!!error && <p className="sub-text">{error}</p>}
-                        <Button title={translate.btnRetry} onClick={handlePreload} />
-                    </>
-                )}
-            </Styled>
+            <LoadingContainer
+                title={translate.title1}
+                subTitle={translate.title2}
+                showMessage={!!error && !preloaded && !preloading}
+                message={error}
+                buttonTitle={translate.btnRetry}
+                onClick={handlePreload}
+            />
         );
     }
     return <WrappedComponent {...props} />;

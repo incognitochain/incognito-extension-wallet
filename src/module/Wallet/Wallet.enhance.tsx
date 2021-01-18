@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { WalletInstance } from 'incognito-js/build/web/browser';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'redux';
@@ -30,6 +30,7 @@ interface IMergeProps extends IEnhanceBalanceProps, IProps {}
 export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergeProps & any) => {
     const { loadBalance } = props;
     const dispatch = useDispatch();
+    const [loadedBalance, setLoadedBalance] = useState(false);
     const defaultAccount: string = useSelector(defaultAccountNameSelector);
     const wallet: WalletInstance = useSelector(walletDataSelector);
     const preload: IPreloadReducer = useSelector(preloadSelector);
@@ -68,6 +69,7 @@ export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IM
                 dispatch(actionFetchPTokenList(true));
                 dispatch(actionFetchPCustomTokenList(true));
             }
+            setLoadedBalance(true);
         }
     };
     const handleInitData = () => {
@@ -85,9 +87,15 @@ export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IM
 
     return (
         <WrappedComponent
-            {...{ ...props, handleRefresh: handleLoadWallet, showReloadBalance: true, showConnectStatus: true }}
+            {...{
+                ...props,
+                handleRefresh: handleLoadWallet,
+                showReloadBalance: true,
+                showConnectStatus: true,
+                loadedBalance,
+            }}
         />
     );
 };
 
-export default compose(withBalance, enhance, withHeaderApp, enhanceDApp);
+export default compose(withBalance, enhance, enhanceDApp, withHeaderApp);

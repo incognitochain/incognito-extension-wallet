@@ -148,7 +148,7 @@ export const actionGetPrivacyTokensBalance = (defaultAccount?: AccountInstance |
     const bridgeTokens = bridgeTokensSelector(state);
     const chainTokens = chainTokensSelector(state);
     const account: AccountInstance = defaultAccount || defaultAccountSelector(state);
-    followed.map(async (tokenId: string) => {
+    return followed.map(async (tokenId: string) => {
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
         return actionGetBalanceToken(token)(dispatch, getState);
     });

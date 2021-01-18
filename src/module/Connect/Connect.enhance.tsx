@@ -2,7 +2,6 @@ import React from 'react';
 import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withHeaderApp } from 'src/components/Header';
-import { enhance as withWallet } from 'src/module/Wallet/Wallet.enhance';
 import withBalance from 'src/module/Account/Acount.enhanceBalance';
 
 interface IProps {
@@ -31,4 +30,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     );
 };
 
-export default compose<IProps, any>(withHeaderApp, withBalance, withWallet, enhance);
+export default compose<IProps, any>(withHeaderApp, withBalance, enhance);

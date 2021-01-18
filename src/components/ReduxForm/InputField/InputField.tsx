@@ -42,9 +42,23 @@ const InputField = (props: IInputFieldProps) => {
     const renderError = () => {
         return (
             <>
-                {(error && <p className={`error fs-small fw-regular ${suffix ? 'align-right' : ''}`}>{error}</p>) ||
+                {(error && (
+                    <p
+                        className={`error fs-small fw-regular ${
+                            inputType === INPUT_FIELD.leftTitle ? 'align-right' : ''
+                        }`}
+                    >
+                        {error}
+                    </p>
+                )) ||
                     (warning && (
-                        <p className={`warning fs-small fw-regular ${suffix ? 'align-right' : ''}`}>{warning}</p>
+                        <p
+                            className={`warning fs-small fw-regular ${
+                                inputType === INPUT_FIELD.leftTitle ? 'align-right' : ''
+                            }`}
+                        >
+                            {warning}
+                        </p>
                     ))}
             </>
         );

@@ -41,6 +41,15 @@ const requestSendTx = async (data) => (
     })
 );
 
+// Request check connect account
+const requestCheckConnectAccount = async (data) => (
+    new Promise((resolve) => {
+        extension.runtime.sendMessage(Object.assign({ name: BACKGROUND_LISTEN.CHECK_CONNECT_ACCOUNT }, data), (response) => {
+            resolve(response)
+        });
+    })
+);
+
 // Client request Connect account
 window.addEventListener(BACKGROUND_LISTEN.REQUEST_CONNECT_ACCOUNT, async () => {
     await requestConnectAccount();
@@ -48,8 +57,14 @@ window.addEventListener(BACKGROUND_LISTEN.REQUEST_CONNECT_ACCOUNT, async () => {
 
 // Client request Connect account
 window.addEventListener(BACKGROUND_LISTEN.REQUEST_SEND_TX, async (event) => {
-    if (!event.detail) return;
+    if (!event?.detail) return;
     await requestSendTx(event.detail);
+}, false)
+
+// Client check connect account
+window.addEventListener(BACKGROUND_LISTEN.CHECK_CONNECT_ACCOUNT, async (event) => {
+    if (!event?.detail) return;
+    await requestCheckConnectAccount();
 }, false)
 
 // Listen background.js send event => post message to DAPP

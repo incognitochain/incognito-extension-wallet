@@ -1,22 +1,23 @@
 import {
-    EXTENSION_URL,
-    NOTIFICATION_WIDTH,
-    NOTIFICATION_HEIGHT,
-    INCOGNITO_EXTENSION_SEND_DATA,
-    EXTENSION_LISTEN,
     BACKGROUND_LISTEN,
-    CONTENT_LISTEN
+    CONTENT_LISTEN,
+    EXTENSION_LISTEN,
+    EXTENSION_URL,
+    INCOGNITO_EXTENSION_SEND_DATA,
+    NOTIFICATION_HEIGHT,
+    NOTIFICATION_WIDTH
 } from './consts'
-import { 
-    openWindow, 
-    getActiveTabs, 
-    extension, 
-    updateWindowPosition, 
-    getLastFocusedWindow, 
+import {
     closeCurrentWindow,
-    sendMessage,
+    extension,
+    getActiveTabs,
     getAllTabs,
+    getLastFocusedWindow,
+    openWindow,
+    sendMessage,
+    updateWindowPosition,
 } from './extension';
+
 const popupOptions = {
     url: EXTENSION_URL,
     type: 'popup',
@@ -175,13 +176,16 @@ const requestConnectAccount = async (sender) => {
     postCurrentRequestToExtension();
 };
 
-const checkIsConnected = (tab) => {
+const checkIsConnected = (tab, accountName) => {
     try {
         const origin = getOriginalURL(tab)
         if (!origin) return false;
         let isConnect = false;
         Object.keys(requestAccount).forEach(connectOrigin => {
-            if (connectOrigin === origin && requestAccount[origin]) isConnect = true
+            if (connectOrigin === origin
+              && requestAccount[origin]
+              && requestAccount[origin]?.name === accountName
+            ) isConnect = true
         });
         return isConnect;
     } catch (error) {
@@ -210,7 +214,7 @@ const handleDisconnectAccount = (origin) => {
             Object.keys(requestAccount).forEach(connectOrigin => {
                 if (connectOrigin === origin && requestAccount[origin]) {
                     delete requestAccount[origin];
-                    postMessageDisableAccount(origin);
+                    postMessageDisableAccount(origin).then();
                 }
             });
         }
@@ -242,11 +246,10 @@ const handleRequestSendTx = async (sender, request) => {
 
 const getTabWithOrigin = async (origin) => {
     const tabs = await getAllTabs();
-    const tab = tabs.find(tab => getOriginalURL(tab) === origin);
-    return tab;
+    return tabs.find(tab => getOriginalURL(tab) === origin);
 };
 
-const handleHandleConnectFinish = async (data) => {
+const handleSendTxFinish = async (data) => {
     try {
         if (!currentRequest) return;
         const { origin } = currentRequest;
@@ -265,18 +268,33 @@ const handleHandleConnectFinish = async (data) => {
 };
 
 const handleCancelSendTx = async () => {
-    if (!currentRequest) return;
-    const { origin } = currentRequest;
+    try {
+        if (!currentRequest) return;
+        const { origin } = currentRequest;
+        const tab = await getTabWithOrigin(origin);
+        currentRequest = null;
+        if (!tab) return;
+        currentRequest = null;
+        const params = {
+            name: INCOGNITO_EXTENSION_SEND_DATA,
+            key: CONTENT_LISTEN.CANCEL_SEND_TX,
+            origin,
+        }
+        tabSendMessage(tab.id, params);
+    } catch (e) {/*Ignored error*/}
+};
+
+const handleCheckConnectAccount = async (sender) => {
+    const origin = getOriginalURL(sender);
     const tab = await getTabWithOrigin(origin);
-    currentRequest = null; 
     if (!tab) return;
-    currentRequest = null; 
-    const params = { 
-        name: INCOGNITO_EXTENSION_SEND_DATA, 
-        key: CONTENT_LISTEN.CANCEL_SEND_TX, 
+    const account = requestAccount[origin];
+    let params = {
+        name: INCOGNITO_EXTENSION_SEND_DATA,
         origin,
-        data: { error, txInfo }
-    }
+        key: account ? CONTENT_LISTEN.CONNECT_TO_ACCOUNT_SUCCESS : CONTENT_LISTEN.DISCONNECT_ACCOUNT,
+        data: account
+    };
     tabSendMessage(tab.id, params);
 };
 
@@ -285,54 +303,58 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
     switch (name) {
         // Client request connect account
         case BACKGROUND_LISTEN.REQUEST_CONNECT_ACCOUNT: {
-            requestConnectAccount(sender);
+            requestConnectAccount(sender).then();
             return sendResponse(sender);
-        };
+        }
         // Client request send tx
         case BACKGROUND_LISTEN.REQUEST_SEND_TX: {
-            handleRequestSendTx(sender, request)
+            handleRequestSendTx(sender, request).then();
             return sendResponse(sender);
-        };
+        }
         // Update balance when loaded account
         case BACKGROUND_LISTEN.LOADED_FOLLOWED_BALANCE: {
             const { account } = data || {};
             if (!account) return;
-            updateBalanceToConnectedPage(account);
+            updateBalanceToConnectedPage(account).then();
             break;
-        };
+        }
         // Connected with account
         case BACKGROUND_LISTEN.SELECTED_CONNECT_ACCOUNT: {
             if (!currentRequest) return;
             const { account } = data;
-            handleConnectAccount(account, currentRequest.origin, true);
+            handleConnectAccount(account, currentRequest.origin, true).then();
             break;
-        };
+        }
         case BACKGROUND_LISTEN.CHECK_IS_CONNECTED: {
-            const { tab } = data;
-            return sendResponse(checkIsConnected(tab));
-        };
+            const { tab, accountName } = data;
+            return sendResponse(checkIsConnected(tab, accountName))
+        }
         case BACKGROUND_LISTEN.DISCONNECT_ACCOUNT: {
             const { origin } = data;
             handleDisconnectAccount(origin)
-            return sendResponse(checkIsConnected(origin));
-        };
+            break;
+        }
         // send tx finish
         case BACKGROUND_LISTEN.SEND_TX_FINISH: {
-            handleHandleConnectFinish(data);
+            handleSendTxFinish(data).then();
             break;
-        };
+        }
         case BACKGROUND_LISTEN.CLEAR_SEND_CURRENT_REQUEST: {
-            handleCancelSendTx();
+            handleCancelSendTx().then();
             break;
-        };
+        }
         case BACKGROUND_LISTEN.GET_PASS_WORK: {
             return sendResponse(pass);
-        };
+        }
         case BACKGROUND_LISTEN.UPDATE_PASS_WORK: {
-            const { passwork } = data;
-            pass = passwork;
+            const { password } = data;
+            pass = password;
             break;
-        };
+        }
+        case BACKGROUND_LISTEN.CHECK_CONNECT_ACCOUNT: {
+            handleCheckConnectAccount(sender).then();
+            break;
+        }
         default:
             break;
     }

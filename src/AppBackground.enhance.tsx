@@ -16,19 +16,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     const handleUpdateRequestFromDApp = (payload: IRequestDApp | null) => {
         dispatch(updateRequestFromDApp(payload));
     };
-    const loadPasswork = async () => {
+    const loadPassword = async () => {
         try {
             let pass: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.GET_PASS_WORK, {});
-            if (isDev) {
-                pass = ENVS.REACT_APP_PASSWORD_SECRET_KEY;
-            }
+            if (isDev) pass = ENVS.REACT_APP_PASSWORD_SECRET_KEY;
             if (pass) dispatch(actionLogin(pass));
         } catch (error) {
-            console.debug('LOAD PASSWORK WITH ERROR:', error);
+            console.debug('LOAD PASS_WORK WITH ERROR:', error);
         }
     };
     React.useEffect(() => {
-        loadPasswork();
+        loadPassword().then();
     }, []);
     // To do implement push connect
     React.useEffect(() => {

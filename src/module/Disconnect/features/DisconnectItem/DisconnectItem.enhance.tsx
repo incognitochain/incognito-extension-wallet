@@ -21,17 +21,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const { originUrl, checkConnection } = props;
     const paymentAddress: string = useSelector(paymentAddressSelector);
     const account: AccountInstance = useSelector(defaultAccountSelector);
-    const handleDisconnet = async () => {
+    const handleDisconnect = async () => {
         try {
             await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.DISCONNECT_ACCOUNT, { origin: originUrl });
-            await checkConnection();
+            setTimeout(async () => checkConnection(), 1000);
         } catch (error) {
             console.log('Disconnect account with error: ', error);
         }
     };
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, paymentAddress, account, handleDisconnet }} />
+            <WrappedComponent {...{ ...props, paymentAddress, account, handleDisconnect }} />
         </ErrorBoundary>
     );
 };
