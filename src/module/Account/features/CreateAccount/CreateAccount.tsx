@@ -15,11 +15,11 @@ const CreateAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) =
                 <Field
                     component={InputField}
                     name="accountName"
-                    label="Keychain name"
+                    label="Enter a name for your keychain"
                     validate={[...validator.combinedAccountName]}
                     componentProps={{
                         autoFocus: true,
-                        placeholder: 'Keychain name',
+                        placeholder: 'Enter a name for your keychain',
                     }}
                 />
                 <Button

@@ -18,10 +18,10 @@ const ImportAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) =
                         component={InputField}
                         componentProps={{
                             autoFocus: true,
-                            placeholder: 'Keychain name',
+                            placeholder: 'Enter a name for your keychain',
                         }}
                         name="accountName"
-                        label="Keychain name"
+                        label="Enter a name for your keychain"
                         validate={[...validator.combinedAccountName]}
                         rightLabel={
                             readOnlyName && (
