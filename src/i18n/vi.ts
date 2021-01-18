@@ -131,6 +131,9 @@ const language: ILanguage = {
             title: 'Decimal Digits',
             desc: 'Limit main asset<br />displays to 5 decimal digits',
         },
+        logout: {
+            title: 'Logout',
+        },
     },
     send: {
         headerTitle: 'Send',

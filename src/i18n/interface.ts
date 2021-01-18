@@ -121,6 +121,9 @@ export interface ISettingLanguage {
         title: string;
         desc: string;
     };
+    logout: {
+        title: string;
+    };
 }
 
 export interface IAccountLanguage {

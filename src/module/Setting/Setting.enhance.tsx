@@ -13,6 +13,7 @@ import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, settingSelector } from './Setting.selector';
 import { route as networkRoute } from './features/Network';
+import { actionLogout } from '../Password';
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const translate: ISettingLanguage = useSelector(translateByFieldSelector)('setting');
@@ -55,6 +56,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     toggleValue: decimalDigits,
                 },
             ],
+        },
+        {
+            title: translate.logout.title,
+            button: true,
+            onClick: () => dispatch(actionLogout()),
         },
     ];
     return (
