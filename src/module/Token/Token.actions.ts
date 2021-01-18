@@ -125,6 +125,7 @@ export const actionFollowDefaultToken = (account: AccountInstance) => async (
             }),
         );
         dispatch(actionFollowedPopularTokenIds({ mainnet }));
+        await actionSaveWallet()(dispatch, getState);
     } catch (error) {
         throw error;
     }

@@ -6,4 +6,7 @@ export interface IProps {
     masterKeyName: string;
     mnemonic: string;
     onBack: () => void;
+    agree: boolean;
+    onAgree: () => void;
+    step: number;
 }

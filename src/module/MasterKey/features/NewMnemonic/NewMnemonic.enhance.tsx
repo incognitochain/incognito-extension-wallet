@@ -5,9 +5,9 @@ import { mnemonicService } from 'incognito-js/build/web/browser';
 import { IProps } from './NewMnemonic.interface';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
-    const { onChangeMnemonic } = props;
+    const { onChangeMnemonic, mnemonic: oldMnemonic } = props;
 
-    const [mnemonic] = useState(mnemonicService.newMnemonic());
+    const [mnemonic] = useState(oldMnemonic || mnemonicService.newMnemonic());
 
     const handleNext = useCallback(() => {
         onChangeMnemonic(mnemonic);

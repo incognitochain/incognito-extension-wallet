@@ -10,15 +10,15 @@ import MasterKeyMnemonic from '../NewMnemonic';
 const Styled = styled.div``;
 
 const NewMasterKey = (props: IProps) => {
-    const { onChangeMasterKeyName, onChangeMnemonic, masterKeyName, mnemonic, onBack } = props;
+    const { onChangeMasterKeyName, onChangeMnemonic, masterKeyName, mnemonic, onBack, agree, onAgree, step } = props;
 
     let Component = MasterKeyName;
 
-    if (masterKeyName) {
+    if (step === 1) {
         Component = MasterKeyMnemonic;
     }
 
-    if (mnemonic) {
+    if (step === 2) {
         Component = VerifyMnemonic;
     }
 
@@ -31,6 +31,8 @@ const NewMasterKey = (props: IProps) => {
                 onChangeMnemonic={onChangeMnemonic}
                 mnemonic={mnemonic}
                 masterKeyName={masterKeyName}
+                agree={agree}
+                onAgree={onAgree}
             />
         </Styled>
     );

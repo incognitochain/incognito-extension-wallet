@@ -34,7 +34,11 @@ const MasterKeyName = (props: IProps) => {
     return (
         <Styled>
             <div className="input-wrapper">
-                <Input defaultValue="" placeholder={dictionary.createMasterKeyName} onChange={onChangeMasterKeyName} />
+                <Input
+                    defaultValue={masterKeyName}
+                    placeholder={dictionary.createMasterKeyName}
+                    onChange={onChangeMasterKeyName}
+                />
             </div>
             <div className="content">{dictionary.content}</div>
             <div className="content">{dictionary.content2}</div>
