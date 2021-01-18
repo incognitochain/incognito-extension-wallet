@@ -1,6 +1,7 @@
 import { ACTION_SHOW_TOOLTIP, ACTION_REMOVE_TOOLTIP } from './Tooltip.constant';
 
 export const actionShowTooltip = ({
+    id = '',
     text,
     timeout = 5,
     ref,
@@ -8,6 +9,7 @@ export const actionShowTooltip = ({
     height = 100,
     margin = 10,
 }: {
+    id?: string;
     text: any;
     timeout?: number;
     ref: any;
@@ -16,7 +18,7 @@ export const actionShowTooltip = ({
     margin?: number;
 }) => ({
     type: ACTION_SHOW_TOOLTIP,
-    payload: { text, timeout, ref, width, height, margin },
+    payload: { id, text, timeout, ref, width, height, margin },
 });
 
 export const actionRemoveTooltip = (id: string) => ({

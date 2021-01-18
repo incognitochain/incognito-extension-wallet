@@ -79,17 +79,7 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
     } = props;
     const toggleStatusMessage = !!message;
     const [toggle, setToggle] = React.useState(false);
-    const dispatch = useDispatch();
-    const handleCopy = () => {
-        copy(copyData);
-        dispatch(
-            actionToggleToast({
-                toggle: true,
-                value: 'Copied',
-                type: TOAST_CONFIGS.success,
-            }),
-        );
-    };
+
     const handleOpenLink = () => window.open(link);
     if (disabled) {
         return null;
@@ -118,7 +108,7 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
                             {toggle ? <ArrowDownIcon /> : <ArrowUpIcon />}
                         </div>
                     )}
-                    {!!copyData && <CopyIcon onClick={handleCopy} />}
+                    {!!copyData && <CopyIcon />}
                     {!!link && <OpenLinkIcon onClick={handleOpenLink} />}
                 </div>
             </div>

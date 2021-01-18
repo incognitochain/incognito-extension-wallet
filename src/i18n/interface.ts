@@ -216,6 +216,7 @@ export interface ITokenLanguage {
 export interface IGeneralLanguage {
     copied: string;
     copy: string;
+    seeKey: string;
     lostNetwork: string;
     btnReload: string;
     loadingTx: string;

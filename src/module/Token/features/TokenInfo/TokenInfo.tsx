@@ -12,18 +12,6 @@ import withTokenInfo, { IInfo } from './TokenInfo.enhance';
 import { Styled } from './TokenInfo.styled';
 
 const InfoItem = ({ label, value, copyable, link }: IInfo) => {
-    const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
-    const dispatch = useDispatch();
-    const handleCopyText = () => {
-        copy(value);
-        dispatch(
-            actionToggleToast({
-                toggle: true,
-                type: TOAST_CONFIGS.success,
-                value: translate.copied,
-            }),
-        );
-    };
     if (!value) {
         return null;
     }
@@ -32,7 +20,7 @@ const InfoItem = ({ label, value, copyable, link }: IInfo) => {
             {!!label && <p className="ellipsis sub-text">{label}</p>}
             <div className="hook flex">
                 {!!value && <p className="ellipsis fw-medium main-text">{value}</p>}
-                {copyable && <CopyIcon onClick={handleCopyText} />}
+                {copyable && <CopyIcon />}
                 {!!link && <OpenLinkIcon onClick={() => window.open(link)} />}
             </div>
         </div>

@@ -9,6 +9,7 @@ const language: ILanguage = {
     general: {
         copied: 'Copied',
         copy: 'Copy',
+        seeKey: 'See keys',
         lostNetwork:
             'Your internet connection is currently<br />unstable. Please check your network<br />settings and try again.',
         btnReload: 'Reload',

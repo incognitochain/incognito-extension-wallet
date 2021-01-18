@@ -71,7 +71,7 @@ const Detail = (props: IProps) => {
                 <p className="decs ellipsis">{desc}</p>
                 <div className="icons">
                     <QrCodeIcon onClick={handleShowQrCode} />
-                    <CopyIcon tooltip={translate.copied} text={desc.toString()} />
+                    <CopyIcon text={desc.toString()} />
                 </div>
             </div>
         </Styled>
