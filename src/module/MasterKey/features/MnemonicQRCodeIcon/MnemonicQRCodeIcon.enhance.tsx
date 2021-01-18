@@ -14,7 +14,7 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
         dispatch(
             actionToggleModal({
                 title: ' ',
-                data: <QrCodeModal value={mnemonic} />,
+                data: <QrCodeModal value={mnemonic} label="Your secret phrase" />,
                 closeable: true,
             }),
         );

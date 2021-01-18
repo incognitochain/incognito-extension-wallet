@@ -20,7 +20,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
         try {
             let pass: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.GET_PASS_WORK, {});
             if (isDev) pass = ENVS.REACT_APP_PASSWORD_SECRET_KEY;
-            // if (pass) dispatch(actionLogin(pass));
+            if (pass) dispatch(actionLogin(pass));
         } catch (error) {
             console.debug('LOAD PASS_WORK WITH ERROR:', error);
         }
