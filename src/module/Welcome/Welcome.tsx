@@ -5,7 +5,11 @@ import OldUser from './features/OldUser';
 import enhance from './Welcome.enhance';
 import { IProps } from './Welcome.interface';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+    .header {
+        margin-top: 0;
+    }
+`;
 
 const Welcome = (props: IProps) => {
     const { isInitWallet, isReset, onForgot, onBack } = props;
