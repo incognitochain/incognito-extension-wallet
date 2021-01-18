@@ -283,6 +283,7 @@ export interface INewMasterKeyLanguage {
     content: string;
     content2: string;
     createKey: string;
+    checkbox: string;
 }
 
 export interface IVerifyMnemonicLanguage {
