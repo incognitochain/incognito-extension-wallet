@@ -9,6 +9,7 @@ interface IProps {
 const Styled = styled.span`
     width: 18px;
     height: 18px;
+    cursor: pointer;
 
     img {
         width: 18px;

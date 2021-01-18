@@ -21,7 +21,9 @@ const reducer = (
             let { data: tooltips } = state;
             const tooltip = action.payload;
 
-            tooltip.id = v4();
+            if (!tooltip.id) {
+                tooltip.id = v4();
+            }
 
             const newData = [...tooltips, tooltip];
 

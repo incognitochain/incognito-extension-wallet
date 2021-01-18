@@ -56,7 +56,7 @@ const MasterKeyInfo = (props: IProps) => {
             <div className="content">{dictionary.revealPhrase}</div>
             <Mnemonic mnemonic={mnemonic} hidden={!showMnemonic} onClick={onShowMnemonic} />
             <div className="icons">
-                <CopyIcon text={mnemonic} tooltip={translate.general.copied} />
+                <CopyIcon text={mnemonic} />
                 <MnemonicQRCodeIcon mnemonic={mnemonic} />
             </div>
             <div>
