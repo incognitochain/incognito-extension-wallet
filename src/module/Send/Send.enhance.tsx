@@ -13,7 +13,7 @@ import { route as routeDetail } from 'src/module/Token/features/Detail';
 import { useHistory } from 'react-router-dom';
 import { withHeaderApp } from 'src/components/Header';
 import withConnect from 'src/App.enhanceConnect';
-import { enhance as withWallet } from 'src/module/Wallet/Wallet.enhance';
+import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -129,7 +129,7 @@ export default compose<IMergeProps, any>(
         form: FORM_CONFIGS.formName,
     }),
     withInit,
-    withWallet,
+    withWalletBalance,
     withFee,
     withValAddress,
     withValAmount,
