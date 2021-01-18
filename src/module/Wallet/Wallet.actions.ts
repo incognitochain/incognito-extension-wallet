@@ -114,17 +114,14 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
     await wallet.sync();
 
     const newList = wallet.masterAccount.getAccounts();
-    let isUpdated = false;
 
-    for (const account of newList) {
-        if (!listAccount.includes(account)) {
-            // eslint-disable-next-line no-await-in-loop
-            await actionFollowDefaultToken(account)(dispatch, getState);
-            isUpdated = true;
+    if (listAccount.length !== newList.length) {
+        for (const account of newList) {
+            if (!listAccount.includes(account)) {
+                // eslint-disable-next-line no-await-in-loop
+                await actionFollowDefaultToken(account)(dispatch, getState);
+            }
         }
-    }
-
-    if (isUpdated) {
         actionSaveWallet()(dispatch, getState);
     }
 
