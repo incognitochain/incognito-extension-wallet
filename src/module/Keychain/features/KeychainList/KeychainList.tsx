@@ -13,6 +13,7 @@ const customModalStyle = {
     top: '30%',
     width: 'auto',
     height: 'auto',
+    borderRadius: 8,
 };
 
 const KeychainList = React.memo(() => {

@@ -7,8 +7,8 @@ import { IProps } from './PasswordModal.interface';
 import enhance from './PasswordModal.enhance';
 
 const Styled = styled.div`
-    button {
-        margin: 15px 0;
+    .submit {
+        margin-top: 15px;
     }
 `;
 
@@ -25,8 +25,9 @@ const PasswordModal = (props: IProps) => {
                     autoComplete="off"
                     placeholder={dictionary.enterPasswordInput}
                     onChange={onChangePass}
+                    toggleVisible
                 />
-                <Button disabled={!!error} title={dictionary.enterPasswordBtn} type="submit" />
+                <Button disabled={!!error} title={dictionary.enterPasswordBtn} type="submit" className="submit" />
                 <p>{error}</p>
                 <input type="text" name="email" value="..." autoComplete="username email" className="hidden" readOnly />
             </form>
