@@ -28,7 +28,6 @@ import {
     importAccountSelector,
 } from './Account.selector';
 import { apiURLSelector } from '../Preload';
-import { apiUpdateWalletAccounts } from '../Wallet/Wallet.services';
 
 export const actionFetched = (payload: any) => ({
     type: ACTION_FETCHED,
@@ -52,7 +51,6 @@ export const actionFetchCreateAccount = (accountName: string) => async (
         const state = getState();
         const wallet: WalletInstance = walletDataSelector(state);
         const create = createAccountSelector(state);
-        const apiURL = apiURLSelector(state);
         if (create) {
             return;
         }
@@ -63,7 +61,7 @@ export const actionFetchCreateAccount = (accountName: string) => async (
         }
         await dispatch(actionFetchedCreateAccount(account));
         await actionFollowDefaultToken(account)(dispatch, getState);
-        await apiUpdateWalletAccounts(apiURL, wallet);
+        await wallet.update();
     } catch (error) {
         throw error;
     } finally {

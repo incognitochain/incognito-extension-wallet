@@ -4,14 +4,14 @@ import { MAINNET_WALLET_NAME, TESTNET_WALLET_NAME } from 'src/configs/walletConf
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { updateWallet } from 'src/database/tables/wallet';
 import { actionSetListAccount, actionSelectAccount, defaultAccountNameSelector } from 'src/module/Account';
-import { apiURLSelector, IPreloadReducer, preloadSelector } from 'src/module/Preload';
+import { IPreloadReducer, preloadSelector } from 'src/module/Preload';
 import { actionChangePassword, actionCreatePassword, passwordSelector } from 'src/module/Password';
 import { batch } from 'react-redux';
 import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wallet.constant';
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import { walletDataSelector, walletIdSelector, walletSelector } from './Wallet.selector';
 import { IDataInitWallet, IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
-import { actionResetFollowDefaultToken } from '../Token';
+import { actionFollowDefaultToken, actionResetFollowDefaultToken } from '../Token';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -96,7 +96,6 @@ export const actionHandleLoadWallet = () => async (dispatch: Dispatch, getState:
     const state: IRootState = getState();
     const preload: IPreloadReducer = preloadSelector(state);
     const walletState: IWalletReducer = walletSelector(state);
-    const apiUrl = apiURLSelector(state);
     const pass = passwordSelector(state);
     const defaultAccountName: string = defaultAccountNameSelector(state);
     const { mainnet } = preload.configs;
@@ -109,38 +108,27 @@ export const actionHandleLoadWallet = () => async (dispatch: Dispatch, getState:
     const wallet = await loadWallet(walletId, pass);
     const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
 
-    // const serverAccounts = await apiGetWalletAccounts(apiUrl, wallet);
-    // const accountIds: number[] = [];
-    //
-    // for (const account of wallet.masterAccount.getAccounts()) {
-    //     accountIds.push(account.getIndex());
-    // }
-    //
-    // const newAccounts = serverAccounts.filter(
-    //     (item: any) => !accountIds.includes(item.id) && !(wallet.masterAccount.deletedIndexes || []).includes(item.id),
-    // );
-    //
-    // if (newAccounts.length > 0) {
-    //     const newCreatedAccounts = [];
-    //     for (const account of newAccounts) {
-    //         try {
-    //             // eslint-disable-next-line no-await-in-loop
-    //             const newAccount = await wallet.masterAccount.addAccount(account.name, undefined, account.id);
-    //             newCreatedAccounts.push(newAccount);
-    //
-    //             // eslint-disable-next-line no-await-in-loop
-    //             await actionFollowDefaultToken(newAccount)(dispatch, getState);
-    //         } catch {
-    //             //
-    //         }
-    //     }
-    //     actionSaveWallet()(dispatch, getState);
-    // }
+    await wallet.sync();
+
+    const newList = wallet.masterAccount.getAccounts();
+    let isUpdated = false;
+
+    for (const account of newList) {
+        if (!listAccount.includes(account)) {
+            // eslint-disable-next-line no-await-in-loop
+            await actionFollowDefaultToken(account)(dispatch, getState);
+            isUpdated = true;
+        }
+    }
+
+    if (isUpdated) {
+        actionSaveWallet()(dispatch, getState);
+    }
 
     const defaultAccount = wallet.masterAccount.getAccountByName(defaultAccountName) || listAccount[0];
     if (defaultAccount) {
         batch(() => {
-            dispatch(actionSetListAccount(listAccount));
+            dispatch(actionSetListAccount(newList));
             dispatch(actionSelectAccount(defaultAccount.name));
             dispatch(actionLoadWallet(wallet));
         });
