@@ -4,7 +4,7 @@ import { ToggleSwitch } from 'src/components';
 import { Styled } from './SettingItem.styled';
 
 export interface ISettingChildItem {
-    desc: string;
+    desc?: string;
     toggle?: boolean;
     onClick?: () => void;
     link?: string;
@@ -13,14 +13,16 @@ export interface ISettingChildItem {
 
 export interface ISettingItem {
     title: string;
-    child: ISettingChildItem[];
+    child?: ISettingChildItem[];
+    button?: boolean;
+    onClick?: () => void;
 }
 
 const ToggleItem = React.memo((props: ISettingChildItem) => {
     const { desc, onClick, toggleValue } = props;
     return (
         <div className="toggle-item">
-            <span className="item sub-text" dangerouslySetInnerHTML={{ __html: desc }} />
+            {!!desc && <span className="item sub-text" dangerouslySetInnerHTML={{ __html: desc }} />}
             <ToggleSwitch toggleValue={toggleValue} onToggle={onClick} />
         </div>
     );
@@ -42,13 +44,24 @@ const Item = React.memo((props: ISettingChildItem) => {
 });
 
 export const SettingItem = React.memo((props: ISettingItem) => {
-    const { title, child } = props;
+    const { title, child, button, onClick } = props;
+    const renderChild = () => {
+        if (!child) return null;
+        return child.map((item: ISettingChildItem) =>
+            item.toggle ? <ToggleItem key={item.desc} {...item} /> : <Item key={item.desc} {...item} />,
+        );
+    };
+    if (button) {
+        return (
+            <Styled onClick={onClick}>
+                <p className="title fs-medium fw-medium pointer">{title}</p>
+            </Styled>
+        );
+    }
     return (
         <Styled>
             <p className="title fs-medium fw-medium">{title}</p>
-            {child.map((item: ISettingChildItem) =>
-                item.toggle ? <ToggleItem key={item.desc} {...item} /> : <Item key={item.desc} {...item} />,
-            )}
+            {renderChild()}
         </Styled>
     );
 });

@@ -30,7 +30,7 @@ const popupOptions = {
 let tabWindow = null;
 let requestAccount = {};
 let currentRequest = null;
-let pass = null;
+let pass = {};
 
 const isOpenPopup = async () => {
     const tabs = await getActiveTabs()
@@ -343,12 +343,16 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
             handleCancelSendTx().then();
             break;
         }
-        case BACKGROUND_LISTEN.GET_PASS_WORK: {
-            return sendResponse(pass);
+        case BACKGROUND_LISTEN.GET_PASS_WORD: {
+            const { chainURL } = data;
+            return sendResponse(pass[chainURL]);
         }
-        case BACKGROUND_LISTEN.UPDATE_PASS_WORK: {
-            const { password } = data;
-            pass = password;
+        case BACKGROUND_LISTEN.UPDATE_PASS_WORD: {
+            const { password, chainURL } = data;
+            pass = {
+                ...pass,
+                [chainURL]: password
+            };
             break;
         }
         case BACKGROUND_LISTEN.CHECK_CONNECT_ACCOUNT: {
