@@ -13,6 +13,7 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
 
     const [masterKeyName, setMasterKeyName] = useState('');
     const [error, setError] = useState('');
+    const [agree, setAgree] = useState(false);
 
     const translate: ILanguage = useSelector(translateSelector);
     const errorDictionary = translate.error;
@@ -39,6 +40,8 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
             onNext={handleNext}
             onChangeMasterKeyName={handleChangeName}
             masterKeyName={masterKeyName}
+            agree={agree}
+            onAgree={() => setAgree(true)}
         />
     );
 };

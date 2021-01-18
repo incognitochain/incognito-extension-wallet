@@ -276,6 +276,7 @@ const language: ILanguage = {
             content2:
                 'Be prepared to record them in a safe place.  If anyone gains access to them, they will gain access to your funds.',
             createKey: "I'm ready",
+            checkbox: 'I accept that if I lose these words I will lose access to my funds.',
         },
         verifyMnemonic: {
             title: 'Click on these words in the correct order. If you make a mistake, click again to undo.',

@@ -4,4 +4,6 @@ export interface IProps {
     onNext: () => void;
     error: string;
     masterKeyName: string;
+    agree: boolean;
+    onAgree: () => void;
 }
