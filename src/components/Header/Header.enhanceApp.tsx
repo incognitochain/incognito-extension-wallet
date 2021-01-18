@@ -32,7 +32,7 @@ const Row = styled.div`
     display: flex;
     flex-direction: row;
     div {
-        margin-right: 10px;
+        margin-right: 15px;
     }
     .refresh-icon {
         -webkit-filter: ${(props: { theme: ITheme }) => props.theme.text};
