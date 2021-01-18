@@ -108,7 +108,7 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
                             {toggle ? <ArrowDownIcon /> : <ArrowUpIcon />}
                         </div>
                     )}
-                    {!!copyData && <CopyIcon />}
+                    {!!copyData && <CopyIcon text={copyData} />}
                     {!!link && <OpenLinkIcon onClick={handleOpenLink} />}
                 </div>
             </div>
