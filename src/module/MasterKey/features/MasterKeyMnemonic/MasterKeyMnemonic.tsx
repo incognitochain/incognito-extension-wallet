@@ -40,12 +40,13 @@ const MasterKeyMnemonic = (props: IProps) => {
 
     const translate = useSelector(translateSelector);
     const dictionary = translate.masterKey.showMnemonic;
+
     return (
         <Styled>
             <div className="content">{dictionary.newMnemonic}</div>
             <Mnemonic mnemonic={mnemonic} />
             <div className="icons">
-                <CopyIcon text={mnemonic} />
+                <CopyIcon text={mnemonic} tooltip={translate.general.copied} />
                 <MnemonicQRCodeIcon mnemonic={mnemonic} />
             </div>
             <div className="actions">{!!onNext && <Button onClick={onNext} title={dictionary.newMnemonicBtn} />}</div>
