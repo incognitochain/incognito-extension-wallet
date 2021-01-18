@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { ITheme } from 'src/styles';
 
 export const Styled = styled.div`
     .history-tx-item {
         display: flex;
         flex-direction: row;
-        align-items: 'center';
+        align-items: center;
         margin-bottom: 15px;
         justify-content: space-between;
     }
@@ -43,5 +44,10 @@ export const Styled = styled.div`
         height: 20px;
         line-height: 20px;
         border-radius: 4px;
+    }
+    .message > a {
+        color: ${(props: { theme: ITheme }) => props.theme.text};
+        display: inline;
+        text-decoration-line: underline;
     }
 `;
