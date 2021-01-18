@@ -9,6 +9,7 @@ import Copy from '../Copy';
 interface IProps {
     hook?: any;
     qrCodeProps: BaseQRCodeProps;
+    label?: string;
 }
 
 const Styled = styled.div`
@@ -36,14 +37,19 @@ const Styled = styled.div`
     .copy-block p {
         max-width: 100%;
     }
+    .label {
+        margin-bottom: 30px;
+        text-align: center;
+    }
 `;
 
 const QrCode = (props: IProps) => {
-    const { hook, qrCodeProps } = props;
+    const { hook, qrCodeProps, label } = props;
     const { value } = qrCodeProps;
     const theme = useSelector(themeSelector);
     return (
         <Styled theme={theme} className="qrcode-container">
+            <div className="label fs-medium fw-bold">{label}</div>
             <div className="qrcode-react">
                 <QRCodeReact {...qrCodeProps} />
             </div>
