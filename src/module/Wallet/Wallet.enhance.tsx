@@ -10,7 +10,6 @@ import {
     actionFollowDefaultToken,
     actionGetPrivacyTokensBalance,
     actionSetFollowedTokens,
-    actionSetSelectedToken,
     IEnvToken,
     ITokenReducer,
 } from 'src/module/Token';
@@ -19,10 +18,10 @@ import { actionGetAccountBalance } from 'src/module/Account';
 import { defaultAccountNameSelector, switchAccountSelector } from 'src/module/Account/Account.selector';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { withHeaderApp } from 'src/components/Header';
-import { actionFreeHistory } from 'src/module/History';
 import { walletDataSelector } from './Wallet.selector';
 import enhanceDApp from './Wallet.enhanceDApp';
 import withBalance, { IEnhanceBalanceProps } from '../Account/Acount.enhanceBalance';
+import enhanceInitData from './Wallet.enhanceInitData';
 
 interface IProps {}
 interface IMergeProps extends IEnhanceBalanceProps, IProps {}
@@ -72,18 +71,11 @@ export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IM
             setLoadedBalance(true);
         }
     };
-    const handleInitData = () => {
-        dispatch(actionFreeHistory());
-        dispatch(actionSetSelectedToken(''));
-    };
     React.useEffect(() => {
         if (!switchAccount) {
             handleLoadWallet();
         }
     }, [wallet, defaultAccount, switchAccount]);
-    React.useEffect(() => {
-        handleInitData();
-    }, []);
 
     return (
         <WrappedComponent
@@ -98,4 +90,4 @@ export const enhance = (WrappedComponent: React.FunctionComponent) => (props: IM
     );
 };
 
-export default compose(withBalance, enhance, enhanceDApp, withHeaderApp);
+export default compose(withBalance, enhanceInitData, enhance, enhanceDApp, withHeaderApp);
