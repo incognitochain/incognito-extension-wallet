@@ -127,7 +127,8 @@ export const getSendData = ({
     const isIncognitoAddress = isEmpty(inputAddress)
         ? false
         : keyServices.checkPaymentAddress(inputAddress) || selectedPrivacy.isNativeToken;
-    const disabledForm = !valid || submitting || !fee || isFetching || !isAddressValidated || !isValidETHAddress;
+    const disabledForm =
+        !valid || submitting || !fee || isFetching || !isAddressValidated || !isValidETHAddress || !!errorMessage;
     return {
         fee,
         feeText,
