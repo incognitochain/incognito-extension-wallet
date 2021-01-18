@@ -25,15 +25,8 @@
     "permissions": [
         "tabs",
         "<all_urls>",
-        "fileSystem",
         "storage",
-        "identity",
-        "audioCapture",
-        "videoCapture",
         "unlimitedStorage",
-        "desktopCapture",
-        "pageCapture",
-        "tabCapture",
         "activeTab",
         "webRequest"
     ],
