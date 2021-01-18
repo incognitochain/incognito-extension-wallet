@@ -38,6 +38,9 @@ const Styled = styled.div`
         position: relative;
         height: 100%;
     }
+    .header {
+        margin-top: 0;
+    }
 `;
 
 const Modal = (props: IProps) => {

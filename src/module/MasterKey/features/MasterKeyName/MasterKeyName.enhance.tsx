@@ -9,11 +9,10 @@ import { translateSelector } from 'src/module/Configs';
 import { IProps } from './MasterKeyName.inteface';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
-    const { onChangeMasterKeyName } = props;
+    const { onChangeMasterKeyName, masterKeyName: oldMasterKeyName, agree, onAgree } = props;
 
-    const [masterKeyName, setMasterKeyName] = useState('');
+    const [masterKeyName, setMasterKeyName] = useState(oldMasterKeyName);
     const [error, setError] = useState('');
-    const [agree, setAgree] = useState(false);
 
     const translate: ILanguage = useSelector(translateSelector);
     const errorDictionary = translate.error;
@@ -41,7 +40,7 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
             onChangeMasterKeyName={handleChangeName}
             masterKeyName={masterKeyName}
             agree={agree}
-            onAgree={() => setAgree(true)}
+            onAgree={onAgree}
         />
     );
 };
