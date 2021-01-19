@@ -11,7 +11,13 @@ import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wall
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import { walletDataSelector, walletIdSelector, walletSelector } from './Wallet.selector';
 import { IDataInitWallet, IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
-import { actionFollowDefaultToken } from '../Token';
+import {
+    actionFollowDefaultToken,
+    actionResetFollowDefaultToken,
+    IEnvToken,
+    ITokenReducer,
+    tokenSelector,
+} from '../Token';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -50,14 +56,10 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
         batch(() => {
             dispatch(actionSetListAccount(listAccount));
             dispatch(actionSelectAccount(defaultAccount.name));
-        });
-
-        await actionFollowDefaultToken(defaultAccount)(dispatch, getState);
-
-        batch(() => {
             dispatch(actionCreatePassword(''));
             dispatch(actionChangePassword(pass));
             dispatch(actionFetched(payload));
+            dispatch(actionResetFollowDefaultToken(mainnet));
         });
 
         return walletId;
@@ -103,11 +105,14 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
     const state: IRootState = getState();
     const preload: IPreloadReducer = preloadSelector(state);
     const walletState: IWalletReducer = walletSelector(state);
+    const tokenState: ITokenReducer = tokenSelector(state);
     const pass = passwordSelector(state);
     const defaultAccountName: string = accountName || defaultAccountNameSelector(state);
     const { mainnet } = preload.configs;
     const field = mainnet ? 'mainnet' : 'testnet';
     const { walletId } = walletState[field];
+    const envToken: IEnvToken = tokenState[field];
+    const { followedPopularIds } = envToken;
     if (!walletId) {
         throw new Error(`Can't not found wallet id`);
     }
@@ -126,6 +131,10 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
             dispatch(actionSelectAccount(defaultAccount.name));
             dispatch(actionLoadWallet(wallet));
         });
+
+        if (!followedPopularIds) {
+            await actionFollowDefaultToken(defaultAccount)(dispatch, getState);
+        }
 
         if (listAccount.length !== newList.length) {
             for (const account of newList) {
