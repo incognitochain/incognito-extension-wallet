@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Field } from 'redux-form';
-import { Button, Header } from 'src/components';
+import { Button, FastFeeIcon, Header } from 'src/components';
 import { InputField } from 'src/components/ReduxForm';
 import { ISendLanguage } from 'src/i18n';
 import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
@@ -12,7 +12,7 @@ import { IMergeProps } from './Send.enhance';
 import { sendDataSelector, sendSelector } from './Send.selector';
 import { ISelectedPrivacy, selectedPrivacySelector } from '../Token';
 import { IFeeTypes, ISendData, ISendReducer } from './Send.interface';
-import { actionChangeFeeType } from './Send.actions';
+import { actionChangeFeeType, actionToggleFastFee } from './Send.actions';
 import { Styled } from './Send.styled';
 import { FORM_CONFIGS } from './Send.constant';
 
@@ -21,6 +21,7 @@ const FeeType = React.memo((props: IFeeTypes) => {
     const { feeUnitByTokenId }: ISendData = useSelector(sendDataSelector);
     const dispatch = useDispatch();
     const selected = feeUnitByTokenId === tokenId;
+
     const handleChangeFeeTypes = (e: SyntheticEvent) => {
         e.preventDefault();
         if (!selected) {
@@ -62,14 +63,20 @@ const ErrorBlock = React.memo(() => {
 });
 
 const EstimateFee = React.memo(() => {
-    const { totalFeeText }: ISendData = useSelector(sendDataSelector);
+    const { totalFeeText, hasMultiLevel }: ISendData = useSelector(sendDataSelector);
+    const { fast2x } = useSelector(sendSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
+    const dispatch = useDispatch();
+    const handleToggleFastFee = () => dispatch(actionToggleFastFee());
     return (
         <div className="estimate-fee flex">
             <div className="left">
                 <p className="fee">{`${translate.fee}: ${totalFeeText}`}</p>
             </div>
-            <div className="right">
+            <div className="right flex">
+                {hasMultiLevel && (
+                    <FastFeeIcon onClick={handleToggleFastFee} className="fastfee-icon" fast2x={fast2x} />
+                )}
                 <FeeTypes />
             </div>
         </div>
@@ -92,6 +99,7 @@ const FormSend = (props: IMergeProps) => {
         onClickAddressBook,
         onClickScan,
         onGoBack,
+        warningAddress,
     } = props;
     const renderForm = () => {
         if (isInitingForm) {
@@ -124,6 +132,7 @@ const FormSend = (props: IMergeProps) => {
                         onClickAddressBook={onClickAddressBook}
                         onClickScan={onClickScan}
                         validate={validateAddress}
+                        warning={warningAddress}
                     />
                     <Field
                         component={InputField}
@@ -149,4 +158,4 @@ const FormSend = (props: IMergeProps) => {
         </Styled>
     );
 };
-export default FormSend;
+export default React.memo(FormSend);

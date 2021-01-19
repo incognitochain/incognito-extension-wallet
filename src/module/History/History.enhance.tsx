@@ -119,6 +119,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                             {
                                 title: historyLanguage.memo,
                                 desc: history.memo,
+                                copyData: history?.memo,
                             },
                         ]);
                     }
@@ -155,87 +156,165 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                         {
                             title: historyLanguage.memo,
                             desc: memo,
+                            copyData: history?.memo,
                         },
                     ]);
                     break;
                 }
                 case HISTORY_FORMAT_TYPE.bridge: {
-                    const historyBridge: TxBridgeHistoryModel = getHistoryBridgeById(id);
+                    const historyBridge: TxBridgeHistoryModel | any = getHistoryBridgeById(id);
                     const historyData: any = await getBridgeHistoryById({
                         id: Number(id),
                         currencyType: historyBridge.currencyType,
                     });
-                    const history: TxBridgeHistoryModel = getHistoryBridgeDetail(camelCaseKeys(historyData));
+                    const history: TxBridgeHistoryModel | undefined = getHistoryBridgeDetail(
+                        camelCaseKeys(historyData),
+                    );
                     _historyData = history;
-                    await setHistoryFactories([
-                        {
-                            title: historyLanguage.id,
-                            desc: history?.id,
-                            copyData: history?.id,
-                        },
-                        {
-                            title: history.type,
-                            desc: `${history.amountFormatedNoClip} ${history?.symbol || ''}`,
-                            descClassName: 'desc-amount',
-                            disabled: !history?.incognitoAmount,
-                        },
-                        {
-                            title: historyLanguage.status,
-                            desc: history?.statusMessage,
-                            descColor: history?.statusColor,
-                            message: history?.statusDetail,
-                            retryShield: true,
-                        },
-                        {
-                            title: historyLanguage.time,
-                            desc: history?.timeFormated,
-                        },
-                        {
-                            title: historyLanguage.expiredAt,
-                            desc: history?.expiredAtFormated,
-                        },
-                        {
-                            title: historyLanguage.inchainTxId,
-                            desc: history?.inChainTx,
-                            link: history?.inChainTx,
-                        },
-                        {
-                            title: historyLanguage.outchainTxId,
-                            desc: history?.outChainTx,
-                            link: history?.outChainTx,
-                        },
-                        {
-                            title: historyLanguage.toAddress,
-                            desc: history?.userPaymentAddress,
-                            copyData: history?.userPaymentAddress,
-                        },
-                        {
-                            title: historyLanguage.coin,
-                            desc: history?.symbol,
-                        },
-                        {
-                            title: historyLanguage.memo,
-                            desc: history?.memo,
-                        },
-                        {
-                            title: historyLanguage.contract,
-                            desc: history?.erc20TokenAddress,
-                            copyData: history?.erc20TokenAddress,
-                        },
-                        {
-                            customItem: (
-                                <div className="shield-address">
-                                    <p className="fw-medium">{historyLanguage.shieldingAddress}</p>
-                                    <QrCode
-                                        qrCodeProps={{
-                                            size: 150,
-                                            value: history?.address,
-                                        }}
-                                    />
-                                </div>
-                            ),
-                        },
-                    ]);
+                    if (!history) {
+                        return [];
+                    }
+                    if (history.isShieldTx) {
+                        await setHistoryFactories([
+                            {
+                                title: historyLanguage.id,
+                                desc: history?.id,
+                                copyData: history?.id,
+                            },
+                            {
+                                title: history.type,
+                                desc: `${history.amountFormatedNoClip} ${history?.symbol || ''}`,
+                                descClassName: 'desc-amount',
+                                disabled: !history?.incognitoAmount,
+                            },
+                            {
+                                title: historyLanguage.status,
+                                desc: history?.statusMessage,
+                                descColor: history?.statusColor,
+                                message: history?.statusDetail,
+                                retryShield: true,
+                            },
+                            {
+                                title: historyLanguage.time,
+                                desc: history?.timeFormated,
+                            },
+                            {
+                                title: historyLanguage.expiredAt,
+                                desc: history?.expiredAtFormated,
+                            },
+                            {
+                                title: historyLanguage.inchainTxId,
+                                desc: history?.inChainTx,
+                                link: history?.inChainTx,
+                            },
+                            {
+                                title: historyLanguage.outchainTxId,
+                                desc: history?.outChainTx,
+                                link: history?.outChainTx,
+                            },
+                            {
+                                title: historyLanguage.toAddress,
+                                desc: history?.userPaymentAddress,
+                                copyData: history?.userPaymentAddress,
+                            },
+                            {
+                                title: historyLanguage.coin,
+                                desc: history?.symbol,
+                            },
+                            {
+                                title: historyLanguage.memo,
+                                desc: history?.memo,
+                            },
+                            {
+                                title: historyLanguage.contract,
+                                desc: history?.erc20TokenAddress,
+                                copyData: history?.erc20TokenAddress,
+                            },
+                            {
+                                customItem: (
+                                    <div className="shield-address">
+                                        <p className="fw-medium">{historyLanguage.shieldingAddress}</p>
+                                        <QrCode
+                                            qrCodeProps={{
+                                                size: 150,
+                                                value: history?.address,
+                                            }}
+                                        />
+                                    </div>
+                                ),
+                            },
+                        ]);
+                    }
+                    if (history.isUnShieldTx) {
+                        await setHistoryFactories([
+                            {
+                                title: historyLanguage.id,
+                                desc: history?.id,
+                                copyData: history?.id,
+                            },
+                            {
+                                title: history.type,
+                                desc: `${history.amountFormatedNoClip} ${history?.symbol}`,
+                                descClassName: 'desc-amount',
+                                disabled: !history?.incognitoAmount,
+                            },
+                            {
+                                title: historyLanguage.status,
+                                desc: history?.statusMessage,
+                                descColor: history?.statusColor,
+                                message: history?.statusDetail,
+                                retryShield: true,
+                            },
+                            {
+                                title: historyLanguage.inchainFee,
+                                desc: `${history?.inchainFeeFormatedNoClip} ${history?.feeSymbol}`,
+                                disabled: !history?.inchainFee,
+                            },
+                            {
+                                title: historyLanguage.outchainFee,
+                                desc: `${history?.outchainFeeFormatedNoClip} ${history?.feeSymbol}`,
+                                disabled: !history?.outchainFee,
+                            },
+                            {
+                                title: historyLanguage.time,
+                                desc: history?.timeFormated,
+                            },
+
+                            {
+                                title: historyLanguage.expiredAt,
+                                desc: history?.expiredAtFormated,
+                            },
+                            {
+                                title: historyLanguage.inchainTxId,
+                                desc: history?.inChainTx,
+                                link: history?.inChainTx,
+                            },
+                            {
+                                title: historyLanguage.outchainTxId,
+                                desc: history?.outChainTx,
+                                link: history?.outChainTx,
+                            },
+                            {
+                                title: historyLanguage.toAddress,
+                                desc: history?.userPaymentAddress,
+                                copyData: history?.userPaymentAddress,
+                            },
+                            {
+                                title: historyLanguage.coin,
+                                desc: history?.symbol,
+                            },
+                            {
+                                title: historyLanguage.memo,
+                                desc: history?.memo,
+                                copyData: history?.memo,
+                            },
+                            {
+                                title: historyLanguage.contract,
+                                desc: history?.erc20TokenAddress,
+                                copyData: history?.erc20TokenAddress,
+                            },
+                        ]);
+                    }
                     break;
                 }
                 default:

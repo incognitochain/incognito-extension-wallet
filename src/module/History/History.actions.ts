@@ -239,7 +239,7 @@ export const actionRetryShieldBridgeToken = (id: string) => async (dispatch: Dis
         const chainTokens = chainTokensSelector(state);
         const tokenId: string = selectedTokenIdSelector(state);
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
-        const history: TxBridgeHistoryModel | undefined = getHistoryBridgeByIdSelector(state)(id);
+        const history: TxBridgeHistoryModel | any = getHistoryBridgeByIdSelector(state)(id);
         if (!history || !history.canRetryExpiredShield) {
             return;
         }
@@ -257,7 +257,7 @@ export const actionRemoveShieldBridgeToken = (id: string) => async (dispatch: Di
         const chainTokens = chainTokensSelector(state);
         const tokenId: string = selectedTokenIdSelector(state);
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
-        const history: TxBridgeHistoryModel | undefined = getHistoryBridgeByIdSelector(state)(id);
+        const history: TxBridgeHistoryModel | any = getHistoryBridgeByIdSelector(state)(id);
         if (!history || !history.canRemoveExpiredOrPendingShield) {
             return;
         }

@@ -10,7 +10,7 @@ import {
     getHistoryBridgeData,
     handleCombineHistory,
 } from './History.utils';
-import { TxCacheHistoryModel, TxHistoryReceiveModel } from './History.interface';
+import { TxCacheHistoryModel, TxHistoryReceiveModel, TxBridgeHistoryModel } from './History.interface';
 
 const { TYPE } = CONSTANT.HISTORY;
 
@@ -107,33 +107,36 @@ export const getHistoryReceiveByTxIdSelector = createSelector(receiveHistoryData
 export const historyBridgeSelector = createSelector(historySelector, (history) => history.brideHistory);
 
 export const historyBridgeDataSelector = createSelector(
+    historyCacheDataSelector,
     historyBridgeSelector,
     selectedPrivacySelector,
     decimalDigitsSelector,
-    (historyBridge, selectedPrivacy, decimalDigits) => {
-        return historyBridge.data.map((history) => ({
+    (historyCache, historyBridge, selectedPrivacy, decimalDigits) =>
+        historyBridge.data.map((history) => ({
             ...getHistoryBridgeData({
                 history,
+                historyCache,
                 decimalDigits,
                 selectedPrivacy,
             }),
-        }));
-    },
+        })),
 );
 
 export const getHistoryBridgeDetailSelector = createSelector(
+    historyCacheDataSelector,
     selectedPrivacySelector,
     decimalDigitsSelector,
-    (selectedPrivacy, decimalDigits) => (history: any) =>
+    (historyCache, selectedPrivacy, decimalDigits) => (history: any) =>
         getHistoryBridgeData({
             history,
+            historyCache,
             decimalDigits,
             selectedPrivacy,
         }),
 );
 
 export const getHistoryBridgeByIdSelector = createSelector(historyBridgeDataSelector, (history) =>
-    memoize((id: string) => history.find((h) => h.id === id)),
+    memoize((id: string) => history.find((h: TxBridgeHistoryModel | any) => h?.id === id)),
 );
 
 export const combineHistorySelector = createSelector(

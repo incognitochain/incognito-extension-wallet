@@ -21,3 +21,5 @@ export const sendDataSelector = createSelector(
 );
 
 export const forceSendDataSelector = createSelector(sendSelector, (send) => send.defaultForceSend);
+
+export const userFeesSelector = createSelector(sendSelector, (send) => send.userFees);

@@ -1,48 +1,40 @@
 import React from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import convert from 'src/utils/convert';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import toString from 'lodash/toString';
 import { bridgeTokensSelector, chainTokensSelector, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { defaultAccountSelector } from 'src/module/Account';
 import { AccountInstance, PaymentInfoModel } from 'incognito-js/build/web/browser';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { floor } from 'lodash';
-import { actionToggleModal } from 'src/components/Modal';
-import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import { sendDataSelector } from './Send.selector';
-import { ISendData } from './Send.interface';
+import { ISendData, ISendFormData } from './Send.interface';
 import { route as routeConfirmTx } from './features/ConfirmTx';
-import { getErrorMsgSend } from './Send.utils';
+import { getHistoryCacheDetailSelector, TxCacheHistoryModel } from '../History';
 
 export interface TInner {
     // eslint-disable-next-line no-unused-vars
-    handleSend: (values: { amount: string; toAddress: string; memo?: string }) => void;
+    handleSendAnonymously: (payload: ISendFormData) => any;
 }
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const { forceSendFinish } = props;
-    const dispatch = useDispatch();
+    const { totalFee, isUseTokenFee, isUsedPRVFee, disabledForm }: ISendData = useSelector(sendDataSelector);
     const history = useHistory();
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const account: AccountInstance = useSelector(defaultAccountSelector);
     const chainTokens = useSelector(chainTokensSelector);
     const bridgeTokens = useSelector(bridgeTokensSelector);
-    const { totalFee, isUseTokenFee, isUsedPRVFee, disabledForm }: ISendData = useSelector(sendDataSelector);
-    const handleSend = async (values: { amount: string; toAddress: string; memo?: string }) => {
+    const getHistoryCacheDetail = useSelector(getHistoryCacheDetailSelector);
+    const handleSendAnonymously = async (values: ISendFormData) => {
         try {
             const { amount, toAddress, memo = '' } = values;
             if (!amount || !toAddress || disabledForm) {
                 return;
             }
-            await dispatch(
-                actionToggleModal({
-                    data: <LoadingTx />,
-                    isLoadingModal: true,
-                }),
-            );
+
             const fee = toString(totalFee);
             const originalAmount = convert.toOriginalAmount({
                 humanAmount: amount,
@@ -71,32 +63,34 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     memo,
                 });
             }
-            if (!tx) {
-                throw new Error(`Failed`);
+            if (!tx.txId) {
+                throw new Error(`Send success but hasnt txId!`);
             }
             // send success
-            history.push(routeConfirmTx, {
-                history: tx,
-            });
+            const hc: TxCacheHistoryModel | undefined = getHistoryCacheDetail(tx);
+            if (hc) {
+                history.push(routeConfirmTx, {
+                    confirmTx: {
+                        txId: hc.txId,
+                        paymentAddress: hc.paymentAddress,
+                        time: hc.timeFormated,
+                        amount: hc.amountFormatedNoClip,
+                        symbol: hc.symbol,
+                        fee: hc.feeFormated,
+                        feeSymbol: hc.feeSymbol,
+                    },
+                });
+            }
             forceSendFinish(null, tx);
         } catch (error) {
-            const errorMsg = getErrorMsgSend(error);
-            dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    value: errorMsg,
-                    type: TOAST_CONFIGS.error,
-                }),
-            );
             // send fail
             forceSendFinish(error, null);
-        } finally {
-            await dispatch(actionToggleModal({}));
+            throw error;
         }
     };
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, handleSend }} />
+            <WrappedComponent {...{ ...props, handleSendAnonymously }} />
         </ErrorBoundary>
     );
 };

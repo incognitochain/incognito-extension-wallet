@@ -178,6 +178,8 @@ const language: ILanguage = {
         contract: 'Contract',
         resume: 'Resume',
         retryCentralizedMsg: 'Your request has been sent, we will process it soon. The history status will be updated',
+        inchainFee: 'In-chain fee',
+        outchainFee: 'Out-chain fee',
     },
     addressBook: {
         headerTitle: 'Address book',

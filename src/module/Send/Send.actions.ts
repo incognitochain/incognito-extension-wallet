@@ -1,48 +1,43 @@
+import toString from 'lodash/toString';
 import { change, focus } from 'redux-form';
 import convert from 'src/utils/convert';
 import format from 'src/utils/format';
-// import trim from 'lodash/trim';
 import floor from 'lodash/floor';
 import BigNumber from 'bignumber.js';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { defaultAccountSelector } from 'src/module/Account';
-import { apiURL2Selector } from 'src/module/Preload';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { COINS } from 'src/constants';
-import { sendDataSelector, sendSelector } from './Send.selector';
-import {
-    getMaxAmount,
-    MAX_FEE_PER_TX,
-    // getMaxAmount,
-    // getTotalFee
-} from './Send.utils';
-import { apiGetEstimateFeeFromChain } from './Send.services';
+import { API_CODE } from 'src/constants/error';
+import { bridgeTokensSelector, chainTokensSelector } from '../Token/Token.selector';
+import { sendDataSelector, sendSelector, userFeesSelector } from './Send.selector';
+import { getMaxAmount, MAX_FEE_PER_TX, getTotalFee } from './Send.utils';
 import {
     ACTION_FETCHING_FEE,
-    ACTION_FETCHED_FEE,
+    ACTION_FETCHED_EST_NATIVE_FEE,
     ACTION_FETCH_FAIL_FEE,
     ACTION_ADD_FEE_TYPE,
     ACTION_CHANGE_FEE_TYPE,
     ACTION_FETCHED_PTOKEN_FEE,
     ACTION_FETCHED_MIN_PTOKEN_FEE,
-    // ACTION_CHANGE_FEE,
+    ACTION_CHANGE_FEE,
     ACTION_INIT,
     ACTION_INIT_FETCHED,
     ACTION_FETCHED_MAX_FEE_PRV,
     ACTION_FETCHED_MAX_FEE_PTOKEN,
-    // ACTION_FETCHED_VALID_ADDR,
-    // ACTION_FETCHED_USER_FEES,
-    // ACTION_FETCHING_USER_FEES,
-    // ACTION_TOGGLE_FAST_FEE,
+    ACTION_FETCHED_VALID_ADDR,
+    ACTION_FETCHED_USER_FEES,
+    ACTION_FETCHING_USER_FEES,
+    ACTION_FETCH_FAIL_USER_FEES,
+    ACTION_TOGGLE_FAST_FEE,
     ACTION_REMOVE_FEE_TYPE,
-    // ACTION_FETCH_FAIL_USER_FEES,
     FORM_CONFIGS,
     ACTION_SET_SENDING,
     ACTION_UPDATE_DATA_FORCE_SEND,
 } from './Send.constant';
-import { IDataForceSend, ISendData, ISendReducer } from './Send.interface';
+import { IDataForceSend, ISendData, ISendReducer, IUserFees } from './Send.interface';
 
 export const actionInitFetched = (payload: {
     screen: string;
@@ -50,48 +45,338 @@ export const actionInitFetched = (payload: {
     minAmount: number;
     minAmountText: string;
     isAddressValidated: boolean;
-    isValidETHAddress: boolean;
 }) => ({
     type: ACTION_INIT_FETCHED,
     payload,
 });
 
+export const actionInitEstimateFee = (config: { screen: string }) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    const state = getState();
+    const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
+    const account: AccountInstance = defaultAccountSelector(state);
+    const wallet = state?.wallet;
+    if (!wallet || !account || !selectedPrivacy.tokenId) {
+        return;
+    }
+    const { screen = 'Send' } = config;
+    let rate = 1;
+    let minAmount = convert.toHumanAmount({
+        originalAmount: 1,
+        decimals: selectedPrivacy.pDecimals,
+    });
+    let minAmountText = format.toFixed({
+        number: minAmount,
+        decimals: selectedPrivacy.pDecimals,
+    });
+    try {
+        switch (screen) {
+            case 'UnShield': {
+                if (!selectedPrivacy.isDecentralized) {
+                    // centralized need fee send to temp address
+                    rate = 2;
+                }
+                break;
+            }
+            default: {
+                rate = 1;
+                break;
+            }
+        }
+        if (screen === 'UnShield') {
+            const bridgeTokens = bridgeTokensSelector(state);
+            const chainTokens = chainTokensSelector(state);
+            const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
+            const minMaxWithdraw = await token.bridgeGetMinMaxWithdraw();
+            if (minMaxWithdraw) {
+                const min = minMaxWithdraw.minAmount;
+                minAmountText = convert.toString({ text: toString(min) });
+                minAmount = convert.toOriginalAmount({
+                    humanAmount: minAmountText,
+                    decimals: selectedPrivacy.pDecimals,
+                });
+            }
+        }
+    } catch (error) {
+        throw error;
+    } finally {
+        await dispatch(
+            actionInitFetched({
+                screen,
+                rate,
+                minAmount,
+                minAmountText,
+                isAddressValidated: true,
+            }),
+        );
+    }
+};
+
+// fee type selection
 export const actionAddFeeType = (payload: { tokenId: string; symbol: string }) => ({
     type: ACTION_ADD_FEE_TYPE,
     payload,
 });
 
-export const actionFetchedFee = (payload: {
+export const actionRemoveFeeType = (payload: { tokenId: string }) => ({
+    type: ACTION_REMOVE_FEE_TYPE,
+    payload,
+});
+
+export const actionChangeFeeType = (payload: string) => ({
+    type: ACTION_CHANGE_FEE_TYPE,
+    payload,
+});
+
+export const actionChangeFee = (payload: any) => ({
+    type: ACTION_CHANGE_FEE,
+    payload,
+});
+
+// valid address withdraw
+export const actionFetchedValidAddr = (payload: { isAddressValidated: boolean }) => ({
+    type: ACTION_FETCHED_VALID_ADDR,
+    payload,
+});
+
+// estimate user fee withdraw
+export const actionFetchingUserFees = () => ({
+    type: ACTION_FETCHING_USER_FEES,
+});
+
+export const actionFetchFailUserFees = (isMemoRequired?: boolean) => ({
+    type: ACTION_FETCH_FAIL_USER_FEES,
+    payload: isMemoRequired,
+});
+
+export const actionFetchedUserFees = (payload: IUserFees) => ({
+    type: ACTION_FETCHED_USER_FEES,
+    payload,
+});
+
+export const actionFetchUserFees = ({
+    address,
+    memo,
+    requestedAmount,
+    incognitoAmount,
+}: {
+    amount: string;
+    address: string;
+    memo: string;
+    requestedAmount: string;
+    incognitoAmount: string;
+}) => async (dispatch: Dispatch, getState: () => IRootState) => {
+    let userFeesData;
+    const state = getState();
+    const { isUnShield } = sendDataSelector(state);
+    const userFees = userFeesSelector(state);
+    const selectedPrivacy = selectedPrivacySelector(state);
+    userFeesData = userFees?.data;
+    if (!isUnShield) {
+        return;
+    }
+    try {
+        await dispatch(actionFetchingUserFees());
+        const account: AccountInstance = defaultAccountSelector(state);
+        const bridgeTokens = bridgeTokensSelector(state);
+        const chainTokens = chainTokensSelector(state);
+        const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
+        userFeesData = await token.bridgeWithdrawEstUserFee({
+            requestedAmount,
+            incognitoAmount,
+            paymentAddress: address,
+            memo,
+        });
+        if (!userFeesData.FeeAddress) {
+            throw new Error("Can't not get fee address!");
+        }
+        await dispatch(actionFetchedUserFees(userFeesData));
+    } catch (error) {
+        if (error && error?.response?.data.Code === API_CODE.MEMO_IS_REQUIRED) {
+            return dispatch(actionFetchFailUserFees(true));
+        }
+        await dispatch(actionFetchFailUserFees());
+        throw error;
+    }
+};
+
+// estimate native fee
+
+export const actionFetchedEstNativeFee = (payload: {
     feePrv: number;
     feePrvText: string;
     minFeePrv: number;
     minFeePrvText: string;
     totalFeePrv: number;
     totalFeePrvText: string;
+    userFeePrv: string;
 }) => ({
-    type: ACTION_FETCHED_FEE,
+    type: ACTION_FETCHED_EST_NATIVE_FEE,
     payload,
 });
 
-export const actionFetchedMinPTokenFee = (payload: { minFeePToken: number; minFeePTokenText: string }) => ({
+export const actionFetchedMaxNativeFee = (payload: { maxFeePrv: number; maxFeePrvText: string }) => ({
+    type: ACTION_FETCHED_MAX_FEE_PRV,
+    payload,
+});
+
+export const actionEstNativeFee = ({ feeEst }: { feeEst: number }) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    let feePrv = 0;
+    let feePrvText = '0';
+    let totalFeePrv = 0;
+    let totalFeePrvText = '0';
+    let userFeePrv = '0';
+    const state = getState();
+    const { fast2x, userFees, rate } = sendSelector(state);
+    const { isUsedPRVFee, isUnShield, feePDecimals, hasMultiLevel } = sendDataSelector(state);
+    const { isFetched } = userFees;
+    try {
+        feePrv = floor(new BigNumber(feeEst).multipliedBy(rate).toNumber());
+        feePrvText = format.toFixed({
+            number: convert.toHumanAmount({
+                originalAmount: feePrv,
+                decimals: COINS.PRV.pDecimals,
+            }),
+            decimals: COINS.PRV.pDecimals,
+        });
+        totalFeePrv = feePrv;
+        totalFeePrvText = feePrvText;
+        if (isUnShield && isFetched) {
+            const { totalFee, totalFeeText, userFee } = getTotalFee({
+                fast2x,
+                userFeesData: userFees?.data,
+                feeEst: feePrv,
+                decimals: feePDecimals,
+                isUsedPRVFee,
+                hasMultiLevel,
+            });
+            totalFeePrv = totalFee;
+            totalFeePrvText = totalFeeText;
+            userFeePrv = userFee;
+        }
+    } catch (error) {
+        throw error;
+    } finally {
+        await dispatch(
+            actionFetchedEstNativeFee({
+                feePrv,
+                feePrvText,
+                minFeePrv: feePrv,
+                minFeePrvText: feePrvText,
+                totalFeePrv,
+                totalFeePrvText,
+                userFeePrv,
+            }),
+        );
+        if (isUsedPRVFee) {
+            await Promise.all([
+                await dispatch(change(FORM_CONFIGS.formName, 'fee', totalFeePrvText)),
+                await dispatch(focus(FORM_CONFIGS.formName, 'fee')),
+            ]);
+        }
+    }
+};
+
+// estimate privacy token fee
+
+export const actionFetchedEstPrivacyFee = (payload: {
+    feePToken: number;
+    feePTokenText: string;
+    totalFeePToken: number;
+    totalFeePTokenText: string;
+    userFeePToken: string;
+}) => ({
+    type: ACTION_FETCHED_PTOKEN_FEE,
+    payload,
+});
+
+export const actionFetchedMaxPrivacyFee = (payload: { amount: number; amountText: string }) => ({
+    type: ACTION_FETCHED_MAX_FEE_PTOKEN,
+    payload,
+});
+
+export const actionEstPrivacyFee = ({ feePTokenEst }: { feePTokenEst: number }) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    let feePToken = 0;
+    let feePTokenText = '0';
+    let totalFeePToken = 0;
+    let totalFeePTokenText = '0';
+    let userFeePToken = '0';
+    const state = getState();
+    const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
+    const { rate, userFees, fast2x } = sendSelector(state);
+    const { isUseTokenFee, isUnShield, hasMultiLevel } = sendDataSelector(state);
+    const { isFetched } = userFees;
+    try {
+        feePToken = floor(new BigNumber(feePTokenEst).multipliedBy(rate).toNumber());
+        feePTokenText = format.toFixed({
+            number: convert.toHumanAmount({
+                originalAmount: feePToken,
+                decimals: selectedPrivacy?.pDecimals,
+            }),
+            decimals: selectedPrivacy?.pDecimals,
+        });
+        totalFeePToken = feePToken;
+        totalFeePTokenText = feePTokenText;
+        if (isUnShield && isFetched) {
+            const { totalFee, totalFeeText, userFee } = getTotalFee({
+                fast2x,
+                userFeesData: userFees?.data,
+                feeEst: feePToken,
+                decimals: selectedPrivacy?.pDecimals,
+                isUsedPRVFee: false,
+                hasMultiLevel,
+            });
+            totalFeePToken = totalFee;
+            totalFeePTokenText = totalFeeText;
+            userFeePToken = userFee;
+        }
+    } catch (error) {
+        throw error;
+    } finally {
+        await dispatch(
+            actionFetchedEstPrivacyFee({
+                feePToken,
+                feePTokenText,
+                totalFeePToken,
+                totalFeePTokenText,
+                userFeePToken,
+            }),
+        );
+        if (isUseTokenFee) {
+            await Promise.all([
+                dispatch(change(FORM_CONFIGS.formName, 'fee', totalFeePTokenText)),
+                dispatch(focus(FORM_CONFIGS.formName, 'fee')),
+            ]);
+        }
+    }
+};
+
+// estimate min privacy token fee
+
+export const actionFetchedEstMinPrivacyFee = (payload: { minFeePToken: number; minFeePTokenText: string }) => ({
     type: ACTION_FETCHED_MIN_PTOKEN_FEE,
     payload,
 });
 
-export const actionHandleMinFeeEst = ({ minFeePTokenEst }: { minFeePTokenEst: number }) => async (
+export const actionEstMinPrivacyFee = ({ minFeePTokenEst }: { minFeePTokenEst: number }) => async (
     dispatch: Dispatch,
     getState: () => IRootState,
 ) => {
     const state = getState();
     const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
-    const {
-        rate,
-    }: // userFees
-    ISendReducer = sendSelector(state);
-    // const { isUnShield } = sendDataSelector(state);
-    // const isFreeFeePToken = !userFees?.data?.TokenFees;
-    // const isFreeFeePrivacy = !userFees?.data?.PrivacyFees;
-    // const isFreeFee = isFreeFeePToken && isFreeFeePrivacy;
+    const { rate, userFees }: ISendReducer = sendSelector(state);
+    const { isUnShield } = sendDataSelector(state);
+    const isFreeFeePToken = !userFees?.data?.TokenFees;
+    const isFreeFeePrivacy = !userFees?.data?.PrivacyFees;
+    const isFreeFee = isFreeFeePToken && isFreeFeePrivacy;
     const minFeePToken = floor(new BigNumber(minFeePTokenEst).multipliedBy(rate).toNumber());
     const minFeePTokenText = format.toFixed({
         number: convert.toHumanAmount({
@@ -102,7 +387,7 @@ export const actionHandleMinFeeEst = ({ minFeePTokenEst }: { minFeePTokenEst: nu
     });
     const task = [
         dispatch(
-            actionFetchedMinPTokenFee({
+            actionFetchedEstMinPrivacyFee({
                 minFeePToken,
                 minFeePTokenText,
             }),
@@ -115,231 +400,17 @@ export const actionHandleMinFeeEst = ({ minFeePTokenEst }: { minFeePTokenEst: nu
         ),
     ];
     await Promise.all(task);
-    // if (isUnShield && !!userFees?.isFetched) {
-    //   if (isFreeFee) {
-    //     return;
-    //   }
-    //   if (isFreeFeePToken) {
-    //     return await dispatch(
-    //       actionRemoveFeeType({ tokenId: selectedPrivacy?.tokenId })
-    //     );
-    //   }
-    // }
-};
-
-export const actionFetchedPTokenFee = (payload: {
-    feePToken: number;
-    feePTokenText: string;
-    totalFeePToken: number;
-    totalFeePTokenText: string;
-}) => ({
-    type: ACTION_FETCHED_PTOKEN_FEE,
-    payload,
-});
-
-export const actionHandleFeePTokenEst = ({ feePTokenEst }: { feePTokenEst: number }) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
-    let feePToken = 0;
-    let feePTokenText = '0';
-    let totalFeePToken = 0;
-    let totalFeePTokenText = '0';
-    // userFeePToken;
-    const state = getState();
-    const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
-    const {
-        rate,
-        // userFees,
-        // fast2x
-    } = sendSelector(state);
-    const {
-        isUseTokenFee,
-        // isUnShield, hasMultiLevel
-    } = sendDataSelector(state);
-    // const { isFetched } = userFees;
-    try {
-        feePToken = floor(new BigNumber(feePTokenEst).multipliedBy(rate).toNumber());
-        feePTokenText = format.toFixed({
-            number: convert.toHumanAmount({
-                originalAmount: feePToken,
-                decimals: selectedPrivacy?.pDecimals,
-            }),
-            decimals: selectedPrivacy?.pDecimals,
-        });
-        totalFeePToken = feePToken;
-        totalFeePTokenText = feePTokenText;
-        // if (isUnShield && isFetched) {
-        //   const { totalFee, totalFeeText, userFee } = getTotalFee({
-        //     fast2x,
-        //     userFeesData: userFees?.data,
-        //     feeEst: feePToken,
-        //     rate,
-        //     pDecimals: selectedPrivacy?.pDecimals,
-        //     isUsedPRVFee: false,
-        //     hasMultiLevel,
-        //   });
-        //   totalFeePToken = totalFee;
-        //   totalFeePTokenText = totalFeeText;
-        //   userFeePToken = userFee;
-        // }
-    } catch (error) {
-        throw error;
-    } finally {
-        await dispatch(
-            actionFetchedPTokenFee({
-                feePToken,
-                feePTokenText,
-                totalFeePToken,
-                totalFeePTokenText,
-                // userFeePToken,
-            }),
-        );
-        if (isUseTokenFee) {
-            await Promise.all([
-                dispatch(change(FORM_CONFIGS.formName, 'fee', totalFeePTokenText)),
-                dispatch(focus(FORM_CONFIGS.formName, 'fee')),
-            ]);
+    if (isUnShield && !!userFees?.isFetched) {
+        if (isFreeFee) {
+            return;
+        }
+        if (isFreeFeePToken) {
+            return dispatch(actionRemoveFeeType({ tokenId: selectedPrivacy?.tokenId }));
         }
     }
 };
 
-export const actionHandleFeeEst = ({ feeEst }: { feeEst: number }) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
-    let feePrv = 0;
-    let feePrvText = '0';
-    let totalFeePrv = 0;
-    let totalFeePrvText = '0';
-    //  userFeePrv;
-    const state = getState();
-    const {
-        //  fast2x, userFees,
-        rate,
-    } = sendSelector(state);
-    const {
-        isUsedPRVFee,
-        // isUnShield,
-        // feePDecimals,
-        // hasMultiLevel,
-    } = sendDataSelector(state);
-    // const { isFetched } = userFees;
-    try {
-        feePrv = floor(new BigNumber(feeEst).multipliedBy(rate).toNumber());
-        feePrvText = format.toFixed({
-            number: convert.toHumanAmount({
-                originalAmount: feePrv,
-                decimals: COINS.PRV.pDecimals,
-            }),
-            decimals: COINS.PRV.pDecimals,
-        });
-        totalFeePrv = feePrv;
-        totalFeePrvText = feePrvText;
-        // if (isUnShield && isFetched) {
-        //   const { totalFee, totalFeeText, userFee } = getTotalFee({
-        //     fast2x,
-        //     userFeesData: userFees?.data,
-        //     feeEst: feePrv,
-        //     rate,
-        //     pDecimals: feePDecimals,
-        //     isUsedPRVFee,
-        //     hasMultiLevel,
-        //   });
-        //   totalFeePrv = totalFee;
-        //   totalFeePrvText = totalFeeText;
-        //   userFeePrv = userFee;
-        // }
-    } catch (error) {
-        throw error;
-    } finally {
-        await dispatch(
-            actionFetchedFee({
-                feePrv,
-                feePrvText,
-                minFeePrv: feePrv,
-                minFeePrvText: feePrvText,
-                totalFeePrv,
-                totalFeePrvText,
-                // userFeePrv,
-            }),
-        );
-        if (isUsedPRVFee) {
-            await Promise.all([
-                await dispatch(change(FORM_CONFIGS.formName, 'fee', totalFeePrvText)),
-                await dispatch(focus(FORM_CONFIGS.formName, 'fee')),
-            ]);
-        }
-    }
-};
-
-export const actionInitEstimateFee = (config: { screen: string }) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
-    const state = getState();
-    const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
-    const account: AccountInstance = defaultAccountSelector(state);
-    const wallet = state?.wallet;
-    if (!wallet || !account || !selectedPrivacy) {
-        return;
-    }
-    const { screen = 'Send' } = config;
-    let rate = 1;
-    let minAmount = convert.toHumanAmount({
-        originalAmount: 1,
-        decimals: selectedPrivacy.pDecimals,
-    });
-    const minAmountText = format.toFixed({
-        number: minAmount,
-        decimals: selectedPrivacy.pDecimals,
-    });
-    try {
-        switch (screen) {
-            // case 'UnShield': {
-            //   rate = 2;
-            //   break;
-            // }
-            default: {
-                rate = 1;
-                break;
-            }
-        }
-        // if (screen === 'UnShield') {
-        //   const [min] = await getMinMaxWithdrawAmount(selectedPrivacy?.tokenId);
-        //   if (min) {
-        //     minAmountText = format.toFixed(min, selectedPrivacy?.pDecimals);
-        //     minAmount = convert.toOriginalAmount(
-        //       minAmountText,
-        //       selectedPrivacy?.pDecimals
-        //     );
-        //   }
-        // }
-    } catch (error) {
-        throw error;
-    } finally {
-        await dispatch(
-            actionInitFetched({
-                screen,
-                rate,
-                minAmount,
-                minAmountText,
-                isAddressValidated: true,
-                isValidETHAddress: true,
-            }),
-        );
-    }
-};
-
-export const actionFetchedMaxFeePrv = (payload: { maxFeePrv: number; maxFeePrvText: string }) => ({
-    type: ACTION_FETCHED_MAX_FEE_PRV,
-    payload,
-});
-
-export const actionFetchedMaxFeePToken = (payload: { amount: number; amountText: string }) => ({
-    type: ACTION_FETCHED_MAX_FEE_PTOKEN,
-    payload,
-});
+// fetch all fees
 
 export const actionInit = () => ({
     type: ACTION_INIT,
@@ -357,6 +428,7 @@ export const actionFetchFee = ({
     amount,
     address,
     screen,
+    memo,
 }: {
     amount: string;
     address: string;
@@ -364,89 +436,82 @@ export const actionFetchFee = ({
     memo: string;
 }) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
-    const selectedPrivacy = selectedPrivacySelector(state);
-    const api2URL = apiURL2Selector(state);
-    const { isFetching, init } = sendSelector(state);
+    const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
+    const { init } = sendSelector(state);
     let feeEst = MAX_FEE_PER_TX;
-    let feePTokenEst: any = 0;
-    let minFeePTokenEst: any = 0;
+    let feePTokenEst = 0;
+    let minFeePTokenEst = 0;
     const originalAmount = convert.toOriginalAmount({
         humanAmount: amount,
         decimals: selectedPrivacy.pDecimals,
     });
-    const bnOriginalAmount = new BigNumber(originalAmount).toNumber();
+    const bnAmount = new BigNumber(originalAmount);
+    const requestedAmount = convert.toString({ text: amount });
+    const incognitoAmount = bnAmount.toString();
+    let isAddressValidated = true;
     try {
         if (
             !init ||
             !amount ||
             !address ||
             !selectedPrivacy?.tokenId ||
-            isFetching ||
-            bnOriginalAmount === 0 ||
-            bnOriginalAmount > selectedPrivacy?.amount
+            bnAmount.isLessThanOrEqualTo(0) ||
+            bnAmount.isGreaterThan(new BigNumber(selectedPrivacy.amount)) ||
+            bnAmount.isNaN()
         ) {
             return;
         }
         await dispatch(actionFetchingFee());
         await actionInitEstimateFee({ screen })(dispatch, getState);
-        // if (selectedPrivacy?.isWithdrawable && screen === 'UnShield') {
-        //   const isAddressValidated = await dispatch(actionValAddr(address));
-        //   if (isAddressValidated) {
-        //     await dispatch(actionFetchUserFees({ address, amount, memo }));
-        //   }
-        // }
-        if (selectedPrivacy?.isToken) {
+        if (selectedPrivacy.isToken) {
+            const account: AccountInstance = defaultAccountSelector(state);
+            const bridgeTokens = bridgeTokensSelector(state);
+            const chainTokens = chainTokensSelector(state);
+            const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
+            if (selectedPrivacy?.isWithdrawable && screen === 'UnShield') {
+                isAddressValidated = await token.bridgeWithdrawCheckValAddress({ address });
+                if (isAddressValidated) {
+                    await actionFetchUserFees({ address, amount, memo, incognitoAmount, requestedAmount })(
+                        dispatch,
+                        getState,
+                    );
+                }
+            }
             try {
-                const payload = {
-                    Prv: feeEst,
-                    TokenID: selectedPrivacy?.tokenId,
-                };
-                let feePTokenEstData: any = await apiGetEstimateFeeFromChain(api2URL, payload);
+                let feePTokenEstData = await token.getEstFeeFromNativeFee({
+                    nativeFee: feeEst,
+                });
                 feePTokenEst = feePTokenEstData;
                 minFeePTokenEst = feePTokenEstData;
-            } catch (error) {
-                console.debug(error);
+            } catch (e) {
+                console.debug(e);
             }
         }
     } catch (error) {
         throw error;
     } finally {
         if (feeEst) {
-            await actionHandleFeeEst({
+            await actionEstNativeFee({
                 feeEst,
             })(dispatch, getState);
         }
         if (feePTokenEst) {
-            await actionHandleFeePTokenEst({ feePTokenEst })(dispatch, getState);
+            await actionEstPrivacyFee({ feePTokenEst })(dispatch, getState);
         }
         if (minFeePTokenEst) {
-            await actionHandleMinFeeEst({ minFeePTokenEst })(dispatch, getState);
+            await actionEstMinPrivacyFee({ minFeePTokenEst })(dispatch, getState);
         }
+        await dispatch(actionFetchedValidAddr({ isAddressValidated }));
     }
 };
-
-export const actionRemoveFeeType = (payload: string) => ({
-    type: ACTION_REMOVE_FEE_TYPE,
-    payload,
-});
-
-export const actionChangeFeeType = (payload: string) => ({
-    type: ACTION_CHANGE_FEE_TYPE,
-    payload,
-});
-
-// export const actionChangeFee = (payload) => ({
-//   type: ACTION_CHANGE_FEE,
-//   payload,
-// });
+//
 
 export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
     const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
-    const apiURL2 = apiURL2Selector(state);
     const { isFetched, isFetching }: ISendReducer = sendSelector(state);
     const { isUseTokenFee, totalFee }: ISendData = sendDataSelector(state);
-    const { amount, isNativeToken, pDecimals, isToken } = selectedPrivacy;
+    const { amount, isNativeToken, pDecimals } = selectedPrivacy;
     const bnAmount = new BigNumber(amount);
     const bnFeeEst = new BigNumber(MAX_FEE_PER_TX);
     const maxAmount = Math.max(isNativeToken ? bnAmount.minus(bnFeeEst).toNumber() : amount, 0);
@@ -471,157 +536,37 @@ export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: ()
             maxAmountText = _maxAmountText;
         } else {
             await dispatch(actionFetchingFee());
-            if (isToken) {
-                try {
-                    const feePTokenEst: any = await apiGetEstimateFeeFromChain(apiURL2, {
-                        Prv: feeEst,
-                        TokenID: selectedPrivacy.tokenId,
-                    });
-                    if (feePTokenEst) {
-                        await Promise.all([
-                            actionHandleFeePTokenEst({ feePTokenEst })(dispatch, getState),
-                            actionHandleMinFeeEst({ minFeePTokenEst: feePTokenEst })(dispatch, getState),
-                        ]);
-                    }
-                } catch (error) {
-                    console.debug(error);
+            const account: AccountInstance = defaultAccountSelector(state);
+            const bridgeTokens = bridgeTokensSelector(state);
+            const chainTokens = chainTokensSelector(state);
+            const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
+            try {
+                const feePTokenEst = await token.getEstFeeFromNativeFee({ nativeFee: feeEst });
+                if (feePTokenEst) {
+                    await Promise.all([
+                        actionEstPrivacyFee({ feePTokenEst })(dispatch, getState),
+                        actionEstMinPrivacyFee({ minFeePTokenEst: feePTokenEst })(dispatch, getState),
+                    ]);
                 }
+            } catch (error) {
+                console.debug(error);
             }
         }
     } catch (error) {
         throw error;
     } finally {
         if (!isFetched) {
-            await actionHandleFeeEst({
+            await actionEstNativeFee({
                 feeEst,
             })(dispatch, getState);
         }
     }
-    // eslint-disable-next-line consistent-return
     return maxAmountText;
 };
 
-// export const actionFetchedValidAddr = (payload) => ({
-//   type: ACTION_FETCHED_VALID_ADDR,
-//   payload,
-// });
-
-// export const actionValAddr = (address = '') => async (dispatch, getState) => {
-//   let isAddressValidated = true;
-//   let isValidETHAddress = true;
-//   const state = getState();
-//   const selectedPrivacy = selectedPrivacySeleclor.selectedPrivacy(state);
-//   const { isUnShield } = feeDataSelector(state);
-//   if (!isUnShield) {
-//     return;
-//   }
-//   try {
-//     const _address = trim(address);
-//     if (_address) {
-//       const validAddr = await apiCheckValidAddress(
-//         _address,
-//         selectedPrivacy?.currencyType
-//       );
-//       isAddressValidated = !!validAddr?.data?.Result;
-//     }
-//   } catch (error) {
-//     throw error;
-//   } finally {
-//     await dispatch(
-//       actionFetchedValidAddr({ isAddressValidated, isValidETHAddress })
-//     );
-//   }
-//   return isAddressValidated;
-// };
-
-// export const actionFetchedUserFees = (payload) => ({
-//   type: ACTION_FETCHED_USER_FEES,
-//   payload,
-// });
-
-// export const actionFetchingUserFees = () => ({
-//   type: ACTION_FETCHING_USER_FEES,
-// });
-
-// export const actionFetchFailUserFees = (payload) => ({
-//   type: ACTION_FETCH_FAIL_USER_FEES,
-//   payload,
-// });
-
-// export const actionFetchUserFees = (payload) => async (dispatch, getState) => {
-//   let userFeesData;
-//   const state = getState();
-//   const { address: paymentAddress, memo, amount: requestedAmount } = payload;
-//   const selectedPrivacy = selectedPrivacySeleclor.selectedPrivacy(state);
-//   const {
-//     tokenId,
-//     contractId,
-//     currencyType,
-//     isErc20Token,
-//     externalSymbol,
-//     paymentAddress: walletAddress,
-//     pDecimals,
-//     isDecentralized,
-//   } = selectedPrivacy;
-//   const { isETH, isUsedPRVFee, userFees, isUnShield } = feeDataSelector(state);
-//   const originalAmount = convert.toOriginalAmount(requestedAmount, pDecimals);
-//   userFeesData = { ...userFees?.data };
-//   let _error;
-//   const { isFetching } = userFees;
-//   if (isFetching || !isUnShield) {
-//     return;
-//   }
-//   try {
-//     await dispatch(actionFetchingUserFees());
-//     if (isDecentralized) {
-//       const data = {
-//         requestedAmount,
-//         originalAmount,
-//         paymentAddress,
-//         walletAddress,
-//         tokenContractID: isETH ? '' : contractId,
-//         tokenId,
-//         burningTxId: '',
-//         currencyType: currencyType,
-//         isErc20Token: isErc20Token,
-//         externalSymbol: externalSymbol,
-//         isUsedPRVFee,
-//       };
-//       userFeesData = await estimateUserFees(data);
-//     } else {
-//       const payload = {
-//         originalAmount,
-//         requestedAmount,
-//         paymentAddress,
-//         walletAddress,
-//         tokenId: tokenId,
-//         currencyType: currencyType,
-//         memo,
-//       };
-//       const _userFeesData = await genCentralizedWithdrawAddress(payload);
-//       userFeesData = {
-//         ..._userFeesData,
-//       };
-//     }
-//   } catch (error) {
-//     _error = error;
-//     throw error;
-//   } finally {
-//     if (_error && _error?.code === 'API_ERROR(-1027)') {
-//       return await dispatch(actionFetchFailUserFees(true));
-//     }
-//     if (!userFeesData.FeeAddress) {
-//       await dispatch(actionFetchFailUserFees());
-//       throw new Error("Can't not get master address!");
-//     }
-//     await dispatch(actionFetchedUserFees(userFeesData));
-//   }
-// };
-
-// export const actionToggleFastFee = (payload) => ({
-//   type: ACTION_TOGGLE_FAST_FEE,
-//   payload,
-// });
+export const actionToggleFastFee = () => ({
+    type: ACTION_TOGGLE_FAST_FEE,
+});
 
 export const actionSetSending = (payload: boolean) => ({
     type: ACTION_SET_SENDING,

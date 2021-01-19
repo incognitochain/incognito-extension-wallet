@@ -1,3 +1,12 @@
+const API_ERROR: any = {
+    '-9001': 'Internal server error',
+    '-1027': 'Memo is required!',
+};
+
+export const API_CODE = {
+    MEMO_IS_REQUIRED: -1027,
+};
+
 const SDK_ERROR: any = {
     '-4007': 'Your balance is insufficient.',
     '-2001': 'Please ensure this private key is valid, and has not already been imported to this device.',
@@ -17,6 +26,7 @@ const CHAIN_ERROR: any = {
 export const ERROR_CODE: any = {
     ...SDK_ERROR,
     ...CHAIN_ERROR,
+    ...API_ERROR,
     DEFAULT: "It looks like your transaction didn't go through.  Please wait a few minutes and try again",
 };
 
