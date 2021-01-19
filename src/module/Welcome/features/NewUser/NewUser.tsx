@@ -50,7 +50,7 @@ const NewUser = (props: INewUserProps) => {
     return (
         <Layout header="">
             <Styled>
-                {isReset && <Header title=" " onGoBack={onBack} />}
+                <Header title=" " onGoBack={onBack} />
                 <AppIcon />
                 <div className="title">{dictionary.title1}</div>
                 <div className="subtitle">{dictionary.title2}</div>
