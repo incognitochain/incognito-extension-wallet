@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
 import { Button, Input } from 'src/components/Core';
+import { trim } from 'lodash';
 import enhance from './MasterKeyName.enhance';
 import { IProps } from './MasterKeyName.inteface';
 import FillCheckBox from '../../../../components/Core/FillCheckBox';
@@ -46,7 +47,11 @@ const MasterKeyName = (props: IProps) => {
                 <FillCheckBox checked={agree} onHandleChecked={onAgree} label={dictionary.checkbox} />
             </div>
             <div>
-                <Button disabled={!masterKeyName || !!error || !agree} onClick={onNext} title={dictionary.createKey} />
+                <Button
+                    disabled={!trim(masterKeyName) || !!error || !agree}
+                    onClick={onNext}
+                    title={dictionary.createKey}
+                />
                 <div className="error-message">{error}</div>
             </div>
         </Styled>
