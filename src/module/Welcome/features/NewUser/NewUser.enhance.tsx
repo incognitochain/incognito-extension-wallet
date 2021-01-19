@@ -9,7 +9,7 @@ import { INewUserProps } from './NewUser.interface';
 import GetStarted from './GetStarted';
 
 const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
-    const { isReset } = props;
+    const { isReset, onBack } = props;
     const [error, setError] = useState('');
     const [pass, setPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
@@ -31,6 +31,14 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
         setConfirmPass(e.target.value);
         setError('');
     }, []);
+
+    const handleBack = () => {
+        if (isReset) {
+            onBack();
+        } else {
+            setGetStarted(false);
+        }
+    };
 
     const isCorrectPassword = () => {
         if (pass && pass.length < 10) {
@@ -87,6 +95,7 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
             onChangeConfirmPass={handleConfirmPassChange}
             disabled={isDisabledButton}
             error={error}
+            onBack={handleBack}
         />
     );
 };
