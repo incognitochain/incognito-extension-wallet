@@ -14,6 +14,8 @@ const customModalStyle = {
     width: 'auto',
     height: 'auto',
     borderRadius: 8,
+    minWidth: 295,
+    padding: '30px 15px',
 };
 
 const KeychainList = React.memo(() => {
