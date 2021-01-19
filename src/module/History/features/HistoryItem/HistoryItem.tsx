@@ -1,5 +1,4 @@
 import React from 'react';
-import copy from 'copy-to-clipboard';
 import { actionToggleToast, Button, TOAST_CONFIGS } from 'src/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDownIcon, ArrowUpIcon, CopyIcon, OpenLinkIcon } from 'src/components/Icons';
