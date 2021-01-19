@@ -98,6 +98,8 @@ export interface IHistoryLanguage {
     contract: string;
     resume: string;
     retryCentralizedMsg: string;
+    inchainFee: string;
+    outchainFee: string;
 }
 
 export interface ISettingLanguage {

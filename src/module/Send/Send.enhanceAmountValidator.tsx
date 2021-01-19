@@ -23,15 +23,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const sendData: ISendData = useSelector(sendDataSelector);
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const isTokenBySymbol = useSelector(isTokenBySymbolSelector);
-    const {
-        // fee,
-        // feeUnitByTokenId,
-        minAmount,
-        maxAmount,
-        maxAmountText,
-        minAmountText,
-        isIncognitoAddress,
-    } = sendData;
+    const { fee, feeUnitByTokenId, minAmount, maxAmount, maxAmountText, minAmountText, isIncognitoAddress } = sendData;
     const initialState: IState = {
         maxAmountValidator: undefined,
         minAmountValidator: undefined,
@@ -89,13 +81,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
 
     React.useEffect(() => {
         setFormValidator();
-    }, [
-        selectedPrivacy,
-        // fee,
-        // feeUnitByTokenId,
-        maxAmount,
-        minAmount,
-    ]);
+    }, [selectedPrivacy, fee, feeUnitByTokenId, maxAmount, minAmount]);
 
     const validateAmount: any[] = getAmountValidator();
 

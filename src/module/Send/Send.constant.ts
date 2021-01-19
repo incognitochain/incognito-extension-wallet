@@ -1,9 +1,9 @@
 export const ACTION_FETCHING_FEE = '[send] Fetching fee';
-export const ACTION_FETCHED_FEE = '[send] Fetched fee';
+export const ACTION_FETCHED_EST_NATIVE_FEE = '[send] Fetched est native fee';
 export const ACTION_FETCH_FAIL_FEE = '[send] Fetch fail fee';
 export const ACTION_ADD_FEE_TYPE = '[send] Add fee type';
 export const ACTION_CHANGE_FEE_TYPE = '[send] Change fee type';
-export const ACTION_FETCHED_PTOKEN_FEE = '[send] Fetched pToken fee';
+export const ACTION_FETCHED_PTOKEN_FEE = '[send] Fetched est pToken fee';
 export const ACTION_INIT = '[send] Init data';
 export const ACTION_INIT_FETCHED = '[send] Fetched init data';
 export const ACTION_FETCHED_MIN_PTOKEN_FEE = '[send] Fetched min pToken fee';

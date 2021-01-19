@@ -14,6 +14,7 @@ export interface IInputFieldProps {
     onClickMax?: () => any;
     onClickAddressBook?: () => any;
     onClickScan?: () => any;
+    warning?: string;
 }
 
 interface IInputProps {
@@ -37,8 +38,9 @@ const InputField = (props: IInputFieldProps) => {
         onClickMax,
         onClickAddressBook,
         onClickScan,
+        warning,
     } = props;
-    const { error, warning } = meta;
+    const { error } = meta;
     const renderError = () => {
         return (
             <>

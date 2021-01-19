@@ -1,3 +1,4 @@
+import memoize from 'lodash/memoize';
 import walletValidator from 'wallet-address-validator';
 import { validation } from '@zilliqa-js/util';
 import BigNumber from 'bignumber.js';
@@ -6,7 +7,7 @@ import convert from 'src/utils/convert';
 import format from 'src/utils/format';
 import { keyServices } from 'incognito-js/build/web/browser';
 
-// const isSafeInteger = (number: number) => Math.abs(number) <= Number.MAX_SAFE_INTEGER;
+const isSafeInteger = (number: number) => Math.abs(number) <= Number.MAX_SAFE_INTEGER;
 
 const required = (value: any) => (isEmpty(value) ? 'Required' : undefined);
 
@@ -23,6 +24,9 @@ const number = (value: string) => {
     const bn = new BigNumber(value);
     if (bn.isNaN()) {
         return 'Must be a number';
+    }
+    if (value && !isSafeInteger(bn.toNumber())) {
+        return 'This number is too large!';
     }
     return undefined;
 };
@@ -43,27 +47,16 @@ const largerThan = (min: number, message?: string) => (value: string) =>
 const email = (message?: string) => (value: string) =>
     value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ? message || 'Invalid email address' : undefined;
 
-// const notInList = (list, { message } = {}) => (value) =>
-//   list?.includes(value)
-//     ? messageHanlder(message, value, list) ?? 'Please use another value'
-//     : undefined;
-
 const regexp = (pattern: RegExp, message = 'Invalid data') => (value: string) =>
     pattern && !pattern.test(value) ? message : undefined;
-
-// const maxBytes = (max, { message } = {}) => (value) =>
-//   value && new Blob([String(value)])?.size > max
-//     ? messageHanlder(message, value, max) ??
-//       `Must be less than or equal ${formatUtils.number(max)} bytes`
-//     : undefined;
 
 const incognitoAddress = (message?: string) => (value: string) => {
     if (value?.length < 15 || !keyServices.checkPaymentAddress(value)) {
         return message || 'Invalid address';
     }
-    // if (value && !keyServices.checkPaymentAddress(value)) {
-    //     return message || 'Use Unshield to exit Incognito';
-    // }
+    if (value && !keyServices.checkPaymentAddress(value)) {
+        return message || 'Use Unshield to exit Incognito';
+    }
     return undefined;
 };
 
@@ -119,7 +112,7 @@ const mecAddress = (message?: string) => (value: string) =>
     !walletValidator.validate(value, 'MEC', 'both') ? message || 'Invalid MEC address' : undefined;
 
 const ltcAddress = (message?: string) => (value: string) =>
-    !walletValidator.validate(value, 'LTC', 'both') ? message || 'Invalid LTC address' : undefined;
+    !new RegExp('^(ltc1|[LM])[a-zA-HJ-NP-Z0-9]{26,40}$').test(value) ? message || 'Invalid LTC address' : undefined;
 
 const kmdAddress = (message?: string) => (value: string) =>
     !walletValidator.validate(value, 'KMD', 'both') ? message || 'Invalid KMD address' : undefined;
@@ -214,32 +207,6 @@ const tomoAddress = (message?: string) => (value: string) =>
 //     : undefined;
 // };
 
-// const isUnShieldAddress = ({
-//   address,
-//   externalSymbol,
-//   isErc20Token,
-//   isBep2Token,
-// }) => {
-//   if (isBep2Token || externalSymbol === CONSTANT_COMMONS.CRYPTO_SYMBOL.BNB) {
-//     const regexp = new RegExp('^(t)?(bnb)([a-z0-9]{39})$'); // t(for testnet) bnb + 39 a-z0-9
-//     return regexp.test(address);
-//   }
-//   if (isErc20Token || CONSTANT_COMMONS.CRYPTO_SYMBOL.TOMO === externalSymbol) {
-//     return walletValidator.validate(
-//       address,
-//       CONSTANT_COMMONS.CRYPTO_SYMBOL.ETH,
-//       'both'
-//     );
-//   }
-//   if (externalSymbol === CONSTANT_COMMONS.CRYPTO_SYMBOL.ZIL) {
-//     return validation.isBech32(address);
-//   }
-//   if (address) {
-//     return walletValidator.validate(address, externalSymbol, 'both');
-//   }
-//   return false;
-// };
-
 const combinedAmount = [required, number, largerThan(0, 'Please enter an amount greater than 0')];
 
 const combinedNanoAmount = [required, isInteger, number, minValue(1, 'Please enter an amount greater than 1.')];
@@ -304,24 +271,26 @@ const combinedAccountName = [
     maxLength(50),
     regexp(/\w+$/i, 'Please use a valid account name (Ex: "Cat, Account-1,..").'),
 ];
+// t(for testnet) bnb + 39 a-z0-9
+const isBNBAddress = (address: string) => new RegExp('^(t)?(bnb)([a-z0-9]{39})$').test(address);
 
-// const isBNBAddress = (address) => {
-//   const regexp = new RegExp('^(t)?(bnb)([a-z0-9]{39})$'); // t(for testnet) bnb + 39 a-z0-9
-//   return regexp.test(address);
-// };
+const isZILAddress = (address: string) => validation.isBech32(address);
 
-// const isZILAddress = (address) => validation.isBech32(address);
+const address = (value: string) => {
+    return 'Invalid address';
+};
 
-const invalidAddress = (message: string) => () => message || 'Invalid address';
+const combineInvalidAddress = [required, address];
 
 const validator = {
     required,
     maxValue,
     minValue,
+    address,
     combinedAmount,
     combinedAccountName,
     combinedNanoAmount,
-    invalidAddress,
+    combineInvalidAddress,
     combinedIncognitoAddress,
     combinedETHAddress,
     combinedTOMOAddress,
@@ -360,6 +329,8 @@ const validator = {
     combinedZILAddress,
     combinedUnknownAddress,
     email,
+    isBNBAddress,
+    isZILAddress,
 };
 
 export default validator;

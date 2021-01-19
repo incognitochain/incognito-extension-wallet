@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash';
 import { ISendReducer } from './Send.interface';
 import {
     ACTION_FETCHING_FEE,
-    ACTION_FETCHED_FEE,
+    ACTION_FETCHED_EST_NATIVE_FEE,
     ACTION_FETCH_FAIL_FEE,
     ACTION_ADD_FEE_TYPE,
     ACTION_CHANGE_FEE_TYPE,
@@ -69,10 +69,10 @@ const defaultState: ISendReducer = {
     fast2x: false,
     totalFeePrv: 0,
     totalFeePrvText: '0',
-    userFeePrv: 0,
+    userFeePrv: '0',
     totalFeePToken: 0,
     totalFeePTokenText: '0',
-    userFeePToken: 0,
+    userFeePToken: '0',
     sending: false,
 };
 
@@ -120,7 +120,7 @@ const sendReducer = (
                 isFetching: true,
             };
         }
-        case ACTION_FETCHED_FEE: {
+        case ACTION_FETCHED_EST_NATIVE_FEE: {
             return {
                 ...state,
                 isFetched: true,
@@ -172,16 +172,6 @@ const sendReducer = (
             const { value, isUseTokenFee, valueOriginal } = action.payload;
             const field = isUseTokenFee ? 'feePTokenText' : 'feePrvText';
             const fieldOriginal = isUseTokenFee ? 'feePToken' : 'feePrv';
-            // const valueToNumber = convert.toString({
-            //   text: value,
-            //   autoCorrect: true,
-            //   toString: true,
-            // });
-            // const valueOriginal = convert.toOriginalAmount({
-            //   humanAmount: valueToNumber,
-            //   decimals: feePDecimals,
-            //   round: false,
-            // });
             return {
                 ...state,
                 [field]: value,
@@ -267,16 +257,9 @@ const sendReducer = (
             };
         }
         case ACTION_TOGGLE_FAST_FEE: {
-            const { fast2x, totalFee, totalFeeText, userFee, isUsedPRVFee } = action.payload;
-            const totalFeeField = isUsedPRVFee ? 'totalFeePrv' : 'totalFeePToken';
-            const totalFeeTextField = isUsedPRVFee ? 'totalFeePrvText' : 'totalFeePTokenText';
-            const userFeeField = isUsedPRVFee ? 'userFeePrv' : 'userFeePToken';
             return {
                 ...state,
-                fast2x,
-                [totalFeeField]: totalFee,
-                [totalFeeTextField]: totalFeeText,
-                [userFeeField]: userFee,
+                fast2x: !state.fast2x,
             };
         }
         case ACTION_UPDATE_DATA_FORCE_SEND: {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { format } from 'src/utils';
 import { BigNumber } from 'bignumber.js';
 import { COINS } from 'src/constants';
@@ -21,6 +22,8 @@ const {
 } = HISTORY;
 const { TX_STATUS, HISTORY_TYPE } = CONSTANT.TX_CONSTANT;
 
+// get status history
+
 const getStatusDataShield = (history: TxBridgeHistoryModel) => {
     const { status, statusMessage } = history;
     let statusColor = '';
@@ -39,15 +42,15 @@ const getStatusDataShield = (history: TxBridgeHistoryModel) => {
 };
 
 const getStatusDataUnShield = (history: any) => {
-    const { statusCode, statusMessage } = history;
+    const { status, statusMessage } = history;
     let statusColor;
     if (history?.isDecentralized) {
-        if (STATUS_CODE_UNSHIELD_DECENTRALIZED.COMPLETE === statusCode) {
+        if (STATUS_CODE_UNSHIELD_DECENTRALIZED.COMPLETE === status) {
             statusColor = COLORS.green;
         } else {
             statusColor = COLORS.colorGreyBold;
         }
-    } else if (STATUS_CODE_UNSHIELD_CENTRALIZED.COMPLETE === statusCode) {
+    } else if (STATUS_CODE_UNSHIELD_CENTRALIZED.COMPLETE === status) {
         statusColor = COLORS.green;
     } else {
         statusColor = COLORS.colorGreyBold;
@@ -61,7 +64,7 @@ export const getStatusData = (history: any) => {
         const statusData = getStatusDataShield(history);
         return statusData;
     }
-    if (history?.isUnshieldTx) {
+    if (history?.isUnShieldTx) {
         const statusData = getStatusDataUnShield(history);
         return statusData;
     }
@@ -94,12 +97,17 @@ export const getStatusData = (history: any) => {
     };
 };
 
+// get type text data
+
 export const getTypeData = (type: number | undefined, history: any, paymentAddress?: string) => {
     let typeText = '';
     if (!type) {
         return typeText;
     }
     switch (type) {
+        case TYPE.UNSHIELD:
+            typeText = 'Unshield';
+            break;
         case TYPE.SHIELD:
             typeText = history?.address ? 'Shield' : 'Receive';
             break;
@@ -150,6 +158,8 @@ export const getTypeHistoryReceive = ({
     }
     return type;
 };
+
+// filter and combine all histories
 
 export const filterCacheByReceive = (cacheHistory: TxCacheHistoryModel[], receiveHistory: TxHistoryReceiveModel[]) => {
     let _cacheHistory = [...cacheHistory];
@@ -212,6 +222,24 @@ export const filterReceiveByBridge = (
     return _receiveHistory;
 };
 
+export const filterCacheByBridge = (cacheHistory: TxCacheHistoryModel[], bridgeHistory: TxBridgeHistoryModel[]) => {
+    let _cacheHistory = [...cacheHistory];
+    try {
+        _cacheHistory = _cacheHistory.filter((ch) => {
+            let bhIndex = bridgeHistory.findIndex(
+                (bh) => bh.incognitoTx === ch.txId || bh.incognitoTxToPayOutsideChainFee === ch.txId,
+            );
+            if (bhIndex > -1) {
+                return false;
+            }
+            return true;
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    return _cacheHistory;
+};
+
 export const handleCombineHistory = ({
     cacheHistory,
     receiveHistory,
@@ -219,10 +247,11 @@ export const handleCombineHistory = ({
 }: {
     cacheHistory: TxCacheHistoryModel[];
     receiveHistory: TxHistoryReceiveModel[];
-    bridgeHistory: TxBridgeHistoryModel[];
+    bridgeHistory: TxBridgeHistoryModel[] | any[];
 }) => {
-    const _cacheHistory = filterCacheByReceive(cacheHistory, receiveHistory);
-    const _receiveHistory = filterReceiveByBridge(receiveHistory, bridgeHistory);
+    let _cacheHistory = filterCacheByReceive(cacheHistory, receiveHistory);
+    let _receiveHistory = filterReceiveByBridge(receiveHistory, bridgeHistory);
+    _cacheHistory = filterCacheByBridge(_cacheHistory, bridgeHistory);
     const combineHistory = [..._cacheHistory, ..._receiveHistory, ...bridgeHistory];
     return combineHistory.map((h: TxCacheHistoryModel | TxHistoryReceiveModel | TxBridgeHistoryModel) => ({
         id: h.id,
@@ -253,28 +282,35 @@ export const getHistoryCacheData = ({
     let usePrivacyFee = false;
     let paymentAddress = '';
     let type = historyType;
-    if (historyType === HISTORY_TYPE.SEND_NATIVE_TOKEN) {
-        amount = nativeTokenInfo.amount;
-        fee = nativeTokenInfo.fee;
-        useNativeFee = true;
-        usePrivacyFee = false;
-        paymentAddress = nativeTokenInfo.paymentInfoList[0].paymentAddressStr || '';
-        type = TYPE.SEND;
-    }
-    if (historyType === HISTORY_TYPE.SEND_PRIVACY_TOKEN) {
-        amount = privacyTokenInfo?.amount || '';
-        paymentAddress = privacyTokenInfo?.paymentInfoList[0].paymentAddressStr || '';
-        type = TYPE.SEND;
-        if (isEmpty(nativeTokenInfo.fee)) {
-            useNativeFee = false;
-            usePrivacyFee = true;
-            fee = privacyTokenInfo?.fee || '';
-        }
-        if (isEmpty(privacyTokenInfo?.fee)) {
+    switch (historyType) {
+        case HISTORY_TYPE.SEND_NATIVE_TOKEN: {
+            amount = nativeTokenInfo.amount;
+            fee = nativeTokenInfo.fee;
             useNativeFee = true;
             usePrivacyFee = false;
-            fee = nativeTokenInfo.fee;
+            paymentAddress = nativeTokenInfo.paymentInfoList[0]?.paymentAddressStr || '';
+            type = TYPE.SEND;
+            break;
         }
+        case HISTORY_TYPE.SEND_PRIVACY_TOKEN:
+        case HISTORY_TYPE.BURNING_REQUEST: {
+            amount = privacyTokenInfo?.amount || '';
+            paymentAddress = privacyTokenInfo?.paymentInfoList[0]?.paymentAddressStr || '';
+            type = TYPE.SEND;
+            if (isEmpty(nativeTokenInfo.fee)) {
+                useNativeFee = false;
+                usePrivacyFee = true;
+                fee = privacyTokenInfo?.fee || '';
+            }
+            if (isEmpty(privacyTokenInfo?.fee)) {
+                useNativeFee = true;
+                usePrivacyFee = false;
+                fee = nativeTokenInfo.fee;
+            }
+            break;
+        }
+        default:
+            break;
     }
     const symbol = selectedPrivacy.symbol || selectedPrivacy.pSymbol;
     const feeSymbol = useNativeFee ? COINS.PRV.symbol : selectedPrivacy.symbol || selectedPrivacy.pSymbol;
@@ -402,13 +438,13 @@ export const getHistoryReceiveData = ({
     }
 };
 
-export const getHistoryBridgeData = ({
-    selectedPrivacy,
+export const getShieldHistoryBridgeData = ({
     history,
+    selectedPrivacy,
     decimalDigits,
 }: {
+    history: TxBridgeHistoryModel;
     selectedPrivacy: ISelectedPrivacy;
-    history: any;
     decimalDigits: boolean;
 }) => {
     try {
@@ -422,8 +458,7 @@ export const getHistoryBridgeData = ({
             decentralized,
             statusMessage,
         } = history;
-        const depositTmpAddress = addressType === TYPE.SHIELD && address;
-        const isShieldTx = !!depositTmpAddress;
+        const isShieldTx = true;
         const isDecentralized = decentralized === 1;
         const { statusColor } = getStatusData({
             isShieldTx,
@@ -433,12 +468,12 @@ export const getHistoryBridgeData = ({
         const type = getTypeData(addressType, history);
         const timeFormated = format.formatUnixDateTime(createdAt);
         const lockTime = new Date(createdAt).getTime();
-        const amountFormated = format.formatAmount({
+        let amountFormated = format.formatAmount({
             originalAmount: new BigNumber(incognitoAmount).toNumber(),
             decimals: selectedPrivacy.pDecimals,
             decimalDigits,
         });
-        const amountFormatedNoClip = format.formatAmount({
+        let amountFormatedNoClip = format.formatAmount({
             originalAmount: new BigNumber(incognitoAmount).toNumber(),
             decimals: selectedPrivacy?.pDecimals,
             decimalDigits,
@@ -469,8 +504,160 @@ export const getHistoryBridgeData = ({
             statusColor,
             canRetryExpiredShield,
             canRemoveExpiredOrPendingShield,
+            isShieldTx,
         };
+    } catch (error) {
+        console.debug(error);
+    }
+};
+
+export const getUnshieldHistoryBridgeData = ({
+    selectedPrivacy,
+    decimalDigits,
+    history,
+    historyCache,
+}: {
+    selectedPrivacy: ISelectedPrivacy;
+    decimalDigits: boolean;
+    history: TxBridgeHistoryModel;
+    historyCache: TxCacheHistoryModel[];
+}) => {
+    if (!history) {
+        return;
+    }
+    const {
+        createdAt,
+        status,
+        statusMessage,
+        addressType,
+        decentralized,
+        expiredAt,
+        privacyFee = '',
+        tokenFee = '',
+        incognitoAmount,
+        burnPrivacyFee,
+        burnTokenFee,
+    } = history;
+    const isUnShieldTx = true;
+    const { pDecimals } = selectedPrivacy;
+    const isDecentralized = decentralized === 1;
+    const { statusColor } = getStatusData({
+        isUnShieldTx,
+        isDecentralized,
+        status,
+    });
+    const type = getTypeData(addressType, history);
+    const timeFormated = format.formatUnixDateTime(createdAt);
+    const lockTime = new Date(createdAt).getTime();
+    const expiredAtFormated = isDecentralized ? '' : format.formatUnixDateTime(expiredAt);
+    let bnIncognitoAmount = new BigNumber(incognitoAmount);
+    let useNativeFee = !!privacyFee;
+    let usePrivacyFee = !!tokenFee;
+    let amountFormated = '';
+    let amountFormatedNoClip = '';
+    let inchainFee = new BigNumber('0');
+    let outchainFee = useNativeFee ? new BigNumber(privacyFee) : new BigNumber(tokenFee);
+    let inchainFeeFormatedNoClip = '';
+    let outchainFeeFormatedNoClip = '';
+    const symbol = selectedPrivacy.symbol || selectedPrivacy.pSymbol || '';
+    let feeSymbol = useNativeFee ? COINS.PRV.symbol : symbol;
+    const burnTx = historyCache.find(
+        (hc) => hc.txId === history.incognitoTxToPayOutsideChainFee || history.incognitoTx,
+    );
+    try {
+        if (selectedPrivacy.isDecentralized) {
+            if (burnTx) {
+                const { fee } = burnTx;
+                const originalFee = new BigNumber(fee);
+                inchainFee = originalFee;
+            }
+        } else {
+            let originalFee: any = useNativeFee ? burnPrivacyFee : burnTokenFee;
+            if (!originalFee && burnTx) {
+                const { fee } = burnTx;
+                originalFee = fee;
+            }
+            originalFee = new BigNumber(originalFee);
+            inchainFee = originalFee.multipliedBy(2);
+            if (usePrivacyFee) {
+                // use token fee
+                bnIncognitoAmount = bnIncognitoAmount.minus(originalFee);
+            }
+        }
+        inchainFeeFormatedNoClip = format.formatAmount({
+            originalAmount: inchainFee.toNumber(),
+            decimals: useNativeFee ? COINS.PRV.pDecimals : pDecimals,
+            decimalDigits: false,
+            clipAmount: false,
+        });
+        outchainFeeFormatedNoClip = format.formatAmount({
+            originalAmount: outchainFee.toNumber(),
+            decimals: useNativeFee ? COINS.PRV.pDecimals : pDecimals,
+            decimalDigits: false,
+            clipAmount: false,
+        });
+        amountFormated = format.formatAmount({
+            originalAmount: bnIncognitoAmount.toNumber(),
+            decimals: selectedPrivacy.pDecimals,
+            decimalDigits,
+            clipAmount: true,
+        });
+        amountFormatedNoClip = format.formatAmount({
+            originalAmount: bnIncognitoAmount.toNumber(),
+            decimals: selectedPrivacy.pDecimals,
+            decimalDigits: false,
+            clipAmount: false,
+        });
+        return {
+            ...history,
+            statusMessage,
+            type,
+            timeFormated,
+            lockTime,
+            formatType: HISTORY_FORMAT_TYPE.bridge,
+            symbol,
+            expiredAtFormated,
+            statusColor,
+            amountFormated,
+            amountFormatedNoClip,
+            inchainFeeFormatedNoClip,
+            outchainFeeFormatedNoClip,
+            isUnShieldTx,
+            feeSymbol,
+            memo: history.memo || burnTx?.memo,
+            inchainFee: inchainFee.toNumber() === 0 ? '' : inchainFee.toString(),
+            outchainFee: outchainFee.toString(),
+        };
+    } catch (error) {
+        console.debug(error);
+    }
+};
+
+export const getHistoryBridgeData = ({
+    selectedPrivacy,
+    decimalDigits,
+    history,
+    historyCache,
+}: {
+    selectedPrivacy: ISelectedPrivacy;
+    decimalDigits: boolean;
+    history: TxBridgeHistoryModel;
+    historyCache: TxCacheHistoryModel[];
+}) => {
+    const { address, addressType } = history;
+    const depositTmpAddress = addressType === TYPE.SHIELD && address;
+    const isShieldTx = !!depositTmpAddress;
+    const isUnShieldTx = !isShieldTx && addressType === TYPE.UNSHIELD;
+    let _history = { ...history, isShieldTx, isUnShieldTx };
+    try {
+        if (isShieldTx) {
+            return getShieldHistoryBridgeData({ history, selectedPrivacy, decimalDigits });
+        }
+        if (isUnShieldTx) {
+            return getUnshieldHistoryBridgeData({ selectedPrivacy, decimalDigits, history, historyCache });
+        }
     } catch (error) {
         throw error;
     }
+    return _history;
 };
