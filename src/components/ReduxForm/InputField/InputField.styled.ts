@@ -6,12 +6,13 @@ export const Styled = styled.div`
     .wrapper {
         .input-container > input {
             text-align: right;
-            padding-right: 40px;
+            padding-right: 50px;
         }
         .input-container .suffix {
             right: 10px;
             z-index: 2;
-            max-width: 40px;
+            width: 40px;
+            text-align: center;
         }
         .input-not-suffix > input {
             padding-right: 10px;
