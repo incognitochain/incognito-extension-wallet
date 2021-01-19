@@ -2,12 +2,15 @@ import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { LoadingIcon } from 'src/components';
-import { TxHistoryItem } from './History.interface';
+import { InfoIcon, LoadingIcon } from 'src/components';
+import { useDispatch, useSelector } from 'react-redux';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { actionRemoveTooltip, actionShowTooltip } from 'src/module/Tooltip';
+import { ITokenLanguage } from 'src/i18n';
+import { TxHistoryItem } from 'src/module/History';
 
 const Styled = styled.div`
     max-height: 304px;
-    overflow: scroll;
     .history-item {
         margin-bottom: 30px;
     }
@@ -33,16 +36,40 @@ const Styled = styled.div`
     .loading-icon {
         margin: auto;
     }
+    .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .row > button {
+        margin-right: 15px;
+    }
 `;
 
+const infoId = 'HistoryItemInfo';
 const HistoryItem = React.memo((props: TxHistoryItem) => {
     const { id, type, amountFormated, timeFormated, statusMessage } = props;
     const history = useHistory();
+    const dispatch = useDispatch();
+    const translate: ITokenLanguage = useSelector(translateByFieldSelector)('token');
+    const infoIconRef: any = React.useRef({});
+    const onShowTooltip = () => {
+        dispatch(
+            actionShowTooltip({
+                id: infoId,
+                text: translate.toolTip.txInfo,
+                ref: infoIconRef ? infoIconRef.current : null,
+                timeout: 0,
+            }),
+        );
+    };
+    const onRemoveTooltip = () => dispatch(actionRemoveTooltip(infoId));
     return (
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
         <Link
             to="#"
             onClick={(e: SyntheticEvent) => {
+                onRemoveTooltip();
                 e.preventDefault();
                 history.push(`/history/${id}`, { history: props });
             }}
@@ -54,7 +81,10 @@ const HistoryItem = React.memo((props: TxHistoryItem) => {
             </div>
             <div className="hook">
                 <p className="sub-text">{timeFormated}</p>
-                <p className="sub-text">{statusMessage}</p>
+                <div className="row">
+                    <p className="sub-text">{statusMessage}</p>
+                    <InfoIcon ref={infoIconRef} onMouseOver={onShowTooltip} onMouseOut={onRemoveTooltip} />
+                </div>
             </div>
         </Link>
     );

@@ -68,6 +68,10 @@ const language: ILanguage = {
         error: {
             tokenIdRequired: 'Token id is required',
         },
+        toolTip: {
+            coinInfo: 'See coin info',
+            txInfo: 'See tx',
+        },
     },
     account: {
         create: {
