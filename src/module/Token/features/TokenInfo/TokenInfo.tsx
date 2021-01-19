@@ -2,11 +2,9 @@ import React from 'react';
 import Header from 'src/components/Header';
 import { CopyIcon, OpenLinkIcon, QuestionIcon } from 'src/components/Icons';
 import { TokenBasic } from 'src/module/Token';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { IGeneralLanguage, ITokenLanguage } from 'src/i18n';
-import copy from 'copy-to-clipboard';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { ITokenLanguage } from 'src/i18n';
 import { COLORS } from 'src/styles';
 import withTokenInfo, { IInfo } from './TokenInfo.enhance';
 import { Styled } from './TokenInfo.styled';
@@ -20,7 +18,7 @@ const InfoItem = ({ label, value, copyable, link }: IInfo) => {
             {!!label && <p className="ellipsis sub-text">{label}</p>}
             <div className="hook flex">
                 {!!value && <p className="ellipsis fw-medium main-text">{value}</p>}
-                {copyable && <CopyIcon />}
+                {copyable && <CopyIcon text={value} />}
                 {!!link && <OpenLinkIcon onClick={() => window.open(link)} />}
             </div>
         </div>
