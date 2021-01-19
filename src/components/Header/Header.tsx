@@ -32,12 +32,15 @@ const Styled = styled.div`
         align-items: center;
         width: 100%;
     }
+    &.remove-margin-top {
+        margin-top: 0px;
+    }
 `;
 
 const Header = (props: IMergeProps & any) => {
-    const { rightHeader, selectAccount, handleClick, renderHeaderTitle, title }: IMergeProps = props;
+    const { rightHeader, selectAccount, handleClick, renderHeaderTitle, title, removeMarginTop }: IMergeProps = props;
     return (
-        <Styled className="header">
+        <Styled className={`header ${removeMarginTop ? 'remove-margin-top' : ''}`}>
             {title && (
                 <div className="left">
                     <ArrowLeftIcon onClick={handleClick} />
