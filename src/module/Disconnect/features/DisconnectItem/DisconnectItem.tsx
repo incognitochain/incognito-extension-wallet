@@ -2,7 +2,6 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { PRV, PRV_ID } from 'src/constants/coin';
-import { defaultAccountSelector } from 'src/module/Account';
 import { getPrivacyDataByTokenIDSelector } from 'src/module/Token';
 import convert from 'src/utils/convert';
 import withEnhance from './DisconnectItem.enhance';

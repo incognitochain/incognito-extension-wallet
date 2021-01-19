@@ -84,10 +84,7 @@ export const actionFetch = (accountName?: string) => async (dispatch: Dispatch, 
     try {
         await dispatch(actionFetching());
         loadSeparator();
-        let task: any[] = [
-            actionFetchPTokenList()(dispatch, getState),
-            actionFetchPCustomTokenList()(dispatch, getState),
-        ];
+        let task: any[] = [actionFetchPCustomTokenList()(dispatch, getState)];
         if (!init) {
             task = [...task, actionInitWallet()(dispatch, getState)];
         } else {
@@ -132,6 +129,7 @@ export const actionFetchSdkConfig = () => async (dispatch: Dispatch, getState: (
         });
         await goServices.implementGoMethodUseWasm();
         await dispatch(actionFetchedSdkConfig({}));
+        await actionFetchPTokenList()(dispatch, getState);
     } catch (error) {
         dispatch(actionFetchFail(error));
         throw error;

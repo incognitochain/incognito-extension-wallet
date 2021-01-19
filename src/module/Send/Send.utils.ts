@@ -2,7 +2,7 @@ import { ERROR_MESSAGE, ERROR_CODE } from 'src/constants/error';
 import floor from 'lodash/floor';
 import format from 'src/utils/format';
 import BigNumber from 'bignumber.js';
-import { keyServices, SDKError } from 'incognito-js/build/web/browser';
+import { keyServices } from 'incognito-js/build/web/browser';
 import { ISelectedPrivacy } from 'src/module/Token';
 import { COINS } from 'src/constants';
 import { IRootState } from 'src/redux/interface';

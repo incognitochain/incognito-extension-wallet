@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FONT_SIZES } from 'src/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { CopyIcon, QrCodeIcon, QrCodeModal } from 'src/components';
 import { actionToggleModal } from 'src/components/Modal';
 import { CONSTANT_COLORS } from 'src/constants';
-import { translateSelector } from 'src/module/Configs';
 
 export interface IProps {
     title: string | number;
@@ -54,7 +53,6 @@ const Styled = styled.div`
 const Detail = (props: IProps) => {
     const { title, desc } = props;
     const dispatch = useDispatch();
-    const translate = useSelector(translateSelector).general;
 
     const handleShowQrCode = () =>
         dispatch(
