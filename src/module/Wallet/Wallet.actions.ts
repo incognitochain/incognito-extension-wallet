@@ -11,7 +11,7 @@ import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wall
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import { walletDataSelector, walletIdSelector, walletSelector } from './Wallet.selector';
 import { IDataInitWallet, IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
-import { actionFollowDefaultToken, actionResetFollowDefaultToken } from '../Token';
+import { actionFollowDefaultToken } from '../Token';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -50,10 +50,14 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
         batch(() => {
             dispatch(actionSetListAccount(listAccount));
             dispatch(actionSelectAccount(defaultAccount.name));
-            dispatch(actionFetched(payload));
+        });
+
+        await actionFollowDefaultToken(defaultAccount)(dispatch, getState);
+
+        batch(() => {
             dispatch(actionCreatePassword(''));
             dispatch(actionChangePassword(pass));
-            dispatch(actionResetFollowDefaultToken(mainnet));
+            dispatch(actionFetched(payload));
         });
 
         return walletId;
@@ -109,21 +113,11 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
     }
 
     const wallet = await loadWallet(walletId, pass);
-    const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+    const listAccount: AccountInstance[] = [...wallet.masterAccount.getAccounts()];
 
     await wallet.sync();
 
     const newList = wallet.masterAccount.getAccounts();
-
-    if (listAccount.length !== newList.length) {
-        for (const account of newList) {
-            if (!listAccount.includes(account)) {
-                // eslint-disable-next-line no-await-in-loop
-                await actionFollowDefaultToken(account)(dispatch, getState);
-            }
-        }
-        actionSaveWallet()(dispatch, getState);
-    }
 
     const defaultAccount = wallet.masterAccount.getAccountByName(defaultAccountName) || listAccount[0];
     if (defaultAccount) {
@@ -132,6 +126,15 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
             dispatch(actionSelectAccount(defaultAccount.name));
             dispatch(actionLoadWallet(wallet));
         });
+
+        if (listAccount.length !== newList.length) {
+            for (const account of newList) {
+                if (!listAccount.includes(account)) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await actionFollowDefaultToken(account)(dispatch, getState);
+                }
+            }
+        }
     }
 };
 

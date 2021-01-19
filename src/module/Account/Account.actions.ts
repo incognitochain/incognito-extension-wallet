@@ -27,7 +27,6 @@ import {
     createAccountSelector,
     importAccountSelector,
 } from './Account.selector';
-import { apiURLSelector } from '../Preload';
 
 export const actionFetched = (payload: any) => ({
     type: ACTION_FETCHED,
