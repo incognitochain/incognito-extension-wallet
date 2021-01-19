@@ -6,7 +6,6 @@ import { tooltipSelector } from './Tooltip.selector';
 
 const enhance = (WrappedComponent: React.FunctionComponent<IProps>) => (props: IProps) => {
     const tooltips = useSelector(tooltipSelector);
-
     return <WrappedComponent {...props} tooltips={tooltips} />;
 };
 

@@ -214,6 +214,10 @@ export interface ITokenLanguage {
     error: {
         tokenIdRequired: string;
     };
+    toolTip: {
+        coinInfo: string;
+        txInfo: string;
+    };
 }
 
 export interface IGeneralLanguage {

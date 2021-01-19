@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Header } from 'src/components';
-import { ILanguage } from 'src/i18n';
-import { themeSelector, translateSelector } from 'src/module/Configs';
+import { ILanguage, ITokenLanguage } from 'src/i18n';
+import { themeSelector, translateByFieldSelector, translateSelector } from 'src/module/Configs';
 import { Amount, Balance, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { route as routeTokenInfo } from 'src/module/Token/features/TokenInfo';
 import { combineHistorySelector, HistoryList, historySelector, receiveHistoryDataSelector } from 'src/module/History';
@@ -10,6 +10,7 @@ import { route as routeSend } from 'src/module/Send';
 import { useHistory } from 'react-router-dom';
 import { InfoIcon, LoadingIcon } from 'src/components/Icons';
 import { route as routeWallet } from 'src/module/Wallet';
+import { actionRemoveTooltip, actionShowTooltip } from 'src/module/Tooltip';
 import withDetail, { IMergedProps } from './Detail.enhance';
 import { Styled } from './Detail.styled';
 
@@ -42,20 +43,45 @@ export const GroupButton = React.memo(() => {
     return <Button title={translateDetail.btnSend} onClick={handleSend} />;
 });
 
+const InfoId = 'Info';
 const Detail = React.memo((props: IMergedProps & any) => {
     const { handleOnEndReached }: IMergedProps = props;
+    const translate: ITokenLanguage = useSelector(translateByFieldSelector)('token');
     const token = useSelector(selectedPrivacySelector);
     const theme = useSelector(themeSelector);
     const { isFetching, isFetched } = useSelector(historySelector);
     const histories = useSelector(combineHistorySelector);
     const { isFetching: isLoadingReceive, refreshing: isRefreshingReceive } = useSelector(receiveHistoryDataSelector);
     const history = useHistory();
+    const dispatch = useDispatch();
+    const infoIconRef: any = React.useRef({});
+    const onShowTooltip = () => {
+        dispatch(
+            actionShowTooltip({
+                id: InfoId,
+                text: translate.toolTip.coinInfo,
+                ref: infoIconRef ? infoIconRef.current : null,
+                timeout: 0,
+            }),
+        );
+    };
+    const onRemoveTooltip = () => dispatch(actionRemoveTooltip('Info'));
     return (
         <Styled theme={theme}>
             <Header
                 onGoBack={() => history.push(routeWallet)}
                 title={token.name}
-                customHeader={<InfoIcon onClick={() => history.push(routeTokenInfo)} />}
+                customHeader={
+                    <InfoIcon
+                        ref={infoIconRef}
+                        onMouseOver={onShowTooltip}
+                        onMouseOut={onRemoveTooltip}
+                        onClick={() => {
+                            onRemoveTooltip();
+                            history.push(routeTokenInfo);
+                        }}
+                    />
+                }
             />
             <TokenBalance />
             <GroupButton />
