@@ -18,7 +18,7 @@ const InfoItem = ({ label, value, copyable, link }: IInfo) => {
             {!!label && <p className="ellipsis sub-text">{label}</p>}
             <div className="hook flex">
                 {!!value && <p className="ellipsis fw-medium main-text">{value}</p>}
-                {copyable && <CopyIcon />}
+                {copyable && <CopyIcon text={value} />}
                 {!!link && <OpenLinkIcon onClick={() => window.open(link)} />}
             </div>
         </div>
