@@ -15,6 +15,7 @@ const language: ILanguage = {
         btnReload: 'Reload',
         loadingTx: `Please do not navigate away till this<br />window closes.`,
         btnRetry: 'Retry',
+        switched: 'Switched',
     },
     home: {
         title: 'Incognito Wallet',

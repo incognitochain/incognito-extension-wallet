@@ -224,6 +224,7 @@ export interface IGeneralLanguage {
     btnReload: string;
     loadingTx: string;
     btnRetry: string;
+    switched: string;
 }
 
 export interface IShieldLanguage {
