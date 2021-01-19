@@ -9,7 +9,7 @@ import { route as addressBookRoute } from 'src/module/AddressBook';
 import { route as keychainRoute } from 'src/module/Keychain';
 import { chainURLSelector } from 'src/module/Preload';
 import { actionLogout } from 'src/module/Password';
-import { actionToggleDecimalDigits, actionToggleHomeConfigs } from './Setting.actions';
+import { actionToggleDecimalDigits, actionToggleHomeConfigs } from 'src/module/Setting/Setting.actions';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, settingSelector } from './Setting.selector';

@@ -14,6 +14,7 @@ export interface IProps {
     selectAccount?: boolean;
     canSearch?: boolean;
     customHeader?: React.FunctionComponent | React.ReactElement;
+    removeMarginTop?: boolean;
 }
 
 export interface IMergeProps extends TInner, IProps {}
