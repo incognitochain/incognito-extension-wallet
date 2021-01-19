@@ -11,6 +11,7 @@ import { TxHistoryItem } from 'src/module/History';
 
 const Styled = styled.div`
     max-height: 304px;
+    overflow: scroll;
     .history-item {
         margin-bottom: 30px;
     }

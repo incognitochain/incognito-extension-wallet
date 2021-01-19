@@ -10,7 +10,7 @@ const Styled = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 30px 0;
+    margin-bottom: 30px;
     .left {
         display: flex;
         flex-direction: row;
@@ -32,15 +32,12 @@ const Styled = styled.div`
         align-items: center;
         width: 100%;
     }
-    &.remove-margin-top {
-        margin-top: 0px;
-    }
 `;
 
 const Header = (props: IMergeProps & any) => {
-    const { rightHeader, selectAccount, handleClick, renderHeaderTitle, title, removeMarginTop }: IMergeProps = props;
+    const { rightHeader, selectAccount, handleClick, renderHeaderTitle, title }: IMergeProps = props;
     return (
-        <Styled className={`header ${removeMarginTop ? 'remove-margin-top' : ''}`}>
+        <Styled className="header">
             {title && (
                 <div className="left">
                     <ArrowLeftIcon onClick={handleClick} />
