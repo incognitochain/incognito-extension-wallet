@@ -8,12 +8,12 @@ import { translateByFieldSelector } from 'src/module/Configs';
 import { route as addressBookRoute } from 'src/module/AddressBook';
 import { route as keychainRoute } from 'src/module/Keychain';
 import { chainURLSelector } from 'src/module/Preload';
+import { actionLogout } from 'src/module/Password';
 import { actionToggleDecimalDigits, actionToggleHomeConfigs } from './Setting.actions';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, settingSelector } from './Setting.selector';
 import { route as networkRoute } from './features/Network';
-import { actionLogout } from '../Password';
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const translate: ISettingLanguage = useSelector(translateByFieldSelector)('setting');

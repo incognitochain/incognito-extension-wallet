@@ -1,4 +1,9 @@
-import { ACTION_CREATE_PASSWORD, ACTION_CHANGE_PASSWORD, ACTION_LOGIN, ACTION_LOGOUT } from './Password.events';
+import {
+    ACTION_CREATE_PASSWORD,
+    ACTION_CHANGE_PASSWORD,
+    ACTION_LOGIN,
+    ACTION_LOGOUT,
+} from 'src/module/Password/Password.events';
 import { IPasswordReducers } from './Password.interface';
 
 const initialState: IPasswordReducers = {

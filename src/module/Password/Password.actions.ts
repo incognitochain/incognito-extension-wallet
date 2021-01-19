@@ -4,8 +4,13 @@ import { walletIdSelector } from 'src/module/Wallet';
 import { loadWallet } from 'src/module/Wallet/Wallet.utils';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import APP_CONSTANT from 'src/constants/app';
-import { ACTION_CHANGE_PASSWORD, ACTION_CREATE_PASSWORD, ACTION_LOGIN, ACTION_LOGOUT } from './Password.events';
-import { chainURLSelector } from '../Preload';
+import { chainURLSelector } from 'src/module/Preload/Preload.selector';
+import {
+    ACTION_CHANGE_PASSWORD,
+    ACTION_CREATE_PASSWORD,
+    ACTION_LOGIN,
+    ACTION_LOGOUT,
+} from 'src/module/Password/Password.events';
 
 const loginEvent = (payload: string) => ({
     type: ACTION_LOGIN,
