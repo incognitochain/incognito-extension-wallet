@@ -96,7 +96,11 @@ export const Followed = React.memo((props: ITokenChildProps) => {
 export const Symbol = React.memo((props: ITokenChildProps) => {
     const { tokenId } = props;
     const token: ISelectedPrivacy = useSelector(getPrivacyDataByTokenIDSelector)(tokenId);
-    return <TextStyled className="sub-text ellipsis">{token.symbol || token.pSymbol}</TextStyled>;
+    return (
+        <TextStyled className="sub-text ellipsis">{`${token.symbol || token.pSymbol} (${
+            token.networkName
+        })`}</TextStyled>
+    );
 });
 
 const Token = (props: IMergePropsToken) => {
