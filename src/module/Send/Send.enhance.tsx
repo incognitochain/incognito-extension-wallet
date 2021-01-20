@@ -1,6 +1,6 @@
 import React from 'react';
 import { compose } from 'recompose';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withLayout } from 'src/components/Layout';
 import { change, focus, InjectedFormProps, reduxForm } from 'redux-form';
@@ -13,16 +13,20 @@ import { route as routeDetail } from 'src/module/Token/features/Detail';
 import { useHistory } from 'react-router-dom';
 import { withHeaderApp } from 'src/components/Header';
 import withConnect from 'src/App.enhanceConnect';
+import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
-import { standardizedAddress } from './Send.utils';
+import { getErrorMsgSend, standardizedAddress } from './Send.utils';
 import { actionFetchFeeByMax } from './Send.actions';
 import withInit, { TInnerInit } from './Send.enhanceInit';
 import withFee from './Send.enhanceFee';
 import { FORM_CONFIGS } from './Send.constant';
 import withForceSend, { TInner as TInnerForceSend } from './Send.withForceSend';
+import { ISendData, ISendFormData } from './Send.interface';
+import { sendDataSelector } from './Send.selector';
+import withUnShield, { TInnerUnshield } from './Send.enhanceUnshield';
 
 export interface IMergeProps
     extends InjectedFormProps<any, any>,
@@ -30,20 +34,22 @@ export interface IMergeProps
         TInnerAddress,
         TInnerAmount,
         TInnerSend,
+        TInnerUnshield,
         TInnerForceSend {
     onClickMax: () => any;
-    // eslint-disable-next-line no-unused-vars
     onChangeField: (value: string, field: any) => any;
     onClickAddressBook: () => any;
     onClickScan: () => any;
     onGoBack: () => any;
+    handleSend: (payload: ISendFormData) => any;
 }
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
-    const { clearForceSendData, clearCurrentRequest } = props;
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergeProps & any) => {
+    const { clearForceSendData, clearCurrentRequest, handleSendAnonymously, handleUnShieldCrypto }: IMergeProps = props;
     const history = useHistory();
     const dispatch = useDispatch();
     const handleStandardizedAddress = (value: string) => standardizedAddress(value);
+    const { disabledForm, isSend, isUnShield }: ISendData = useSelector(sendDataSelector);
     const onChangeField = async (value: string, field: string) => {
         let val: any = value;
         if (field === 'toAddress') {
@@ -107,6 +113,37 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         history.push(routeDetail);
     };
 
+    const handleSend = async (payload: ISendFormData) => {
+        try {
+            if (disabledForm) {
+                return;
+            }
+            await dispatch(
+                actionToggleModal({
+                    data: <LoadingTx />,
+                    isLoadingModal: true,
+                }),
+            );
+            if (isSend) {
+                await handleSendAnonymously(payload);
+            }
+            if (isUnShield) {
+                await handleUnShieldCrypto();
+            }
+        } catch (error) {
+            const errorMsg = getErrorMsgSend(error);
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: errorMsg,
+                    type: TOAST_CONFIGS.error,
+                }),
+            );
+        } finally {
+            await dispatch(actionToggleModal({}));
+        }
+    };
+
     return (
         <ErrorBoundary>
             <WrappedComponent
@@ -117,6 +154,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     onClickAddressBook,
                     onClickScan,
                     onGoBack,
+                    showConnectStatus: true,
+                    handleSend,
                 }}
             />
         </ErrorBoundary>
@@ -135,6 +174,7 @@ export default compose<IMergeProps, any>(
     withValAmount,
     withForceSend,
     withSend,
+    withUnShield,
     withConnect,
     enhance,
     withHeaderApp,

@@ -38,6 +38,10 @@ export const Styled = styled.div`
     .error-block {
         margin-top: 10px;
     }
+    .fastfee-icon {
+        margin-right: 5px;
+        margin-left: unset;
+    }
 `;
 
 export const Row = styled.div`

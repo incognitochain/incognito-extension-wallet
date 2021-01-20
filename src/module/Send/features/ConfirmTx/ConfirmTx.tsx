@@ -4,13 +4,12 @@ import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
-import { getHistoryCacheDetailSelector } from 'src/module/History';
 import HistoryItem, { IHistoryItem } from 'src/module/History/features/HistoryItem';
-import { serverSelector } from 'src/module/Preload';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { IConfirmTxLanguage } from 'src/i18n';
+import { serverSelector } from 'src/module/Preload';
 import { route as routeDetail } from 'src/module/Token/features/Detail';
-import { TxHistoryModelParam } from 'incognito-js/build/web/browser';
+import { ConfirmTxItem } from './ConfirmTx.interface';
 
 const Styled = styled.div`
     p.confirm-title {
@@ -22,36 +21,35 @@ const Styled = styled.div`
 const ConfirmTx = () => {
     const { state }: { state: any } = useLocation();
     const historyState = useHistory();
-    const { history }: { history: TxHistoryModelParam } = state;
-    const server = useSelector(serverSelector);
+    const { confirmTx }: { confirmTx: ConfirmTxItem } = state;
     const confirmLanguage: IConfirmTxLanguage = useSelector(translateByFieldSelector)('send.confirm');
-    const tx: any = useSelector(getHistoryCacheDetailSelector)(history);
-    if (!tx || !confirmLanguage) {
+    const server = useSelector(serverSelector);
+    if (!confirmTx) {
         return <Redirect to="/" />;
     }
     const itemsFactories: IHistoryItem[] = [
         {
             title: confirmLanguage.txId,
-            desc: tx.txId,
-            copyData: tx.txId,
-            link: `${server.exploreChainURL}/tx/${tx.txId}`,
+            desc: confirmTx.txId,
+            copyData: confirmTx.txId,
+            link: `${server.exploreChainURL}/tx/${confirmTx.txId}`,
         },
         {
             title: confirmLanguage.toAddress,
-            desc: tx.paymentAddress,
-            copyData: tx.paymentAddress,
+            desc: confirmTx.paymentAddress,
+            copyData: confirmTx.paymentAddress,
         },
         {
             title: confirmLanguage.time,
-            desc: tx.timeFormated,
+            desc: confirmTx.time,
         },
         {
             title: confirmLanguage.amount,
-            desc: `${tx.amountFormatedNoClip} ${tx.symbol}`,
+            desc: `${confirmTx.amount} ${confirmTx.symbol}`,
         },
         {
             title: confirmLanguage.fee,
-            desc: `${tx.feeFormated} ${tx.feeSymbol}`,
+            desc: `${confirmTx.fee} ${confirmTx.feeSymbol}`,
         },
     ];
     return (

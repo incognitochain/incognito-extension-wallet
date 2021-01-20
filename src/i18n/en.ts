@@ -178,6 +178,8 @@ const language: ILanguage = {
         contract: 'Contract',
         resume: 'Resume',
         retryCentralizedMsg: 'Your request has been sent, we will process it soon. The history status will be updated',
+        inchainFee: 'In-chain fee',
+        outchainFee: 'Out-chain fee',
     },
     addressBook: {
         headerTitle: 'Address book',
@@ -249,7 +251,8 @@ const language: ILanguage = {
     welcome: {
         newUser: {
             title1: 'Encrypt access to your funds.',
-            title2: 'Create a password to protect this wallet. For your eyes only.',
+            title2:
+                'Create a password to protect this wallet and access your transaction history. For your eyes only; no one will be able to help you recover it. Keep it safe.',
             createPass: 'Create password (min. 10 chars)',
             confirmCreatePass: 'Enter the password again',
             createKey: 'Create new key',
@@ -261,7 +264,7 @@ const language: ILanguage = {
         forgotPass: {
             title1: 'Forgot your password?',
             title2:
-                'You’ll need to generate a new wallet using a new password. Then you can either create a new master key to start again from fresh, or import a master key phrase to recover your existing funds.',
+                'Simply enter a new one. To start fresh, create a new master key. To recover existing funds, import a phrase. Note that existing transaction history cannot be recovered without its original password.',
             createPass: 'Create password (min. 10 chars)',
             confirmCreatePass: 'Enter the password again',
             createKey: 'Create new key',

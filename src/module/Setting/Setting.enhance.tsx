@@ -12,6 +12,8 @@ import { actionLogout } from 'src/module/Password';
 import { actionToggleDecimalDigits, actionToggleHomeConfigs } from 'src/module/Setting/Setting.actions';
 import styled from 'styled-components';
 import { Header, SettingIcon } from 'src/components';
+import { useHistory } from 'react-router-dom';
+import { route as importRoute } from 'src/module/Account/features/ImportAccount';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, settingSelector } from './Setting.selector';
@@ -35,6 +37,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const chainURL = useSelector(chainURLSelector);
     const { decimalDigits } = useSelector(settingSelector);
     const { stagingHomeConfigs } = useSelector(devSettingSelector);
+    const history = 
+          
+          ();
     const settingFactories: ISettingItem[] = [
         {
             title: translate.keychain.title,
@@ -52,6 +57,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     toggle: true,
                     onClick: handleToggleHomeConfigs,
                     toggleValue: stagingHomeConfigs,
+                },
+                {
+                    desc: 'Import account',
+                    onClick: () => history.push(importRoute),
                 },
             ],
         },

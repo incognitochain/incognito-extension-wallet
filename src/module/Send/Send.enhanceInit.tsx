@@ -1,16 +1,23 @@
 import React from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { reset } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
-import { accountBalanceSelector } from 'src/module/Account';
+import { accountBalanceSelector, actionGetAccountBalance, defaultAccountSelector } from 'src/module/Account';
 import { isGettingBalanceByTokenIdSelector } from 'src/redux';
 import format from 'src/utils/format';
 import convert from 'src/utils/convert';
 import { COINS } from 'src/constants';
+import { actionGetBalanceByTokenId } from 'src/redux/actions';
+import { walletSelector } from 'src/module/Wallet';
 import { FORM_CONFIGS } from './Send.constant';
-import { actionInit, actionInitEstimateFee, actionFetchedMaxFeePrv, actionFetchedMaxFeePToken } from './Send.actions';
+import {
+    actionInit,
+    actionInitEstimateFee,
+    actionFetchedMaxNativeFee,
+    actionFetchedMaxPrivacyFee,
+} from './Send.actions';
 import { sendSelector } from './Send.selector';
 
 export interface TInnerInit {
@@ -21,13 +28,16 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const [init, setInit] = React.useState(false);
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
+    const account = useSelector(defaultAccountSelector);
+    const wallet = useSelector(walletSelector);
     const accountBalance: number = useSelector(accountBalanceSelector);
+    const tokenBalance: number = selectedPrivacy?.amount;
     const isGettingBalance = useSelector(isGettingBalanceByTokenIdSelector)(selectedPrivacy.tokenId);
     const send = useSelector(sendSelector);
     const isInitingForm = !selectedPrivacy || !send.init || !init || isGettingBalance;
     const handleFetchedMaxPrv = async (accBalance: number) =>
         dispatch(
-            actionFetchedMaxFeePrv({
+            actionFetchedMaxNativeFee({
                 maxFeePrv: accBalance,
                 maxFeePrvText: format.toFixed({
                     number: convert.toHumanAmount({
@@ -40,8 +50,9 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
         );
 
     const handleFetchedMaxFeePToken = async (pToken: ISelectedPrivacy) =>
+        pToken.isToken &&
         dispatch(
-            actionFetchedMaxFeePToken({
+            actionFetchedMaxPrivacyFee({
                 amount: pToken.amount,
                 amountText: format.toFixed({
                     number: convert.toHumanAmount({
@@ -59,11 +70,15 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
         }
         try {
             setInit(false);
-            await dispatch(reset(FORM_CONFIGS.formName));
-            await dispatch(actionInit());
-            await dispatch(actionInitEstimateFee({ screen: 'Send' }));
-            await handleFetchedMaxPrv(accountBalance);
-            await handleFetchedMaxFeePToken(selectedPrivacy);
+            batch(() => {
+                dispatch(reset(FORM_CONFIGS.formName));
+                dispatch(actionGetBalanceByTokenId());
+                dispatch(actionGetAccountBalance());
+                dispatch(actionInit());
+                dispatch(actionInitEstimateFee({ screen: 'Send' }));
+                handleFetchedMaxPrv(accountBalance);
+                handleFetchedMaxFeePToken(selectedPrivacy);
+            });
         } catch (error) {
             dispatch(actionToggleToast({ toggle: true, value: error, type: TOAST_CONFIGS.error }));
         } finally {
@@ -71,16 +86,20 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
         }
     };
     React.useEffect(() => {
-        handleFetchedMaxPrv(accountBalance);
-    }, [accountBalance]);
+        if (init && !!accountBalance) {
+            handleFetchedMaxPrv(accountBalance);
+        }
+    }, [account, accountBalance, init]);
 
     React.useEffect(() => {
-        handleFetchedMaxFeePToken(selectedPrivacy);
-    }, [selectedPrivacy?.amount, selectedPrivacy?.tokenId]);
+        if (init && !!tokenBalance) {
+            handleFetchedMaxFeePToken(selectedPrivacy);
+        }
+    }, [tokenBalance, selectedPrivacy?.tokenId, init]);
 
     React.useEffect(() => {
         initData();
-    }, [selectedPrivacy?.tokenId, accountBalance]);
+    }, [selectedPrivacy?.tokenId, wallet, account]);
     return (
         <ErrorBoundary>
             <WrappedComp {...{ ...props, isInitingForm }} />

@@ -21,3 +21,4 @@ export { default as KeyIcon } from './Key';
 export { default as EyeIcon } from './Eye';
 export { default as ConnectStatus } from './ConnectStatus';
 export { default as LostConnectIcon } from './LostConnect';
+export { default as FastFeeIcon } from './FastFee';

@@ -17,7 +17,7 @@ const RetryShield = React.memo(() => {
     const dispatch = useDispatch();
     const useHistoryHooks = useHistory();
     const { id } = params;
-    const history: TxBridgeHistoryModel | undefined = useSelector(getHistoryBridgeByIdSelector)(id);
+    const history: TxBridgeHistoryModel | any = useSelector(getHistoryBridgeByIdSelector)(id);
     const [retry, setRetry] = React.useState(false);
     if (!history || !history.canRetryExpiredShield) {
         return null;

@@ -8,15 +8,16 @@ export interface IApiUpdatePTokenFee {}
 
 export interface IApiEstimateUserFees {}
 
+export interface IUserFees {
+    Level1: string;
+    Level2?: string;
+}
 export interface IUserFeesData {
-    PrivacyFees: {
-        Level1: string;
-        Level2: string;
-    };
-    TokenFees: {
-        Level1: string;
-        Level2: string;
-    };
+    PrivacyFees: IUserFees;
+    TokenFees: IUserFees;
+    Address?: string;
+    FeeAddress: string;
+    ID: string;
 }
 
 export interface IFeeTypes {
@@ -25,10 +26,13 @@ export interface IFeeTypes {
 }
 
 export interface ISendData {
+    feePrv: number;
+    feePToken: number;
     fee: number;
+    feeText: string;
     feeUnitByTokenId: string;
     feePDecimals: number;
-    feeText: string;
+    feeSymbol: string;
     totalFee: number;
     totalFeeText: string;
     maxFee: number;
@@ -42,13 +46,28 @@ export interface ISendData {
     isUseTokenFee: boolean;
     isUnShield: boolean;
     isSend: boolean;
-    isIncognitoAddress: boolean;
+    hasMultiLevel: boolean;
     inputAmount: string;
     inputMemo: string;
     inputAddress: string;
     titleBtnSubmit: string;
     forceSendTitleBtnSubmit: string;
     disabledForm: boolean;
+    isIncognitoAddress: boolean;
+    isExternalAddress: boolean;
+    userFee: string;
+    originalFee: number;
+    nativeFee: string;
+    privacyFee: string;
+    incognitoAmount: string;
+    requestedAmount: string;
+    paymentAddress: string;
+    memo: string;
+    userFeeLevel: number;
+    userFeeSelection: number;
+    symbol: string;
+    amountFormatedNoClip: string;
+    totalFeeFormatedNoClip: string;
 }
 
 export interface ISendReducer {
@@ -90,10 +109,10 @@ export interface ISendReducer {
     fast2x: boolean;
     totalFeePrv: number;
     totalFeePrvText: string;
-    userFeePrv: number;
+    userFeePrv: string;
     totalFeePToken: number;
     totalFeePTokenText: string;
-    userFeePToken: number;
+    userFeePToken: string;
     sending: false;
     defaultForceSend?: IDataForceSend;
 }
@@ -104,4 +123,10 @@ export interface IDataForceSend {
     amount: string;
     memo?: string;
     tokenId: string;
+}
+
+export interface ISendFormData {
+    amount: string;
+    memo?: string;
+    toAddress: string;
 }
