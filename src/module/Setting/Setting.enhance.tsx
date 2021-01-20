@@ -1,7 +1,6 @@
 import React from 'react';
 import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { withLayout } from 'src/components/Layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { ISettingLanguage } from 'src/i18n/interface';
 import { translateByFieldSelector } from 'src/module/Configs';
@@ -37,9 +36,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const chainURL = useSelector(chainURLSelector);
     const { decimalDigits } = useSelector(settingSelector);
     const { stagingHomeConfigs } = useSelector(devSettingSelector);
-    const history = 
-          
-          ();
+    const history = useHistory();
     const settingFactories: ISettingItem[] = [
         {
             title: translate.keychain.title,

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import withSetting from 'src/module/Setting/Setting.enhance';
 import { SettingItem, ISettingItem } from './features/SettingItem';
-import withSetting from './Setting.enhance';
 import { IInner } from './Setting.interface';
 
 const Styled = styled.div`
