@@ -256,7 +256,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                                 title: history.type,
                                 desc: `${history.amountFormatedNoClip} ${history?.symbol}`,
                                 descClassName: 'desc-amount',
-                                disabled: !history?.incognitoAmount,
+                                disabled: !history?.amountFormatedNoClip,
                             },
                             {
                                 title: historyLanguage.status,
