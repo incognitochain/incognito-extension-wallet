@@ -9,6 +9,11 @@ export const Styled = styled.div`
         font-size: ${FONT_SIZES.superSmall}px;
         color: ${COLORS.green};
     }
+    &.content {
+        margin-top: 20px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
 `;
 
 export const Row = styled.div`
