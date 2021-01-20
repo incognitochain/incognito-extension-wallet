@@ -56,7 +56,7 @@ const Modal = (props: IProps) => {
         return null;
     }
 
-    const { closeable, data: modalData, customModalStyle, title, isLoadingModal } = lastModal;
+    const { closeable, data: modalData, customModalStyle, title, isLoadingModal, rightHeader } = lastModal;
 
     const renderModalContent = () => {
         if (isLoadingModal) {
@@ -68,7 +68,9 @@ const Modal = (props: IProps) => {
         }
         return (
             <div className="modal-content-wrapper" style={customModalStyle}>
-                {!!title && <Header onGoBack={closeable ? onClose : undefined} title={title} />}
+                {!!title && (
+                    <Header onGoBack={closeable ? onClose : undefined} title={title} rightHeader={rightHeader} />
+                )}
                 {modalData}
             </div>
         );

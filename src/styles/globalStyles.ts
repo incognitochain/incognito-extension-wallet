@@ -236,6 +236,12 @@ export const GlobalStyled = createGlobalStyle`
     .warning {
         color: ${COLORS.orange};
     }
+    .text-color-grey {
+        color: ${COLORS.newGrey};
+    }
+    .text-color-black {
+        color: ${COLORS.black};
+    }
 `;
 
 export const Row = styled.div`

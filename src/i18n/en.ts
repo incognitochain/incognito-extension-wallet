@@ -16,6 +16,8 @@ const language: ILanguage = {
         loadingTx: `Please do not navigate away till this<br />window closes.`,
         btnRetry: 'Retry',
         switched: 'Switched',
+        removed: 'Removed',
+        keys: 'keys',
     },
     home: {
         title: 'Incognito Wallet',
@@ -312,6 +314,7 @@ const language: ILanguage = {
             revealPhrase: 'Reveal master key phrase',
             viewKeys: 'View keychains',
             revealPhraseBtn: 'View keys',
+            removeKey: 'Remove keychain',
         },
     },
     modal: {
@@ -324,6 +327,27 @@ const language: ILanguage = {
     disconnect: {
         headerTitle: 'Manage connections',
         subTitle: 'This app will no longer be able to view the balance of the address you disconnect.',
+    },
+    keysExplained: {
+        header: 'Keys explained',
+        desc: 'Different keys enable different access and actions.',
+        content: [
+            {
+                title: 'Master key',
+                text:
+                    'A master key will allow you to recover all associated keychains and their keys, using a secret 12 word phrase. You <b>must</b> keep the master key phrase safe – it’s the only way to ensure no one but you can access your funds',
+            },
+            {
+                title: 'Keychain',
+                text:
+                    'Each keychain is comprised of several essential keys, much like your car key or house key. The payment key allows you to receive funds, the validator key allows you to run a Node, and the private key – the most important key in any keychain – allows you to recover all other keys in that keychain.<br/><br/>If you need more than one payment address, or want to run more than one Node, simply generate new keychains',
+            },
+            {
+                title: 'Be safe',
+                text:
+                    'A private key will restore its keychain, and a master key phrase will restore all its associated keychains. Anyone who gains access to these, gains access to your funds. So keep them safe.',
+            },
+        ],
     },
 };
 

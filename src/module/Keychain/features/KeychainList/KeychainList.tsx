@@ -7,6 +7,7 @@ import { MasterKeyInfo } from 'src/module/MasterKey';
 import { PasswordModal } from 'src/module/Password';
 import { walletDataSelector } from 'src/module/Wallet';
 import { actionToggleModal } from 'src/components/Modal';
+import { SmallButton } from 'src/components';
 import AccountItem from '../AccountItem';
 
 const customModalStyle = {
@@ -16,6 +17,7 @@ const customModalStyle = {
     borderRadius: 8,
     minWidth: 295,
     padding: '30px 15px',
+    boxShadow: '0 20px 30px 0 rgba(0,0,0,0.15)',
 };
 
 const KeychainList = React.memo(() => {
@@ -51,9 +53,7 @@ const KeychainList = React.memo(() => {
         <div className="hook-container">
             <div className="wallet">
                 <div className="wallet-name">{wallet.name}</div>
-                <div className="wallet-reveal" onClick={handleCheckPassword}>
-                    {dictionary.revealPhraseBtn}
-                </div>
+                <SmallButton title={dictionary.revealPhraseBtn} onClick={handleCheckPassword} />
             </div>
             <div className="keychains">
                 {listAccount.map((account: AccountInstance) => (

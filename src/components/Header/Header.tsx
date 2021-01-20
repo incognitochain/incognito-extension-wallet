@@ -11,6 +11,7 @@ const Styled = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    margin: 0 0 30px 0;
     .left {
         display: flex;
         flex-direction: row;

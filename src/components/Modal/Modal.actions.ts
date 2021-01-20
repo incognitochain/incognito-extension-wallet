@@ -7,6 +7,7 @@ export const actionToggleModal = ({
     customModalStyle = undefined,
     title = '',
     isLoadingModal = false,
+    rightHeader = undefined,
 }: {
     data?: any;
     autoClearOnNewModal?: boolean;
@@ -14,9 +15,10 @@ export const actionToggleModal = ({
     customModalStyle?: any;
     title?: string;
     isLoadingModal?: boolean;
+    rightHeader?: any;
 }) => ({
     type: ACTION_TOGGLE_MODAL,
-    payload: { data, autoClearOnNewModal, closeable, customModalStyle, title, isLoadingModal },
+    payload: { data, autoClearOnNewModal, closeable, customModalStyle, title, isLoadingModal, rightHeader },
 });
 
 export const actionClearAllModal = () => ({
