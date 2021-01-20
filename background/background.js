@@ -261,8 +261,9 @@ const handleSendTxFinish = async (data) => {
             key: CONTENT_LISTEN.SEND_TX_FINISH, 
             origin,
             data: { error, txInfo }
-        }    
-        // send data to client    
+        }
+        currentRequest = null;
+        // send data to client
         tabSendMessage(tab.id, params);
     } catch (error) {/*Ignored error*/}
 };

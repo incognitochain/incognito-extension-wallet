@@ -26,7 +26,8 @@ const enhanceForceSend = (WrappedComponent: React.FunctionComponent) => (props: 
     const handleClearForceSendData = () => dispatch(actionUpdateDataForceSend(undefined));
     // send finish => fail or success => update background.js
     const handleForceSendFinish = async (error: any, txInfo: any) => {
-        if (forceSendData) handleClearForceSendData();
+        handleClearForceSendData();
+        dispatch(clearRequestFromDApp());
         await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.SEND_TX_FINISH, { error, txInfo });
     };
     // clear current request in background.js when tap back
