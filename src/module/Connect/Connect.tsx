@@ -2,18 +2,21 @@ import React from 'react';
 import { Button, Header } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { IConnectLanguage } from 'src/i18n';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AccountInstance } from 'incognito-js/build/web/browser';
-import { paymentAddressSelector } from 'src/module/Account';
+import { paymentAddressSelector, defaultAccountSelector } from 'src/module/Account';
 import { isDev } from 'src/configs';
 import APP_CONSTANT from 'src/constants/app';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import CheckBox from 'src/components/Core/FillCheckBox';
+import {
+    actionClearRequestFromDApp as clearRequestFromDApp,
+    IRequestDApp,
+    requestDAppSelector,
+} from 'src/module/Preload';
 import withEnhance from './Connect.enhance';
 import { Styled } from './Connect.styled';
 import AccountConnectItem from './feature/AccountConnectItem';
-import { defaultAccountSelector } from '../Account';
-import { IRequestDApp, requestDAppSelector } from '../Preload';
 
 interface IProps {
     loading: boolean;
@@ -28,6 +31,7 @@ const DAppURL = React.memo(() => {
 
 const Connect = React.memo((props: IProps & any) => {
     const { loading, allFollowedTokens } = props;
+    const dispatch = useDispatch();
     const [isAccept, setIsAccept] = React.useState<boolean>(false);
     const [connecting, setConnecting] = React.useState<boolean>(false);
     const translate: IConnectLanguage = useSelector(translateByFieldSelector)('connect');
@@ -55,7 +59,7 @@ const Connect = React.memo((props: IProps & any) => {
     };
     return (
         <Styled className="hook-container">
-            <Header title={translate.headerTitle} />
+            <Header title={translate.headerTitle} onGoBack={() => dispatch(clearRequestFromDApp())} />
             <DAppURL />
             <AccountConnectItem loading={loading} />
             <CheckBox
