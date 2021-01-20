@@ -34,6 +34,7 @@ export interface ILanguage {
     modal: IModalLanguage;
     connect: IConnectLanguage;
     disconnect: IDisconnectLanguage;
+    keysExplained: IKeysExplainedLanguage;
 }
 
 export interface IPreloadLanguage {
@@ -231,6 +232,8 @@ export interface IGeneralLanguage {
     loadingTx: string;
     btnRetry: string;
     switched: string;
+    removed: string;
+    keys: string;
 }
 
 export interface IShieldLanguage {
@@ -339,10 +342,20 @@ export interface IMasterKeyLanguage {
         revealPhrase: string;
         viewKeys: string;
         revealPhraseBtn: string;
+        removeKey: string;
     };
 }
 
 export interface IModalLanguage {
     addKeysModal: string;
     createKeyModal: string;
+}
+
+export interface IKeysExplainedLanguage {
+    header: string;
+    desc: string;
+    content: {
+        title: string;
+        text: string;
+    }[];
 }

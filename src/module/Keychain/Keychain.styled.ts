@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { FONT_SIZES } from 'src/styles';
-import { CONSTANT_COLORS } from '../../constants';
 
 export const Styled = styled.div`
     .hook-container {
@@ -30,15 +29,6 @@ export const Styled = styled.div`
         text-overflow: ellipsis;
     }
 
-    .wallet-reveal {
-        border-radius: 5px;
-        background-color: ${CONSTANT_COLORS.BLACK};
-        color: ${CONSTANT_COLORS.WHITE};
-        font-size: 13px;
-        padding: 3px 5px;
-        cursor: pointer;
-    }
-
     .keychains {
         margin-left: 15px;
     }
@@ -64,5 +54,9 @@ export const Styled = styled.div`
     .delete-icon {
         margin-left: 10px;
         margin-top: -2px;
+    }
+    .custom-header {
+        display: flex;
+        align-items: center;
     }
 `;

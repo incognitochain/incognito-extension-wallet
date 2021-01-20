@@ -35,7 +35,8 @@ const Styled = styled.div`
         padding: 10px;
         color: ${CONSTANT_COLORS.LIGHT_GREY};
         background-color: ${CONSTANT_COLORS.GREY2};
-        border-color: ${CONSTANT_COLORS.GREY};
+        border-radius: 8px;
+        border: 1px solid ${CONSTANT_COLORS.GREY};
     }
     .hook .icons {
         display: flex;
@@ -64,7 +65,7 @@ const Detail = (props: IProps) => {
         );
     return (
         <Styled className="account-item">
-            <p className="title">{title}</p>
+            <p className="title fs-medium fw-medium">{title}</p>
             <div className="hook">
                 <p className="decs ellipsis">{desc}</p>
                 <div className="icons">
