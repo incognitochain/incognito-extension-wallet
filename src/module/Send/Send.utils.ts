@@ -188,7 +188,15 @@ export const getSendData = ({
         ? false
         : keyServices.checkPaymentAddress(inputAddress) || selectedPrivacy.isNativeToken;
     const isExternalAddress = isEmpty(inputAddress) ? false : !isIncognitoAddress && selectedPrivacy.isWithdrawable;
-    const disabledForm = !valid || submitting || !fee || isFetching || !isAddressValidated;
+    const disabledForm =
+        !valid ||
+        submitting ||
+        !fee ||
+        isFetching ||
+        !isFetched ||
+        !isAddressValidated ||
+        (isUnShield && !userFees.isFetched) ||
+        (isUnShield && userFees.isFetching);
     const userFeeSelection = isUsedPRVFee ? 2 : 1;
     const userFeeLevel = fast2x ? 2 : 1;
     const nativeFee = isUsedPRVFee ? originalFee : '';
