@@ -14,6 +14,7 @@ import {
     IRequestDApp,
     requestDAppSelector,
 } from 'src/module/Preload';
+import { useHistory } from 'react-router';
 import withEnhance from './Connect.enhance';
 import { Styled } from './Connect.styled';
 import AccountConnectItem from './feature/AccountConnectItem';
@@ -38,6 +39,7 @@ const Connect = React.memo((props: IProps & any) => {
     const paymentAddress: string = useSelector(paymentAddressSelector);
     const handleChecked = () => setIsAccept(!isAccept);
     const account: AccountInstance = useSelector(defaultAccountSelector);
+    const history = useHistory();
     const handleSendAccount = async () => {
         try {
             setConnecting(true);
@@ -57,9 +59,13 @@ const Connect = React.memo((props: IProps & any) => {
             /* Ignore error */
         }
     };
+    const handleGoBack = () => {
+        dispatch(clearRequestFromDApp());
+        history.goBack();
+    };
     return (
         <Styled className="hook-container">
-            <Header title={translate.headerTitle} onGoBack={() => dispatch(clearRequestFromDApp())} />
+            <Header title={translate.headerTitle} onGoBack={handleGoBack} />
             <DAppURL />
             <AccountConnectItem loading={loading} />
             <CheckBox
