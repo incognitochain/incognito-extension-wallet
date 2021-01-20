@@ -561,7 +561,7 @@ export const getUnshieldHistoryBridgeData = ({
     let outchainFeeFormatedNoClip = '';
     const symbol = selectedPrivacy.symbol || selectedPrivacy.pSymbol || '';
     let feeSymbol = useNativeFee ? COINS.PRV.symbol : symbol;
-    const burnTx = historyCache.find(
+    const burnTx: TxCacheHistoryModel | undefined = historyCache.find(
         (hc) => hc.txId === history.incognitoTxToPayOutsideChainFee || history.incognitoTx,
     );
     try {
@@ -573,13 +573,17 @@ export const getUnshieldHistoryBridgeData = ({
             }
         } else {
             let originalFee: any = useNativeFee ? burnPrivacyFee : burnTokenFee;
-            if (!originalFee && burnTx) {
-                const { fee } = burnTx;
-                originalFee = fee;
-            }
             originalFee = new BigNumber(originalFee);
             inchainFee = originalFee.multipliedBy(2);
-            if (usePrivacyFee) {
+            if (!incognitoAmount || status === STATUS_CODE_UNSHIELD_CENTRALIZED.PENDING) {
+                if (burnTx) {
+                    const { amount } = burnTx;
+                    bnIncognitoAmount = new BigNumber(amount);
+                    if (usePrivacyFee) {
+                        bnIncognitoAmount = bnIncognitoAmount.minus(outchainFee).minus(originalFee);
+                    }
+                }
+            } else if (usePrivacyFee) {
                 // use token fee
                 bnIncognitoAmount = bnIncognitoAmount.minus(originalFee);
             }
@@ -618,8 +622,8 @@ export const getUnshieldHistoryBridgeData = ({
             symbol,
             expiredAtFormated,
             statusColor,
-            amountFormated,
-            amountFormatedNoClip,
+            amountFormated: amountFormated === '0' ? '' : amountFormated,
+            amountFormatedNoClip: amountFormatedNoClip === '0' ? '' : amountFormatedNoClip,
             inchainFeeFormatedNoClip,
             outchainFeeFormatedNoClip,
             isUnShieldTx,
