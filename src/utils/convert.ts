@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import format from 'src/utils/format';
 import { getDecimalSeparator } from './separator';
 
 const checkAmount = (amount: number) => {
@@ -35,6 +36,16 @@ const toHumanAmount = (payload: IHunmanAmount) => {
     }
     const indexNumber = new BigNumber(10).pow(decimals);
     return amount.dividedBy(indexNumber).toNumber();
+};
+
+const toHumanAmountString = (payload: IHunmanAmount) => {
+    return format.toFixed({
+        number: toHumanAmount({
+            originalAmount: payload.originalAmount || 0,
+            decimals: payload.decimals,
+        }),
+        decimals: payload.decimals,
+    });
 };
 
 const toOriginalAmount = ({
@@ -87,6 +98,7 @@ const convert = {
     checkAmount,
     replaceDecimals,
     toHumanAmount,
+    toHumanAmountString,
     toOriginalAmount,
     toNumber,
     toString,

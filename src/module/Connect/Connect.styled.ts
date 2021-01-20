@@ -6,6 +6,9 @@ export const Styled = styled.div`
         margin-bottom: 0px;
         cursor: pointer;
     }
+    > div {
+        margin-bottom: 15px;
+    }
     p.original-url {
         margin-bottom: 10px;
         color: ${COLORS.colorGreyBold};
@@ -19,7 +22,7 @@ export const Styled = styled.div`
     }
     .wrapper-check-box {
         display: flex;
-        flex-direction: 'row';
+        flex-direction: row;
     }
     .account-connect-item {
         display: flex;
@@ -36,5 +39,8 @@ export const Styled = styled.div`
     }
     .wrapper {
         margin: 30px 0px;
+    }
+    .content {
+        margin: 22px 15px 15px;
     }
 `;
