@@ -39,7 +39,6 @@ const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProp
                 default:
                     break;
             }
-            dispatch(clearRequestFromDApp());
         }
     }, [requestDApp, loadedBalance]);
     if (requestDApp && !loadedBalance) {

@@ -5,6 +5,7 @@ import { change } from 'redux-form';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import APP_CONSTANT from 'src/constants/app';
 import { isDev } from 'src/configs';
+import { actionClearRequestFromDApp as clearRequestFromDApp } from 'src/module/Preload/Preload.actions';
 import { actionUpdateDataForceSend } from './Send.actions';
 import { forceSendDataSelector } from './Send.selector';
 import { IDataForceSend } from './Send.interface';
@@ -31,6 +32,7 @@ const enhanceForceSend = (WrappedComponent: React.FunctionComponent) => (props: 
     // clear current request in background.js when tap back
     const handleClearCurrentRequest = async (error: any, txInfo: any) => {
         if (isDev) return;
+        dispatch(clearRequestFromDApp());
         await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.CLEAR_SEND_CURRENT_REQUEST, { error, txInfo });
     };
     React.useEffect(() => {

@@ -5,3 +5,11 @@ export const getActiveTabs = () => {
         });
     });
 };
+
+export const getLastFocusedWindow = () => {
+    return new Promise((resolve) => {
+        chrome.windows.getLastFocused((windowObject) => {
+            return resolve(windowObject);
+        });
+    });
+};

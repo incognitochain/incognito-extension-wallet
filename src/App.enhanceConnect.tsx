@@ -2,7 +2,7 @@ import React from 'react';
 import { isDev } from 'src/configs';
 import APP_CONSTANT from 'src/constants/app';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
-import { getActiveTabs } from 'src/utils/app';
+import { getActiveTabs, getLastFocusedWindow } from 'src/utils/app';
 import { useSelector } from 'react-redux';
 import { defaultAccountNameSelector } from './module/Account';
 
@@ -13,15 +13,22 @@ const enhanceConnect = (WrappedComponent: React.FunctionComponent) => (props: IP
     const [originUrl, setOriginUrl] = React.useState<string | null>(null);
     const accountName = useSelector(defaultAccountNameSelector);
     const handleCheckConnectAccount = async () => {
-        const tabs: any = await getActiveTabs();
-        const isConnected: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.CHECK_IS_CONNECTED, {
-            tab: tabs[0],
+        const activeTabs: any = await getActiveTabs();
+        const lastFocusedWindow: any = await getLastFocusedWindow();
+        let tab = null;
+        if (lastFocusedWindow.type !== 'popup') {
+            tab = activeTabs.find((activeTab: any) => activeTab.windowId === lastFocusedWindow.id);
+        }
+        const response: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.CHECK_IS_CONNECTED, {
+            tab,
             accountName,
         });
-        const { origin } = new URL(tabs[0].url);
-        console.debug('CHECK CONNECT ACCOUNT: ', isConnected, origin);
-        setOriginUrl(origin);
-        setConnected(isConnected);
+        if (response) {
+            const { isConnect, origin } = response;
+            setOriginUrl(origin);
+            setConnected(isConnect);
+            console.debug('CHECK CONNECT ACCOUNT: ', isConnect, origin);
+        }
     };
     React.useEffect(() => {
         if (isDev) return; // check is connect

@@ -6,7 +6,7 @@ import {
     INCOGNITO_EXTENSION_SEND_DATA,
     NOTIFICATION_HEIGHT,
     NOTIFICATION_WIDTH
-} from './consts'
+} from "./consts";
 import {
     closeCurrentWindow,
     extension,
@@ -15,8 +15,8 @@ import {
     getLastFocusedWindow,
     openWindow,
     sendMessage,
-    updateWindowPosition,
-} from './extension';
+    updateWindowPosition
+} from "./extension";
 
 const popupOptions = {
     url: EXTENSION_URL,
@@ -31,13 +31,13 @@ let tabWindow = null;
 let requestAccount = {};
 let currentRequest = null;
 let pass = {};
+let tabRequest = null;
 
 const isOpenPopup = async () => {
     const tabs = await getActiveTabs()
-    const isOpenPopup = Boolean(
+    return Boolean(
       tabs.find((tab) => EXTENSION_URL === tab.url),
     );
-    return isOpenPopup;
 };
 
 const tabSendMessage = (tabId, params) => {
@@ -101,24 +101,25 @@ const updateBalanceToConnectedPage = async (account) => {
     // To do update balance to connected page
     if (requestAccount) {
         const tabs = await getActiveTabs();
-        Object.keys(requestAccount).forEach(async(origin) => {
+        for (const origin of Object.keys(requestAccount)) {
             const lastAccount = requestAccount[origin];
             if (lastAccount && account.name === lastAccount.name) {
-                requestAccount = { 
+                requestAccount = {
                     ...requestAccount,
                     [origin]: account
                 }
                 const tab = tabs.find(tab => getOriginalURL(tab) === origin);
-                // If orign is open, send new account to this page
-                if (tab) handleConnectAccount(account, origin, false);
+                // If origin is open, send new account to this page
+                if (tab) handleConnectAccount(account, origin, false).then();
             }
-        });
+        }
     }
 };
 
-const openPopup = async () => {
+const openPopup = async (sender) => {
     try {
         // Open new window
+        tabRequest = sender.tab;
         const lastFocused = await getLastFocusedWindow()
         tabWindow = await openWindow(popupOptions);
 
@@ -141,10 +142,10 @@ const postCurrentRequestToExtension = (data) => {
         switch (request) {
             // move to connect account screen
             case BACKGROUND_LISTEN.REQUEST_CONNECT_ACCOUNT:
-                sendMessage({ name: EXTENSION_LISTEN.MOVE_TO_CONNECT_ACCOUNT, origin })
+                sendMessage({ name: EXTENSION_LISTEN.MOVE_TO_CONNECT_ACCOUNT, origin }).then()
                 break;
             case BACKGROUND_LISTEN.REQUEST_SEND_TX:
-                sendMessage({ name: EXTENSION_LISTEN.MOVE_TO_SEND_TX, origin, data })
+                sendMessage({ name: EXTENSION_LISTEN.MOVE_TO_SEND_TX, origin, data }).then();
                 break;
             default:
                 break;
@@ -162,12 +163,12 @@ const requestConnectAccount = async (sender) => {
 
     // url did connect with extension
     if (requestAccount[origin]) {
-        handleConnectAccount(requestAccount[origin], origin, false);
+        handleConnectAccount(requestAccount[origin], origin, false).then();
         return;
     }
 
     // handle Open popup
-    const popup = await openPopup();
+    const popup = await openPopup(sender);
 
     if (popup) {
         currentRequest = { origin, request: BACKGROUND_LISTEN.REQUEST_CONNECT_ACCOUNT };
@@ -178,6 +179,7 @@ const requestConnectAccount = async (sender) => {
 
 const checkIsConnected = (tab, accountName) => {
     try {
+        if (!tab) tab = tabRequest;
         const origin = getOriginalURL(tab)
         if (!origin) return false;
         let isConnect = false;
@@ -187,10 +189,8 @@ const checkIsConnected = (tab, accountName) => {
               && requestAccount[origin]?.name === accountName
             ) isConnect = true
         });
-        return isConnect;
-    } catch (error) {
-        /*Ignored error*/
-    }
+        return { isConnect, origin };
+    } catch (error) {/*Ignored error*/}
 };
 
 const postMessageDisableAccount = async (origin) => {
@@ -235,7 +235,7 @@ const handleRequestSendTx = async (sender, request) => {
     if (!requestAccount[origin]) return;
 
     // handle Open popup
-    const popup = await openPopup();
+    const popup = await openPopup(sender);
 
     if (popup) {
         currentRequest = { origin, request: BACKGROUND_LISTEN.REQUEST_SEND_TX };
@@ -370,12 +370,13 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
 chrome.tabs.onRemoved.addListener(function(tabId, info) {
     const { tabs } = tabWindow;
     if (tabWindow && tabs.length > 0) {
-        const isCloseIncognitExtensionTab = Boolean(
+        const isCloseIncognitoExtensionTab = Boolean(
             tabs.find((tab) => tab && tab.id === tabId),
         );
-        if (isCloseIncognitExtensionTab) {
+        if (isCloseIncognitoExtensionTab) {
             currentRequest = null;
             tabWindow = null;
+            tabRequest = null;
         }
     }
 });
