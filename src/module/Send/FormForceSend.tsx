@@ -18,6 +18,8 @@ import { FORM_CONFIGS } from './Send.constant';
 const EstimateFee = React.memo(() => {
     const { types }: ISendReducer = useSelector(sendSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
+    const { errorMessage }: ISendData = useSelector(sendDataSelector);
+    const getErrorMessage = () => errorMessage || undefined;
     return (
         <Field
             component={InputField}
@@ -28,6 +30,7 @@ const EstimateFee = React.memo(() => {
             }}
             subtitle={translate.fee}
             suffix={types[0].symbol}
+            validate={[getErrorMessage]}
         />
     );
 });
