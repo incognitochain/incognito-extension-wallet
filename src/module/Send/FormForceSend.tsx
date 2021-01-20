@@ -15,10 +15,13 @@ import { ISendData, ISendReducer } from './Send.interface';
 import { Styled, Row } from './Send.styled';
 import { FORM_CONFIGS } from './Send.constant';
 
-const EstimateFee = React.memo(() => {
+interface IPropsFee {
+    errorMessage: string;
+}
+const EstimateFee = React.memo((props: IPropsFee) => {
     const { types }: ISendReducer = useSelector(sendSelector);
+    const { errorMessage } = props;
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
-    const { errorMessage }: ISendData = useSelector(sendDataSelector);
     return (
         <Field
             component={InputField}
@@ -37,6 +40,7 @@ const EstimateFee = React.memo(() => {
 const FormForceSend = (props: IMergeProps & any) => {
     const { originUrl, handleSubmit, handleSend, validateAmount, validateAddress, onGoBack } = props;
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
+    const { errorMessage }: ISendData = useSelector(sendDataSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const theme: ITheme = useSelector(themeSelector);
     const { forceSendTitleBtnSubmit, disabledForm, inputMemo, inputAddress }: ISendData = useSelector(sendDataSelector);
@@ -83,10 +87,10 @@ const FormForceSend = (props: IMergeProps & any) => {
                         subtitle={translate.memo}
                     />
                 )}
-                <EstimateFee />
+                <EstimateFee errorMessage={errorMessage} />
                 <Row>
                     <Button title={translate.cancel} type="button" onClick={onGoBack} />
-                    <Button title={forceSendTitleBtnSubmit} disabled={disabledForm} type="submit" />
+                    <Button title={forceSendTitleBtnSubmit} disabled={disabledForm || !!errorMessage} type="submit" />
                 </Row>
             </form>
         </Styled>

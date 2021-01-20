@@ -16,6 +16,7 @@ import withConnect from 'src/App.enhanceConnect';
 import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 import { ERROR_MESSAGE } from 'src/constants/error';
+import withBalance from 'src/module/Account/Acount.enhanceBalance';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -171,6 +172,7 @@ export default compose<IMergeProps, any>(
         form: FORM_CONFIGS.formName,
     }),
     withInit,
+    withBalance,
     withWalletBalance,
     withFee,
     withValAddress,

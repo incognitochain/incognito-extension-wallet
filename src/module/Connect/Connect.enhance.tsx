@@ -3,6 +3,8 @@ import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withHeaderApp } from 'src/components/Header';
 import withBalance from 'src/module/Account/Acount.enhanceBalance';
+import { useSelector } from 'react-redux';
+import { defaultAccountNameSelector } from 'src/module/Account/Account.selector';
 
 interface IProps {
     loadBalance: () => void;
@@ -10,6 +12,7 @@ interface IProps {
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     const { loadBalance } = props;
+    const accountName = useSelector(defaultAccountNameSelector);
     const [loading, setLoading] = React.useState<boolean>(true);
     const [allFollowedTokens, setAllFollowedTokens] = React.useState<any>([]);
     const handleLoadBalance = async () => {
@@ -22,7 +25,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             setAllFollowedTokens(tokens);
             setLoading(false);
         });
-    }, []);
+    }, [accountName]);
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, loading, allFollowedTokens }} />

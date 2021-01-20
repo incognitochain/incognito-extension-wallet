@@ -5,20 +5,7 @@ export interface ILanguage {
         title: string;
     };
     keychain: IKeychainLanguage;
-    wallet: {
-        headerTitle: string;
-        selectAccount: {
-            headerTitle: string;
-        };
-        addCoin: string;
-        error: {
-            walletNotExisted: string;
-        };
-        blockShield: {
-            totalShielded: string;
-            btnShield: string;
-        };
-    };
+    wallet: IWalletLanguage;
     token: ITokenLanguage;
     account: IAccountLanguage;
     setting: ISettingLanguage;
@@ -35,6 +22,24 @@ export interface ILanguage {
     connect: IConnectLanguage;
     disconnect: IDisconnectLanguage;
     keysExplained: IKeysExplainedLanguage;
+}
+
+export interface IWalletLanguage {
+    headerTitle: string;
+    selectAccount: {
+        headerTitle: string;
+    };
+    addCoin: string;
+    error: {
+        walletNotExisted: string;
+    };
+    tooltip: {
+        refresh: string;
+    };
+    blockShield: {
+        totalShielded: string;
+        btnShield: string;
+    };
 }
 
 export interface IPreloadLanguage {

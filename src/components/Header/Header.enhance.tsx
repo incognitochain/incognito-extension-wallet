@@ -46,7 +46,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         }
         return (
             <div className="header-container flex">
-                {title && (
+                {!!title && (
                     <button
                         type="button"
                         onClick={onHandleToggleSearch}
