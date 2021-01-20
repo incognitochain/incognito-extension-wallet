@@ -1,8 +1,7 @@
-import { ERROR_MESSAGE, ERROR_CODE } from 'src/constants/error';
+import { ERROR_MESSAGE } from 'src/constants/error';
 import floor from 'lodash/floor';
 import format from 'src/utils/format';
 import isEmpty from 'lodash/isEmpty';
-import toString from 'lodash/toString';
 import trim from 'lodash/trim';
 import BigNumber from 'bignumber.js';
 import { keyServices } from 'incognito-js/build/web/browser';
@@ -267,15 +266,4 @@ export const standardizedAddress = (address: string) => {
         newAddress = address.substring(0, indexParams);
     }
     return removeAllSpace(newAddress);
-};
-
-export const getErrorMsgSend = (error: any) => {
-    if (error?.code || error?.Code || error?.response?.data?.Code) {
-        const code = error?.code || toString(error?.Code) || toString(error?.response?.data?.Code);
-        const message = ERROR_CODE[code] || ERROR_CODE.DEFAULT;
-        return `${message} ERROR_CODE(${code})`;
-    }
-    if (error instanceof Error) {
-        return error?.message || '';
-    }
 };

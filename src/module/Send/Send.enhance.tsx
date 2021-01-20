@@ -15,10 +15,11 @@ import { withHeaderApp } from 'src/components/Header';
 import withConnect from 'src/App.enhanceConnect';
 import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
+import { ERROR_MESSAGE } from 'src/constants/error';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
-import { getErrorMsgSend, standardizedAddress } from './Send.utils';
+import { standardizedAddress } from './Send.utils';
 import { actionFetchFeeByMax } from './Send.actions';
 import withInit, { TInnerInit } from './Send.enhanceInit';
 import withFee from './Send.enhanceFee';
@@ -131,12 +132,14 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
                 await handleUnShieldCrypto();
             }
         } catch (error) {
-            const errorMsg = getErrorMsgSend(error);
             dispatch(
                 actionToggleToast({
                     toggle: true,
-                    value: errorMsg,
+                    value: error,
                     type: TOAST_CONFIGS.error,
+                    defaultMessage: {
+                        defaultChainErrorMsg: ERROR_MESSAGE.DEFAULT_ERROR_SEND,
+                    },
                 }),
             );
         } finally {
