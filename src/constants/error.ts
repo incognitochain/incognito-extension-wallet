@@ -1,4 +1,4 @@
-const API_ERROR: any = {
+export const API_ERROR: any = {
     '-9001': 'Internal server error',
     '-1027': 'Memo is required!',
 };
@@ -7,7 +7,7 @@ export const API_CODE = {
     MEMO_IS_REQUIRED: -1027,
 };
 
-const SDK_ERROR: any = {
+export const SDK_ERROR: any = {
     '-4007': 'Your balance is insufficient.',
     '-2001': 'Please ensure this private key is valid, and has not already been imported to this device.',
     '-2005': 'Please ensure this private key is valid.',
@@ -17,20 +17,14 @@ const SDK_ERROR: any = {
     '-3006': 'Please consolidate UTXOs for this keychain in your Settings tab, then try again.',
 };
 
-const CHAIN_ERROR: any = {
+export const CHAIN_ERROR: any = {
     '-6005': 'Please wait for your previous transaction to finish processing. Simply try again later.',
     '-9999': 'The network is a little busy',
     '-6009': 'Please wait for your previous transaction to finish processing. Simply try again later.',
 };
 
-export const ERROR_CODE: any = {
-    ...SDK_ERROR,
-    ...CHAIN_ERROR,
-    ...API_ERROR,
-    DEFAULT: "It looks like your transaction didn't go through.  Please wait a few minutes and try again",
-};
-
 export const ERROR_MESSAGE = {
+    DEFAULT_ERROR_SEND: "It looks like your transaction didn't go through. Please wait a few minutes and try again",
     VNODE_WITHDRAWAL: 'Withdrawal initiated! Your balance will update in approximately 5 minutes.',
     ALL_NODE_WITHDRAWAL: 'Withdrawal initiated! Your balance will update when the process is complete.',
     PNODE_WITHDRAWAL:
