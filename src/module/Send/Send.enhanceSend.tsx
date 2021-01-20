@@ -64,7 +64,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                 });
             }
             if (!tx.txId) {
-                throw new Error(`Send success but hasnt txId!`);
+                throw new Error(`Send success but hasn't txId!`);
             }
             // send success
             const hc: TxCacheHistoryModel | undefined = getHistoryCacheDetail(tx);
