@@ -275,8 +275,8 @@ export const actionEstNativeFee = ({ feeEst }: { feeEst: number }) => async (
         );
         if (isUsedPRVFee) {
             await Promise.all([
-                await dispatch(change(FORM_CONFIGS.formName, 'fee', totalFeePrvText)),
-                await dispatch(focus(FORM_CONFIGS.formName, 'fee')),
+                await dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.fee, totalFeePrvText)),
+                await dispatch(focus(FORM_CONFIGS.formName, FORM_CONFIGS.fee)),
             ]);
         }
     }
@@ -536,20 +536,22 @@ export const actionFetchFeeByMax = () => async (dispatch: Dispatch, getState: ()
             maxAmountText = _maxAmountText;
         } else {
             await dispatch(actionFetchingFee());
-            const account: AccountInstance = defaultAccountSelector(state);
-            const bridgeTokens = bridgeTokensSelector(state);
-            const chainTokens = chainTokensSelector(state);
-            const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
-            try {
-                const feePTokenEst = await token.getEstFeeFromNativeFee({ nativeFee: feeEst });
-                if (feePTokenEst) {
-                    await Promise.all([
-                        actionEstPrivacyFee({ feePTokenEst })(dispatch, getState),
-                        actionEstMinPrivacyFee({ minFeePTokenEst: feePTokenEst })(dispatch, getState),
-                    ]);
+            if (selectedPrivacy.isToken) {
+                const account: AccountInstance = defaultAccountSelector(state);
+                const bridgeTokens = bridgeTokensSelector(state);
+                const chainTokens = chainTokensSelector(state);
+                const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
+                try {
+                    const feePTokenEst = await token.getEstFeeFromNativeFee({ nativeFee: feeEst });
+                    if (feePTokenEst) {
+                        await Promise.all([
+                            actionEstPrivacyFee({ feePTokenEst })(dispatch, getState),
+                            actionEstMinPrivacyFee({ minFeePTokenEst: feePTokenEst })(dispatch, getState),
+                        ]);
+                    }
+                } catch (error) {
+                    console.debug(error);
                 }
-            } catch (error) {
-                console.debug(error);
             }
         }
     } catch (error) {
