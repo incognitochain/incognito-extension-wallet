@@ -15,6 +15,7 @@ export interface IInputFieldProps {
     onClickAddressBook?: () => any;
     onClickScan?: () => any;
     warning?: string;
+    errorCustom?: string;
 }
 
 interface IInputProps {
@@ -39,8 +40,10 @@ const InputField = (props: IInputFieldProps) => {
         onClickAddressBook,
         onClickScan,
         warning,
+        errorCustom,
     } = props;
-    const { error } = meta;
+    const { error: errorMeta } = meta;
+    const error = errorMeta || errorCustom;
     const renderError = () => {
         return (
             <>

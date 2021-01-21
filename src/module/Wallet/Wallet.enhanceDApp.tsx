@@ -1,11 +1,11 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { route as connectRoute } from 'src/module/Connect/Connect.route';
 import { route as disconnectRoute } from 'src/module/Disconnect/Disconnect.route';
 import { route as sendRoute } from 'src/module/Send';
 import APP_CONSTANT from 'src/constants/app';
-import { actionClearRequestFromDApp as clearRequestFromDApp, IRequestDApp, requestDAppSelector } from '../Preload';
+import { IRequestDApp, requestDAppSelector } from 'src/module/Preload';
 import { LoadingContainer } from '../Preload/Preload.enhance';
 import { IPreloadLanguage } from '../../i18n';
 import { translateByFieldSelector } from '../Configs';
@@ -17,7 +17,6 @@ interface IProps {
 const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     const { loadedBalance } = props;
     const history = useHistory();
-    const dispatch = useDispatch();
     const requestDApp: IRequestDApp | null = useSelector(requestDAppSelector);
     const translate: IPreloadLanguage = useSelector(translateByFieldSelector)('preload');
     React.useEffect(() => {

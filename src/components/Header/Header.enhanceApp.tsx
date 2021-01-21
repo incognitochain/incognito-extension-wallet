@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { SettingIcon } from 'src/components/Icons';
 import QrCode from 'src/components/QrCodeLink';
@@ -10,8 +10,11 @@ import { ITheme } from 'src/styles';
 import { delay } from 'src/utils';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import Refresh from 'src/components/Refresh';
+import { actionRemoveTooltip, actionShowTooltip } from 'src/module/Tooltip/Tooltip.actions';
 import { actionSetRefreshPage } from './Header.actions';
 import { refreshHeaderSelector } from './Header.selector';
+import { IAccountLanguage, IWalletLanguage } from '../../i18n';
+import { translateByFieldSelector } from '../../module/Configs';
 
 const Styled = styled.div`
     margin-bottom: 30px;
@@ -46,16 +49,45 @@ interface IProps {
     handleRefresh: () => any;
 }
 
+const idRefresh = 'tooltip-refresh';
 const HeaderApp = React.memo((props: IProps & any) => {
     const { showConnectStatus, showReloadBalance, handleRefresh } = props;
+    const translate: IWalletLanguage = useSelector(translateByFieldSelector)('wallet');
+    const dispatch = useDispatch();
     const refreshing = useSelector(refreshHeaderSelector);
+    const iconRefreshRef: any = useRef(null);
+    const showTooltipRefresh = () => {
+        dispatch(
+            actionShowTooltip({
+                id: idRefresh,
+                text: translate.tooltip.refresh,
+                ref: iconRefreshRef ? iconRefreshRef.current : null,
+                timeout: 0,
+            }),
+        );
+    };
+    const removeTooltipRefresh = () => {
+        dispatch(actionRemoveTooltip(idRefresh));
+    };
+    const onClickRefresh = () => {
+        removeTooltipRefresh();
+        handleRefresh && handleRefresh();
+    };
     return (
         <Styled>
             <Row>
                 <div className="menu">
                     <SettingIcon />
                 </div>
-                {!!showReloadBalance && <Refresh handleRefresh={handleRefresh} refreshing={refreshing} />}
+                {!!showReloadBalance && (
+                    <Refresh
+                        ref={iconRefreshRef}
+                        handleRefresh={onClickRefresh}
+                        refreshing={refreshing}
+                        onMouseOver={showTooltipRefresh}
+                        onMouseOut={removeTooltipRefresh}
+                    />
+                )}
                 {!!showConnectStatus && <ConnectStatus />}
             </Row>
             <div className="menu">

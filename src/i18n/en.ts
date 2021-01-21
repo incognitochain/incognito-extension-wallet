@@ -44,6 +44,9 @@ const language: ILanguage = {
         error: {
             walletNotExisted: 'Wallet is not exist',
         },
+        tooltip: {
+            refresh: 'Refresh this page',
+        },
         blockShield: {
             totalShielded: 'Shielded Balance',
             btnShield: 'Shield my crypto',
@@ -322,7 +325,7 @@ const language: ILanguage = {
         createKeyModal: 'Create keychain',
     },
     connect: {
-        headerTitle: 'Connect to pDEX',
+        headerTitle: 'Connect to',
     },
     disconnect: {
         headerTitle: 'Manage connections',

@@ -9,12 +9,12 @@ const Styled = styled.button`
     height: 20px;
 `;
 
-const Refresh = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+const Refresh = React.forwardRef((props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>, ref: any) => {
     return (
-        <Styled className="icon" {...props}>
+        <Styled ref={ref} className="icon" {...props}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/refresh.png`} alt="" />
         </Styled>
     );
-};
+});
 
 export default Refresh;

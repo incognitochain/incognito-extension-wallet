@@ -6,13 +6,17 @@ interface IProps {
     refreshing: boolean;
 }
 
-const RefreshComponent = (props: IProps) => {
+const RefreshComponent = React.forwardRef((props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>, ref: any) => {
     const { handleRefresh, refreshing }: IProps = props;
     return (
         <div className="refresh-container">
-            {refreshing ? <LoadingIcon /> : <RefreshIcon className="refresh-icon" onClick={handleRefresh} />}
+            {refreshing ? (
+                <LoadingIcon />
+            ) : (
+                <RefreshIcon ref={ref} className="refresh-icon" onClick={handleRefresh} {...props} />
+            )}
         </div>
     );
-};
+});
 
 export default RefreshComponent;
