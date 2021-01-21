@@ -25,3 +25,6 @@ yarn-error.log*
 .build/
 
 .eslintcache
+
+public/content.js
+public/background.js

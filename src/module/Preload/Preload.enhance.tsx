@@ -4,12 +4,13 @@ import { compose } from 'recompose';
 import styled from 'styled-components';
 import Spinner from 'react-bootstrap/esm/Spinner';
 import { IWalletReducer, walletSelector } from 'src/module/Wallet';
-import { Button } from 'src/components';
+import { AppIcon, Button } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { IPreloadLanguage } from 'src/i18n';
 import { forceSendDataSelector } from 'src/module/Send/Send.selector';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
 import { preloadSelector } from './Preload.selector';
+import { isTab } from '../../utils';
 
 const Styled = styled.div`
     > p {
@@ -53,8 +54,20 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     const forceSendData = useSelector(forceSendDataSelector);
     const handlePreload = () => dispatch(actionPreloadApp(forceSendData?.accountName));
     React.useEffect(() => {
-        handlePreload();
+        if (!isTab()) {
+            handlePreload();
+        }
     }, []);
+
+    if (isTab()) {
+        return (
+            <div>
+                <AppIcon />
+                <div>{translate.openExtension}</div>
+            </div>
+        );
+    }
+
     if (preloading || !loaded || !preloaded) {
         return (
             <LoadingContainer

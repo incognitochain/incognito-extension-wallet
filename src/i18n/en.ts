@@ -5,6 +5,7 @@ const language: ILanguage = {
         title1: `Entering incognito mode<br />for your crypto...`,
         title2: `Please check your connection or<br />re-install the application<br />(only if you have a backup of your private keys) and try again.`,
         btnRetry: 'Retry',
+        openExtension: 'Please open the extension to continue.',
     },
     general: {
         copied: 'Copied',

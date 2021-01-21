@@ -29,7 +29,24 @@ export const queryCurrentActiveTab = () => {
         });
     });
 };
+
 export const getURL = (url?: string) => {
     if (!url) return null;
     return new URL(url);
+};
+
+export const isTab = () => {
+    return window.location.hash === '#window';
+};
+
+export const openAsTab = () => {
+    if (chrome && chrome.tabs && chrome.tabs.create) {
+        chrome.tabs.create({ url: chrome.extension.getURL('index.html#window') });
+    }
+};
+
+export const closeCurrentTab = () => {
+    if (window && window.close) {
+        window.close();
+    }
 };
