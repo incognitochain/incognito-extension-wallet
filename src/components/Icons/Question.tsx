@@ -5,11 +5,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 16px;
-    height: 15px;
-    > img {
-        margin-bottom: 5px;
-    }
+    width: 18px;
+    height: 18px;
 `;
 
 const Question = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {

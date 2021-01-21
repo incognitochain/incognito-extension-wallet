@@ -9,25 +9,13 @@ import { route as keychainRoute } from 'src/module/Keychain';
 import { chainURLSelector } from 'src/module/Preload';
 import { actionLogout } from 'src/module/Password';
 import { actionToggleDecimalDigits, actionToggleHomeConfigs } from 'src/module/Setting/Setting.actions';
-import styled from 'styled-components';
-import { Header, SettingIcon } from 'src/components';
+import { Header } from 'src/components';
 import { useHistory } from 'react-router-dom';
 import { route as importRoute } from 'src/module/Account/features/ImportAccount';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, settingSelector } from './Setting.selector';
 import { route as networkRoute } from './features/Network';
-
-const WrapSetting = styled.div`
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 24px;
-    > a {
-        cursor: default;
-    }
-`;
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const translate: ISettingLanguage = useSelector(translateByFieldSelector)('setting');
@@ -82,14 +70,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             onClick: () => dispatch(actionLogout()),
         },
     ];
-    const renderSettingIcon = () => (
-        <WrapSetting>
-            <SettingIcon />
-        </WrapSetting>
-    );
     return (
         <ErrorBoundary>
-            {renderSettingIcon()}
             <Header title={translate.headerTitle} />
             <WrappedComponent {...{ ...props, settingFactories }} />
         </ErrorBoundary>
