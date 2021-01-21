@@ -50,7 +50,7 @@ const InputField = (props: IInputFieldProps) => {
                 {(error && (
                     <p
                         className={`error fs-small fw-regular ${
-                            inputType === INPUT_FIELD.leftTitle ? 'align-right' : ''
+                            inputType === INPUT_FIELD.leftTitleDisplayPTag ? 'align-right' : ''
                         }`}
                     >
                         {error}
@@ -59,7 +59,7 @@ const InputField = (props: IInputFieldProps) => {
                     (warning && (
                         <p
                             className={`warning fs-small fw-regular ${
-                                inputType === INPUT_FIELD.leftTitle ? 'align-right' : ''
+                                inputType === INPUT_FIELD.leftTitleDisplayPTag ? 'align-right' : ''
                             }`}
                         >
                             {warning}
@@ -91,18 +91,18 @@ const InputField = (props: IInputFieldProps) => {
                         </div>
                     </div>
                 );
-            case INPUT_FIELD.leftTitle:
+            case INPUT_FIELD.leftTitleDisplayPTag: {
+                const value = componentProps?.value || input?.value || '';
                 return (
-                    <div className="wrapper">
-                        <div className="flex">
-                            <p className="sub-title fw-medium fs-medium ellipsis">{subtitle}</p>
-                            <div className={`input-container input-address ${!suffix ? 'input-not-suffix' : ''}`}>
-                                <Input {...{ input, componentProps }} />
-                                {suffix && <p className="center-abs-ver suffix ellipsis">{suffix}</p>}
-                            </div>
+                    <div className="hook-row-space-between wrapper">
+                        <p className="sub-title fw-medium fs-medium ellipsis">{subtitle}</p>
+                        <div className="wrap-content">
+                            <p className="ellipsis">{value}</p>
+                            {suffix && <p className="suffix ellipsis">{suffix}</p>}
                         </div>
                     </div>
                 );
+            }
             default:
                 return (
                     <div className="input-container">

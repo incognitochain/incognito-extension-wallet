@@ -160,6 +160,12 @@ export const GlobalStyled = createGlobalStyle`
         flex-direction: row;
         align-items: center;
     }
+    .hook-row-space-between {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
     .hook-column {
 
     }
