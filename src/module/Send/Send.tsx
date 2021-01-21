@@ -6,7 +6,7 @@ import FormForceSend from './FormForceSend';
 const Send = (props: IMergeProps & any) => {
     const { forceSendData } = props;
     const renderForm = () => {
-        if (forceSendData) return <FormForceSend {...props} />;
+        if (!forceSendData) return <FormForceSend {...props} />;
         return <FormSend {...props} />;
     };
     return renderForm();

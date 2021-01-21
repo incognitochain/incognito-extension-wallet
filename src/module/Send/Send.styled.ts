@@ -28,12 +28,12 @@ export const Styled = styled.div`
         }
     }
     .force-balance {
-        margin-top: 55px;
+        padding-top: 25px;
         color: ${COLORS.newGrey};
     }
     .origin-url {
         position: absolute;
-        top: 85px;
+        top: 35px;
     }
     .error-block {
         margin-top: 10px;
