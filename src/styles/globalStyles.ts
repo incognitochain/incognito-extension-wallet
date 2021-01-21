@@ -61,6 +61,10 @@ export const darkTheme: ITheme = {
 export const DEFAULT_THEME = lightTheme;
 
 export const GlobalStyled = createGlobalStyle`
+    html {
+        background: ${COLORS.lightGrey19};
+    }
+
     #root {
         background: ${(props: IGlobalStyle) => props.theme.body};
         color: ${(props: IGlobalStyle) => props.theme.text};
@@ -81,6 +85,13 @@ export const GlobalStyled = createGlobalStyle`
         line-height: ${FONT_SIZES.regular + 3}px;
         margin: auto;
         padding: 30px;
+    }
+    
+    #root.incognito-extension-tab {
+        margin-top: 40px;
+        margin-bottom: 100px;
+        border-radius: 30px;
+        border: 1px solid ${COLORS.lightGrey21};
     }
     
     @font-face {

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ImportMnemonic, NewMasterKey } from 'src/module/MasterKey';
 import { actionCreatePassword, newPasswordSelector } from 'src/module/Password';
 import { errorTranslateSelector } from 'src/module/Configs';
+import { isTab, openAsTab } from 'src/utils';
 import { INewUserProps } from './NewUser.interface';
 import GetStarted from './GetStarted';
 
@@ -14,7 +15,7 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
     const [pass, setPass] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
     const [isImport, setIsImport] = useState(false);
-    const [getStarted, setGetStarted] = useState(isReset);
+    const [getStarted, setGetStarted] = useState(isReset || isTab());
     const dispatch = useDispatch();
 
     const appPassword = useSelector(newPasswordSelector);
@@ -67,8 +68,16 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
         }
     };
 
+    const handleGetStarted = useCallback(() => {
+        setGetStarted(true);
+
+        if (!isTab()) {
+            openAsTab();
+        }
+    }, []);
+
     if (!getStarted) {
-        return <GetStarted onGetStarted={() => setGetStarted(true)} />;
+        return <GetStarted onGetStarted={handleGetStarted} />;
     }
 
     if (isImport) {
@@ -96,6 +105,8 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
             disabled={isDisabledButton}
             error={error}
             onBack={handleBack}
+            pass={pass}
+            confirmPass={confirmPass}
         />
     );
 };

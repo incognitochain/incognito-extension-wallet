@@ -18,6 +18,7 @@ import {
     ITokenReducer,
     tokenSelector,
 } from '../Token';
+import { closeCurrentTab } from '../../utils';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -145,6 +146,8 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
             }
         }
     }
+
+    closeCurrentTab();
 };
 
 export const actionUpdateWallet = (wallet: WalletInstance) => ({

@@ -44,7 +44,18 @@ const Styled = styled.div`
 `;
 
 const NewUser = (props: INewUserProps) => {
-    const { isReset, disabled, onChangePass, onChangeConfirmPass, onImport, onCreate, error, onBack } = props;
+    const {
+        isReset,
+        disabled,
+        onChangePass,
+        onChangeConfirmPass,
+        onImport,
+        onCreate,
+        error,
+        onBack,
+        pass,
+        confirmPass,
+    } = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = isReset ? translate.welcome.forgotPass : translate.welcome.newUser;
     return (
@@ -61,7 +72,7 @@ const NewUser = (props: INewUserProps) => {
                             type="password"
                             placeholder={dictionary.createPass}
                             onChange={onChangePass}
-                            defaultValue=""
+                            defaultValue={pass}
                             toggleVisible
                         />
                     </div>
@@ -71,7 +82,7 @@ const NewUser = (props: INewUserProps) => {
                             type="password"
                             placeholder={dictionary.confirmCreatePass}
                             onChange={onChangeConfirmPass}
-                            defaultValue=""
+                            defaultValue={confirmPass}
                             toggleVisible
                         />
                     </div>

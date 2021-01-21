@@ -46,6 +46,7 @@ export interface IPreloadLanguage {
     title1: string;
     title2: string;
     btnRetry: string;
+    openExtension: string;
 }
 
 export interface IAddressBookLanguage {
