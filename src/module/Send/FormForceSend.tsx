@@ -26,7 +26,7 @@ const EstimateFee = React.memo((props: IPropsFee) => {
         <Field
             component={InputField}
             name={FORM_CONFIGS.fee}
-            inputType={INPUT_FIELD.leftTitle}
+            inputType={INPUT_FIELD.leftTitleDisplayPTag}
             componentProps={{
                 disabled: true,
             }}
@@ -53,7 +53,7 @@ const FormForceSend = (props: IMergeProps & any) => {
                 <Field
                     component={InputField}
                     name={FORM_CONFIGS.amount}
-                    inputType={INPUT_FIELD.leftTitle}
+                    inputType={INPUT_FIELD.leftTitleDisplayPTag}
                     componentProps={{
                         disabled: true,
                     }}
@@ -64,7 +64,7 @@ const FormForceSend = (props: IMergeProps & any) => {
                 <Field
                     component={InputField}
                     name={FORM_CONFIGS.toAddress}
-                    inputType={INPUT_FIELD.leftTitle}
+                    inputType={INPUT_FIELD.leftTitleDisplayPTag}
                     componentProps={{
                         disabled: true,
                         value: ellipsisCenter({
@@ -79,7 +79,7 @@ const FormForceSend = (props: IMergeProps & any) => {
                     <Field
                         component={InputField}
                         name={FORM_CONFIGS.memo}
-                        inputType={INPUT_FIELD.leftTitle}
+                        inputType={INPUT_FIELD.leftTitleDisplayPTag}
                         componentProps={{
                             placeholder: translate.placeholderMemo,
                             disabled: true,

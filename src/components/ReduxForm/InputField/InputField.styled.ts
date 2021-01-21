@@ -3,21 +3,6 @@ import { COLORS } from 'src/styles';
 
 export const Styled = styled.div`
     margin-top: 15px;
-    .wrapper {
-        .input-container > input {
-            text-align: right;
-            padding-right: 50px;
-        }
-        .input-container .suffix {
-            right: 10px;
-            z-index: 2;
-            width: 40px;
-            text-align: center;
-        }
-        .input-not-suffix > input {
-            padding-right: 10px;
-        }
-    }
     .input-wrapper {
         position: relative;
         flex: 1;
@@ -125,5 +110,25 @@ export const Styled = styled.div`
                 right: 10px;
             }
         }
+    }
+    .wrapper {
+        margin-top: 25px;
+    }
+    .wrap-content {
+        background-color: ${COLORS.colorGrey};
+        height: 40px;
+        width: 215px;
+        display: inline-flex;
+        justify-content: flex-end;
+        align-items: center;
+        border-radius: 8px;
+        padding: 0 10px;
+    }
+    .wrap-content > p {
+        padding-right: 5px;
+    }
+    .suffix {
+        padding-left: 5px;
+        display: contents;
     }
 `;

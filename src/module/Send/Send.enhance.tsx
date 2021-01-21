@@ -167,7 +167,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
 };
 
 export default compose<IMergeProps, any>(
-    withLayout,
     reduxForm({
         form: FORM_CONFIGS.formName,
     }),
@@ -181,6 +180,7 @@ export default compose<IMergeProps, any>(
     withSend,
     withUnShield,
     withConnect,
-    enhance,
     withHeaderApp,
+    withLayout,
+    enhance,
 );
