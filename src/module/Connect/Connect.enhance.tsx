@@ -4,7 +4,11 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withHeaderApp } from 'src/components/Header';
 import withBalance from 'src/module/Account/Acount.enhanceBalance';
 import { useSelector } from 'react-redux';
-import { defaultAccountNameSelector } from 'src/module/Account/Account.selector';
+import { defaultAccountNameSelector, switchAccountSelector } from 'src/module/Account/Account.selector';
+import { WalletInstance } from 'incognito-js/build/web/browser';
+import throttle from 'lodash/throttle';
+import { walletDataSelector } from 'src/module/Wallet/Wallet.selector';
+import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 
 interface IProps {
     loadBalance: () => void;
@@ -12,20 +16,24 @@ interface IProps {
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     const { loadBalance } = props;
-    const accountName = useSelector(defaultAccountNameSelector);
     const [loading, setLoading] = React.useState<boolean>(true);
+    const defaultAccount: string = useSelector(defaultAccountNameSelector);
+    const wallet: WalletInstance = useSelector(walletDataSelector);
+    const switchAccount = useSelector(switchAccountSelector);
     const [allFollowedTokens, setAllFollowedTokens] = React.useState<any>([]);
-    const handleLoadBalance = async () => {
-        const tokensBalance = await loadBalance();
-        return tokensBalance;
-    };
+    const handleLoadBalance = throttle(
+        async () => {
+            const tokensBalance = await loadBalance();
+            setAllFollowedTokens(tokensBalance);
+            setLoading(false);
+        },
+        1000,
+        { trailing: true },
+    );
     React.useEffect(() => {
         setLoading(true);
-        handleLoadBalance().then((tokens) => {
-            setAllFollowedTokens(tokens);
-            setLoading(false);
-        });
-    }, [accountName]);
+        handleLoadBalance();
+    }, [wallet, defaultAccount, switchAccount]);
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, loading, allFollowedTokens }} />
@@ -33,4 +41,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     );
 };
 
-export default compose<IProps, any>(withHeaderApp, withBalance, enhance);
+export default compose<IProps, any>(withBalance, withWalletBalance, enhance, withHeaderApp);
