@@ -146,8 +146,6 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
             }
         }
     }
-
-    closeCurrentTab();
 };
 
 export const actionUpdateWallet = (wallet: WalletInstance) => ({
