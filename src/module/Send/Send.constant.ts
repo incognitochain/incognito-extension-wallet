@@ -34,3 +34,4 @@ export const FORCE_SEND_FORM_CONFIGS = {
 };
 export const ACTION_SET_SENDING = '[send] Toggle sending tx';
 export const ACTION_UPDATE_DATA_FORCE_SEND = '[send] Update data force send';
+export const ACTION_SET_ERROR_MESSAGE = '[send] Set form error message';

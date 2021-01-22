@@ -16,9 +16,6 @@ const enhanceAddressValidation = (WrappedComp: React.FunctionComponent) => (prop
     const { isAddressValidated } = useSelector(sendSelector);
     const { symbol, isErc20Token } = selectedPrivacy;
     const getExternalAddressValidator = React.useCallback(() => {
-        if (!isAddressValidated) {
-            return validator.combineInvalidAddress;
-        }
         if (isErc20Token || symbol === COINS.CRYPTO_SYMBOL.ETH) {
             return validator.combinedETHAddress;
         }

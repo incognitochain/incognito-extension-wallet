@@ -15,12 +15,9 @@ import { ISendData, ISendReducer } from './Send.interface';
 import { Styled, Row } from './Send.styled';
 import { FORM_CONFIGS } from './Send.constant';
 
-interface IPropsFee {
-    errorMessage: string;
-}
-const EstimateFee = React.memo((props: IPropsFee) => {
+const EstimateFee = React.memo(() => {
     const { types }: ISendReducer = useSelector(sendSelector);
-    const { errorMessage } = props;
+    const { feeError }: ISendData = useSelector(sendDataSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     return (
         <Field
@@ -32,7 +29,7 @@ const EstimateFee = React.memo((props: IPropsFee) => {
             }}
             subtitle={translate.fee}
             suffix={types[0].symbol}
-            errorCustom={errorMessage}
+            errorCustom={feeError}
         />
     );
 });
@@ -40,7 +37,6 @@ const EstimateFee = React.memo((props: IPropsFee) => {
 const FormForceSend = (props: IMergeProps & any) => {
     const { originUrl, handleSubmit, handleSend, validateAmount, validateAddress, onGoBack } = props;
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
-    const { errorMessage }: ISendData = useSelector(sendDataSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const theme: ITheme = useSelector(themeSelector);
     const { forceSendTitleBtnSubmit, disabledForm, inputMemo, inputAddress }: ISendData = useSelector(sendDataSelector);
@@ -87,10 +83,10 @@ const FormForceSend = (props: IMergeProps & any) => {
                         subtitle={translate.memo}
                     />
                 )}
-                <EstimateFee errorMessage={errorMessage} />
+                <EstimateFee />
                 <Row>
                     <Button title={translate.cancel} type="button" onClick={onGoBack} />
-                    <Button title={forceSendTitleBtnSubmit} disabled={disabledForm || !!errorMessage} type="submit" />
+                    <Button title={forceSendTitleBtnSubmit} disabled={disabledForm} type="submit" />
                 </Row>
             </form>
         </Styled>

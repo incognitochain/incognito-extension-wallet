@@ -1,4 +1,3 @@
-import memoize from 'lodash/memoize';
 import walletValidator from 'wallet-address-validator';
 import { validation } from '@zilliqa-js/util';
 import BigNumber from 'bignumber.js';
@@ -276,7 +275,7 @@ const isBNBAddress = (address: string) => new RegExp('^(t)?(bnb)([a-z0-9]{39})$'
 
 const isZILAddress = (address: string) => validation.isBech32(address);
 
-const address = (value: string) => {
+const address = () => {
     return 'Invalid address';
 };
 

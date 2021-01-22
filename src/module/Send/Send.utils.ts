@@ -118,6 +118,7 @@ export const getSendData = ({
         maxFeePrvText,
         rate,
         fast2x,
+        errorMessage,
     } = send;
     const isUseTokenFee = actived !== COINS.PRV.id;
     const isUsedPRVFee = !isUseTokenFee;
@@ -158,7 +159,7 @@ export const getSendData = ({
     });
     const maxFee = isUseTokenFee ? maxFeePToken : maxFeePrv;
     const maxFeeText = isUseTokenFee ? maxFeePTokenText : maxFeePrvText;
-    const errorMessage = !isFetching && isFetched && totalFee > maxFee ? ERROR_MESSAGE.INSUFFICIENT_BALANCE : '';
+    const feeError = !isFetching && isFetched && totalFee > maxFee ? ERROR_MESSAGE.INSUFFICIENT_BALANCE : '';
     const selector = formValueSelector(FORM_CONFIGS.formName);
     const inputAmount = selector(state, FORM_CONFIGS.amount);
     const inputAddress = selector(state, FORM_CONFIGS.toAddress);
@@ -196,7 +197,9 @@ export const getSendData = ({
         !isFetched ||
         !isAddressValidated ||
         (isUnShield && !userFees.isFetched) ||
-        (isUnShield && userFees.isFetching);
+        (isUnShield && userFees.isFetching) ||
+        !!feeError ||
+        !!errorMessage;
     const userFeeSelection = isUsedPRVFee ? 2 : 1;
     const userFeeLevel = fast2x ? 2 : 1;
     const nativeFee = isUsedPRVFee ? originalFee : '';
@@ -223,7 +226,6 @@ export const getSendData = ({
         totalFeeText,
         maxFee,
         maxFeeText,
-        errorMessage,
         minAmount,
         minAmountText,
         maxAmount,
@@ -254,6 +256,7 @@ export const getSendData = ({
         symbol,
         amountFormatedNoClip,
         totalFeeFormatedNoClip,
+        feeError,
     };
 };
 
