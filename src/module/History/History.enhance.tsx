@@ -447,6 +447,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     showReloadBalance: true,
                     handleRefresh: handleFetchHistory,
                     historyData,
+                    rightHeaderAppMenu: false,
                 }}
             />
         </ErrorBoundary>
