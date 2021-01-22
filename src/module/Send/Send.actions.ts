@@ -370,7 +370,6 @@ export const actionEstMinPrivacyFee = ({ minFeePTokenEst }: { minFeePTokenEst: n
     dispatch: Dispatch,
     getState: () => IRootState,
 ) => {
-    console.debug('minFeePTokenEst', minFeePTokenEst);
     const state = getState();
     const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
     const { rate, userFees }: ISendReducer = sendSelector(state);
