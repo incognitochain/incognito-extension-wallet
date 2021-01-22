@@ -10,7 +10,7 @@ import { defaultAccountSelector } from 'src/module/Account';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { COINS } from 'src/constants';
-import { API_CODE } from 'src/constants/error';
+import { API_CODE, API_ERROR } from 'src/constants/error';
 import { bridgeTokensSelector, chainTokensSelector } from '../Token/Token.selector';
 import { sendDataSelector, sendSelector, userFeesSelector } from './Send.selector';
 import { getMaxAmount, MAX_FEE_PER_TX, getTotalFee } from './Send.utils';
@@ -36,8 +36,14 @@ import {
     FORM_CONFIGS,
     ACTION_SET_SENDING,
     ACTION_UPDATE_DATA_FORCE_SEND,
+    ACTION_SET_ERROR_MESSAGE,
 } from './Send.constant';
 import { IDataForceSend, ISendData, ISendReducer, IUserFees } from './Send.interface';
+
+export const actionSetErrorMessage = (payload: string) => ({
+    type: ACTION_SET_ERROR_MESSAGE,
+    payload,
+});
 
 export const actionInitFetched = (payload: {
     screen: string;
@@ -45,6 +51,7 @@ export const actionInitFetched = (payload: {
     minAmount: number;
     minAmountText: string;
     isAddressValidated: boolean;
+    errorMessage: string;
 }) => ({
     type: ACTION_INIT_FETCHED,
     payload,
@@ -109,6 +116,7 @@ export const actionInitEstimateFee = (config: { screen: string }) => async (
                 minAmount,
                 minAmountText,
                 isAddressValidated: true,
+                errorMessage: '',
             }),
         );
     }
@@ -194,10 +202,11 @@ export const actionFetchUserFees = ({
         }
         await dispatch(actionFetchedUserFees(userFeesData));
     } catch (error) {
-        if (error && error?.response?.data.Code === API_CODE.MEMO_IS_REQUIRED) {
+        if (error && error?.response?.data?.Error?.Code === API_CODE.MEMO_IS_REQUIRED) {
+            dispatch(actionSetErrorMessage(API_ERROR[toString(API_CODE.MEMO_IS_REQUIRED)]));
             return dispatch(actionFetchFailUserFees(true));
         }
-        await dispatch(actionFetchFailUserFees());
+        dispatch(actionFetchFailUserFees());
         throw error;
     }
 };

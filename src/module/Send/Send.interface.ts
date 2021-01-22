@@ -37,7 +37,6 @@ export interface ISendData {
     totalFeeText: string;
     maxFee: number;
     maxFeeText: string;
-    errorMessage: string;
     minAmount: number;
     minAmountText: string;
     maxAmount: number;
@@ -68,6 +67,7 @@ export interface ISendData {
     symbol: string;
     amountFormatedNoClip: string;
     totalFeeFormatedNoClip: string;
+    feeError: string;
 }
 
 export interface ISendReducer {
@@ -115,6 +115,7 @@ export interface ISendReducer {
     userFeePToken: string;
     sending: false;
     defaultForceSend?: IDataForceSend;
+    errorMessage: string;
 }
 
 export interface IDataForceSend {
