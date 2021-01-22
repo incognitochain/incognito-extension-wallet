@@ -8,7 +8,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { IHistoryLanguage } from 'src/i18n';
 import { serverSelector } from 'src/module/Preload';
 import { IHistoryItem } from 'src/module/History/features/HistoryItem/HistoryItem.interface';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { actionToggleToast, Button, TOAST_CONFIGS } from 'src/components';
 import { TxBridgeHistoryModel, TxHistoryItem, TxHistoryReceiveModel } from './History.interface';
 import {
     getHistoryBridgeByIdSelector,
@@ -17,8 +17,7 @@ import {
     getHistoryReceiveByTxIdSelector,
 } from './History.selector';
 import { HISTORY_FORMAT_TYPE } from './History.constant';
-import { actionRemoveShieldBridgeToken } from './History.actions';
-import {} from 'incognito-js/build/web/browser';
+import { actionRemoveShieldBridgeToken, actionRetryShieldBridgeToken } from './History.actions';
 import {
     checkCachedHistoryById,
     getBridgeHistoryById,
@@ -27,17 +26,19 @@ import {
 } from 'incognito-js/build/web/browser';
 import { delay } from 'src/utils';
 import { camelCaseKeys } from 'src/utils/object';
+import { compose } from 'redux';
+import withHeaderApp from 'src/components/Header/Header.enhanceApp';
+import HistoryItem from './features/HistoryItem';
+import toString from 'lodash/toString';
 
 interface IProps {}
 
 interface TInner {
     historyLanguage: IHistoryLanguage;
     historyFactories: IHistoryItem[];
-    handleRemoveTxHistory?: any;
-    removingBridgeTx?: boolean;
-    canRemoveExpiredOrPendingShield?: boolean;
     handleRefreshHistory: () => any;
     refreshing: boolean;
+    historyData: any;
 }
 
 export interface IMergeProps extends IProps, TInner {}
@@ -48,6 +49,98 @@ export interface IState {
     historyFactories: IHistoryItem[];
 }
 
+const ShieldSub = React.memo((props: { history: TxBridgeHistoryModel }) => {
+    const { history } = props;
+    if (!history) {
+        return null;
+    }
+    const [removingBridgeTx, setRemoveBridgeTx] = React.useState(false);
+    const [retry, setRetry] = React.useState(false);
+    const historyLanguage: IHistoryLanguage = useSelector(translateByFieldSelector)('history');
+    const dispatch = useDispatch();
+    const { goBack } = useHistory();
+    const handleRemoveTxHistory = async () => {
+        try {
+            if (removingBridgeTx) {
+                return;
+            }
+            await setRemoveBridgeTx(true);
+            const removed: any = await dispatch(actionRemoveShieldBridgeToken(history.id));
+            if (removed) {
+                goBack();
+                dispatch(
+                    actionToggleToast({
+                        value: 'Canceled',
+                        type: TOAST_CONFIGS.success,
+                        toggle: true,
+                    }),
+                );
+            }
+        } catch (error) {
+            dispatch(
+                actionToggleToast({
+                    value: error,
+                    type: TOAST_CONFIGS.error,
+                    toggle: true,
+                }),
+            );
+        } finally {
+            await setRemoveBridgeTx(false);
+        }
+    };
+    const handleRetryShield = async (history: TxBridgeHistoryModel) => {
+        try {
+            if (retry) {
+                return;
+            }
+            await setRetry(true);
+            await dispatch(actionRetryShieldBridgeToken(history.id));
+            dispatch(
+                actionToggleToast({
+                    type: TOAST_CONFIGS.success,
+                    value: history.isDecentralized
+                        ? historyLanguage.retryDecentralizedMsg
+                        : historyLanguage.retryCentralizedMsg,
+                    toggle: true,
+                }),
+            );
+
+            goBack();
+        } catch (error) {
+            dispatch(
+                actionToggleToast({
+                    type: TOAST_CONFIGS.error,
+                    value: error,
+                    toggle: true,
+                }),
+            );
+        } finally {
+            setRetry(false);
+        }
+    };
+    if (history.canRetryExpiredShield) {
+        return (
+            <Button
+                className="btn-sub-shield fs-small"
+                disabled={retry}
+                onClick={() => handleRetryShield(history)}
+                title={`${historyLanguage.resume}${retry ? '...' : ''}`}
+            />
+        );
+    }
+    if (history.canRemovePendingShield) {
+        return (
+            <Button
+                className="btn-sub-shield fs-small"
+                disabled={removingBridgeTx}
+                onClick={handleRemoveTxHistory}
+                title={`${historyLanguage.cancel}${removingBridgeTx ? '...' : ''}`}
+            />
+        );
+    }
+    return null;
+});
+
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & HTMLAttributes<HTMLElement>) => {
     const { state: stateLocation }: any = useLocation();
     const { id }: { id: string } = useParams();
@@ -55,25 +148,24 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const historyLanguage: IHistoryLanguage = useSelector(translateByFieldSelector)('history');
     const server = useSelector(serverSelector);
     const dispatch = useDispatch();
-    const { goBack } = useHistory();
     const getHistoryCacheDetail = useSelector(getHistoryCacheDetailSelector);
     const getHistoryReceiveByTxId = useSelector(getHistoryReceiveByTxIdSelector);
     const getHistoryBridgeDetail = useSelector(getHistoryBridgeDetailSelector);
     const getHistoryBridgeById = useSelector(getHistoryBridgeByIdSelector);
     const [fetching, setFetching] = React.useState(false);
     const [historyFactories, setHistoryFactories] = React.useState<any>([]);
-    const [removingBridgeTx, setRemoveBridgeTx] = React.useState(false);
     const [historyData, setHistoryData] = React.useState<any>({});
     if (!h) {
         return null;
     }
+
     const handleFetchHistory = async () => {
         try {
             if (!id || fetching) {
                 return;
             }
             setFetching(true);
-            await delay(100);
+            await delay(50);
             let _historyData;
             switch (h.formatType) {
                 case HISTORY_FORMAT_TYPE.cache:
@@ -94,12 +186,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                                 descClassName: 'desc-amount',
                             },
                             {
-                                title: historyLanguage.fee,
+                                title: historyLanguage.inchainFee,
                                 desc: `${history?.feeFormated} ${history?.feeSymbol || ''}`,
                                 descClassName: 'desc-amount',
                             },
                             {
-                                title: historyLanguage.status,
+                                title: historyLanguage.inchainStatus,
                                 desc: history?.statusMessage,
                                 descColor: history?.statusColor,
                             },
@@ -167,9 +259,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                         id: Number(id),
                         currencyType: historyBridge.currencyType,
                     });
-                    const history: TxBridgeHistoryModel | undefined = getHistoryBridgeDetail(
-                        camelCaseKeys(historyData),
-                    );
+                    const history: TxBridgeHistoryModel | undefined = getHistoryBridgeDetail({
+                        ...camelCaseKeys(historyData),
+                        id: toString(id),
+                    });
                     _historyData = history;
                     if (!history) {
                         return [];
@@ -188,11 +281,16 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                                 disabled: !history?.incognitoAmount,
                             },
                             {
-                                title: historyLanguage.status,
-                                desc: history?.statusMessage,
-                                descColor: history?.statusColor,
-                                message: history?.statusDetail,
-                                retryShield: true,
+                                customItem: (
+                                    <HistoryItem
+                                        title={historyLanguage.status}
+                                        desc={history?.statusMessage}
+                                        descColor={history?.statusColor}
+                                        message={history?.statusDetail}
+                                        sub={<ShieldSub history={history} />}
+                                        hookClassName="shield-hook"
+                                    />
+                                ),
                             },
                             {
                                 title: historyLanguage.time,
@@ -333,35 +431,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             await setFetching(false);
         }
     };
-    const handleRemoveTxHistory = async () => {
-        try {
-            if (removingBridgeTx) {
-                return;
-            }
-            await setRemoveBridgeTx(true);
-            const removed: any = await dispatch(actionRemoveShieldBridgeToken(id));
-            if (removed) {
-                goBack();
-                dispatch(
-                    actionToggleToast({
-                        value: 'Canceled',
-                        type: TOAST_CONFIGS.success,
-                        toggle: true,
-                    }),
-                );
-            }
-        } catch (error) {
-            dispatch(
-                actionToggleToast({
-                    value: error,
-                    type: TOAST_CONFIGS.error,
-                    toggle: true,
-                }),
-            );
-        } finally {
-            await setRemoveBridgeTx(false);
-        }
-    };
     React.useEffect(() => {
         handleFetchHistory();
     }, [id]);
@@ -372,15 +441,16 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     ...props,
                     historyFactories,
                     historyLanguage,
-                    handleRemoveTxHistory,
-                    canRemoveExpiredOrPendingShield: !!historyData?.canRemoveExpiredOrPendingShield,
-                    removingBridgeTx,
+                    canRemovePendingShield: !!historyData?.canRemovePendingShield,
                     handleRefreshHistory: handleFetchHistory,
                     refreshing: fetching,
+                    showReloadBalance: true,
+                    handleRefresh: handleFetchHistory,
+                    historyData,
                 }}
             />
         </ErrorBoundary>
     );
 };
 
-export default enhance;
+export default compose(enhance, withHeaderApp);

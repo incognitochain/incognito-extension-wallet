@@ -10,6 +10,8 @@ export interface IHistoryItem {
     customItem?: React.FunctionComponent | React.ReactElement | any;
     disabled?: boolean;
     message?: string;
-    hook?: React.FunctionComponent | React.ReactElement | any;
+    sub?: React.ReactElement | any;
     retryShield?: boolean;
+    removeShield?: boolean;
+    hookClassName?: string;
 }

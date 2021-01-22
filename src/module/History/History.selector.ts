@@ -136,7 +136,7 @@ export const getHistoryBridgeDetailSelector = createSelector(
 );
 
 export const getHistoryBridgeByIdSelector = createSelector(historyBridgeDataSelector, (history) =>
-    memoize((id: string) => history.find((h: TxBridgeHistoryModel | any) => h?.id === id)),
+    memoize((id: string) => history.length > 0 && history.find((h: TxBridgeHistoryModel | any) => h?.id === id)),
 );
 
 export const combineHistorySelector = createSelector(

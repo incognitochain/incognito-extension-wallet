@@ -19,4 +19,4 @@ const RefreshComponent = React.forwardRef((props: IProps & React.ButtonHTMLAttri
     );
 });
 
-export default RefreshComponent;
+export default React.memo(RefreshComponent);

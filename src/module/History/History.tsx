@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { themeSelector } from 'src/module/Configs/Configs.selector';
 import HistoryItem from 'src/module/History/features/HistoryItem';
-import TrashBin from 'src/components/Icons/TrashBin';
-import RefreshComponent from 'src/components/Refresh';
 import withHistory, { IMergeProps } from './History.enhance';
 
 const Styled = styled.div`
@@ -25,38 +23,29 @@ const Styled = styled.div`
         width: 20px;
         height: 19px;
     }
+    .history-tx-item .shield-hook {
+        justify-content: unset;
+    }
+    .history-tx-item .hook .btn-sub-shield {
+        width: unset;
+        margin: 0 5px;
+        padding: 0 5px;
+        height: 20px;
+        line-height: 20px;
+        border-radius: 4px;
+    }
+    .scroll-view {
+        max-height: 465px;
+    }
 `;
 
-const RightHeader = React.memo((props: IMergeProps & any) => {
-    const {
-        handleRemoveTxHistory,
-        removingBridgeTx,
-        canRemoveExpiredOrPendingShield,
-        handleRefreshHistory,
-        refreshing,
-    } = props;
-    return (
-        <div className="history-right-header flex">
-            <RefreshComponent handleRefresh={handleRefreshHistory} refreshing={refreshing} />
-            <div className="remove-history-container">
-                {canRemoveExpiredOrPendingShield ? (
-                    removingBridgeTx ? (
-                        <LoadingIcon />
-                    ) : (
-                        <TrashBin onClick={handleRemoveTxHistory} />
-                    )
-                ) : null}
-            </div>
-        </div>
-    );
-});
-
 const History = React.memo((props: IMergeProps & any) => {
-    const { historyFactories, historyLanguage }: IMergeProps = props;
+    const { historyFactories, historyLanguage, historyData }: IMergeProps = props;
     const theme = useSelector(themeSelector);
     return (
         <Styled theme={theme}>
-            <Header title={historyLanguage.headerTitle} rightHeader={<RightHeader {...props} />} />
+            <Header title={historyLanguage.headerTitle} />
+            {!historyData || (historyFactories.length === 0 && <LoadingIcon center />)}
             <div className="scroll-view">
                 {historyFactories.map((item, index) => (
                     <HistoryItem key={item?.title || index} {...item} />
@@ -66,4 +55,4 @@ const History = React.memo((props: IMergeProps & any) => {
     );
 });
 
-export default withHistory(React.memo(History));
+export default withHistory(History);

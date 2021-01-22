@@ -183,9 +183,13 @@ const language: ILanguage = {
         memo: 'Memo',
         contract: 'Contract',
         resume: 'Resume',
+        cancel: 'Cancel',
         retryCentralizedMsg: 'Your request has been sent, we will process it soon. The history status will be updated',
+        retryDecentralizedMsg: 'Your request has been sent, we will process it soon.',
         inchainFee: 'In-chain fee',
         outchainFee: 'Out-chain fee',
+        inchainStatus: 'In-chain status',
+        outchainStatus: 'Out-chain status',
     },
     addressBook: {
         headerTitle: 'Address book',
