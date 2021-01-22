@@ -71,7 +71,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         const val = [];
         if (minAmountValidator) val.push(minAmountValidator);
         if (maxAmountValidator) val.push(maxAmountValidator);
-        if (selectedPrivacy?.isIncognitoToken || isTokenBySymbol(COINS.CRYPTO_SYMBOL.NEO)) {
+        if (selectedPrivacy?.isIncognitoToken || isTokenBySymbol(selectedPrivacy.symbol)) {
             val.push(...validator.combinedNanoAmount);
         }
         val.push(...validator.combinedAmount);
