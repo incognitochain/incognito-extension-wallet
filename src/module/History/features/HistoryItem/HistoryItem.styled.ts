@@ -34,17 +34,6 @@ export const Styled = styled.div`
     .arrow-icon {
         right: 0;
     }
-    .history-tx-item .shield-hook {
-        justify-content: unset;
-    }
-    .shield-hook .btn-retry-shield {
-        width: unset;
-        margin: 0 5px;
-        padding: 0 5px;
-        height: 20px;
-        line-height: 20px;
-        border-radius: 4px;
-    }
     .message > a {
         color: ${(props: { theme: ITheme }) => props.theme.text};
         display: inline;

@@ -4,7 +4,7 @@ import { IRouteProps } from 'src/module';
 const historyRoute: IRouteProps = {
     path: '/history/:id',
     exact: true,
-    component: lazy(() => import('./History')),
+    component: lazy(() => import('./History').then((res: any) => res)),
     name: 'history',
     to: '/history/:id',
 };

@@ -11,10 +11,10 @@ import { delay } from 'src/utils';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import Refresh from 'src/components/Refresh';
 import { actionRemoveTooltip, actionShowTooltip } from 'src/module/Tooltip/Tooltip.actions';
+import { IWalletLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
 import { actionSetRefreshPage } from './Header.actions';
 import { refreshHeaderSelector } from './Header.selector';
-import { IAccountLanguage, IWalletLanguage } from '../../i18n';
-import { translateByFieldSelector } from '../../module/Configs';
 
 const Styled = styled.div`
     margin-bottom: 30px;
@@ -29,13 +29,8 @@ const Styled = styled.div`
     .menu .btn-select-account {
         margin-left: 10px;
     }
-`;
-
-const Row = styled.div`
-    display: flex;
-    flex-direction: row;
-    div {
-        margin-right: 15px;
+    .menu .refresh-container {
+        margin-left: 15px;
     }
     .refresh-icon {
         -webkit-filter: ${(props: { theme: ITheme }) => props.theme.text};
@@ -75,10 +70,8 @@ const HeaderApp = React.memo((props: IProps & any) => {
     };
     return (
         <Styled>
-            <Row>
-                <div className="menu">
-                    <SettingIcon />
-                </div>
+            <div className="menu">
+                <SettingIcon />
                 {!!showReloadBalance && (
                     <Refresh
                         ref={iconRefreshRef}
@@ -89,7 +82,7 @@ const HeaderApp = React.memo((props: IProps & any) => {
                     />
                 )}
                 {!!showConnectStatus && <ConnectStatus />}
-            </Row>
+            </div>
             <div className="menu">
                 <QrCode route={receiveRoute} />
                 <BtnSelectAccount />

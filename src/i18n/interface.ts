@@ -104,9 +104,13 @@ export interface IHistoryLanguage {
     memo: string;
     contract: string;
     resume: string;
+    cancel: string;
     retryCentralizedMsg: string;
+    retryDecentralizedMsg: string;
     inchainFee: string;
     outchainFee: string;
+    inchainStatus: string;
+    outchainStatus: string;
 }
 
 export interface ISettingLanguage {

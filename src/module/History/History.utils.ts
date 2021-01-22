@@ -484,12 +484,9 @@ export const getShieldHistoryBridgeData = ({
             !isDecentralized &&
             addressType === TYPE.SHIELD &&
             STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status);
-        const canRemoveExpiredOrPendingShield =
+        const canRemovePendingShield =
             addressType === TYPE.SHIELD &&
-            (STATUS_CODE_SHIELD_CENTRALIZED.PENDING === status ||
-                STATUS_CODE_SHIELD_CENTRALIZED.TIMED_OUT.includes(status) ||
-                STATUS_CODE_SHIELD_DECENTRALIZED.PENDING === status ||
-                STATUS_CODE_SHIELD_DECENTRALIZED.TIMED_OUT === status);
+            (STATUS_CODE_SHIELD_CENTRALIZED.PENDING === status || STATUS_CODE_SHIELD_DECENTRALIZED.PENDING === status);
         return {
             ...history,
             statusMessage,
@@ -503,7 +500,7 @@ export const getShieldHistoryBridgeData = ({
             expiredAtFormated,
             statusColor,
             canRetryExpiredShield,
-            canRemoveExpiredOrPendingShield,
+            canRemovePendingShield,
             isShieldTx,
         };
     } catch (error) {

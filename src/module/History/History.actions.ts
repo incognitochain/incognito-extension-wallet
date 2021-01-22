@@ -258,7 +258,7 @@ export const actionRemoveShieldBridgeToken = (id: string) => async (dispatch: Di
         const tokenId: string = selectedTokenIdSelector(state);
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
         const history: TxBridgeHistoryModel | any = getHistoryBridgeByIdSelector(state)(id);
-        if (!history || !history.canRemoveExpiredOrPendingShield) {
+        if (!history || !history.canRemovePendingShield) {
             return;
         }
         return await token.bridgeRemoveHistory({ ...history, id: Number(id) });

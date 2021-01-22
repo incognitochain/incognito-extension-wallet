@@ -130,7 +130,7 @@ export interface TxBridgeHistoryModel {
     statusDetail: string;
     canRetryExpiredShield: boolean;
     isDecentralized: boolean;
-    canRemoveExpiredOrPendingShield: boolean;
+    canRemovePendingShield: boolean;
     isShieldTx: boolean;
     isUnShieldTx: boolean;
     privacyFee?: string;

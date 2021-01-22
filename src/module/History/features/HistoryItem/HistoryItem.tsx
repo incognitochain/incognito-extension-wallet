@@ -1,65 +1,7 @@
 import React from 'react';
-import { actionToggleToast, Button, TOAST_CONFIGS } from 'src/components';
-import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDownIcon, ArrowUpIcon, CopyIcon, OpenLinkIcon } from 'src/components/Icons';
-import { IHistoryLanguage } from 'src/i18n';
-import { translateByFieldSelector } from 'src/module/Configs';
-import { TxBridgeHistoryModel } from 'src/module/History';
-import { useHistory, useParams } from 'react-router-dom';
-import { getHistoryBridgeByIdSelector } from 'src/module/History/History.selector';
-import { actionRetryShieldBridgeToken } from 'src/module/History/History.actions';
 import { IHistoryItem } from './HistoryItem.interface';
 import { Styled } from './HistoryItem.styled';
-
-const RetryShield = React.memo(() => {
-    const historyLanguage: IHistoryLanguage = useSelector(translateByFieldSelector)('history');
-    const params: any = useParams();
-    const dispatch = useDispatch();
-    const useHistoryHooks = useHistory();
-    const { id } = params;
-    const history: TxBridgeHistoryModel | any = useSelector(getHistoryBridgeByIdSelector)(id);
-    const [retry, setRetry] = React.useState(false);
-    if (!history || !history.canRetryExpiredShield) {
-        return null;
-    }
-    const handleRetryShield = async () => {
-        try {
-            if (retry) {
-                return;
-            }
-            await setRetry(true);
-            await dispatch(actionRetryShieldBridgeToken(id));
-            if (!history.isDecentralized) {
-                dispatch(
-                    actionToggleToast({
-                        type: TOAST_CONFIGS.success,
-                        value: historyLanguage.retryCentralizedMsg,
-                        toggle: true,
-                    }),
-                );
-            }
-            useHistoryHooks.goBack();
-        } catch (error) {
-            dispatch(
-                actionToggleToast({
-                    type: TOAST_CONFIGS.error,
-                    value: error,
-                    toggle: true,
-                }),
-            );
-        } finally {
-            setRetry(false);
-        }
-    };
-    return (
-        <Button
-            className="btn-retry-shield fs-small"
-            disabled={retry}
-            onClick={handleRetryShield}
-            title={`${historyLanguage.resume}${retry ? '...' : ''}`}
-        />
-    );
-});
 
 const HistoryItem = React.memo((props: IHistoryItem) => {
     const {
@@ -73,8 +15,8 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
         descColor = '',
         disabled = false,
         message = '',
-        hook,
-        retryShield,
+        sub,
+        hookClassName = '',
     } = props;
     const toggleStatusMessage = !!message;
     const [toggle, setToggle] = React.useState(false);
@@ -93,12 +35,11 @@ const HistoryItem = React.memo((props: IHistoryItem) => {
         <Styled>
             <div className="history-tx-item">
                 <p className={`sub-text title ${titleClassName}`}>{title}</p>
-                <div className={`hook  ${retryShield ? 'shield-hook' : ''}`}>
+                <div className={`hook ${hookClassName}`}>
                     <span className={`ellipsis desc ${descClassName}`} style={{ color: descColor }}>
                         {desc}
                     </span>
-                    {retryShield && <RetryShield />}
-                    {!!hook && hook}
+                    {!!sub && sub}
                     {message && (
                         <div
                             className={`${toggleStatusMessage ? 'toggle-message' : ''} arrow-icon center-abs-ver`}
