@@ -4,9 +4,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import convert from 'src/utils/convert';
-import { ISelectedPrivacy, isTokenBySymbolSelector, selectedPrivacySelector } from 'src/module/Token';
+import { ISelectedPrivacy, popularCoinIdsSelector, selectedPrivacySelector } from 'src/module/Token';
 import { validator } from 'src/components/ReduxForm';
-import { COINS } from 'src/constants';
 import { ISendData } from './Send.interface';
 import { sendDataSelector } from './Send.selector';
 
@@ -22,7 +21,7 @@ interface IState {
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const sendData: ISendData = useSelector(sendDataSelector);
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
-    const isTokenBySymbol = useSelector(isTokenBySymbolSelector);
+    const popularCoinsIds = useSelector(popularCoinIdsSelector);
     const { fee, feeUnitByTokenId, minAmount, maxAmount, maxAmountText, minAmountText, isIncognitoAddress } = sendData;
     const initialState: IState = {
         maxAmountValidator: undefined,
@@ -71,7 +70,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         const val = [];
         if (minAmountValidator) val.push(minAmountValidator);
         if (maxAmountValidator) val.push(maxAmountValidator);
-        if (selectedPrivacy?.isIncognitoToken || isTokenBySymbol(selectedPrivacy.symbol)) {
+        if (selectedPrivacy?.isIncognitoToken || popularCoinsIds.NEO === selectedPrivacy.tokenId) {
             val.push(...validator.combinedNanoAmount);
         }
         val.push(...validator.combinedAmount);
