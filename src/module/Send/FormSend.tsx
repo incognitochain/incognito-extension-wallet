@@ -51,15 +51,16 @@ const FeeTypes = React.memo(() => {
 });
 
 const ErrorBlock = React.memo(() => {
-    const { errorMessage }: ISendData = useSelector(sendDataSelector);
-    if (!errorMessage) {
-        return null;
+    const { feeError }: ISendData = useSelector(sendDataSelector);
+    const { errorMessage }: ISendReducer = useSelector(sendSelector);
+    if (errorMessage || feeError) {
+        return (
+            <div className="error-block">
+                <p className="error fs-small">{errorMessage || feeError}</p>
+            </div>
+        );
     }
-    return (
-        <div className="error-block">
-            <p className="error fs-small">{errorMessage}</p>
-        </div>
-    );
+    return null;
 });
 
 const EstimateFee = React.memo(() => {

@@ -22,6 +22,7 @@ import {
     ACTION_FETCH_FAIL_USER_FEES,
     ACTION_SET_SENDING,
     ACTION_UPDATE_DATA_FORCE_SEND,
+    ACTION_SET_ERROR_MESSAGE,
 } from './Send.constant';
 import { hasMultiLevelUsersFee, MAX_FEE_PER_TX } from './Send.utils';
 
@@ -74,6 +75,7 @@ const defaultState: ISendReducer = {
     totalFeePTokenText: '0',
     userFeePToken: '0',
     sending: false,
+    errorMessage: '',
 };
 
 const initialState: ISendReducer = {
@@ -180,13 +182,6 @@ const sendReducer = (
         }
         case ACTION_FETCHED_MAX_FEE_PRV: {
             const { maxFeePrv, maxFeePrvText } = action.payload;
-            // const maxFeePrv = accountBalance;
-            // const maxFeePrvText = format.formatAmount({
-            //   originalAmount: maxFeePrv,
-            //   decimalDigits: false,
-            //   decimals: COINS.PRV.pDecimal.s,
-            //   clipAmount: false,
-            // });
             return {
                 ...state,
                 maxFeePrv,
@@ -267,6 +262,13 @@ const sendReducer = (
             return {
                 ...state,
                 defaultForceSend: payload,
+            };
+        }
+        case ACTION_SET_ERROR_MESSAGE: {
+            console.debug('action.payload', action.payload);
+            return {
+                ...state,
+                errorMessage: action.payload,
             };
         }
         default:
