@@ -226,7 +226,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     _historyData = { ...history, memo };
                     await setHistoryFactories([
                         {
-                            title: historyLanguage.id,
+                            title: historyLanguage.inchainTxId,
                             desc: history?.txId,
                             copyData: history?.txId,
                             link: history?.txId ? `${server.exploreChainURL}/tx/${history?.txId}` : '',
@@ -244,6 +244,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                         {
                             title: historyLanguage.time,
                             desc: history?.timeFormated,
+                        },
+                        {
+                            title: historyLanguage.coin,
+                            desc: history.symbol,
                         },
                         {
                             title: historyLanguage.memo,
