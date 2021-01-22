@@ -67,9 +67,9 @@ export const getTotalFee = ({
     let userFee;
     try {
         const userFees = isUsedPRVFee ? userFeesData?.PrivacyFees : userFeesData?.TokenFees;
-        userFee = new BigNumber(userFees?.Level1 || '');
+        userFee = new BigNumber(userFees?.Level1 || '0');
         if (hasMultiLevel) {
-            userFee = new BigNumber(fast2x ? userFees?.Level2 || '' : userFees?.Level1 || '');
+            userFee = new BigNumber(fast2x ? userFees?.Level2 || '0' : userFees?.Level1 || '0');
         }
         totalFee = userFee.plus(feeEst || 0);
         totalFee = floor(totalFee.toNumber());
