@@ -42,11 +42,19 @@ interface IProps {
     showConnectStatus?: boolean;
     showReloadBalance?: boolean;
     handleRefresh: () => any;
+    rightHeaderAppMenu?: boolean;
+    leftHeaderAppMenu?: boolean;
 }
 
 const idRefresh = 'tooltip-refresh';
 const HeaderApp = React.memo((props: IProps & any) => {
-    const { showConnectStatus, showReloadBalance, handleRefresh } = props;
+    const {
+        showConnectStatus,
+        showReloadBalance,
+        handleRefresh,
+        rightHeaderAppMenu = true,
+        leftHeaderAppMenu = true,
+    } = props;
     const translate: IWalletLanguage = useSelector(translateByFieldSelector)('wallet');
     const dispatch = useDispatch();
     const refreshing = useSelector(refreshHeaderSelector);
@@ -70,29 +78,33 @@ const HeaderApp = React.memo((props: IProps & any) => {
     };
     return (
         <Styled>
-            <div className="menu">
-                <SettingIcon />
-                {!!showReloadBalance && (
-                    <Refresh
-                        ref={iconRefreshRef}
-                        handleRefresh={onClickRefresh}
-                        refreshing={refreshing}
-                        onMouseOver={showTooltipRefresh}
-                        onMouseOut={removeTooltipRefresh}
-                    />
-                )}
-                {!!showConnectStatus && <ConnectStatus />}
-            </div>
-            <div className="menu">
-                <QrCode route={receiveRoute} />
-                <BtnSelectAccount />
-            </div>
+            {leftHeaderAppMenu && (
+                <div className="menu">
+                    <SettingIcon />
+                    {!!showReloadBalance && (
+                        <Refresh
+                            ref={iconRefreshRef}
+                            handleRefresh={onClickRefresh}
+                            refreshing={refreshing}
+                            onMouseOver={showTooltipRefresh}
+                            onMouseOut={removeTooltipRefresh}
+                        />
+                    )}
+                    {!!showConnectStatus && <ConnectStatus />}
+                </div>
+            )}
+            {rightHeaderAppMenu && (
+                <div className="menu">
+                    <QrCode route={receiveRoute} />
+                    <BtnSelectAccount />
+                </div>
+            )}
         </Styled>
     );
 });
 
 const enhanceHeaderApp = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
-    const { showConnectStatus, showReloadBalance, handleRefresh } = props;
+    const { handleRefresh, ...rest } = props;
     const dispatch = useDispatch();
     const onHandleRefresh = async () => {
         if (typeof handleRefresh === 'function') {
@@ -108,11 +120,7 @@ const enhanceHeaderApp = (WrappedComponent: React.FunctionComponent) => (props: 
     };
     return (
         <ErrorBoundary>
-            <HeaderApp
-                handleRefresh={onHandleRefresh}
-                showConnectStatus={showConnectStatus}
-                showReloadBalance={showReloadBalance}
-            />
+            <HeaderApp handleRefresh={onHandleRefresh} {...rest} />
             <WrappedComponent {...props} />
         </ErrorBoundary>
     );
