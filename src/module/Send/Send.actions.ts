@@ -352,8 +352,8 @@ export const actionEstPrivacyFee = ({ feePTokenEst }: { feePTokenEst: number }) 
         );
         if (isUseTokenFee) {
             await Promise.all([
-                dispatch(change(FORM_CONFIGS.formName, 'fee', totalFeePTokenText)),
-                dispatch(focus(FORM_CONFIGS.formName, 'fee')),
+                dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.fee, totalFeePTokenText)),
+                dispatch(focus(FORM_CONFIGS.formName, FORM_CONFIGS.fee)),
             ]);
         }
     }
@@ -370,6 +370,7 @@ export const actionEstMinPrivacyFee = ({ minFeePTokenEst }: { minFeePTokenEst: n
     dispatch: Dispatch,
     getState: () => IRootState,
 ) => {
+    console.debug('minFeePTokenEst', minFeePTokenEst);
     const state = getState();
     const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
     const { rate, userFees }: ISendReducer = sendSelector(state);
