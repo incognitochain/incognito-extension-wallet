@@ -25,13 +25,14 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         async () => {
             const tokensBalance = await loadBalance();
             setAllFollowedTokens(tokensBalance);
-            setLoading(false);
+            setTimeout(() => setLoading(false), 1000);
         },
         1000,
         { trailing: true },
     );
     React.useEffect(() => {
         setLoading(true);
+        handleLoadBalance.cancel();
         handleLoadBalance();
     }, [wallet, defaultAccount, switchAccount]);
     return (
