@@ -92,7 +92,7 @@ export const followedTokensIdsSelector = createSelector(followedTokensSelect, (f
     const privacyTokenIds = reverse([...followed].map((t) => t.tokenId));
     return excludePRV ? privacyTokenIds : [COINS.PRV.id, ...privacyTokenIds];
 });
-export const popularCoinIdsSeletor = createSelector(preloadSelector, (preload) => {
+export const popularCoinIdsSelector = createSelector(preloadSelector, (preload) => {
     const { mainnet } = preload.configs;
     let result: { [symbol: string]: any } = {};
     if (mainnet) {
@@ -102,6 +102,7 @@ export const popularCoinIdsSeletor = createSelector(preloadSelector, (preload) =
             USDT: '716fd1009e2a1669caacc36891e707bfdf02590f96ebd897548e8963c95ebac0',
             BNB: 'b2655152784e8639fa19521a7035f331eea1f1e911b2f3200a507ebb4554387b',
             XMR: 'c01e7dc1d1aba995c19b257412340b057f8ad1482ccb6a9bb0adce61afbf05d4',
+            NEO: '86c45a9fdddc5546e3b4f09dba211b836aefc5d08ed22e7d33cff7f9b8b39c10',
         };
     } else {
         result = {
@@ -110,6 +111,7 @@ export const popularCoinIdsSeletor = createSelector(preloadSelector, (preload) =
             USDT: '4946b16a08a9d4afbdf416edf52ef15073db0fc4a63e78eb9de80f94f6c0852a',
             BNB: '9fca0a0947f4393994145ef50eecd2da2aa15da2483b310c2c0650301c59b17d',
             XMR: 'c01e7dc1d1aba995c19b257412340b057f8ad1482ccb6a9bb0adce61afbf05d4',
+            NEO: '86c45a9fdddc5546e3b4f09dba211b836aefc5d08ed22e7d33cff7f9b8b39c10',
         };
     }
     return result;
@@ -125,7 +127,7 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
     followedTokensIdsSelector,
     followedTokensSelect,
     accountBalanceSelector,
-    popularCoinIdsSeletor,
+    popularCoinIdsSelector,
     decimalDigitsSelector,
     (pCustomTokens, pTokens, followedTokensIds, followed, accountBalance, coins, decimalDigits) =>
         memoize((tokenID: string) => {
@@ -213,7 +215,7 @@ export const availableTokensSelector = createSelector(
 );
 
 export const pUSDTSelector = createSelector(
-    popularCoinIdsSeletor,
+    popularCoinIdsSelector,
     getPrivacyDataByTokenIDSelector,
     (coins, getPrivacyDataByTokenID) => getPrivacyDataByTokenID(coins.USDT),
 );
@@ -280,7 +282,7 @@ export const totalShieldedTokensSelector = createSelector(
     },
 );
 
-export const isTokenBySymbolSelector = createSelector(popularCoinIdsSeletor, (coins) => (symbol: string) =>
+export const isTokenBySymbolSelector = createSelector(popularCoinIdsSelector, (coins) => (symbol: string) =>
     !!coins[symbol],
 );
 
