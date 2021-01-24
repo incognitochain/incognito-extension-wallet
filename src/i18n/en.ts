@@ -155,6 +155,7 @@ const language: ILanguage = {
         toAddress: 'To',
         incognitoAddress: 'Enter address',
         fee: 'Fee',
+        fast: 'Fast',
         memo: 'Memo',
         placeholderMemo: 'Add a memo (optional)',
         balance: 'Balance',

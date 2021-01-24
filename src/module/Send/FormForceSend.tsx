@@ -9,30 +9,12 @@ import { INPUT_FIELD } from 'src/components/ReduxForm/InputField/InputField.cons
 import { ITheme } from 'src/styles';
 import { ellipsisCenter } from 'src/utils';
 import { IMergeProps } from './Send.enhance';
-import { sendDataSelector, sendSelector } from './Send.selector';
+import { sendDataSelector } from './Send.selector';
 import { ISelectedPrivacy, selectedPrivacySelector } from '../Token';
-import { ISendData, ISendReducer } from './Send.interface';
+import { ISendData } from './Send.interface';
 import { Styled, Row } from './Send.styled';
 import { FORM_CONFIGS } from './Send.constant';
-
-const EstimateFee = React.memo(() => {
-    const { types }: ISendReducer = useSelector(sendSelector);
-    const { feeError }: ISendData = useSelector(sendDataSelector);
-    const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
-    return (
-        <Field
-            component={InputField}
-            name={FORM_CONFIGS.fee}
-            inputType={INPUT_FIELD.leftTitleDisplayPTag}
-            componentProps={{
-                disabled: true,
-            }}
-            subtitle={translate.fee}
-            suffix={types[0].symbol}
-            errorCustom={feeError}
-        />
-    );
-});
+import { ErrorBlock, EstimateFee } from './FormSend';
 
 const FormForceSend = (props: IMergeProps & any) => {
     const { originUrl, handleSubmit, handleSend, validateAmount, validateAddress, onGoBack } = props;
@@ -84,6 +66,7 @@ const FormForceSend = (props: IMergeProps & any) => {
                     />
                 )}
                 <EstimateFee />
+                <ErrorBlock />
                 <Row>
                     <Button title={translate.cancel} type="button" onClick={onGoBack} />
                     <Button title={forceSendTitleBtnSubmit} disabled={disabledForm} type="submit" />

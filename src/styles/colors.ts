@@ -59,4 +59,5 @@ export const COLORS = {
     colorGreyBold: '#8A8A8E',
     colorGreyMedium: '#C4C4C6',
     colorGreyLight: '#D8D8D8',
+    colorManateeGrey: '#959599',
 };
