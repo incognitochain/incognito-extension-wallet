@@ -12,13 +12,15 @@ export const Styled = styled.div`
     }
     .estimate-fee {
         justify-content: space-between;
-        margin-top: 10px;
+        margin-top: 15px;
     }
     .fee-types .fee-type {
         background-color: ${COLORS.colorGreyLight};
-        border-radius: 5px;
+        border-radius: 8px;
         color: ${COLORS.black};
-        padding: 3px 5px;
+        padding-top: 1px;
+        min-width: 54px;
+        height: 28px;
         &.selected {
             color: ${COLORS.white};
             background-color: ${(props: IGlobalStyle) => props.theme.button};
@@ -39,8 +41,7 @@ export const Styled = styled.div`
         margin-top: 10px;
     }
     .fastfee-icon {
-        margin-right: 5px;
-        margin-left: unset;
+        margin-left: 5px;
     }
 `;
 
@@ -50,7 +51,6 @@ export const Row = styled.div`
     justify-content: space-between;
     .btn-container {
         width: 145px;
-        margin: 30px 0px;
-        margin-left: inherit;
+        margin: 30px 0;
     }
 `;

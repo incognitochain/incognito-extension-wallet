@@ -20,7 +20,7 @@ export const Styled = styled.div`
         flex: 1;
     }
     .sub-title {
-        width: 70px;
+        width: 60px;
     }
     > p {
         margin-top: 10px;
@@ -112,12 +112,12 @@ export const Styled = styled.div`
         }
     }
     .wrapper {
-        margin-top: 25px;
+        margin-top: 15px;
     }
     .wrap-content {
         background-color: ${COLORS.colorGrey};
         height: 40px;
-        width: 215px;
+        width: 230px;
         display: inline-flex;
         justify-content: flex-end;
         align-items: center;

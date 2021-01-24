@@ -50,7 +50,7 @@ const FeeTypes = React.memo(() => {
     );
 });
 
-const ErrorBlock = React.memo(() => {
+export const ErrorBlock = React.memo(() => {
     const { feeError }: ISendData = useSelector(sendDataSelector);
     const { errorMessage }: ISendReducer = useSelector(sendSelector);
     if (errorMessage || feeError) {
@@ -63,24 +63,38 @@ const ErrorBlock = React.memo(() => {
     return null;
 });
 
-const EstimateFee = React.memo(() => {
+export const EstimateFee = React.memo(() => {
     const { totalFeeText, hasMultiLevel }: ISendData = useSelector(sendDataSelector);
     const { fast2x } = useSelector(sendSelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const dispatch = useDispatch();
     const handleToggleFastFee = () => dispatch(actionToggleFastFee());
-    return (
-        <div className="estimate-fee flex">
+    const renderFee = () => (
+        <div className="estimate-fee flex fw-medium">
             <div className="left">
-                <p className="fee">{`${translate.fee}: ${totalFeeText}`}</p>
+                <p className="fee">{translate.fee}</p>
             </div>
             <div className="right flex">
-                {hasMultiLevel && (
-                    <FastFeeIcon onClick={handleToggleFastFee} className="fastfee-icon" fast2x={fast2x} />
-                )}
+                <p className="fee">{totalFeeText}</p>
                 <FeeTypes />
             </div>
         </div>
+    );
+    const renderPriorityFee = () => (
+        <div className="estimate-fee flex fw-medium">
+            <div className="left">
+                <p className="fee">{translate.fast}</p>
+            </div>
+            <div className="right flex">
+                <FastFeeIcon handleClick={handleToggleFastFee} className="fastfee-icon" fast2x={fast2x} />
+            </div>
+        </div>
+    );
+    return (
+        <>
+            {hasMultiLevel && renderPriorityFee()}
+            {renderFee()}
+        </>
     );
 });
 

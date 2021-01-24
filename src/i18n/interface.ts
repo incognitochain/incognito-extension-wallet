@@ -83,6 +83,7 @@ export interface ISendLanguage {
     toAddress: string;
     incognitoAddress: string;
     fee: string;
+    fast: string;
     memo: string;
     placeholderMemo: string;
     confirm: IConfirmTxLanguage;

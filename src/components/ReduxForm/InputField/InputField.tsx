@@ -95,7 +95,7 @@ const InputField = (props: IInputFieldProps) => {
                 const value = componentProps?.value || input?.value || '';
                 return (
                     <div className="hook-row-space-between wrapper">
-                        <p className="sub-title fw-medium fs-medium ellipsis">{subtitle}</p>
+                        <p className="sub-title fw-medium fs-regular ellipsis">{subtitle}</p>
                         <div className="wrap-content">
                             <p className="ellipsis">{value}</p>
                             {suffix && <p className="suffix ellipsis">{suffix}</p>}
