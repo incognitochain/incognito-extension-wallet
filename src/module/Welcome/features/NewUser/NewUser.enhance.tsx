@@ -86,13 +86,23 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
                 onBack={() => {
                     setIsImport(false);
                     dispatch(actionCreatePassword(''));
+                    setPass('');
+                    setConfirmPass('');
                 }}
             />
         );
     }
 
     if (appPassword) {
-        return <NewMasterKey onBack={() => dispatch(actionCreatePassword(''))} />;
+        return (
+            <NewMasterKey
+                onBack={() => {
+                    dispatch(actionCreatePassword(''));
+                    setPass('');
+                    setConfirmPass('');
+                }}
+            />
+        );
     }
 
     return (
