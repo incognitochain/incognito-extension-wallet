@@ -25,19 +25,20 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
 
     const handleChangeMasterKeyName = useCallback((e) => {
         setError('');
-        setMasterKeyName(e.target.value);
+        setMasterKeyName(trim(e.target.value));
     }, []);
 
     const handleChangeMnemonic = useCallback((e) => {
         setError('');
-        setMnemonic(e.target.value);
+        setMnemonic(trim(e.target.value || '').replace(/\n/g, ' '));
     }, []);
 
     const isDisabled = useMemo(() => {
-        return !trim(masterKeyName) || !mnemonic || mnemonic.split(' ').length !== 12;
+        return !masterKeyName || !mnemonic || mnemonic.split(' ').length !== 12;
     }, [mnemonic, masterKeyName]);
 
-    const handleVerify = async () => {
+    const handleVerify = async (e: any) => {
+        e.preventDefault();
         try {
             await dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
         } catch {

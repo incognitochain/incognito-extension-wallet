@@ -35,7 +35,7 @@ const ImportMnemonic = (props: IProps) => {
             <Header onGoBack={onBack} title=" " />
             <AppIcon />
             <div className="title">{dictionary.title}</div>
-            <form className="form" autoComplete="off">
+            <form className="form" autoComplete="off" onSubmit={onVerify}>
                 <div className="input">
                     <Input
                         autoComplete="off"
@@ -53,8 +53,8 @@ const ImportMnemonic = (props: IProps) => {
                     />
                 </div>
                 <input type="text" name="email" value="..." autoComplete="username email" className="hidden" readOnly />
+                <Button disabled={isDisabled} title={error || dictionary.btn} className="verify-btn" type="submit" />
             </form>
-            <Button onClick={onVerify} disabled={isDisabled} title={error || dictionary.btn} className="verify-btn" />
         </Styled>
     );
 };

@@ -30,6 +30,9 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
     const handleBack = useCallback(() => {
         if (step === 0) {
             onBack();
+        } else if (step === 1) {
+            setMnemonic('');
+            setStep(step - 1);
         } else {
             setStep(step - 1);
         }
