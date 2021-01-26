@@ -63,7 +63,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
         return (
             <div>
                 <AppIcon />
-                <div>{translate.openExtension}</div>
+                <div className="fw-bold fs-medium">{translate.openExtension}</div>
+                <div className="fs-regular text-color-grey m-t-15">{translate.openExtensionSub}</div>
             </div>
         );
     }
