@@ -9,6 +9,7 @@ import { sendExtensionMessage } from 'src/utils/sendMessage';
 import { isDev } from 'src/configs';
 import { bridgeTokensSelector, chainTokensSelector, getPrivacyDataByTokenIDSelector } from '../Token';
 import { defaultAccountSelector, paymentAddressSelector } from './Account.selector';
+import { cachePromise } from '../../services';
 
 export interface IEnhanceBalanceProps {
     loadBalance: () => void;
@@ -23,7 +24,8 @@ const enhanceBalance = (WrappedComponent: React.FunctionComponent) => (props: IE
     const chainTokens = useSelector(chainTokensSelector);
     const getPrivacyData = useSelector(getPrivacyDataByTokenIDSelector);
     const paymentAddress: string = useSelector(paymentAddressSelector);
-    const handleLoadBalanceTokens = async () => {
+
+    const handleCacheBalance = async () => {
         const followed: string[] = [COINS.PRV.id, ...account.privacyTokenIds];
         const promise = followed.map(async (tokenId: string) => {
             let token;
@@ -38,16 +40,23 @@ const enhanceBalance = (WrappedComponent: React.FunctionComponent) => (props: IE
             return { ...privacyData, amount };
         });
         const tokens = await Promise.all(promise);
-        if (isDev) return tokens;
-        const formatAccount = {
+        return {
             name: account.name,
             paymentAddress,
             tokens,
         };
+    };
+
+    const handleLoadBalanceTokens = async () => {
+        const formatAccount = await cachePromise(
+            `sign-function-account-${account.key.keySet.publicKeySerialized}`,
+            handleCacheBalance,
+            30000,
+        );
         sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.LOADED_FOLLOWED_BALANCE, {
             account: formatAccount,
         });
-        return tokens;
+        return formatAccount.tokens;
     };
 
     return (
