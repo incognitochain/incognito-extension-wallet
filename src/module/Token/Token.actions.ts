@@ -82,7 +82,7 @@ export const actionGetBalanceToken = (token: PrivacyTokenInstance) => async (
     const totalBalance = await cachePromise(
         `token-balance-${tokenId}-${account.key.keySet.publicKeySerialized}`,
         () => token.getTotalBalance(tokenId),
-        10000,
+        30000,
     );
     const amountStr = totalBalance || '0';
     amount = new BigNumber(amountStr).toNumber();

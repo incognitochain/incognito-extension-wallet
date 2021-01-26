@@ -102,7 +102,7 @@ const FormSend = (props: IMergeProps) => {
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const translate: ISendLanguage = useSelector(translateByFieldSelector)('send');
     const theme: ITheme = useSelector(themeSelector);
-    const { titleBtnSubmit, disabledForm }: ISendData = useSelector(sendDataSelector);
+    const { titleBtnSubmit, disabledForm, isSend, isUnShield }: ISendData = useSelector(sendDataSelector);
     const {
         isInitingForm,
         handleSubmit,
@@ -116,6 +116,38 @@ const FormSend = (props: IMergeProps) => {
         onGoBack,
         warningAddress,
     } = props;
+    const renderMemo = () => {
+        if ((selectedPrivacy.isBep2Token || selectedPrivacy.currencyType === 4) && isUnShield) {
+            return (
+                <>
+                    <Field
+                        component={InputField}
+                        name={FORM_CONFIGS.memo}
+                        componentProps={{
+                            placeholder: translate.placeholderMemo,
+                        }}
+                    />
+                    <p
+                        className="fs-small fw-medium"
+                        style={{ marginTop: '10px' }}
+                        dangerouslySetInnerHTML={{ __html: translate.placeholderMemoBEP2 }}
+                    />
+                </>
+            );
+        }
+        if (isSend) {
+            return (
+                <Field
+                    component={InputField}
+                    name={FORM_CONFIGS.memo}
+                    componentProps={{
+                        placeholder: translate.placeholderMemo,
+                    }}
+                />
+            );
+        }
+        return null;
+    };
     const renderForm = () => {
         if (isInitingForm) {
             return <LoadingContainer />;
@@ -149,13 +181,7 @@ const FormSend = (props: IMergeProps) => {
                         validate={validateAddress}
                         warning={warningAddress}
                     />
-                    <Field
-                        component={InputField}
-                        name={FORM_CONFIGS.memo}
-                        componentProps={{
-                            placeholder: translate.placeholderMemo,
-                        }}
-                    />
+                    {renderMemo()}
                     <EstimateFee />
                     <ErrorBlock />
                     <Button title={titleBtnSubmit} disabled={disabledForm} type="submit" />
