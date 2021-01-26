@@ -1,3 +1,4 @@
+import { IUnshieldReducer } from 'src/module/Send/features/UnShield';
 import { IShieldReducer } from 'src/module/Shield';
 import { IPreloadReducer } from 'src/module/Preload';
 import { ITokenReducer } from 'src/module/Token';
@@ -35,4 +36,5 @@ export interface IRootState {
     shield: IShieldReducer;
     password: IPasswordReducers;
     tooltip: ITooltipReducer;
+    unShield: IUnshieldReducer;
 }

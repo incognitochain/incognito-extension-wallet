@@ -10,7 +10,8 @@ import {
     actionGetPrivacyTokensBalance,
     actionSetFollowedTokens,
 } from 'src/module/Token';
-import { IEnhanceBalanceProps } from '../Account/Acount.enhanceBalance';
+import { IEnhanceBalanceProps } from 'src/module/Account/Acount.enhanceBalance';
+import { actionRetryLastWithdrawTxs } from 'src/module/Send/features/UnShield';
 
 interface IProps {}
 export interface IMergeProps extends IEnhanceBalanceProps, IProps {}
@@ -48,6 +49,7 @@ const withWalletBalance = (WrappedComponent: React.FunctionComponent) => (props:
                 dispatch(actionFetchPTokenList(true));
                 dispatch(actionFetchPCustomTokenList(true));
             }
+            dispatch(actionRetryLastWithdrawTxs());
             setLoadedBalance(true);
         }
     };

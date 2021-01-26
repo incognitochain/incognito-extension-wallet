@@ -6,6 +6,7 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { withHeaderApp } from 'src/components/Header';
 import { defaultAccountSelector, switchAccountSelector } from 'src/module/Account';
 import { actionFetchAllHistory, actionFetchReceiveHistory, receiveHistoryDataSelector } from 'src/module/History';
+import { actionRetryLastWithdrawTxs } from 'src/module/Send/features/UnShield';
 import { selectedTokenIdSelector } from 'src/module/Token';
 import { walletDataSelector } from 'src/module/Wallet';
 import { actionGetBalanceByTokenId } from 'src/redux/actions';
@@ -38,6 +39,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     type: TOAST_CONFIGS.error,
                 }),
             );
+        } finally {
+            dispatch(actionRetryLastWithdrawTxs());
         }
     };
     const handleOnEndReached = () => {

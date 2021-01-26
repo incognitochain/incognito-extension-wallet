@@ -4,16 +4,12 @@ import withSetting from 'src/module/Setting/Setting.enhance';
 import { SettingItem, ISettingItem } from './features/SettingItem';
 import { IInner } from './Setting.interface';
 
-const Styled = styled.div`
-    padding-bottom: 10px;
-    overflow: scroll;
-    max-height: 433px;
-`;
+const Styled = styled.div``;
 
 const Setting = (props: IInner) => {
     const { settingFactories } = props;
     return (
-        <Styled>
+        <Styled className="scroll-view">
             {settingFactories.map((item: ISettingItem) => (
                 <SettingItem key={item.title} {...item} />
             ))}
