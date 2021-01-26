@@ -14,6 +14,10 @@ export const Styled = styled.div`
         justify-content: space-between;
         margin-top: 15px;
     }
+    .fee {
+        margin-right: 5px;
+        max-width: 120px;
+    }
     .fee-types .fee-type {
         background-color: ${COLORS.colorGreyLight};
         border-radius: 8px;

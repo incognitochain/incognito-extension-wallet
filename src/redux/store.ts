@@ -41,10 +41,9 @@ export const configStore = (preloadedState: any = {}) => {
     const middlewareEnhancer = isDev
         ? isToggleReduxLogger
             ? applyMiddleware(thunk, saga, logger)
-            : applyMiddleware(thunk, saga)
+            : composeWithDevTools(applyMiddleware(thunk, saga))
         : applyMiddleware(thunk, saga);
-    const composedEnhancers = isDev ? composeWithDevTools(middlewareEnhancer) : middlewareEnhancer;
-    const store: any = createStore(persistedReducer, preloadedState, composedEnhancers);
+    const store: any = createStore(persistedReducer, preloadedState, middlewareEnhancer);
     const persistor = persistStore(store);
     return { store, persistor };
 };

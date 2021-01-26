@@ -1,16 +1,24 @@
 import { AccountInstance, TxHistoryModel, TxHistoryModelParam } from 'incognito-js/build/web/browser';
 import { PrivacyToken } from 'incognito-js/build/web/browser/src/walletInstance/token';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { defaultAccountSelector } from 'src/module/Account';
 import { bridgeTokensSelector, chainTokensSelector, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { useHistory } from 'react-router-dom';
 import { route as routeConfirmTx } from 'src/module/Send/features/ConfirmTx';
 import toString from 'lodash/toString';
+import { delay } from 'src/utils/delay';
 import { sendDataSelector, userFeesSelector } from './Send.selector';
 import { ISendData, IUserFeesData } from './Send.interface';
 import { getHistoryCacheDetailSelector } from '../History';
+import {
+    actionAddStorageDataDecentralized,
+    actionRemoveStorageDataDecentralized,
+    actionRemoveStorageDataCentralized,
+    actionAddStorageDataCentralized,
+} from './features/UnShield';
+import { toggleSaveBurnTxSelector } from '../Setting';
 
 interface IProps {}
 
@@ -40,11 +48,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const getHistoryCacheDetail = useSelector(getHistoryCacheDetailSelector);
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const { data }: { data: IUserFeesData } = useSelector(userFeesSelector);
-    const { isDecentralized, tokenId } = selectedPrivacy;
+    const { isDecentralized, tokenId, currencyType, contractId } = selectedPrivacy;
     const account: AccountInstance = useSelector(defaultAccountSelector);
     const bridgeTokens = useSelector(bridgeTokensSelector);
     const chainTokens = useSelector(chainTokensSelector);
+    const toggleSaveBurnTx = useSelector(toggleSaveBurnTxSelector);
     const history = useHistory();
+    const dispatch = useDispatch();
     const handleCentralizedWithdraw = async (token: PrivacyToken) => {
         const { FeeAddress: masterAddress, Address: tempAddress } = data;
         if (!tempAddress) {
@@ -84,14 +94,38 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         if (!burningTxId) {
             throw new Error(`Burned token, but doesnt have txID, please check it`);
         }
-        await token.bridgeWithdrawCentralized({
+        const centralizedWithdrawData = {
             burningTxId,
             userFeeLevel,
             userFeeSelection,
             tempAddress,
             privacyFee,
             nativeFee,
-        });
+        };
+        await dispatch(
+            actionAddStorageDataCentralized({
+                tx: {
+                    burningTxId,
+                    data: {
+                        privacyFee,
+                        nativeFee,
+                        address: tempAddress,
+                        userFeeSelection,
+                        userFeeLevel,
+                        incognitoTxToPayOutsideChainFee: burningTxId,
+                    },
+                },
+            }),
+        );
+        if (toggleSaveBurnTx) {
+            await delay(10000);
+        }
+        await token.bridgeWithdrawCentralized(centralizedWithdrawData);
+        await dispatch(
+            actionRemoveStorageDataCentralized({
+                burningTxId,
+            }),
+        );
         const hc = getHistoryCacheDetail(burnTx);
         history.push(routeConfirmTx, {
             confirmTx: {
@@ -150,7 +184,35 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         if (!burningTxId) {
             throw new Error(`Burned token, but doesnt have txID, please check it`);
         }
+        await dispatch(
+            actionAddStorageDataDecentralized({
+                tx: {
+                    burningTxId,
+                    data: {
+                        incognitoAmount,
+                        requestedAmount,
+                        paymentAddress,
+                        walletAddress: account.key.keySet.paymentAddressKeySerialized,
+                        tokenId,
+                        incognitoTx: burningTxId,
+                        currencyType,
+                        erc20TokenAddress: contractId,
+                        id: userFeeId,
+                        userFeeSelection,
+                        userFeeLevel,
+                    },
+                },
+            }),
+        );
+        if (toggleSaveBurnTx) {
+            await delay(10000);
+        }
         await token.bridgeWithdrawDecentralized(decentralizedWithdrawData);
+        await dispatch(
+            actionRemoveStorageDataDecentralized({
+                burningTxId,
+            }),
+        );
         const hc = getHistoryCacheDetail(burnTx);
         history.push(routeConfirmTx, {
             confirmTx: {

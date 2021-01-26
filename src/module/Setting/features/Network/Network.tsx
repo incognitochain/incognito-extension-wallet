@@ -4,10 +4,10 @@ import { Header } from 'src/components';
 import { withLayout } from 'src/components/Layout';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
-import { actionSetConfigs, actionSetServer } from 'src/module/Preload';
-import { DEFAULT_LIST_SERVER, IServer } from 'src/services';
-import { FONT_SIZES } from 'src/styles';
+import { actionSetConfigs, actionSetServer, serverSelector } from 'src/module/Preload';
+import { IServer } from 'src/services';
 import styled from 'styled-components';
+import { isDevSelector, actionToggleDevMode, defaultListServerSelector } from 'src/module/Setting';
 
 interface INetworkItem {
     title: string;
@@ -21,13 +21,9 @@ const Styled = styled.div`
         margin-bottom: 30px;
     }
     .network-item .title {
-        font-size: ${FONT_SIZES.medium}px;
-        line-height: ${FONT_SIZES.medium + 5}px;
         margin-bottom: 15px;
     }
     .network-item .desc {
-        font-size: ${FONT_SIZES.regular}px;
-        line-height: ${FONT_SIZES.regular + 5}px;
     }
 `;
 
@@ -36,8 +32,8 @@ const NetworkItem = React.memo((props: INetworkItem) => {
     const handleClick = () => typeof onChangeNetwork === 'function' && onChangeNetwork();
     return (
         <div className="network-item" onClick={handleClick}>
-            <p className="title">{title}</p>
-            <p className="desc">{desc}</p>
+            <p className="title fs-medium">{title}</p>
+            <p className="desc fs-regular">{desc}</p>
         </div>
     );
 });
@@ -47,22 +43,33 @@ declare const window: Window;
 const Network = React.memo(() => {
     const translate: ILanguage = useSelector(translateSelector);
     const networkTranslate = translate.setting.network;
+    const defaultList = useSelector(defaultListServerSelector);
+    const defaultServer = useSelector(serverSelector);
     const dispatch = useDispatch();
+    const [totalClick, setTotalClick] = React.useState(0);
+    const isDev = useSelector(isDevSelector);
     const handleChangeNetwork = async (server: IServer) => {
-        await dispatch(
-            actionSetConfigs({
-                mainnet: !!server.default,
-                apiURL: server.apiURL || '',
-                chainURL: server.chainURL || '',
-            }),
-        );
-        await dispatch(actionSetServer(server));
-        window?.location?.reload();
+        const currentClick = totalClick + 1;
+        await setTotalClick(currentClick);
+        if (currentClick === 7) {
+            return dispatch(actionToggleDevMode());
+        }
+        if (defaultServer.id !== server.id && isDev && server.id !== 'local') {
+            await dispatch(
+                actionSetConfigs({
+                    mainnet: !!server.default,
+                    apiURL: server.apiURL || '',
+                    chainURL: server.chainURL || '',
+                }),
+            );
+            await dispatch(actionSetServer(server));
+            window?.location?.reload();
+        }
     };
     return (
         <Styled>
             <Header title={networkTranslate.title} />
-            {DEFAULT_LIST_SERVER.map((server) => (
+            {defaultList.map((server) => (
                 <NetworkItem
                     key={server.id}
                     title={server.name}
