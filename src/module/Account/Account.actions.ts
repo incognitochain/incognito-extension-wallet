@@ -76,7 +76,7 @@ export const actionGetAccountBalance = (defaultAccount?: AccountInstance | undef
         const accountBalanceStr = await cachePromise(
             `account-balance-${account.key.keySet.publicKeySerialized}`,
             async () => account?.nativeToken?.getTotalBalance(),
-            10000,
+            30000,
         );
         accountBalance = new BigNumber(accountBalanceStr || '0').toNumber();
     } catch (error) {

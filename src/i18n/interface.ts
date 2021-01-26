@@ -87,6 +87,7 @@ export interface ISendLanguage {
     speed: string;
     memo: string;
     placeholderMemo: string;
+    placeholderMemoBEP2: string;
     confirm: IConfirmTxLanguage;
     balance: string;
 }

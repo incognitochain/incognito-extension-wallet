@@ -169,6 +169,7 @@ const language: ILanguage = {
             amount: 'Amount',
             sent: 'Sent.',
         },
+        placeholderMemoBEP2: `For withdrawals to wallets on exchanges (e.g. Binance, etc.), enter your memo to avoid loss of funds.`,
     },
     history: {
         headerTitle: 'Transaction details',
