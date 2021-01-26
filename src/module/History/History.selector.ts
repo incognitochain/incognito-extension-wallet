@@ -73,7 +73,7 @@ export const receiveHistoryDataSelector = createSelector(
                     decimalDigits,
                 }),
             )
-            .filter((history) => !!history.amount && history.typeCode === TYPE.RECEIVE);
+            .filter((history) => history.amount !== '0' && history.typeCode === TYPE.RECEIVE);
         const shouldLoadmore = loadedData && _data.length >= 5;
         const notEnoughData = loadedData && _data.length < 5;
         return {
