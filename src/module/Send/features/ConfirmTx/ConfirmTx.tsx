@@ -9,6 +9,7 @@ import { translateByFieldSelector } from 'src/module/Configs';
 import { IConfirmTxLanguage } from 'src/i18n';
 import { serverSelector } from 'src/module/Preload';
 import { route as routeDetail } from 'src/module/Token/features/Detail';
+import { selectedTokenIdSelector } from 'src/module/Token';
 import { ConfirmTxItem } from './ConfirmTx.interface';
 
 const Styled = styled.div`
@@ -24,6 +25,7 @@ const ConfirmTx = () => {
     const { confirmTx }: { confirmTx: ConfirmTxItem } = state;
     const confirmLanguage: IConfirmTxLanguage = useSelector(translateByFieldSelector)('send.confirm');
     const server = useSelector(serverSelector);
+    const selectedPrivacyTokenId = useSelector(selectedTokenIdSelector);
     if (!confirmTx) {
         return <Redirect to="/" />;
     }
@@ -54,7 +56,7 @@ const ConfirmTx = () => {
     ];
     return (
         <Styled>
-            <Header onGoBack={() => historyState.push(routeDetail)} title=" " />
+            <Header onGoBack={() => historyState.push(`${routeDetail}/${selectedPrivacyTokenId}`)} title=" " />
             <p className="confirm-title fw-bold fs-supermedium center-text">{confirmLanguage.sent}</p>
             {itemsFactories.map((item: IHistoryItem) => (
                 <HistoryItem key={item.title} {...item} />

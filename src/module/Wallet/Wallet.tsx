@@ -21,9 +21,9 @@ const ListFollowToken = React.memo(() => {
     const listFollowTokenIds = useSelector(followedTokensIdsSelector)(false);
     const history = useHistory();
     const dispatch = useDispatch();
-    const handleSelectToken = (tokenId: string) => {
-        dispatch(actionSetSelectedToken(tokenId));
-        history.push('/token');
+    const handleSelectToken = async (tokenId: string) => {
+        await dispatch(actionSetSelectedToken(tokenId));
+        history.push(`/token/${tokenId}`);
     };
     const renderItem = (tokenId: string) => (
         <Token tokenId={tokenId} handleSelectToken={() => handleSelectToken(tokenId)} showBalance showAmount />
