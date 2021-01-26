@@ -21,12 +21,10 @@ export const Styled = styled.div`
         padding-top: 1px;
         min-width: 54px;
         height: 28px;
+        margin-left: 5px;
         &.selected {
             color: ${COLORS.white};
             background-color: ${(props: IGlobalStyle) => props.theme.button};
-        }
-        :last-child {
-            margin-left: 5px;
         }
     }
     .force-balance {
