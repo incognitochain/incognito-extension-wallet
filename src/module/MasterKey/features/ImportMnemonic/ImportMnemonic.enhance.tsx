@@ -5,7 +5,7 @@ import { batch, useDispatch, useSelector } from 'react-redux';
 import { translateSelector } from 'src/module/Configs';
 import { actionImportWallet } from 'src/module/Wallet';
 import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
-import { trim } from 'lodash';
+import { trim, last } from 'lodash';
 import { IProps } from './ImportMnemonic.inteface';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
@@ -20,36 +20,46 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
     const pass = newPass || currentPass;
     const dispatch = useDispatch();
 
-    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     const errorDictionary = translate.error;
+
+    const handleVerify = async (e: any) => {
+        e.preventDefault();
+        if (masterKeyName && mnemonic) {
+            try {
+                await dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
+            } catch {
+                setError(errorDictionary.invalidMnemonic);
+            }
+
+            batch(() => {
+                dispatch(actionCreatePassword(''));
+                dispatch(actionChangePassword(pass));
+            });
+        }
+    };
 
     const handleChangeMasterKeyName = useCallback((e) => {
         setError('');
         setMasterKeyName(trim(e.target.value));
     }, []);
 
-    const handleChangeMnemonic = useCallback((e) => {
-        setError('');
-        setMnemonic(trim(e.target.value || '').replace(/\n/g, ' '));
-    }, []);
+    const handleChangeMnemonic = useCallback(
+        (e) => {
+            setError('');
+
+            const { value } = e.target;
+            if (last(value) === '\n') {
+                handleVerify(e);
+            } else {
+                setMnemonic(trim(e.target.value || '').replace(/\n/g, ' '));
+            }
+        },
+        [mnemonic],
+    );
 
     const isDisabled = useMemo(() => {
         return !masterKeyName || !mnemonic || mnemonic.split(' ').length !== 12;
     }, [mnemonic, masterKeyName]);
-
-    const handleVerify = async (e: any) => {
-        e.preventDefault();
-        try {
-            await dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
-        } catch {
-            setError(errorDictionary.invalidMnemonic);
-        }
-
-        batch(() => {
-            dispatch(actionCreatePassword(''));
-            dispatch(actionChangePassword(pass));
-        });
-    };
 
     return (
         <WrappedComponent

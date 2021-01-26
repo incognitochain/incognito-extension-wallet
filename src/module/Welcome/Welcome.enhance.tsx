@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { compose } from 'recompose';
 import { withLayout } from 'src/components/Layout';
 import { useSelector } from 'react-redux';

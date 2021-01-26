@@ -121,7 +121,7 @@ export const GlobalStyled = createGlobalStyle`
     .fw-medium{
         font-weight: 500;
     }
-    .fw-normal{
+    .fw-light{
         font-weight: 200;
     }
     .fw-bold {
@@ -258,6 +258,9 @@ export const GlobalStyled = createGlobalStyle`
     }
     .text-color-black {
         color: ${COLORS.black};
+    }
+    .m-t-15 {
+        margin-top: 15px;
     }
 `;
 
