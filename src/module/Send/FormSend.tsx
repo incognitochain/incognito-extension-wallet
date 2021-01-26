@@ -72,10 +72,10 @@ export const EstimateFee = React.memo(() => {
     const renderFee = () => (
         <div className="estimate-fee flex fw-medium">
             <div className="left">
-                <p>{translate.fee}</p>
+                <p className="fee">{translate.fee}</p>
             </div>
             <div className="right flex">
-                <p className="fee ellipsis">{totalFeeText}</p>
+                <p className="fee">{totalFeeText}</p>
                 <FeeTypes />
             </div>
         </div>
@@ -83,7 +83,7 @@ export const EstimateFee = React.memo(() => {
     const renderPriorityFee = () => (
         <div className="estimate-fee flex fw-medium">
             <div className="left">
-                <p>{translate.fast}</p>
+                <p className="fee">{translate.speed}</p>
             </div>
             <div className="right flex">
                 <FastFeeIcon handleClick={handleToggleFastFee} className="fastfee-icon" fast2x={fast2x} />
