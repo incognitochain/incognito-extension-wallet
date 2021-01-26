@@ -17,7 +17,7 @@ const Styled = styled.div`
     }
     .histories-container .history-item {
         :last-child {
-            margin-bottom: 15px;
+            margin-bottom: 50px;
         }
     }
     .history-item .hook {
