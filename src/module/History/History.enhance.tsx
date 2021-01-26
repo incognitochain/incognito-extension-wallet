@@ -370,12 +370,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                             {
                                 title: historyLanguage.inchainFee,
                                 desc: `${history?.inchainFeeFormatedNoClip} ${history?.feeSymbol}`,
-                                disabled: !history?.inchainFee,
+                                disabled: !history?.inchainFeeFormatedNoClip,
                             },
                             {
                                 title: historyLanguage.outchainFee,
                                 desc: `${history?.outchainFeeFormatedNoClip} ${history?.feeSymbol}`,
-                                disabled: !history?.outchainFee,
+                                disabled: !history?.outchainFeeFormatedNoClip,
                             },
                             {
                                 title: historyLanguage.time,

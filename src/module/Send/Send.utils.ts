@@ -171,7 +171,7 @@ export const getSendData = ({
         decimals: selectedPrivacy.pDecimals,
     });
     const bnAmount = new BigNumber(originalAmount);
-    const requestedAmount = convert.toString({ text: inputAmount });
+    const requestedAmount = inputAmount;
     const incognitoAmount = bnAmount.toString();
     const paymentAddress = trim(inputAddress);
     const memo = inputMemo;
