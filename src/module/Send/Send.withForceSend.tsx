@@ -56,6 +56,7 @@ const enhanceForceSend = (WrappedComponent: React.FunctionComponent) => (props: 
                     clearForceSendData: handleClearForceSendData,
                     forceSendFinish: handleForceSendFinish,
                     clearCurrentRequest: handleClearCurrentRequest,
+                    rightHeaderAppMenu: !forceSendData,
                 }}
             />
         </ErrorBoundary>
