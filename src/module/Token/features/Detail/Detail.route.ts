@@ -2,11 +2,11 @@ import { lazy } from 'react';
 import { IRouteProps } from 'src/module';
 
 const detailRoute: IRouteProps = {
-    path: '/token',
+    path: '/token/:id',
     exact: true,
     component: lazy(() => import('./Detail')),
     name: 'Detail',
-    to: '/token',
+    to: '/token/:id',
 };
 
 export const route = '/token';

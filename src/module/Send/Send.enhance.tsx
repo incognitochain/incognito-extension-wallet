@@ -17,6 +17,7 @@ import LoadingTx from 'src/components/LoadingTx/LoadingTx';
 import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 import { ERROR_MESSAGE } from 'src/constants/error';
 import withBalance from 'src/module/Account/Acount.enhanceBalance';
+import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -51,6 +52,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
     const history = useHistory();
     const dispatch = useDispatch();
     const handleStandardizedAddress = (value: string) => standardizedAddress(value);
+    const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const { disabledForm, isSend, isUnShield }: ISendData = useSelector(sendDataSelector);
     const onChangeField = async (value: string, field: string) => {
         let val: any = value;
@@ -112,7 +114,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
     const onGoBack = () => {
         clearForceSendData && clearForceSendData();
         clearCurrentRequest && clearCurrentRequest();
-        history.push(routeDetail);
+        history.push(`${routeDetail}/${selectedPrivacy.tokenId}`);
     };
 
     const handleSend = async (payload: ISendFormData) => {
