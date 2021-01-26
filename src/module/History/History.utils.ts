@@ -547,20 +547,20 @@ export const getUnshieldHistoryBridgeData = ({
     const timeFormated = format.formatUnixDateTime(createdAt);
     const lockTime = new Date(createdAt).getTime();
     const expiredAtFormated = isDecentralized ? '' : format.formatUnixDateTime(expiredAt);
-    let bnIncognitoAmount = new BigNumber(incognitoAmount);
-    let useNativeFee = !!privacyFee;
-    let usePrivacyFee = !!tokenFee;
+    let bnIncognitoAmount = new BigNumber(incognitoAmount || '0');
     let amountFormated = '';
     let amountFormatedNoClip = '';
     let inchainFee = new BigNumber('0');
-    let outchainFee = useNativeFee ? new BigNumber(privacyFee) : new BigNumber(tokenFee);
     let inchainFeeFormatedNoClip = '';
     let outchainFeeFormatedNoClip = '';
     const symbol = selectedPrivacy.symbol || selectedPrivacy.pSymbol || '';
-    let feeSymbol = useNativeFee ? COINS.PRV.symbol : symbol;
     const burnTx: TxCacheHistoryModel | undefined = historyCache.find(
-        (hc) => hc.txId === history.incognitoTxToPayOutsideChainFee || history.incognitoTx,
+        (hc) => hc.txId === history.incognitoTxToPayOutsideChainFee || hc.txId === history.incognitoTx,
     );
+    let useNativeFee = burnTx ? !!burnTx?.useNativeFee : !!privacyFee;
+    let usePrivacyFee = burnTx ? !!burnTx?.usePrivacyFee : !!tokenFee;
+    let feeSymbol = useNativeFee ? COINS.PRV.symbol : symbol;
+    let outchainFee = useNativeFee ? new BigNumber(privacyFee || '0') : new BigNumber(tokenFee || '0');
     try {
         if (selectedPrivacy.isDecentralized) {
             if (burnTx) {
@@ -626,7 +626,7 @@ export const getUnshieldHistoryBridgeData = ({
             isUnShieldTx,
             feeSymbol,
             memo: history.memo || burnTx?.memo,
-            inchainFee: inchainFee.toNumber() === 0 ? '' : inchainFee.toString(),
+            inchainFee: inchainFee.toString(),
             outchainFee: outchainFee.toString(),
         };
     } catch (error) {

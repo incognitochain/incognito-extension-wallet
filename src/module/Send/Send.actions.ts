@@ -455,7 +455,7 @@ export const actionFetchFee = ({
         decimals: selectedPrivacy.pDecimals,
     });
     const bnAmount = new BigNumber(originalAmount);
-    const requestedAmount = convert.toString({ text: amount });
+    const requestedAmount = amount;
     const incognitoAmount = bnAmount.toString();
     let isAddressValidated = true;
     try {
