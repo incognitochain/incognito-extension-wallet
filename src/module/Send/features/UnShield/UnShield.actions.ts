@@ -1,6 +1,7 @@
 import { IRootState } from 'src/redux/interface';
 import { centralizedWithdraw, decentralizedWithdraw } from 'incognito-js/build/web/browser';
 import { Dispatch } from 'redux';
+import { signPublicKeyEncodeSelector } from 'src/module/Account';
 import { unShieldStorageDataSelector } from './UnShield.selector';
 import {
     ACTION_ADD_STORAGE_DATA_DECENTRALIZED,
@@ -42,6 +43,7 @@ export const actionRemoveStorageDataCentralized = (payload = { burningTxId: '' }
 export const actionRetryLastWithdrawTxs = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state: IRootState = getState();
     const { decentralized, centralized } = unShieldStorageDataSelector(state);
+    const signPublicKey = signPublicKeyEncodeSelector(state);
     decentralized.txs.map((item) => {
         try {
             dispatch(
@@ -49,7 +51,7 @@ export const actionRetryLastWithdrawTxs = () => async (dispatch: Dispatch, getSt
                     burningTxId: item.burningTxId,
                 }),
             );
-            decentralizedWithdraw({ ...item.data });
+            decentralizedWithdraw({ ...item.data, signPublicKey });
         } catch (error) {
             console.debug(error);
         }
@@ -62,7 +64,7 @@ export const actionRetryLastWithdrawTxs = () => async (dispatch: Dispatch, getSt
                     burningTxId: item.burningTxId,
                 }),
             );
-            centralizedWithdraw({ ...item.data });
+            centralizedWithdraw({ ...item.data, signPublicKey });
         } catch (error) {
             console.debug(error);
         }

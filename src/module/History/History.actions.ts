@@ -3,7 +3,7 @@ import uniqBy from 'lodash/uniqBy';
 import { AccountInstance, checkCachedHistories } from 'incognito-js/build/web/browser';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { defaultAccountSelector } from 'src/module/Account';
+import { defaultAccountSelector, signPublicKeyEncodeSelector } from 'src/module/Account';
 import {
     selectedTokenIdSelector,
     bridgeTokensSelector,
@@ -177,16 +177,17 @@ export const actionFetchBridgeHistory = () => async (dispatch: Dispatch, getStat
     const state = getState();
     const historyBridge = historyBridgeSelector(state);
     const account: AccountInstance = defaultAccountSelector(state);
-    const selectedPrivacy = selectedPrivacySelector(state);
+    const selectedPrivacy: ISelectedPrivacy = selectedPrivacySelector(state);
     const bridgeTokens = bridgeTokensSelector(state);
     const chainTokens = chainTokensSelector(state);
+    const signPublicKey: string = signPublicKeyEncodeSelector(state);
     if (historyBridge.fetching || !selectedPrivacy.isDeposable || !selectedPrivacy.isWithdrawable) {
         return;
     }
     try {
         await dispatch(actionFetchingBridgeHistory());
         const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
-        data = await token.bridgeGetHistory();
+        data = await token.bridgeGetHistory({ signPublicKey });
     } catch (error) {
         throw error;
     } finally {
@@ -240,10 +241,11 @@ export const actionRetryShieldBridgeToken = (id: string) => async (dispatch: Dis
         const tokenId: string = selectedTokenIdSelector(state);
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
         const history: TxBridgeHistoryModel | any = getHistoryBridgeByIdSelector(state)(id);
+        const signPublicKey = signPublicKeyEncodeSelector(state);
         if (!history || !history.canRetryExpiredShield) {
             return;
         }
-        await token.bridgeRetryHistory({ ...history, id: Number(id) });
+        await token.bridgeRetryHistory({ ...history, id: Number(id), signPublicKey });
     } catch (error) {
         throw error;
     }
@@ -252,16 +254,17 @@ export const actionRetryShieldBridgeToken = (id: string) => async (dispatch: Dis
 export const actionRemoveShieldBridgeToken = (id: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
     try {
         const state = getState();
+        const history: TxBridgeHistoryModel | any = getHistoryBridgeByIdSelector(state)(id);
+        if (!history || !history.canRemovePendingShield) {
+            return;
+        }
         const account: AccountInstance = defaultAccountSelector(state);
         const bridgeTokens = bridgeTokensSelector(state);
         const chainTokens = chainTokensSelector(state);
         const tokenId: string = selectedTokenIdSelector(state);
         const token = await account.getPrivacyTokenById(tokenId, bridgeTokens, chainTokens);
-        const history: TxBridgeHistoryModel | any = getHistoryBridgeByIdSelector(state)(id);
-        if (!history || !history.canRemovePendingShield) {
-            return;
-        }
-        return await token.bridgeRemoveHistory({ ...history, id: Number(id) });
+        const signPublicKey = signPublicKeyEncodeSelector(state);
+        return await token.bridgeRemoveHistory({ signPublicKey, id: Number(id) });
     } catch (error) {
         throw error;
     }

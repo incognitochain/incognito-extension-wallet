@@ -13,6 +13,7 @@ import {
     ACTION_SWITCH_ACCOUNT_FETCHED,
     ACTION_GET_ACCOUNT_BALANCE_FETCHING,
     ACTION_GET_ACCOUNT_BALANCE_FETCHED,
+    ACTION_SET_SIGN_PUBLIC_KEY_ENCODE,
 } from './Account.constant';
 import { IAccountReducer } from './Account.interface';
 
@@ -24,6 +25,7 @@ const initialState: IAccountReducer = {
     create: false,
     import: false,
     accountBalance: 0,
+    signPublicKeyEncode: '',
 };
 
 const accountReducer = (
@@ -34,6 +36,12 @@ const accountReducer = (
     },
 ) => {
     switch (action.type) {
+        case ACTION_SET_SIGN_PUBLIC_KEY_ENCODE: {
+            return {
+                ...state,
+                signPublicKeyEncode: action.payload,
+            };
+        }
         case ACTION_FETCHING_CREATE_ACCOUNT: {
             return {
                 ...state,

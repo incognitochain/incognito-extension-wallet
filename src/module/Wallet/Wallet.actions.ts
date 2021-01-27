@@ -1,3 +1,4 @@
+import { actionSetSignPublicKeyEncode } from 'src/module/Account/Account.actions';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { MAINNET_WALLET_NAME, TESTNET_WALLET_NAME } from 'src/configs/walletConfigs';
@@ -7,17 +8,12 @@ import { actionSetListAccount, actionSelectAccount, defaultAccountNameSelector }
 import { IPreloadReducer, preloadSelector } from 'src/module/Preload';
 import { actionChangePassword, actionCreatePassword, passwordSelector } from 'src/module/Password';
 import { batch } from 'react-redux';
+import { actionFollowDefaultToken, actionResetFollowDefaultToken, IEnvToken, ITokenReducer } from 'src/module/Token';
+import { tokenSelector } from 'src/module/Token/Token.selector';
 import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wallet.constant';
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import { walletDataSelector, walletIdSelector, walletSelector } from './Wallet.selector';
 import { IDataInitWallet, IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
-import {
-    actionFollowDefaultToken,
-    actionResetFollowDefaultToken,
-    IEnvToken,
-    ITokenReducer,
-    tokenSelector,
-} from '../Token';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -89,9 +85,13 @@ export const actionInitWallet = () => async (dispatch: Dispatch, getState: () =>
         };
         const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
         const defaultAccount: AccountInstance = listAccount && listAccount[0];
-        dispatch(actionSetListAccount(listAccount));
-        dispatch(actionSelectAccount(defaultAccount.name));
-        dispatch(actionFetched(payload));
+        const signPublicKeyEncode = await defaultAccount.getSignPublicKey();
+        batch(() => {
+            dispatch(actionSetListAccount(listAccount));
+            dispatch(actionSelectAccount(defaultAccount.name));
+            dispatch(actionSetSignPublicKeyEncode(signPublicKeyEncode));
+            dispatch(actionFetched(payload));
+        });
         return walletId;
     } catch (error) {
         throw error;
@@ -116,26 +116,22 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
     if (!walletId) {
         throw new Error(`Can't not found wallet id`);
     }
-
     const wallet = await loadWallet(walletId, pass);
     const listAccount: AccountInstance[] = [...wallet.masterAccount.getAccounts()];
-
     await wallet.sync();
-
     const newList = wallet.masterAccount.getAccounts();
-
     const defaultAccount = wallet.masterAccount.getAccountByName(defaultAccountName) || listAccount[0];
+    const signPublicKeyEncode = await defaultAccount.getSignPublicKey();
     if (defaultAccount) {
         batch(() => {
             dispatch(actionSetListAccount(newList));
             dispatch(actionSelectAccount(defaultAccount.name));
             dispatch(actionLoadWallet(wallet));
+            dispatch(actionSetSignPublicKeyEncode(signPublicKeyEncode));
         });
-
         if (!followedPopularIds) {
             await actionFollowDefaultToken(defaultAccount)(dispatch, getState);
         }
-
         if (listAccount.length !== newList.length) {
             for (const account of newList) {
                 if (!listAccount.includes(account)) {

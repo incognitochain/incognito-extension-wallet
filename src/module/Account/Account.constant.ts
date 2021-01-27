@@ -9,3 +9,4 @@ export const ACTION_SWITCH_ACCOUNT_FETCHING = `[account] Switching account`;
 export const ACTION_SWITCH_ACCOUNT_FETCHED = `[account] Switched account`;
 export const ACTION_GET_ACCOUNT_BALANCE_FETCHING = `[account] Get account balance fetching`;
 export const ACTION_GET_ACCOUNT_BALANCE_FETCHED = `[account] Get account balance fetched`;
+export const ACTION_SET_SIGN_PUBLIC_KEY_ENCODE = `[account] Get sign public key encode`;

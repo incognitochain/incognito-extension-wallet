@@ -6,7 +6,6 @@ import { IRootState } from 'src/redux/interface';
 import { actionHandleLoadWallet, actionSaveWallet, actionUpdateWallet, IWalletReducer } from 'src/module/Wallet';
 import { walletDataSelector, walletSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token';
-import { actionFreeHistory } from 'src/module/History';
 import { cachePromise } from 'src/services';
 import { batch } from 'react-redux';
 import {
@@ -21,13 +20,18 @@ import {
     ACTION_SWITCH_ACCOUNT_FETCHED,
     ACTION_GET_ACCOUNT_BALANCE_FETCHING,
     ACTION_GET_ACCOUNT_BALANCE_FETCHED,
+    ACTION_SET_SIGN_PUBLIC_KEY_ENCODE,
 } from './Account.constant';
 import {
     defaultAccountNameSelector,
     defaultAccountSelector,
     createAccountSelector,
     importAccountSelector,
+    switchAccountSelector,
 } from './Account.selector';
+import { actionFreeHistory } from '../History';
+
+export const actionSetSignPublicKeyEncode = (payload: string) => ({ type: ACTION_SET_SIGN_PUBLIC_KEY_ENCODE, payload });
 
 export const actionFetched = (payload: any) => ({
     type: ACTION_FETCHED,
@@ -104,19 +108,21 @@ export const actionSwitchAccountFetched = () => ({
 export const actionSwitchAccount = (accountName: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
     const wallet: WalletInstance = walletDataSelector(state);
+    const switchAccount: boolean = switchAccountSelector(state);
     const defaultAccountName = defaultAccountNameSelector(state);
     const account: AccountInstance = wallet.masterAccount.getAccountByName(accountName);
     try {
-        if (isEqual(account?.name, defaultAccountName)) {
-            return account;
-        }
-        await dispatch(actionSwitchAccountFetching());
         if (!account) {
             throw new Error(`Account not found!`);
         }
+        if (isEqual(account?.name, defaultAccountName) || switchAccount) {
+            return account;
+        }
+        await dispatch(actionSwitchAccountFetching());
         await dispatch(actionSelectAccount(account.name));
+        const signPublicKeyEncode = await account.getSignPublicKey();
         batch(() => {
-            actionHandleLoadWallet()(dispatch, getState);
+            dispatch(actionSetSignPublicKeyEncode(signPublicKeyEncode));
             actionGetAccountBalance(account)(dispatch, getState);
             actionGetPrivacyTokensBalance(account)(dispatch, getState);
             dispatch(actionFreeHistory());
@@ -193,8 +199,9 @@ export const actionFetchImportAccount = (accountName: string, privateKey: string
         if (!account) {
             throw new Error(`Can't not create account`);
         }
-        await dispatch(actionFetchedImportAccount(account));
+        await actionSwitchAccount(accountName)(dispatch, getState);
         await actionFollowDefaultToken(account)(dispatch, getState);
+        await dispatch(actionFetchedImportAccount(account));
     } catch (error) {
         throw error;
     } finally {

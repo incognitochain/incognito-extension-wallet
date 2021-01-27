@@ -3,7 +3,7 @@ import { PrivacyToken } from 'incognito-js/build/web/browser/src/walletInstance/
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { defaultAccountSelector } from 'src/module/Account';
+import { defaultAccountSelector, signPublicKeyEncodeSelector } from 'src/module/Account';
 import { bridgeTokensSelector, chainTokensSelector, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { useHistory } from 'react-router-dom';
 import { route as routeConfirmTx } from 'src/module/Send/features/ConfirmTx';
@@ -52,6 +52,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const account: AccountInstance = useSelector(defaultAccountSelector);
     const bridgeTokens = useSelector(bridgeTokensSelector);
     const chainTokens = useSelector(chainTokensSelector);
+    const signPublicKey: string = useSelector(signPublicKeyEncodeSelector);
     const toggleSaveBurnTx = useSelector(toggleSaveBurnTxSelector);
     const history = useHistory();
     const dispatch = useDispatch();
@@ -101,6 +102,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             tempAddress,
             privacyFee,
             nativeFee,
+            signPublicKey,
         };
         await dispatch(
             actionAddStorageDataCentralized({
@@ -153,6 +155,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             userFeeSelection,
             userFeeLevel,
             burningTxId: '',
+            signPublicKey,
         };
         const burnTx: TxHistoryModelParam = await token.bridgeBurningDecentralized({
             outchainAddress: paymentAddress,

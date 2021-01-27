@@ -1,6 +1,6 @@
 import { shieldSelector } from 'src/module/Shield/Shield.selector';
 import { AccountInstance, PrivacyTokenInstance } from 'incognito-js/build/web/browser';
-import { defaultAccountSelector } from 'src/module/Account/Account.selector';
+import { defaultAccountSelector, signPublicKeyEncodeSelector } from 'src/module/Account/Account.selector';
 import { IRootState } from 'src/redux/interface';
 import { Dispatch } from 'redux';
 import { actionFollowTokenById } from 'src/module/Token';
@@ -34,22 +34,23 @@ export const actionFetch = ({ tokenId }: { tokenId: string }) => async (
 ) => {
     try {
         const state = getState();
-        const account: AccountInstance = defaultAccountSelector(state);
         const selectedPrivacy = getPrivacyDataByTokenIDSelector(state)(tokenId);
-        const brideTokens = bridgeTokensSelector(state);
-        const chainTokens = chainTokensSelector(state);
         const shieldState = shieldSelector(state);
         const { isFetching } = shieldState;
         if (!selectedPrivacy || !selectedPrivacy.isDeposable || isFetching) {
             return;
         }
         await dispatch(actionFetching());
+        const account: AccountInstance = defaultAccountSelector(state);
+        const brideTokens = bridgeTokensSelector(state);
+        const chainTokens = chainTokensSelector(state);
+        const signPublicKey = signPublicKeyEncodeSelector(state);
         const token: PrivacyTokenInstance = await account.getPrivacyTokenById(tokenId, brideTokens, chainTokens);
         const data: {
             address: string;
             minAmount: number;
             maxAmount: number;
-        } = await token.bridgeGenerateDepositAddress();
+        } = await token.bridgeGenerateDepositAddress({ signPublicKey });
         await dispatch(
             actionFetched({
                 address: data?.address,

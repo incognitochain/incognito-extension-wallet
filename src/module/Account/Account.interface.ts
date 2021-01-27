@@ -24,4 +24,5 @@ export interface IAccountReducer {
     create: boolean;
     import: boolean;
     accountBalance: number;
+    signPublicKeyEncode: string;
 }
