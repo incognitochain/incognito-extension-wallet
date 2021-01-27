@@ -72,3 +72,8 @@ export const paymentAddressSelector = createSelector(
     keySetAccountSelector,
     (keySet) => keySet.paymentAddressKeySerialized,
 );
+
+export const signPublicKeyEncodeSelector = createSelector(
+    accountSelector,
+    (account) => account.signPublicKeyEncode || '',
+);

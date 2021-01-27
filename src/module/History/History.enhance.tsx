@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { HTMLAttributes } from 'react';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { translateByFieldSelector } from 'src/module/Configs';
@@ -9,15 +8,6 @@ import { IHistoryLanguage } from 'src/i18n';
 import { serverSelector } from 'src/module/Preload';
 import { IHistoryItem } from 'src/module/History/features/HistoryItem/HistoryItem.interface';
 import { actionToggleToast, Button, TOAST_CONFIGS } from 'src/components';
-import { TxBridgeHistoryModel, TxHistoryItem, TxHistoryReceiveModel } from './History.interface';
-import {
-    getHistoryBridgeByIdSelector,
-    getHistoryBridgeDetailSelector,
-    getHistoryCacheDetailSelector,
-    getHistoryReceiveByTxIdSelector,
-} from './History.selector';
-import { HISTORY_FORMAT_TYPE } from './History.constant';
-import { actionRemoveShieldBridgeToken, actionRetryShieldBridgeToken } from './History.actions';
 import {
     checkCachedHistoryById,
     getBridgeHistoryById,
@@ -28,8 +18,21 @@ import { delay } from 'src/utils';
 import { camelCaseKeys } from 'src/utils/object';
 import { compose } from 'redux';
 import withHeaderApp from 'src/components/Header/Header.enhanceApp';
-import HistoryItem from './features/HistoryItem';
 import toString from 'lodash/toString';
+import { signPublicKeyEncodeSelector } from 'src/module/Account/Account.selector';
+import HistoryItem from './features/HistoryItem';
+import {
+    // actionRemoveShieldBridgeToken,
+    actionRetryShieldBridgeToken,
+} from './History.actions';
+import { HISTORY_FORMAT_TYPE } from './History.constant';
+import {
+    getHistoryBridgeByIdSelector,
+    getHistoryBridgeDetailSelector,
+    getHistoryCacheDetailSelector,
+    getHistoryReceiveByTxIdSelector,
+} from './History.selector';
+import { TxBridgeHistoryModel, TxHistoryItem, TxHistoryReceiveModel } from './History.interface';
 
 interface IProps {}
 
@@ -51,43 +54,43 @@ export interface IState {
 
 const ShieldSub = React.memo((props: { history: TxBridgeHistoryModel }) => {
     const { history } = props;
-    if (!history) {
-        return null;
-    }
-    const [removingBridgeTx, setRemoveBridgeTx] = React.useState(false);
+    // const [removingBridgeTx, setRemoveBridgeTx] = React.useState(false);
     const [retry, setRetry] = React.useState(false);
     const historyLanguage: IHistoryLanguage = useSelector(translateByFieldSelector)('history');
     const dispatch = useDispatch();
     const { goBack } = useHistory();
-    const handleRemoveTxHistory = async () => {
-        try {
-            if (removingBridgeTx) {
-                return;
-            }
-            await setRemoveBridgeTx(true);
-            const removed: any = await dispatch(actionRemoveShieldBridgeToken(history.id));
-            if (removed) {
-                goBack();
-                dispatch(
-                    actionToggleToast({
-                        value: 'Canceled',
-                        type: TOAST_CONFIGS.success,
-                        toggle: true,
-                    }),
-                );
-            }
-        } catch (error) {
-            dispatch(
-                actionToggleToast({
-                    value: error,
-                    type: TOAST_CONFIGS.error,
-                    toggle: true,
-                }),
-            );
-        } finally {
-            await setRemoveBridgeTx(false);
-        }
-    };
+    if (!history) {
+        return null;
+    }
+    // const handleRemoveTxHistory = async () => {
+    //     try {
+    //         if (removingBridgeTx) {
+    //             return;
+    //         }
+    //         await setRemoveBridgeTx(true);
+    //         const removed: any = await dispatch(actionRemoveShieldBridgeToken(history.id));
+    //         if (removed) {
+    //             goBack();
+    //             dispatch(
+    //                 actionToggleToast({
+    //                     value: 'Canceled',
+    //                     type: TOAST_CONFIGS.success,
+    //                     toggle: true,
+    //                 }),
+    //             );
+    //         }
+    //     } catch (error) {
+    //         dispatch(
+    //             actionToggleToast({
+    //                 value: error,
+    //                 type: TOAST_CONFIGS.error,
+    //                 toggle: true,
+    //             }),
+    //         );
+    //     } finally {
+    //         await setRemoveBridgeTx(false);
+    //     }
+    // };
     const handleRetryShield = async (history: TxBridgeHistoryModel) => {
         try {
             if (retry) {
@@ -128,16 +131,16 @@ const ShieldSub = React.memo((props: { history: TxBridgeHistoryModel }) => {
             />
         );
     }
-    if (history.canRemovePendingShield) {
-        return (
-            <Button
-                className="btn-sub-shield fs-small"
-                disabled={removingBridgeTx}
-                onClick={handleRemoveTxHistory}
-                title={`${historyLanguage.cancel}${removingBridgeTx ? '...' : ''}`}
-            />
-        );
-    }
+    // if (history.canRemovePendingShield) {
+    //     return (
+    //         <Button
+    //             className="btn-sub-shield fs-small"
+    //             disabled={removingBridgeTx}
+    //             onClick={handleRemoveTxHistory}
+    //             title={`${historyLanguage.cancel}${removingBridgeTx ? '...' : ''}`}
+    //         />
+    //     );
+    // }
     return null;
 });
 
@@ -152,6 +155,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const getHistoryReceiveByTxId = useSelector(getHistoryReceiveByTxIdSelector);
     const getHistoryBridgeDetail = useSelector(getHistoryBridgeDetailSelector);
     const getHistoryBridgeById = useSelector(getHistoryBridgeByIdSelector);
+    const signPublicKey: string = useSelector(signPublicKeyEncodeSelector);
     const [fetching, setFetching] = React.useState(false);
     const [historyFactories, setHistoryFactories] = React.useState<any>([]);
     const [historyData, setHistoryData] = React.useState<any>({});
@@ -262,15 +266,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     const historyData: any = await getBridgeHistoryById({
                         id: Number(id),
                         currencyType: historyBridge.currencyType,
+                        decentralized: historyBridge.decentralized,
+                        signPublicKey,
                     });
                     const history: TxBridgeHistoryModel | undefined = getHistoryBridgeDetail({
                         ...camelCaseKeys(historyData),
                         id: toString(id),
                     });
-                    _historyData = history;
                     if (!history) {
                         return [];
                     }
+                    _historyData = history;
                     if (history.isShieldTx) {
                         await setHistoryFactories([
                             {

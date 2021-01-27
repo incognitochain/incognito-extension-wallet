@@ -6,7 +6,7 @@ import floor from 'lodash/floor';
 import BigNumber from 'bignumber.js';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { defaultAccountSelector } from 'src/module/Account';
+import { defaultAccountSelector, signPublicKeyEncodeSelector } from 'src/module/Account';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { COINS } from 'src/constants';
@@ -190,12 +190,14 @@ export const actionFetchUserFees = ({
         const account: AccountInstance = defaultAccountSelector(state);
         const bridgeTokens = bridgeTokensSelector(state);
         const chainTokens = chainTokensSelector(state);
+        const signPublicKey: string = signPublicKeyEncodeSelector(state);
         const token = await account.getPrivacyTokenById(selectedPrivacy.tokenId, bridgeTokens, chainTokens);
         userFeesData = await token.bridgeWithdrawEstUserFee({
             requestedAmount,
             incognitoAmount,
             paymentAddress: address,
             memo,
+            signPublicKey,
         });
         if (!userFeesData.FeeAddress) {
             throw new Error("Can't not get fee address!");
