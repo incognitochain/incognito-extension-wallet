@@ -6,6 +6,10 @@ import {
     ACTION_REMOVE_STORAGE_DATA_DECENTRALIZED,
     ACTION_ADD_STORAGE_DATA_CENTRALIZED,
     ACTION_REMOVE_STORAGE_DATA_CENTRALIZED,
+    ACTION_ADD_STORAGE_RAW_DATA_DECENTRALIZED,
+    ACTION_REMOVE_STORAGE_RAW_DATA_DECENTRALIZED,
+    ACTION_ADD_STORAGE_RAW_DATA_CENTRALIZED,
+    ACTION_REMOVE_STORAGE_RAW_DATA_CENTRALIZED,
 } from './UnShield.constant';
 import { IUnshieldReducer } from './UnShield.interface';
 
@@ -15,6 +19,12 @@ const initialState: IUnshieldReducer = {
             txs: [],
         },
         centralized: {
+            txs: [],
+        },
+        decentralizedRawTxs: {
+            txs: [],
+        },
+        centralizedRawTxs: {
             txs: [],
         },
     },
@@ -32,7 +42,7 @@ const unShieldReducer = (
             const { tx } = action.payload;
             const { storage } = state;
             const { txs } = storage.decentralized;
-            if (!tx) {
+            if (!tx.burningTxId) {
                 return state;
             }
             return {
@@ -68,7 +78,7 @@ const unShieldReducer = (
             const { tx } = action.payload;
             const { storage } = state;
             const { txs } = storage.centralized;
-            if (!tx) {
+            if (!tx.burningTxId) {
                 return state;
             }
             return {
@@ -95,6 +105,79 @@ const unShieldReducer = (
                     ...storage,
                     centralized: {
                         ...storage.centralized,
+                        txs: [...txs.filter((tx: any) => tx?.burningTxId !== burningTxId)],
+                    },
+                },
+            };
+        }
+        // raw data
+        case ACTION_ADD_STORAGE_RAW_DATA_DECENTRALIZED: {
+            const { tx } = action.payload;
+            const { storage } = state;
+            const { txs } = storage.decentralizedRawTxs;
+            if (!tx.burningTxId) {
+                return state;
+            }
+            return {
+                ...state,
+                storage: {
+                    ...storage,
+                    decentralizedRawTxs: {
+                        ...storage.decentralizedRawTxs,
+                        txs: [...txs, tx],
+                    },
+                },
+            };
+        }
+        case ACTION_REMOVE_STORAGE_RAW_DATA_DECENTRALIZED: {
+            const { burningTxId } = action.payload;
+            const { storage } = state;
+            const { txs } = storage.decentralizedRawTxs;
+            if (!burningTxId) {
+                return state;
+            }
+            return {
+                ...state,
+                storage: {
+                    ...storage,
+                    decentralizedRawTxs: {
+                        ...storage.decentralizedRawTxs,
+                        txs: [...txs.filter((tx: any) => tx?.burningTxId !== burningTxId)],
+                    },
+                },
+            };
+        }
+        case ACTION_ADD_STORAGE_RAW_DATA_CENTRALIZED: {
+            const { tx } = action.payload;
+            const { storage } = state;
+            const { txs } = storage.centralizedRawTxs;
+            if (!tx.burningTxId) {
+                return state;
+            }
+            return {
+                ...state,
+                storage: {
+                    ...storage,
+                    centralizedRawTxs: {
+                        ...storage.centralizedRawTxs,
+                        txs: [...txs, tx],
+                    },
+                },
+            };
+        }
+        case ACTION_REMOVE_STORAGE_RAW_DATA_CENTRALIZED: {
+            const { burningTxId } = action.payload;
+            const { storage } = state;
+            const { txs } = storage.centralizedRawTxs;
+            if (!burningTxId) {
+                return state;
+            }
+            return {
+                ...state,
+                storage: {
+                    ...storage,
+                    centralizedRawTxs: {
+                        ...storage.centralizedRawTxs,
                         txs: [...txs.filter((tx: any) => tx?.burningTxId !== burningTxId)],
                     },
                 },

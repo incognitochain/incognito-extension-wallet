@@ -13,6 +13,12 @@ import { useHistory } from 'react-router-dom';
 import { route as importRoute } from 'src/module/Account/features/ImportAccount';
 import { route as profileRoute } from 'src/module/Profile';
 import { actionToggleDecimalDigits, actionToggleHomeConfigs, actionToggleModeSaveBurnTx } from './Setting.actions';
+import {
+    actionToggleDecimalDigits,
+    actionToggleHomeConfigs,
+    actionToggleModeSaveBurnTx,
+    actionToggleModeSaveRawBurnTx,
+} from './Setting.actions';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, isDevSelector, settingSelector } from './Setting.selector';
@@ -24,7 +30,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const handleToggleHomeConfigs = () => dispatch(actionToggleHomeConfigs());
     const chainURL = useSelector(chainURLSelector);
     const { decimalDigits } = useSelector(settingSelector);
-    const { stagingHomeConfigs, toggleSaveBurnTx } = useSelector(devSettingSelector);
+    const { stagingHomeConfigs, toggleSaveBurnTx, toggleSaveRawBurnTx } = useSelector(devSettingSelector);
     const history = useHistory();
     const isDev = useSelector(isDevSelector);
     let settingFactories: ISettingItem[] = [
@@ -77,6 +83,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     toggle: true,
                     onClick: () => dispatch(actionToggleModeSaveBurnTx()),
                     toggleValue: toggleSaveBurnTx,
+                },
+                {
+                    desc: 'Toggle save burn raw tx local',
+                    toggle: true,
+                    onClick: () => dispatch(actionToggleModeSaveRawBurnTx()),
+                    toggleValue: toggleSaveRawBurnTx,
                 },
                 {
                     desc: 'User Profile',

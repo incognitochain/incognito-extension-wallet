@@ -6,12 +6,14 @@ import {
     ACTION_TOGGLE_DECIMAL_DIGITS,
     ACTION_TOGGLE_DEV_MODE,
     ACTION_TOGGLE_MODE_SAVE_BURN_TX,
+    ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX,
 } from './Setting.constant';
 
 export interface ISettingReducer {
     dev: {
         stagingHomeConfigs: boolean;
         toggleSaveBurnTx: boolean;
+        toggleSaveRawBurnTx: boolean;
     };
     isDev: boolean;
     decimalDigits: boolean;
@@ -21,6 +23,7 @@ const initialState: ISettingReducer = {
     dev: {
         stagingHomeConfigs: false,
         toggleSaveBurnTx: false,
+        toggleSaveRawBurnTx: false,
     },
     decimalDigits: true,
     isDev: false,
@@ -59,6 +62,12 @@ const settingReducer = (
             return {
                 ...state,
                 dev: { ...state.dev, toggleSaveBurnTx: !state.dev.toggleSaveBurnTx },
+            };
+        }
+        case ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX: {
+            return {
+                ...state,
+                dev: { ...state.dev, toggleSaveRawBurnTx: !state.dev.toggleSaveRawBurnTx },
             };
         }
         default:

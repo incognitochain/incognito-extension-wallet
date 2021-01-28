@@ -9,16 +9,20 @@ import { useHistory } from 'react-router-dom';
 import { route as routeConfirmTx } from 'src/module/Send/features/ConfirmTx';
 import toString from 'lodash/toString';
 import { delay } from 'src/utils/delay';
+import { getHistoryCacheDetailSelector } from 'src/module/History/History.selector';
+import { toggleSaveBurnTxSelector, toggleSaveRawBurnTxSelector } from 'src/module/Setting/Setting.selector';
 import { sendDataSelector, userFeesSelector } from './Send.selector';
 import { ISendData, IUserFeesData } from './Send.interface';
-import { getHistoryCacheDetailSelector } from '../History';
 import {
     actionAddStorageDataDecentralized,
     actionRemoveStorageDataDecentralized,
     actionRemoveStorageDataCentralized,
     actionAddStorageDataCentralized,
+    actionAddStorageRawDataDecentralized,
+    actionRemoveStorageRawDataDecentralized,
+    actionRemoveStorageRawDataCentralized,
+    actionAddStorageRawDataCentralized,
 } from './features/UnShield';
-import { toggleSaveBurnTxSelector } from '../Setting';
 
 interface IProps {}
 
@@ -54,6 +58,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const chainTokens = useSelector(chainTokensSelector);
     const signPublicKey: string = useSelector(signPublicKeyEncodeSelector);
     const toggleSaveBurnTx = useSelector(toggleSaveBurnTxSelector);
+    const toggleSaveRawBurnTx = useSelector(toggleSaveRawBurnTxSelector);
     const history = useHistory();
     const dispatch = useDispatch();
     const handleCentralizedWithdraw = async (token: PrivacyToken) => {
@@ -84,16 +89,58 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             },
         ];
         isUseTokenFee ? (privacyPaymentInfoList = [...privacyPaymentInfoList, ...paymentInfoList]) : false;
+        let storageData = {
+            privacyFee,
+            nativeFee,
+            address: tempAddress,
+            userFeeSelection,
+            userFeeLevel,
+            incognitoTxToPayOutsideChainFee: '',
+        };
         const burnTx: TxHistoryModel = await token.bridgeBurningCentralized({
             nativeFee,
             privacyFee,
             privacyPaymentInfoList,
             nativePaymentInfoList: isUsedPRVFee ? [...paymentInfoList] : [],
             memo,
+            txIdHandler: (rawTxId: string) =>
+                dispatch(
+                    actionAddStorageRawDataCentralized({
+                        tx: {
+                            burningTxId: rawTxId,
+                            data: {
+                                ...storageData,
+                                incognitoTxToPayOutsideChainFee: rawTxId,
+                            },
+                        },
+                    }),
+                ),
         });
+        if (toggleSaveRawBurnTx) {
+            await delay(100000);
+        }
         const burningTxId = burnTx.txId;
         if (!burningTxId) {
             throw new Error(`Burned token, but doesnt have txID, please check it`);
+        }
+        await dispatch(
+            actionAddStorageDataCentralized({
+                tx: {
+                    burningTxId,
+                    data: {
+                        ...storageData,
+                        incognitoTxToPayOutsideChainFee: burningTxId,
+                    },
+                },
+            }),
+        );
+        await dispatch(
+            actionRemoveStorageRawDataCentralized({
+                burningTxId,
+            }),
+        );
+        if (toggleSaveBurnTx) {
+            await delay(100000);
         }
         const centralizedWithdrawData = {
             burningTxId,
@@ -104,24 +151,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             nativeFee,
             signPublicKey,
         };
-        await dispatch(
-            actionAddStorageDataCentralized({
-                tx: {
-                    burningTxId,
-                    data: {
-                        privacyFee,
-                        nativeFee,
-                        address: tempAddress,
-                        userFeeSelection,
-                        userFeeLevel,
-                        incognitoTxToPayOutsideChainFee: burningTxId,
-                    },
-                },
-            }),
-        );
-        if (toggleSaveBurnTx) {
-            await delay(10000);
-        }
         await token.bridgeWithdrawCentralized(centralizedWithdrawData);
         await dispatch(
             actionRemoveStorageDataCentralized({
@@ -147,15 +176,19 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             throw new Error(`Can't not get master address`);
         }
         let burningTxId = '';
-        const decentralizedWithdrawData = {
+
+        const storageData = {
             incognitoAmount,
             requestedAmount,
             paymentAddress,
-            userFeeId,
+            walletAddress: account.key.keySet.paymentAddressKeySerialized,
+            tokenId,
+            incognitoTx: '',
+            currencyType,
+            erc20TokenAddress: contractId,
+            id: userFeeId,
             userFeeSelection,
             userFeeLevel,
-            burningTxId: '',
-            signPublicKey,
         };
         const burnTx: TxHistoryModelParam = await token.bridgeBurningDecentralized({
             outchainAddress: paymentAddress,
@@ -181,9 +214,20 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                   ]
                 : [],
             memo,
+            txIdHandler: (rawTxId: string) =>
+                dispatch(
+                    actionAddStorageRawDataDecentralized({
+                        tx: {
+                            burningTxId: rawTxId,
+                            data: { ...storageData, incognitoTx: rawTxId },
+                        },
+                    }),
+                ),
         });
+        if (toggleSaveRawBurnTx) {
+            await delay(100000);
+        }
         burningTxId = burnTx.txId;
-        decentralizedWithdrawData.burningTxId = burningTxId;
         if (!burningTxId) {
             throw new Error(`Burned token, but doesnt have txID, please check it`);
         }
@@ -192,24 +236,30 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 tx: {
                     burningTxId,
                     data: {
-                        incognitoAmount,
-                        requestedAmount,
-                        paymentAddress,
-                        walletAddress: account.key.keySet.paymentAddressKeySerialized,
-                        tokenId,
+                        ...storageData,
                         incognitoTx: burningTxId,
-                        currencyType,
-                        erc20TokenAddress: contractId,
-                        id: userFeeId,
-                        userFeeSelection,
-                        userFeeLevel,
                     },
                 },
             }),
         );
+        await dispatch(
+            actionRemoveStorageRawDataDecentralized({
+                burningTxId,
+            }),
+        );
         if (toggleSaveBurnTx) {
-            await delay(10000);
+            await delay(100000);
         }
+        const decentralizedWithdrawData = {
+            incognitoAmount,
+            requestedAmount,
+            paymentAddress,
+            userFeeId,
+            userFeeSelection,
+            userFeeLevel,
+            burningTxId,
+            signPublicKey,
+        };
         await token.bridgeWithdrawDecentralized(decentralizedWithdrawData);
         await dispatch(
             actionRemoveStorageDataDecentralized({
