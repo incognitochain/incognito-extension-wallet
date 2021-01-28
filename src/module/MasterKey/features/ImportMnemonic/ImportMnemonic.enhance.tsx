@@ -5,7 +5,7 @@ import { batch, useDispatch, useSelector } from 'react-redux';
 import { translateSelector } from 'src/module/Configs';
 import { actionImportWallet } from 'src/module/Wallet';
 import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
-import { trim, last } from 'lodash';
+import { trim } from 'lodash';
 import { IProps } from './ImportMnemonic.inteface';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
@@ -43,18 +43,20 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
         setMasterKeyName(trim(e.target.value));
     }, []);
 
-    const handleChangeMnemonic = useCallback(
-        (e) => {
-            setError('');
+    const handleChangeMnemonic = useCallback((e) => {
+        setError('');
+        setMnemonic(trim(e.target.value || '').replace(/\n/g, ' '));
+    }, []);
 
-            const { value } = e.target;
-            if (last(value) === '\n') {
+    const handleKeyDown = useCallback(
+        (e) => {
+            const keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
                 handleVerify(e);
-            } else {
-                setMnemonic(trim(e.target.value || '').replace(/\n/g, ' '));
+                return false;
             }
         },
-        [mnemonic],
+        [masterKeyName, mnemonic],
     );
 
     const isDisabled = useMemo(() => {
@@ -67,6 +69,7 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
             onChangeName={handleChangeMasterKeyName}
             onChangeMnemonic={handleChangeMnemonic}
             onVerify={handleVerify}
+            onKeyDown={handleKeyDown}
             isDisabled={isDisabled}
             error={error}
         />
