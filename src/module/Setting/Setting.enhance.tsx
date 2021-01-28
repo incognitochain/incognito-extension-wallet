@@ -11,6 +11,7 @@ import { actionLogout } from 'src/module/Password';
 import { Header } from 'src/components';
 import { useHistory } from 'react-router-dom';
 import { route as importRoute } from 'src/module/Account/features/ImportAccount';
+import { route as profileRoute } from 'src/module/Profile';
 import { actionToggleDecimalDigits, actionToggleHomeConfigs, actionToggleModeSaveBurnTx } from './Setting.actions';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
@@ -76,6 +77,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     toggle: true,
                     onClick: () => dispatch(actionToggleModeSaveBurnTx()),
                     toggleValue: toggleSaveBurnTx,
+                },
+                {
+                    desc: 'User Profile',
+                    onClick: () => history.push(profileRoute),
                 },
             ],
         });

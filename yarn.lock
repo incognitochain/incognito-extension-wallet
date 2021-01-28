@@ -7453,7 +7453,7 @@ in-publish@^2.0.0:
 
 "incognito-js@https://github.com/incognitochain/sdk-v2#develop":
   version "1.1.0"
-  resolved "https://github.com/incognitochain/sdk-v2#73e8f602fed583f3538a304ab2a50471bd669707"
+  resolved "https://github.com/incognitochain/sdk-v2#91a5f6803187be139b20d82ef0f83496d0e63d65"
   dependencies:
     "@types/base64-js" "^1.2.5"
     "@types/circular-json" "^0.4.0"
