@@ -4,6 +4,7 @@ export interface IProps {
     error: string;
     onChangeMnemonic: (e: any) => void;
     onChangeName: (e: any) => void;
+    onKeyDown: (e: any) => void;
     onVerify: () => void;
     isDisabled: boolean;
     onBack: () => void;

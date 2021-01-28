@@ -26,7 +26,7 @@ const Styled = styled.div`
 `;
 
 const ImportMnemonic = (props: IProps) => {
-    const { onChangeName, onChangeMnemonic, error, onVerify, isDisabled, onBack } = props;
+    const { onChangeName, onChangeMnemonic, error, onVerify, isDisabled, onBack, onKeyDown } = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = translate.masterKey.importMnemonic;
 
@@ -50,6 +50,7 @@ const ImportMnemonic = (props: IProps) => {
                         placeholder={dictionary.mnemonicInput}
                         onChange={onChangeMnemonic}
                         defaultValue=""
+                        onKeyDown={onKeyDown}
                     />
                 </div>
                 <input type="text" name="email" value="..." autoComplete="username email" className="hidden" readOnly />
