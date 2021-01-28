@@ -4,6 +4,7 @@ import {
     ACTION_TOGGLE_DECIMAL_DIGITS,
     ACTION_TOGGLE_DEV_MODE,
     ACTION_TOGGLE_MODE_SAVE_BURN_TX,
+    ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX,
 } from './Setting.constant';
 
 export const actionFetched = (payload: any) => ({
@@ -25,4 +26,8 @@ export const actionToggleDevMode = () => ({
 
 export const actionToggleModeSaveBurnTx = () => ({
     type: ACTION_TOGGLE_MODE_SAVE_BURN_TX,
+});
+
+export const actionToggleModeSaveRawBurnTx = () => ({
+    type: ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX,
 });

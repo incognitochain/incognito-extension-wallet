@@ -20,3 +20,5 @@ export const defaultListServerSelector = createSelector(isDevSelector, (isDev) =
 ]);
 
 export const toggleSaveBurnTxSelector = createSelector(devSettingSelector, (dev) => dev.toggleSaveBurnTx);
+
+export const toggleSaveRawBurnTxSelector = createSelector(devSettingSelector, (dev) => dev.toggleSaveRawBurnTx);

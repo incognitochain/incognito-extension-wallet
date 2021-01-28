@@ -6,4 +6,4 @@ export const unShieldSelector = createSelector(
     (unShield) => unShield,
 );
 
-export const unShieldStorageDataSelector = createSelector(unShieldSelector, (unShield) => unShield?.storage);
+export const unShieldStorageDataSelector = createSelector(unShieldSelector, (unShield) => unShield.storage);
