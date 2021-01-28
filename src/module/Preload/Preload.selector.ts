@@ -17,3 +17,8 @@ export const requestDAppSelector = createSelector(preloadSelector, (preload) => 
 export const apiURLSelector = createSelector(serverSelector, (server) => server.apiURL);
 
 export const apiURL2Selector = createSelector(serverSelector, (server) => server.api2URL);
+
+export const authTokenSelector = createSelector(preloadSelector, (preload) => {
+    const { deviceId, deviceToken } = preload.configs;
+    return { deviceId, deviceToken };
+});
