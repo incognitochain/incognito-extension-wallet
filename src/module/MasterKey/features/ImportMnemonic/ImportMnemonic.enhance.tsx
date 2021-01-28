@@ -7,6 +7,7 @@ import { actionImportWallet } from 'src/module/Wallet';
 import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { trim } from 'lodash';
 import { IProps } from './ImportMnemonic.inteface';
+import { validator } from '../../../../utils';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
     const [masterKeyName, setMasterKeyName] = useState('');
@@ -39,8 +40,14 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
     };
 
     const handleChangeMasterKeyName = useCallback((e) => {
+        const name = trim(e.target.value);
+
         setError('');
-        setMasterKeyName(trim(e.target.value));
+        setMasterKeyName(name);
+
+        if (!validator.validateAlphaNumericText(name)) {
+            return setError(errorDictionary.invalidMasterKeyName);
+        }
     }, []);
 
     const handleChangeMnemonic = useCallback((e) => {
