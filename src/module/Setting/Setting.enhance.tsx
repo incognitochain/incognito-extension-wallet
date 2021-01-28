@@ -12,7 +12,6 @@ import { Header } from 'src/components';
 import { useHistory } from 'react-router-dom';
 import { route as importRoute } from 'src/module/Account/features/ImportAccount';
 import { route as profileRoute } from 'src/module/Profile';
-import { actionToggleDecimalDigits, actionToggleHomeConfigs, actionToggleModeSaveBurnTx } from './Setting.actions';
 import {
     actionToggleDecimalDigits,
     actionToggleHomeConfigs,
