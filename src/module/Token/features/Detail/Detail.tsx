@@ -37,8 +37,9 @@ export const GroupButton = React.memo(() => {
     const translate: ILanguage = useSelector(translateSelector);
     const translateDetail = translate.token.detail;
     const history = useHistory();
+    const selectedPrivacy = useSelector(selectedPrivacySelector);
     const handleSend = () => {
-        history.push(routeSend);
+        history.push(`${routeSend}/${selectedPrivacy.tokenId}`);
     };
     return <Button title={translateDetail.btnSend} onClick={handleSend} />;
 });

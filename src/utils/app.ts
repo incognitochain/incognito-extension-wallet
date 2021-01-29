@@ -39,9 +39,9 @@ export const isTab = () => {
     return window.location.hash === '#window';
 };
 
-export const openAsTab = () => {
+export const openAsTab = (url = 'index.html#window') => {
     if (chrome && chrome.tabs && chrome.tabs.create) {
-        chrome.tabs.create({ url: chrome.extension.getURL('index.html#window') });
+        chrome.tabs.create({ url: chrome.extension.getURL(url) });
     }
 };
 
