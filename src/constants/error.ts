@@ -14,7 +14,8 @@ export const SDK_ERROR: any = {
     '-2': 'Please try again with a valid private key.',
     '-5': 'Please wait for your previous transaction to finish processing. Simply try again later.',
     '-3002': 'Something’s not quite right. Please try again later!',
-    '-3006': 'Please consolidate UTXOs for this keychain in your Settings tab, then try again.',
+    // '-3006': 'Please consolidate UTXOs for this keychain in your Settings tab, then try again.',
+    '-3006': 'Please consolidate UTXOs for this keychain, then try again.',
 };
 
 export const CHAIN_ERROR: any = {
