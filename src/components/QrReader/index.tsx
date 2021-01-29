@@ -3,9 +3,12 @@ import styled from 'styled-components';
 import { CloseIcon } from 'src/components/Icons';
 import { actionToggleModal } from 'src/components/Modal';
 import { BrowserQRCodeReader } from '@zxing/library';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isString } from 'lodash';
 import Spinner from 'react-bootstrap/esm/Spinner';
+import { openAsTab } from 'src/utils';
+import { selectedPrivacySelector } from 'src/module/Token';
+import { COINS } from 'src/constants';
 
 const Styled = styled.div`
     .icon {
@@ -39,18 +42,23 @@ const QrReaderComponent = (props: IProps & any) => {
     });
     let { codeReader, hasWebcam, hasWebcamPermissions, error } = state;
     const { onScan }: IProps = props;
-
+    const selectedPrivacy = useSelector(selectedPrivacySelector);
     const checkPermission = async () => {
-        await window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-        const devices = await window.navigator.mediaDevices.enumerateDevices();
-        const webcams = devices.filter((device) => device.kind === 'videoinput');
-        const userHasWebcam = webcams.length > 0;
-        if (!userHasWebcam) {
-            throw new Error('No webcam found');
-        }
-        const userHasWebcamPermissions = webcams.some((webcam) => webcam.label && webcam.label.length > 0);
-        if (!userHasWebcamPermissions) {
-            throw new Error('Not webcam permissions');
+        try {
+            await window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+            const devices = await window.navigator.mediaDevices.enumerateDevices();
+            const webcams = devices.filter((device) => device.kind === 'videoinput');
+            const userHasWebcam = webcams.length > 0;
+            if (!userHasWebcam) {
+                throw new Error('No webcam found');
+            }
+            const userHasWebcamPermissions = webcams.some((webcam) => webcam.label && webcam.label.length > 0);
+            if (!userHasWebcamPermissions) {
+                throw new Error('Not webcam permissions');
+            }
+        } catch (error) {
+            openAsTab(`index.html/?page=send&tokenId=${selectedPrivacy.tokenId || COINS.PRV.id}`);
+            throw error;
         }
     };
     const initCamera = async () => {
@@ -70,7 +78,6 @@ const QrReaderComponent = (props: IProps & any) => {
             setState({ ...state, error: e?.message || 'Something went wrong!' });
         }
     };
-
     const renderWebcamp = () => {
         if (!codeReader) {
             return <Spinner animation="border" />;
@@ -80,7 +87,6 @@ const QrReaderComponent = (props: IProps & any) => {
         }
         return null;
     };
-
     React.useEffect(() => {
         initCamera();
     }, [state]);

@@ -3,7 +3,7 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { batch, useDispatch, useSelector } from 'react-redux';
 import { reset } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
-import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
+import { actionSetSelectedToken, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { accountBalanceSelector, actionGetAccountBalance, defaultAccountSelector } from 'src/module/Account';
 import { isGettingBalanceByTokenIdSelector } from 'src/redux';
 import format from 'src/utils/format';
@@ -11,6 +11,7 @@ import convert from 'src/utils/convert';
 import { COINS } from 'src/constants';
 import { actionGetBalanceByTokenId } from 'src/redux/actions';
 import { walletSelector } from 'src/module/Wallet';
+import { Redirect, useParams } from 'react-router-dom';
 import { FORM_CONFIGS } from './Send.constant';
 import {
     actionInit,
@@ -27,6 +28,11 @@ export interface TInnerInit {
 const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const [init, setInit] = React.useState(false);
+    const params: any = useParams();
+    const { id: tokenId } = params;
+    if (!tokenId) {
+        return <Redirect to="/" />;
+    }
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const account = useSelector(defaultAccountSelector);
     const wallet = useSelector(walletSelector);
@@ -100,6 +106,11 @@ const enhanceInit = (WrappedComp: React.FunctionComponent) => (props: any) => {
     React.useEffect(() => {
         initData();
     }, [selectedPrivacy?.tokenId, wallet, account]);
+    React.useEffect(() => {
+        if (tokenId !== selectedPrivacy.tokenId) {
+            dispatch(actionSetSelectedToken(tokenId));
+        }
+    }, [tokenId]);
     return (
         <ErrorBoundary>
             <WrappedComp {...{ ...props, isInitingForm }} />
