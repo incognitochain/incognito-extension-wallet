@@ -10,7 +10,7 @@ import { defaultAccountSelector, signPublicKeyEncodeSelector } from 'src/module/
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { COINS } from 'src/constants';
-import { API_CODE, API_ERROR } from 'src/constants/error';
+import { API_CODE, API_ERROR, ERROR_MESSAGE } from 'src/constants/error';
 import { bridgeTokensSelector, chainTokensSelector } from '../Token/Token.selector';
 import { sendDataSelector, sendSelector, userFeesSelector } from './Send.selector';
 import { getMaxAmount, MAX_FEE_PER_TX, getTotalFee } from './Send.utils';
@@ -202,11 +202,20 @@ export const actionFetchUserFees = ({
         if (!userFeesData.FeeAddress) {
             throw new Error("Can't not get fee address!");
         }
+        if (!userFeesData.Address && !selectedPrivacy.isDecentralized) {
+            throw new Error("Can't not get temp address");
+        }
         await dispatch(actionFetchedUserFees(userFeesData));
     } catch (error) {
         if (error && error?.response?.data?.Error?.Code === API_CODE.MEMO_IS_REQUIRED) {
             dispatch(actionSetErrorMessage(API_ERROR[toString(API_CODE.MEMO_IS_REQUIRED)]));
             return dispatch(actionFetchFailUserFees(true));
+        }
+        if (error && error?.response?.status === 500) {
+            dispatch(actionFetchFailUserFees());
+            throw new Error(
+                `${ERROR_MESSAGE.CAN_NOT_ESTIMATE_FEE} API_ERROR_CODE(${error?.response?.data?.Error?.Code || ''})`,
+            );
         }
         dispatch(actionFetchFailUserFees());
         throw error;
