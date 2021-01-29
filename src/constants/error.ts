@@ -12,7 +12,7 @@ export const SDK_ERROR: any = {
     '-2001': 'Please ensure this private key is valid, and has not already been imported to this device.',
     '-2005': 'Please ensure this private key is valid.',
     '-2': 'Please try again with a valid private key.',
-    '-5': 'Your balance is insufficient.',
+    '-5': 'Please wait for your previous transaction to finish processing. Simply try again later.',
     '-3002': 'Something’s not quite right. Please try again later!',
     '-3006': 'Please consolidate UTXOs for this keychain in your Settings tab, then try again.',
 };
