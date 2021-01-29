@@ -7,6 +7,7 @@ import { COINS } from 'src/constants';
 import APP_CONSTANT from 'src/constants/app';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import { cachePromise } from 'src/services';
+import { isEmpty } from 'lodash';
 import { bridgeTokensSelector, chainTokensSelector, getPrivacyDataByTokenIDSelector } from '../Token';
 import { defaultAccountSelector, paymentAddressSelector } from './Account.selector';
 
@@ -46,7 +47,12 @@ const enhanceBalance = (WrappedComponent: React.FunctionComponent) => (props: IE
         };
     };
 
-    const handleLoadBalanceTokens = async () => {
+    const handleLoadBalanceTokens = async (forceLoad: boolean) => {
+        const requestAccount = await sendExtensionMessage(
+            APP_CONSTANT.BACKGROUND_LISTEN.CHECK_WALLET_HAVE_CONNECTION,
+            {},
+        );
+        if (isEmpty(requestAccount) && !forceLoad) return null;
         const formatAccount = await cachePromise(
             `sign-function-account-${account.key.keySet.publicKeySerialized}`,
             handleCacheBalance,

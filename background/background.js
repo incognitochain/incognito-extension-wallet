@@ -5,7 +5,7 @@ import {
     EXTENSION_URL,
     INCOGNITO_EXTENSION_SEND_DATA,
     NOTIFICATION_HEIGHT,
-    NOTIFICATION_WIDTH
+    NOTIFICATION_WIDTH,
 } from "./consts";
 import {
     closeCurrentWindow,
@@ -360,6 +360,9 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
             handleCheckConnectAccount(sender).then();
             break;
         }
+        case BACKGROUND_LISTEN.CHECK_WALLET_HAVE_CONNECTION: {
+            return sendResponse(requestAccount);
+        }
         default:
             break;
     }
@@ -369,8 +372,9 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
 
 // Remove current request
 chrome.tabs.onRemoved.addListener(function(tabId, info) {
-    const { tabs } = tabWindow;
-    if (tabWindow && tabs.length > 0) {
+    if (tabWindow) {
+        const { tabs } = tabWindow;
+        if (tabs.length <= 0) return;
         const isCloseIncognitoExtensionTab = Boolean(
             tabs.find((tab) => tab && tab.id === tabId),
         );

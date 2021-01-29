@@ -18,7 +18,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const [allFollowedTokens, setAllFollowedTokens] = React.useState<any>([]);
     const handleLoadBalance = debounce(async () => {
         setLoading(true);
-        const tokensBalance = await loadBalance();
+        const tokensBalance = await loadBalance(true);
         setAllFollowedTokens(tokensBalance);
         setTimeout(() => setLoading(false), 1000);
     }, 1000);
