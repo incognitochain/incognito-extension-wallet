@@ -22,3 +22,5 @@ export const authTokenSelector = createSelector(preloadSelector, (preload) => {
     const { deviceId, deviceToken } = preload.configs;
     return { deviceId, deviceToken };
 });
+
+export const hasCameraPermissionSelector = createSelector(preloadSelector, (preload) => preload.hasCameraPermission);

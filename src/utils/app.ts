@@ -35,6 +35,22 @@ export const getURL = (url?: string) => {
     return new URL(url);
 };
 
+export const getQueryString = () => (typeof window !== 'undefined' ? window.location.search : '');
+
+export const getURLSearchParams = (search?: string) => {
+    if (typeof window === 'undefined') {
+        return {};
+    }
+    return new URLSearchParams(search || window.location.search);
+};
+
+export const isContainsQueryString = (queryString: string) => {
+    if (typeof window === 'undefined') {
+        return false;
+    }
+    return window.location.search.indexOf(queryString) > -1;
+};
+
 export const isTab = () => {
     return window.location.hash === '#window';
 };

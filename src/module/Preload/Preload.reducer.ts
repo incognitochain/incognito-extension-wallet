@@ -13,6 +13,7 @@ import {
     ACTION_FETCHED_SDK_CONFIG,
     ACTION_UPDATE_REQUEST_FROM_DAPP,
     ACTION_CLEAR_REQUEST_FROM_DAPP,
+    ACTION_SET_CAMERA_PERMISSION,
 } from './Preload.constant';
 
 export interface IPreloadConfigs {
@@ -37,6 +38,7 @@ export interface IPreloadReducer {
     server: IServer;
     error: string;
     requestDApp: IRequestDApp | null;
+    hasCameraPermission: boolean;
 }
 
 const initialState: IPreloadReducer = {
@@ -54,6 +56,7 @@ const initialState: IPreloadReducer = {
     },
     server: MAINNET_SERVER,
     requestDApp: null,
+    hasCameraPermission: false,
 };
 
 const preloadReducer = (
@@ -130,6 +133,12 @@ const preloadReducer = (
             return {
                 ...state,
                 requestDApp: null,
+            };
+        }
+        case ACTION_SET_CAMERA_PERMISSION: {
+            return {
+                ...state,
+                hasCameraPermission: true,
             };
         }
         default:

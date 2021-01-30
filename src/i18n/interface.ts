@@ -247,6 +247,10 @@ export interface IGeneralLanguage {
     switched: string;
     removed: string;
     keys: string;
+    readyDesc: string;
+    hasCameraDesc: string;
+    scanQrCode: string;
+    placeQrCode: string;
 }
 
 export interface IShieldLanguage {

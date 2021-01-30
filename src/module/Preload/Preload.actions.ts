@@ -18,6 +18,7 @@ import {
     ACTION_FETCHED_SDK_CONFIG,
     ACTION_UPDATE_REQUEST_FROM_DAPP,
     ACTION_CLEAR_REQUEST_FROM_DAPP,
+    ACTION_SET_CAMERA_PERMISSION,
 } from './Preload.constant';
 import { ENVS } from '../../configs';
 
@@ -143,4 +144,8 @@ export const actionUpdateRequestFromDApp = (payload: IRequestDApp | null) => ({
 
 export const actionClearRequestFromDApp = () => ({
     type: ACTION_CLEAR_REQUEST_FROM_DAPP,
+});
+
+export const actionSetCameraPermission = () => ({
+    type: ACTION_SET_CAMERA_PERMISSION,
 });

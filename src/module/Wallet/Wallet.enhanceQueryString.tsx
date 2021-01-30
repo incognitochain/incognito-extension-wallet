@@ -5,6 +5,7 @@ import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { actionSetSelectedToken } from 'src/module/Token';
 import { route as routeSend } from 'src/module/Send';
+import { getURLSearchParams } from 'src/utils';
 
 interface IProps {}
 
@@ -13,8 +14,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     const history = useHistory();
     const handleQueryString = async () => {
         try {
-            const queryString: any = typeof window !== 'undefined' && window.location.search;
-            const urlParams = new URLSearchParams(queryString);
+            const urlParams: any = getURLSearchParams();
             const page = urlParams.get('page');
             switch (page) {
                 case 'send': {

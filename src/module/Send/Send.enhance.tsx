@@ -108,6 +108,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
         dispatch(
             actionToggleModal({
                 data: <QrReader onScan={handleScanQrCode} />,
+                isLoadingModal: true,
             }),
         );
     };

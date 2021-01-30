@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
-import { AppIcon, Button, Input, Layout } from 'src/components/Core';
+import { AppIcon, Button, Input, Layout } from 'src/components';
 import { CONSTANT_COLORS } from 'src/constants';
 import enhance from './OldUser.enhance';
 import { IOldUserProps } from './OldUser.interface';
