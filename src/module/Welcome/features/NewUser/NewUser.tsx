@@ -3,11 +3,10 @@ import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
-import { AppIcon, Button, Input, Layout } from 'src/components/Core';
+import { AppIcon, Button, Input, Layout, Header } from 'src/components';
 import { CONSTANT_COLORS } from 'src/constants';
 import enhance from './NewUser.enhance';
 import { INewUserProps } from './NewUser.interface';
-import { Header } from '../../../../components';
 
 const Styled = styled.div`
     .title {
