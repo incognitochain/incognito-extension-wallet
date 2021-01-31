@@ -59,6 +59,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const signPublicKey: string = useSelector(signPublicKeyEncodeSelector);
     const toggleSaveBurnTx = useSelector(toggleSaveBurnTxSelector);
     const toggleSaveRawBurnTx = useSelector(toggleSaveRawBurnTxSelector);
+    const { forceSendFinish } = props;
     const history = useHistory();
     const dispatch = useDispatch();
     const handleCentralizedWithdraw = async (token: PrivacyToken) => {
@@ -158,17 +159,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             }),
         );
         const hc = getHistoryCacheDetail(burnTx);
-        history.push(routeConfirmTx, {
-            confirmTx: {
-                txId: burningTxId,
-                paymentAddress,
-                time: hc.timeFormated,
-                amount: amountFormatedNoClip,
-                symbol,
-                fee: totalFeeFormatedNoClip,
-                feeSymbol,
-            },
-        });
+        const confirmTx = {
+            txId: burningTxId,
+            paymentAddress,
+            time: hc.timeFormated,
+            amount: amountFormatedNoClip,
+            symbol,
+            fee: totalFeeFormatedNoClip,
+            feeSymbol,
+        }
+        forceSendFinish(null, confirmTx)
+        history.push(routeConfirmTx, { confirmTx });
     };
     const handleDecentralizedWithdraw = async (token: PrivacyToken) => {
         const { FeeAddress: masterAddress, ID: userFeeId } = data;
@@ -267,17 +268,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             }),
         );
         const hc = getHistoryCacheDetail(burnTx);
-        history.push(routeConfirmTx, {
-            confirmTx: {
-                txId: burningTxId,
-                paymentAddress,
-                time: hc.timeFormated,
-                amount: amountFormatedNoClip,
-                symbol,
-                fee: totalFeeFormatedNoClip,
-                feeSymbol,
-            },
-        });
+        const confirmTx = {
+            txId: burningTxId,
+            paymentAddress,
+            time: hc.timeFormated,
+            amount: amountFormatedNoClip,
+            symbol,
+            fee: totalFeeFormatedNoClip,
+            feeSymbol,
+        }
+        forceSendFinish(null, confirmTx)
+        history.push(routeConfirmTx, { confirmTx });
     };
     const handleUnShieldCrypto = async () => {
         try {
@@ -288,6 +289,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 await handleCentralizedWithdraw(token);
             }
         } catch (error) {
+            forceSendFinish(error, null)
             throw error;
         }
     };
