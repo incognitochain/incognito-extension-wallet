@@ -167,8 +167,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             symbol,
             fee: totalFeeFormatedNoClip,
             feeSymbol,
-        }
-        forceSendFinish(null, confirmTx)
+        };
+        forceSendFinish(null, confirmTx);
         history.push(routeConfirmTx, { confirmTx });
     };
     const handleDecentralizedWithdraw = async (token: PrivacyToken) => {
@@ -276,8 +276,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             symbol,
             fee: totalFeeFormatedNoClip,
             feeSymbol,
-        }
-        forceSendFinish(null, confirmTx)
+        };
+        forceSendFinish(null, confirmTx);
         history.push(routeConfirmTx, { confirmTx });
     };
     const handleUnShieldCrypto = async () => {
@@ -289,7 +289,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 await handleCentralizedWithdraw(token);
             }
         } catch (error) {
-            forceSendFinish(error, null)
+            forceSendFinish(error, null);
             throw error;
         }
     };
