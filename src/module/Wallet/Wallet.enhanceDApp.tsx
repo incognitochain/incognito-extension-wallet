@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { route as connectRoute } from 'src/module/Connect/Connect.route';
 import { route as disconnectRoute } from 'src/module/Disconnect/Disconnect.route';
-import { route as sendRoute } from 'src/module/Send';
+import { forceSendDataSelector, route as sendRoute } from 'src/module/Send';
 import APP_CONSTANT from 'src/constants/app';
 import { IRequestDApp, requestDAppSelector } from 'src/module/Preload';
 import { LoadingContainer } from '../Preload/Preload.enhance';
@@ -19,6 +19,7 @@ const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProp
     const history = useHistory();
     const requestDApp: IRequestDApp | null = useSelector(requestDAppSelector);
     const translate: IPreloadLanguage = useSelector(translateByFieldSelector)('preload');
+    const forceSendData = useSelector(forceSendDataSelector);
     React.useEffect(() => {
         if (!loadedBalance) return;
         if (requestDApp) {
@@ -33,7 +34,7 @@ const enhanceDApp = (WrappedComponent: React.FunctionComponent) => (props: IProp
                     break;
                 // move to send tx
                 case APP_CONSTANT.EXTENSION_LISTEN.MOVE_TO_SEND_TX:
-                    history.push(sendRoute);
+                    history.push(`${sendRoute}/${forceSendData?.tokenId}`);
                     break;
                 default:
                     break;
