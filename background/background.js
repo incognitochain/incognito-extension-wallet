@@ -299,6 +299,20 @@ const handleCheckConnectAccount = async (sender) => {
     tabSendMessage(tab.id, params);
 };
 
+const handleRemoveAccount = (accountName) => {
+    try {
+        if (!requestAccount || !accountName) return;
+        Object.keys(requestAccount).forEach(connectOrigin => {
+            const connectAccountName = requestAccount[connectOrigin]?.name
+            if (connectAccountName && connectAccountName === accountName) {
+                delete requestAccount[connectOrigin];
+            }
+        });
+    } catch (e) {
+        /*Ignored error*/
+    }
+};
+
 extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => {
     const { name, data } = request;
     switch (name) {
@@ -362,6 +376,10 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
         }
         case BACKGROUND_LISTEN.CHECK_WALLET_HAVE_CONNECTION: {
             return sendResponse(requestAccount);
+        }
+        case BACKGROUND_LISTEN.REMOVE_ACCOUNT: {
+            const { accountName } = data;
+            return handleRemoveAccount(accountName);
         }
         default:
             break;
