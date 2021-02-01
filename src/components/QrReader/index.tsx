@@ -54,7 +54,6 @@ const QrReaderComponent = (props: IProps & any) => {
         error: '',
     });
     const selectedPrivacy = useSelector(selectedPrivacySelector);
-    const hasCameraPermission = useSelector(hasCameraPermissionSelector);
     const theme = useSelector(themeSelector);
     let { codeReader, error } = state;
     const { onScan }: IProps = props;
@@ -78,6 +77,11 @@ const QrReaderComponent = (props: IProps & any) => {
             // has permission
             if (containsQueryString) {
                 dispatch(actionSetCameraPermission());
+                dispatch(
+                    actionToggleModal({
+                        data: <AppReady desc={translate.hasCameraDesc} />,
+                    }),
+                );
             }
         } catch (error) {
             if (!containsQueryString) openAsTab(pathname);
@@ -104,9 +108,6 @@ const QrReaderComponent = (props: IProps & any) => {
     React.useEffect(() => {
         initCamera();
     }, [state]);
-    if (hasCameraPermission && containsQueryString) {
-        return <AppReady desc={translate.hasCameraDesc} />;
-    }
     return (
         <Styled theme={theme}>
             <CloseIcon onClick={() => dispatch(actionToggleModal({}))} />

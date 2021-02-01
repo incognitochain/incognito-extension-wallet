@@ -2,12 +2,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { themeSelector } from 'src/module/Configs';
 import styled from 'styled-components';
-import { IGlobalStyle } from 'src/styles';
+import { COLORS } from 'src/styles';
 
 const Styled = styled.div`
     width: 50px;
     height: 50px;
-    background-color: ${(props: IGlobalStyle) => props.theme.body};
+    background-color: ${COLORS.black};
     border-radius: 50%;
     margin-bottom: 30px;
 `;
