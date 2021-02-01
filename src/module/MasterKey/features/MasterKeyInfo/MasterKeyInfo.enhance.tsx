@@ -8,6 +8,8 @@ import AccountDetails from 'src/module/Account/features/AccountDetail';
 import { actionFetchRemoveAccount } from 'src/module/Account';
 import { translateSelector } from 'src/module/Configs';
 import { actionToggleToast, SmallButton, TOAST_CONFIGS } from 'src/components';
+import { sendExtensionMessage } from 'src/utils/sendMessage';
+import APP_CONSTANT from 'src/constants/app';
 import { IProps } from './MasterKeyInfo.inteface';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
@@ -27,12 +29,14 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
 
         const handleRemoveKeychain = () => {
             try {
-                dispatch(actionFetchRemoveAccount(account.name));
+                const accountName = account.name;
+                sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.REMOVE_ACCOUNT, { accountName });
+                dispatch(actionFetchRemoveAccount(accountName));
                 dispatch(actionClearAllModal());
                 dispatch(
                     actionToggleToast({
                         toggle: true,
-                        value: `${general.removed} ${account.name}`,
+                        value: `${general.removed} ${accountName}`,
                         type: TOAST_CONFIGS.success,
                     }),
                 );
