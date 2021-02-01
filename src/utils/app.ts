@@ -67,7 +67,7 @@ export const closeCurrentTab = () => {
     }
 };
 
-export const handleOpenNewTab = () => {
+export const handleClassForTab = () => {
     try {
         const root: any = document.querySelector('#root');
         if (!root.classList.contains('incognito-extension-tab')) {
