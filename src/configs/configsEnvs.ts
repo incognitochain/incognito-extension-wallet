@@ -39,7 +39,7 @@ export const getEnvs = () => {
     } finally {
         envs = isEmpty(envs) ? defaultEnvs : envs;
     }
-    return envs;
+    return { ...envs, REACT_APP_DOMAIN_URL: window.location.origin };
 };
 
 export const ENVS: IENVS = getEnvs();
