@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { handleOpenNewTab, isTab } from './utils';
+import { handleClassForTab, isTab } from './utils';
 
 const rootEl = document.getElementById('root');
 
 ReactDOM.render(<App />, rootEl);
 
 if ((isTab() || !!window.location.search) && rootEl) {
-    handleOpenNewTab();
+    handleClassForTab();
 }
 
 if (module.hot) {
