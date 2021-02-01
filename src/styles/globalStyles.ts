@@ -93,7 +93,12 @@ export const GlobalStyled = createGlobalStyle`
         border-radius: 30px;
         border: 1px solid ${COLORS.lightGrey21};
     }
-    
+
+    #root.incognito-extension-tab .modal-content-wrapper{ 
+        margin-top: 40px;
+        border-radius: 30px;
+    }
+
     @font-face {
         font-family: 'SF-Pro-Display';
         src: url('${ENVS.REACT_APP_DOMAIN_URL}/fonts/SF-Pro-Display/SF-Pro-Display-Regular.otf'); 

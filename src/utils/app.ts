@@ -66,3 +66,14 @@ export const closeCurrentTab = () => {
         window.close();
     }
 };
+
+export const handleOpenNewTab = () => {
+    try {
+        const root: any = document.querySelector('#root');
+        if (!root.classList.contains('incognito-extension-tab')) {
+            root.classList.add('incognito-extension-tab');
+        }
+    } catch (error) {
+        console.debug(error);
+    }
+};
