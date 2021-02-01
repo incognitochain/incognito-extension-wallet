@@ -46,18 +46,13 @@ const Styled = styled.div`
 const Modal = (props: IProps) => {
     const modalState = useSelector(modalSelector);
     const theme = useSelector(themeSelector);
-
     const { onClose } = props;
-
     const { data } = modalState;
     const lastModal = last(data);
-
     if (isEmpty(data) || isEmpty(lastModal)) {
         return null;
     }
-
     const { closeable, data: modalData, customModalStyle, title, isLoadingModal, rightHeader } = lastModal;
-
     const renderModalContent = () => {
         if (isLoadingModal) {
             return (
