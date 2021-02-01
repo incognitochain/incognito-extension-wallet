@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { isTab } from './utils';
+import { handleOpenNewTab, isTab } from './utils';
 
 const rootEl = document.getElementById('root');
 
 ReactDOM.render(<App />, rootEl);
 
-if (isTab() && rootEl) {
-    rootEl.className += ' incognito-extension-tab';
+if ((isTab() || !!window.location.search) && rootEl) {
+    handleOpenNewTab();
 }
 
 if (module.hot) {
