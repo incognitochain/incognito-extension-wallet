@@ -59,7 +59,7 @@ const QrReaderComponent = (props: IProps & any) => {
     const { onScan }: IProps = props;
     const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const queryString = `?page=send&tokenId=${selectedPrivacy.tokenId || COINS.PRV.id}`;
-    const pathname = `index.html/${queryString}`;
+    const pathname = `index.html${queryString}`;
     const containsQueryString = isContainsQueryString(queryString);
     const checkPermission = async () => {
         try {
