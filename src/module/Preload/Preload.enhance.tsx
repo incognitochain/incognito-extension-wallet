@@ -58,7 +58,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
             handlePreload();
         }
     }, []);
-
     if (isTab()) {
         return (
             <div>
@@ -68,7 +67,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
             </div>
         );
     }
-
     if (preloading || !loaded || !preloaded) {
         return (
             <LoadingContainer

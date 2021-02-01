@@ -21,9 +21,10 @@ const language: ILanguage = {
         removed: 'Removed',
         keys: 'keys',
         readyDesc: 'You’re ready to go Incognito.',
-        hasCameraDesc: 'Camera allowed. Launch the extension to continue.',
+        hasCameraDesc: 'To continue using Incognito, please close this window and reopen the extension.',
         scanQrCode: 'Scan QR Code',
         placeQrCode: 'Place the QR code in front of your camera',
+        cameraReadyDesc: 'Scan function enabled.',
     },
     home: {
         title: 'Incognito Wallet',

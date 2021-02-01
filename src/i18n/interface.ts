@@ -248,6 +248,7 @@ export interface IGeneralLanguage {
     removed: string;
     keys: string;
     readyDesc: string;
+    cameraReadyDesc: string;
     hasCameraDesc: string;
     scanQrCode: string;
     placeQrCode: string;

@@ -8,7 +8,7 @@ import { isString } from 'lodash';
 import { openAsTab, isContainsQueryString } from 'src/utils';
 import { selectedPrivacySelector } from 'src/module/Token';
 import { COINS } from 'src/constants';
-import { actionSetCameraPermission, hasCameraPermissionSelector } from 'src/module/Preload';
+import { actionSetCameraPermission } from 'src/module/Preload';
 import AppReady from 'src/components/AppReady';
 import { IGeneralLanguage } from 'src/i18n';
 import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
@@ -79,7 +79,7 @@ const QrReaderComponent = (props: IProps & any) => {
                 dispatch(actionSetCameraPermission());
                 dispatch(
                     actionToggleModal({
-                        data: <AppReady desc={translate.hasCameraDesc} />,
+                        data: <AppReady title={translate.cameraReadyDesc} desc={translate.hasCameraDesc} />,
                     }),
                 );
             }
