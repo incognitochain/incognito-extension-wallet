@@ -385,7 +385,6 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
             break;
     }
     sendResponse(sender);
-    return true;
 });
 
 // Remove current request
