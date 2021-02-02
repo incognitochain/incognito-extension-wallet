@@ -6,7 +6,7 @@ const language: ILanguage = {
         title2: `Please check your connection or<br />re-install the application<br />(only if you have a backup of your private keys) and try again.`,
         btnRetry: 'Retry',
         openExtension: 'You’re ready to go Incognito.',
-        openExtensionSub: 'Master key created. Launch the extension to continue.',
+        openExtensionSub: 'Just close this window and relaunch the extension.',
     },
     general: {
         copied: 'Copied',
