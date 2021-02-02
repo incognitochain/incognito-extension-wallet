@@ -63,7 +63,9 @@ const Network = React.memo(() => {
                 }),
             );
             await dispatch(actionSetServer(server));
-            window?.location?.reload();
+            setTimeout(() => {
+                window?.location?.reload();
+            }, 2000);
         }
     };
     return (
