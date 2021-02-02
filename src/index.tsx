@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { handleClassForTab, isTab } from './utils';
+import { handleClassForEdge, handleClassForTab, isTab } from './utils';
+import { isEdge } from './utils/browsers';
 
 const rootEl = document.getElementById('root');
 
@@ -10,6 +11,10 @@ ReactDOM.render(<App />, rootEl);
 
 if ((isTab() || !!window.location.search) && rootEl) {
     handleClassForTab();
+}
+
+if (rootEl && isEdge()) {
+    handleClassForEdge();
 }
 
 if (module.hot) {

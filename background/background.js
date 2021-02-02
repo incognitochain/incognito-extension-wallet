@@ -319,12 +319,12 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
         // Client request connect account
         case BACKGROUND_LISTEN.REQUEST_CONNECT_ACCOUNT: {
             requestConnectAccount(sender).then();
-            return sendResponse(sender);
+            break;
         }
         // Client request send tx
         case BACKGROUND_LISTEN.REQUEST_SEND_TX: {
             handleRequestSendTx(sender, request).then();
-            return sendResponse(sender);
+            break;
         }
         // Update balance when loaded account
         case BACKGROUND_LISTEN.LOADED_FOLLOWED_BALANCE: {
@@ -342,7 +342,8 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
         }
         case BACKGROUND_LISTEN.CHECK_IS_CONNECTED: {
             const { tab, accountName } = data;
-            return sendResponse(checkIsConnected(tab, accountName))
+            sendResponse(checkIsConnected(tab, accountName));
+            return false;
         }
         case BACKGROUND_LISTEN.DISCONNECT_ACCOUNT: {
             const { origin } = data;
@@ -360,7 +361,8 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
         }
         case BACKGROUND_LISTEN.GET_PASS_WORD: {
             const { chainURL } = data;
-            return sendResponse(pass[chainURL]);
+            sendResponse(pass[chainURL]);
+            return false;
         }
         case BACKGROUND_LISTEN.UPDATE_PASS_WORD: {
             const { password, chainURL } = data;
@@ -375,16 +377,19 @@ extension.runtime.onMessage.addListener(async(request, sender, sendResponse) => 
             break;
         }
         case BACKGROUND_LISTEN.CHECK_WALLET_HAVE_CONNECTION: {
-            return sendResponse(requestAccount);
+            sendResponse(requestAccount);
+            return false;
         }
         case BACKGROUND_LISTEN.REMOVE_ACCOUNT: {
             const { accountName } = data;
-            return handleRemoveAccount(accountName);
+            handleRemoveAccount(accountName);
+            break;
         }
         default:
             break;
     }
     sendResponse(sender);
+    return false;
 });
 
 // Remove current request

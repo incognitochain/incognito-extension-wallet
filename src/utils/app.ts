@@ -77,3 +77,15 @@ export const handleClassForTab = () => {
         console.debug(error);
     }
 };
+
+export const handleClassForEdge = () => {
+    try {
+        const className = 'edge-browser';
+        const root: any = document.querySelector('#root');
+        if (!root.classList.contains(className)) {
+            root.classList.add(className);
+        }
+    } catch (error) {
+        console.debug(error);
+    }
+};

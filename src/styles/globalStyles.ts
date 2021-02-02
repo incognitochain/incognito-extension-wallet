@@ -267,6 +267,12 @@ export const GlobalStyled = createGlobalStyle`
     .m-t-15 {
         margin-top: 15px;
     }
+    
+    // Remove eye icon for password input on Edge Chromium
+    input::-ms-reveal,
+    input::-ms-clear {
+        display: none;
+    }
 `;
 
 export const Row = styled.div`
