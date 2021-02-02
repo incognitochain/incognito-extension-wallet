@@ -17,8 +17,11 @@ const Styled = styled.div`
         line-height: ${FONT_SIZES.regular + 5};
         margin-left: 5px;
     }
-    .checkbox {
+    .checkbox-container {
         margin-bottom: 30px;
+    }
+    .checkbox-container .checkbox-icon {
+        margin-left: unset;
     }
 `;
 

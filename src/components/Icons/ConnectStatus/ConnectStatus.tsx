@@ -7,13 +7,8 @@ import { getURL } from 'src/utils/app';
 import enhance from './ConnectStatus.enhance';
 
 const Styled = styled.button`
-    .wrapper {
-        cursor: pointer;
-    }
-    .icon {
-        width: 21px;
-        height: 21px;
-    }
+    width: 21px;
+    height: 21px;
 `;
 
 interface IProps {
@@ -43,8 +38,14 @@ const ConnectStatus = (props: IProps & any) => {
         removeTooltip();
     };
     return (
-        <Styled onClick={onClickConnect} ref={iconConnectRef} onMouseOver={showToolTip} onMouseOut={removeTooltip}>
-            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/connect.png`} alt="" className="icon" />
+        <Styled
+            className="icon connect-icon"
+            onClick={onClickConnect}
+            ref={iconConnectRef}
+            onMouseOver={showToolTip}
+            onMouseOut={removeTooltip}
+        >
+            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/connect.png`} alt="connect-icon" />
         </Styled>
     );
 };

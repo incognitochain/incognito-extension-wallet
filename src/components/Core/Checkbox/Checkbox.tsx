@@ -10,28 +10,28 @@ interface IProps {
 }
 
 const Styled = styled.button`
-    &.wrapper {
-        display: flex;
-    }
     .icon {
         margin-right: 5px;
-        min-width: 18px;
-        height: 18px;
+        width: 15px;
+        height: 15px;
+    }
+    .checkbox-label {
+        line-height: 14px;
     }
 `;
 
 const Checkbox = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     const { onHandleChecked, label, checked } = props;
     return (
-        <Styled className="checkbox wrapper" onClick={onHandleChecked}>
-            <div className="icon">
+        <Styled className="checkbox-container flex" onClick={onHandleChecked}>
+            <div className="icon checkbox-icon">
                 <img
                     src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/${!checked ? 'checkbox' : 'checked-box'}.png`}
                     alt=""
                     className="icon-abs"
                 />
             </div>
-            {label && <p className="fw-medium">{label}</p>}
+            {label && <p className="checkbox-label fw-medium">{label}</p>}
         </Styled>
     );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, Header } from 'src/components';
+import { Button, Header, InfoIcon } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import {
     ListToken,
@@ -14,6 +14,7 @@ import {
 import { route as routeAddToken } from 'src/module/Token/features/AddToken';
 import { translateSelector } from 'src/module/Configs/Configs.selector';
 import { route as routeShield } from 'src/module/Shield';
+import { route as routeWhyShield } from 'src/module/Shield/features/WhyShield';
 import withWallet from './Wallet.enhance';
 import { Styled } from './Wallet.styled';
 
@@ -39,6 +40,10 @@ const TotalShield = React.memo(() => {
     return (
         <div className="total-shield">
             <p className="fs-avglarge fw-medium center-text">{`$${totalShield.formatTotalAmountUSD}`}</p>
+            <div className="total-shield-sub flex">
+                <p className="sub-text center-text">{translate.wallet.blockShield.totalShielded}</p>
+                <InfoIcon isGreyIcon onClick={() => history.push(routeWhyShield)} />
+            </div>
             <Button title={btnShield} onClick={() => history.push(routeShield)} />
         </div>
     );

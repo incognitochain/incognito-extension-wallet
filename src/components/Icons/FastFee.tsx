@@ -15,9 +15,11 @@ const Lightning = styled.button`
     &.selected {
         background-color: ${(props: { theme: ITheme }) => props.theme.button};
         color: ${COLORS.white};
+        border: solid transparent 0.5px;
     }
     &.unSelected {
-        background-color: ${COLORS.colorGrey};
+        background-color: ${COLORS.lightGrey12};
+        border: solid ${COLORS.lightGrey21} 0.5px;
         color: ${COLORS.colorManateeGrey};
     }
     .p {

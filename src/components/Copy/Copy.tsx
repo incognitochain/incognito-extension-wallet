@@ -13,6 +13,7 @@ const Styled = styled.div`
     flex-direction: row;
     align-items: center;
     background-color: ${COLORS.colorGrey};
+    border: solid ${COLORS.lightGrey21} 0.5px;
     border-radius: 20px;
     height: 40px;
     margin-top: 30px;

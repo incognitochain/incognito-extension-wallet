@@ -29,7 +29,8 @@ const Styled = styled.div`
     .menu .btn-select-account {
         margin-left: 10px;
     }
-    .menu .refresh-container {
+    .menu .refresh-container,
+    .connect-icon {
         margin-left: 15px;
     }
     .refresh-icon {

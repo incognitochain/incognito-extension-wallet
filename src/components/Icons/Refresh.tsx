@@ -6,7 +6,7 @@ interface IProps {}
 
 const Styled = styled.button`
     width: 19px;
-    height: 20px;
+    height: 23px;
 `;
 
 const Refresh = React.forwardRef((props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>, ref: any) => {

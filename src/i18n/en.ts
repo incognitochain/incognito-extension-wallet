@@ -228,12 +228,12 @@ const language: ILanguage = {
                 returned. All original coins are stored safely using the methods
                 below:
             </p>
-            <p class='fw-bold'>Trustless bridge for Ethereum</p>
+            <p class='main-text fw-medium fs-medium'>Trustless bridge for Ethereum</p>
             <p class='sub-text'>
                 For ETH and all ERC20 tokens, your crypto is safely secured in a
                 trustless smart contract.
             </p>
-            <p class='fw-bold'>Portal (upcoming)</p>
+            <p class='main-text fw-medium fs-medium'>Portal (upcoming)</p>
             <p class='sub-text'>
                 For other coins, your crypto is stored in one of the wallets
                 maintained by the Incognito Core team. We’re working on a trustless

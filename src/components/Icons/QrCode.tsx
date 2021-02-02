@@ -6,21 +6,16 @@ interface IProps {
     onClick?: any;
 }
 
-const Styled = styled.span`
-    width: 18px;
-    height: 18px;
+const Styled = styled.div`
+    width: 20px;
+    height: 20px;
     cursor: pointer;
-
-    img {
-        width: 18px;
-        height: 18px;
-    }
 `;
 
 const QrCode = (props: IProps) => {
     const { onClick } = props;
     return (
-        <Styled onClick={onClick}>
+        <Styled className="icon qrcode-icon" onClick={onClick}>
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/qrcode.png`} alt="" />
         </Styled>
     );
