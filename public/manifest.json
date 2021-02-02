@@ -2,13 +2,13 @@
     "short_name": "Incognito - Anonymous Bitcoin Wallet",
     "name": "Incognito - Anonymous Bitcoin Wallet",
     "icons": {
-        "512": "favicon.ico",
-        "256": "favicon.ico",
-        "128": "favicon.ico",
-        "64": "favicon.ico",
-        "32": "favicon.ico",
-        "24": "favicon.ico",
-        "16": "favicon.ico"
+        "512": "images/icons/icon-512.png",
+        "256": "images/icons/icon-256.png",
+        "128": "images/icons/icon-128.png",
+        "64": "images/icons/icon-64.png",
+        "32": "images/icons/icon-32.png",
+        "24": "images/icons/icon-24.png",
+        "16": "images/icons/icon-16.png"
     },
     "start_url": ".",
     "display": "standalone",
@@ -16,7 +16,15 @@
     "background_color": "#ffffff",
     "manifest_version": 2,
     "browser_action": {
-        "default_icon": "favicon.ico",
+        "default_icon": {
+            "512": "images/icons/icon-512.png",
+            "256": "images/icons/icon-256.png",
+            "128": "images/icons/icon-128.png",
+            "64": "images/icons/icon-64.png",
+            "32": "images/icons/icon-32.png",
+            "24": "images/icons/icon-24.png",
+            "16": "images/icons/icon-16.png"
+        },
         "default_popup": "index.html"
     },
     "version": "1.0",
