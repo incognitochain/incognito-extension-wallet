@@ -20,3 +20,14 @@ export const sendExtensionMessage = (name: string, data: any = {}) => {
         /* Ignored error */
     }
 };
+
+export const sendPasswordToBackground = async (pass: string, chainURL: string) => {
+    try {
+        await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.UPDATE_PASS_WORD, {
+            password: pass,
+            chainURL,
+        });
+    } catch (e) {
+        /* Ignored error */
+    }
+};

@@ -6,8 +6,10 @@ import { translateSelector } from 'src/module/Configs';
 import { actionImportWallet } from 'src/module/Wallet';
 import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { trim } from 'lodash';
+import { sendPasswordToBackground } from 'src/utils/sendMessage';
+import { validator } from 'src/utils';
+import { chainURLSelector } from 'src/module/Preload';
 import { IProps } from './ImportMnemonic.inteface';
-import { validator } from '../../../../utils';
 
 const enhance = (WrappedComponent: any) => (props: IProps) => {
     const [masterKeyName, setMasterKeyName] = useState('');
@@ -17,6 +19,7 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
     const translate = useSelector(translateSelector);
     const currentPass = useSelector(passwordSelector);
     const newPass = useSelector(newPasswordSelector);
+    const chainURL = useSelector(chainURLSelector);
 
     const pass = newPass || currentPass;
     const dispatch = useDispatch();
@@ -32,6 +35,9 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
                 setError(errorDictionary.invalidMnemonic);
             }
 
+            if (pass) {
+                await sendPasswordToBackground(newPass, chainURL);
+            }
             batch(() => {
                 dispatch(actionCreatePassword(''));
                 dispatch(actionChangePassword(pass));

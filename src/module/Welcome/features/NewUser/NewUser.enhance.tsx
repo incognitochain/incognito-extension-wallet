@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ImportMnemonic, NewMasterKey } from 'src/module/MasterKey';
 import { actionCreatePassword, newPasswordSelector } from 'src/module/Password';
 import { errorTranslateSelector } from 'src/module/Configs';
-import { isTab, openAsTab } from 'src/utils';
+import { closeExtensionPopup, isTab, openAsTab } from 'src/utils';
 import { INewUserProps } from './NewUser.interface';
 import GetStarted from './GetStarted';
 
@@ -70,7 +70,7 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
 
     const handleGetStarted = useCallback(() => {
         setGetStarted(true);
-
+        closeExtensionPopup();
         if (!isTab()) {
             openAsTab();
         }

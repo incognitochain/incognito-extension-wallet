@@ -14,6 +14,15 @@ export const getLastFocusedWindow = () => {
     });
 };
 
+export const closeExtensionPopup = () => {
+    return chrome.windows.getCurrent((windowDetails) => {
+        if (windowDetails?.type === 'popup') {
+            return chrome.windows.remove(windowDetails.id);
+        }
+        return true;
+    });
+};
+
 export const queryCurrentActiveTab = () => {
     return new Promise((resolve) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
