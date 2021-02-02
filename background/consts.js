@@ -1,4 +1,4 @@
-export const EXTENSION_URL = 'chrome-extension://dackgmpbcfpcbjdjkndjfgebhfgcojfo/index.html#popup';
+export const EXTENSION_URL = chrome.extension.getURL('index.html#popup');
 export const NOTIFICATION_HEIGHT = 610;
 export const NOTIFICATION_WIDTH = 355;
 
