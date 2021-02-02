@@ -78,7 +78,7 @@ const Input = (props: IProps) => {
             <input {...inputProps} type={inputType} className={className.join(' ')} />
             {toggleVisible && (
                 <div className="eye-icon">
-                    <EyeIcon onClick={handleTogglePassword} />
+                    <EyeIcon toggle={inputType === 'text'} onClick={handleTogglePassword} />
                 </div>
             )}
         </Styled>
