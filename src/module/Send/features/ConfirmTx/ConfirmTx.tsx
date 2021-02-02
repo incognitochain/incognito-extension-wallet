@@ -57,7 +57,7 @@ const ConfirmTx = () => {
     return (
         <Styled>
             <Header onGoBack={() => historyState.push(`${routeDetail}/${selectedPrivacyTokenId}`)} title=" " />
-            <p className="confirm-title fw-bold fs-supermedium center-text">{confirmLanguage.sent}</p>
+            <p className="confirm-title fw-medium fs-avglarge center-text">{confirmLanguage.sent}</p>
             {itemsFactories.map((item: IHistoryItem) => (
                 <HistoryItem key={item.title} {...item} />
             ))}
