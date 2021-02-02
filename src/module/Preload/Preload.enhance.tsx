@@ -11,6 +11,7 @@ import { forceSendDataSelector } from 'src/module/Send/Send.selector';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
 import { preloadSelector } from './Preload.selector';
 import { isTab } from '../../utils';
+import { chainTokensSelector, pTokensSelector } from '../Token';
 
 const Styled = styled.div`
     > p {
@@ -51,6 +52,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     const { loaded }: IWalletReducer = useSelector(walletSelector);
     const translate: IPreloadLanguage = useSelector(translateByFieldSelector)('preload');
     const { error, isFetching: preloading, isFetched: preloaded } = useSelector(preloadSelector);
+    const pTokens = useSelector(pTokensSelector);
+    const chainTokens = useSelector(chainTokensSelector);
     const forceSendData = useSelector(forceSendDataSelector);
     const handlePreload = () => dispatch(actionPreloadApp(forceSendData?.accountName));
     React.useEffect(() => {
@@ -67,7 +70,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
             </div>
         );
     }
-    if (preloading || !loaded || !preloaded) {
+    if (preloading || !loaded || !preloaded || !pTokens || !chainTokens) {
         return (
             <LoadingContainer
                 title={translate.title1}

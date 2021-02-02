@@ -28,7 +28,7 @@ const FillCheckBox = React.memo((props: ICheckBoxProps & any) => {
     return (
         <Styled className="wrapper" onClick={onHandleChecked}>
             <img
-                src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/${checked ? 'checked-black' : 'uncheck-gray'}.png`}
+                src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/${checked ? 'checked-box' : 'checkbox'}.png`}
                 alt=""
                 className="icon-checkbox"
             />

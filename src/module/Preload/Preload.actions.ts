@@ -85,7 +85,7 @@ export const actionFetch = (accountName?: string) => async (dispatch: Dispatch, 
     try {
         await dispatch(actionFetching());
         loadSeparator();
-        let task: any[] = [actionFetchPCustomTokenList()(dispatch, getState)];
+        let task: any[] = [];
         if (!init) {
             task = [...task, actionInitWallet()(dispatch, getState)];
         } else {
@@ -120,7 +120,14 @@ export const actionFetchSdkConfig = () => async (dispatch: Dispatch, getState: (
             removeMethod: async (key: string) => localStorage.removeItem(key),
             namespace: 'EXTENSION_WALLET',
         });
-        const { deviceId, deviceToken } = await actionLogin()(dispatch, getState);
+        let task = [
+            actionLogin()(dispatch, getState),
+            goServices.implementGoMethodUseWasm(),
+            actionFetchPTokenList()(dispatch, getState),
+            actionFetchPCustomTokenList()(dispatch, getState),
+        ];
+        const [loginData] = await Promise.all(task);
+        const { deviceId, deviceToken } = loginData;
         setConfig({
             ...configs,
             wasmPath: `${ENVS.REACT_APP_DOMAIN_URL}/privacy.wasm`,
@@ -128,9 +135,7 @@ export const actionFetchSdkConfig = () => async (dispatch: Dispatch, getState: (
             deviceId,
             deviceToken,
         });
-        await goServices.implementGoMethodUseWasm();
         await dispatch(actionFetchedSdkConfig({}));
-        await actionFetchPTokenList()(dispatch, getState);
     } catch (error) {
         dispatch(actionFetchFail(error));
         throw error;
