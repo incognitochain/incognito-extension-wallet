@@ -12,7 +12,6 @@ jobs:
     executor: build-executor
     environment:
       CI: "false"
-      GIT_COMMIT_DESC: $(git log --format=oneline -n 1 $CIRCLE_SHA1)
     steps:
       - checkout
       - run:
@@ -26,17 +25,16 @@ jobs:
       - run:
           name: Create release
           command: |
-            echo "token: $GITHUB_TOKEN"
-            echo "user: $CIRCLE_PROJECT_USERNAME"
-            echo "repo: $CIRCLE_PROJECT_REPONAME"
-            echo "commit: $CIRCLE_SHA1"
-            echo "desc: $GIT_COMMIT_DESC"
-            echo "sort: $(echo $CIRCLE_SHA1 | cut -c -7)"
-            ls -l /tmp/artifacts
-
             wget https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
             tar xzf ghr_v0.13.0_linux_amd64.tar.gz
-            ./ghr_v0.13.0_linux_amd64/ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME -n $CIRCLE_SHA1 -b $GIT_COMMIT_DESC -c $(echo $CIRCLE_SHA1 | cut -c -7) $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
+            ./ghr_v0.13.0_linux_amd64/ghr \
+              -t $GITHUB_TOKEN \
+              -u $CIRCLE_PROJECT_USERNAME \
+              -r $CIRCLE_PROJECT_REPONAME \
+              -n $CIRCLE_SHA1 \
+              -b "$(git log --format=oneline -n 1 $CIRCLE_SHA1)" \
+              -c $(echo $CIRCLE_SHA1 | cut -c -7) \
+              $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
 workflows:
   version: 2
   create_github_release:
