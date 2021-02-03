@@ -1,0 +1,40 @@
+version: 2.1
+orbs:
+  slack: circleci/slack@4.1.1
+  github-release: h-matsuo/github-release@0.1.1
+
+executors:
+  build-executor:
+    docker:
+      - image: cimg/node:14.15.4
+
+jobs:
+  build:
+    executor: build-executor
+    environment:
+      GIT_COMMIT_DESC: $(git log --format=oneline -n 1 $CIRCLE_SHA1)
+    steps:
+      - checkout
+      - run:
+          name: Setup Environment Variables
+          command: |
+            mkdir -p /tmp/artifacts
+            yarn
+            yarn build
+            zip -r build.zip build
+            mv build.zip /tmp/artifacts/build.zip
+      - github-release/create:
+          tag: $(echo $CIRCLE_SHA1 | cut -c -7)
+          title: $CIRCLE_SHA1
+          description: $GIT_COMMIT_DESC
+          file-path: /tmp/artifacts/build.zip
+          draft: true
+workflows:
+  version: 2
+  create_github_release:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - feature/github-release
