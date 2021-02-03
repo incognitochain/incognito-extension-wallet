@@ -30,7 +30,7 @@ jobs:
           description: $GIT_COMMIT_DESC
           file-path: /tmp/artifacts/build.zip
           draft: true
-          prerelease: false
+          pre-release: false
 workflows:
   version: 2
   create_github_release:
