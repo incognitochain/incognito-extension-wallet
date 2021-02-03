@@ -31,9 +31,9 @@ jobs:
               -t $GITHUB_TOKEN \
               -u $CIRCLE_PROJECT_USERNAME \
               -r $CIRCLE_PROJECT_REPONAME \
-              -n $CIRCLE_SHA1 \
+              -n $(echo $CIRCLE_SHA1 | cut -c -7) \
               -b "$(git log --format=oneline -n 1 $CIRCLE_SHA1)" \
-              -c $(echo $CIRCLE_SHA1 | cut -c -7) \
+              -c $CIRCLE_SHA1 \
               $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
 workflows:
   version: 2
