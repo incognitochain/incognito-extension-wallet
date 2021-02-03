@@ -6,7 +6,7 @@ orbs:
 executors:
   build-executor:
     docker:
-      - image: cimg/node:12.20.1
+      - image: cimg/go:1.13.9-node
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Setup Environment Variables
+          name: Build release
           command: |
             mkdir -p /tmp/artifacts
             yarn
