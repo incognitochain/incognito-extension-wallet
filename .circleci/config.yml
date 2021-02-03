@@ -26,8 +26,13 @@ jobs:
       - run:
           name: Create release
           command: |
+            echo "token: $GITHUB_TOKEN"
+            echo "user: $CIRCLE_PROJECT_USERNAME"
+            echo "repo: $CIRCLE_PROJECT_REPONAME"
+            echo "commit: $CIRCLE_SHA1"
+            echo "desc: $GIT_COMMIT_DESC"
+            echo "sort: $(echo $CIRCLE_SHA1 | cut -c -7)"
             ls -l /tmp/artifacts
-            echo $CIRCLE_SHA1 | cut -c -7
 
             wget https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
             tar xzf ghr_v0.13.0_linux_amd64.tar.gz
