@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import { IRouteProps } from 'src/module';
 
-const connectRoute: IRouteProps = {
+const disconnectRoute: IRouteProps = {
     path: '/disconnect',
     exact: true,
     component: lazy(() => import('./Disconnect')),
@@ -11,4 +11,4 @@ const connectRoute: IRouteProps = {
 
 export const route = '/disconnect';
 
-export default connectRoute;
+export default disconnectRoute;
