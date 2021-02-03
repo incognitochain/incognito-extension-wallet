@@ -31,7 +31,7 @@ jobs:
               -t $GITHUB_TOKEN \
               -u $CIRCLE_PROJECT_USERNAME \
               -r $CIRCLE_PROJECT_REPONAME \
-              -n $(echo $CIRCLE_SHA1 | cut -c -7) \
+              -n $CIRCLE_TAG \
               -b "$(git log --format=oneline -n 1 $CIRCLE_SHA1)" \
               -c $CIRCLE_SHA1 \
               $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
@@ -43,5 +43,7 @@ workflows:
           context: Incognito
           filters:
             branches:
+              ignore: /.*/
+            tags:
               only:
-                - feature/github-release
+                - /^v.*/
