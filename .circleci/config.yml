@@ -15,6 +15,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Prepare env
+          command: |
+            echo "export COMMIT_MESSAGE=\"$(git show -s --format=%s)\"" >> $BASH_ENV
+            echo "export APP_VERSION="$(sed 's/.*\"version\": \"\(.*\)\".*/\1/;t;d' ./package.json)"" >> $BASH_ENV
+      - run:
           name: Build
           command: |
             mkdir -p /tmp/artifacts
@@ -31,10 +36,11 @@ jobs:
               -t $GITHUB_TOKEN \
               -u $CIRCLE_PROJECT_USERNAME \
               -r $CIRCLE_PROJECT_REPONAME \
-              -n $CIRCLE_TAG \
-              -b "$(git log --format=oneline -n 1 $CIRCLE_SHA1)" \
+              -n $COMMIT_MESSAGE \
               -c $CIRCLE_SHA1 \
-              $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
+              -replace \
+              $APP_VERSION /tmp/artifacts/build.zip
+
 workflows:
   version: 2
   create_github_release:
@@ -43,7 +49,5 @@ workflows:
           context: Incognito
           filters:
             branches:
-              ignore: /.*/
-            tags:
               only:
-                - /^v.*/
+                - feature/github-release
