@@ -26,22 +26,18 @@ jobs:
       - run:
           name: Create release
           command: |
+            ls -l /tmp/artifacts
+            echo $CIRCLE_SHA1 | cut -c -7
+
             wget https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
             tar xzf ghr_v0.13.0_linux_amd64.tar.gz
-            ./ghr_v0.13.0_linux_amd64/ghr \
-              -t $GITHUB_TOKEN \
-              -u $CIRCLE_PROJECT_USERNAME \
-              -r $CIRCLE_PROJECT_REPONAME \
-              -n $CIRCLE_SHA1 \
-              -b $GIT_COMMIT_DESC \
-              -c $(echo $CIRCLE_SHA1 | cut -c -7) \
-              -draft -replace \
-              $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
+            ./ghr_v0.13.0_linux_amd64/ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME -n $CIRCLE_SHA1 -b $GIT_COMMIT_DESC -c $(echo $CIRCLE_SHA1 | cut -c -7) $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
 workflows:
   version: 2
   create_github_release:
     jobs:
       - build:
+          context: Incognito
           filters:
             branches:
               only:
