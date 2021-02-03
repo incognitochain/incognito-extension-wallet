@@ -1,12 +1,11 @@
 version: 2.1
 orbs:
   slack: circleci/slack@4.1.1
-  github-release: h-matsuo/github-release@0.1.1
 
 executors:
   build-executor:
     docker:
-      - image: cimg/go:1.13.9-node
+      - image: cimg/node:12.20.1
 
 jobs:
   build:
@@ -17,20 +16,27 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build release
+          name: Build
           command: |
             mkdir -p /tmp/artifacts
             yarn
             yarn build
             zip -r build.zip build
             mv build.zip /tmp/artifacts/build.zip
-      - github-release/create:
-          tag: v0.0.1
-          title: $CIRCLE_SHA1
-          description: $GIT_COMMIT_DESC
-          file-path: /tmp/artifacts/build.zip
-          draft: true
-          pre-release: false
+      - run:
+          name: Create release
+          command: |
+            wget https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
+            tar xzf ghr_v0.13.0_linux_amd64.tar.gz
+            ./ghr_v0.13.0_linux_amd64/ghr \
+              -t $GITHUB_TOKEN \
+              -u $CIRCLE_PROJECT_USERNAME \
+              -r $CIRCLE_PROJECT_REPONAME \
+              -n $CIRCLE_SHA1 \
+              -b $GIT_COMMIT_DESC \
+              -c $(echo $CIRCLE_SHA1 | cut -c -7) \
+              -draft -replace \
+              $(echo $CIRCLE_SHA1 | cut -c -7) /tmp/artifacts/build.zip
 workflows:
   version: 2
   create_github_release:
