@@ -12,6 +12,7 @@ jobs:
   build:
     executor: build-executor
     environment:
+      CI: "false"
       GIT_COMMIT_DESC: $(git log --format=oneline -n 1 $CIRCLE_SHA1)
     steps:
       - checkout
