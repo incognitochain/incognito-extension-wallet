@@ -23,13 +23,15 @@ jobs:
           name: Build
           command: |
             mkdir -p /tmp/artifacts
-            yarn
-            yarn build
-            zip -r build.zip build
-            mv build.zip /tmp/artifacts/build.zip
+            # yarn
+            # yarn build
+            # zip -r build.zip build
+            cp build.zip /tmp/artifacts/build.zip
       - run:
           name: Create release
           command: |
+            echo "app: $APP_VERSION"
+            echo "msg: $COMMIT_MESSAGE"
             wget https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
             tar xzf ghr_v0.13.0_linux_amd64.tar.gz
             ./ghr_v0.13.0_linux_amd64/ghr \
