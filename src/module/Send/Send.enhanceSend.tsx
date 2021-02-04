@@ -69,19 +69,18 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             // send success
             const hc: TxCacheHistoryModel | undefined = getHistoryCacheDetail(tx);
             if (hc) {
-                history.push(routeConfirmTx, {
-                    confirmTx: {
-                        txId: hc.txId,
-                        paymentAddress: hc.paymentAddress,
-                        time: hc.timeFormated,
-                        amount: hc.amountFormatedNoClip,
-                        symbol: hc.symbol,
-                        fee: hc.feeFormated,
-                        feeSymbol: hc.feeSymbol,
-                    },
-                });
+                const confirmTx = {
+                    txId: hc.txId,
+                    paymentAddress: hc.paymentAddress,
+                    time: hc.timeFormated,
+                    amount: hc.amountFormatedNoClip,
+                    symbol: hc.symbol,
+                    fee: hc.feeFormated,
+                    feeSymbol: hc.feeSymbol,
+                };
+                history.push(routeConfirmTx, { confirmTx });
+                forceSendFinish(null, confirmTx);
             }
-            forceSendFinish(null, tx);
         } catch (error) {
             // send fail
             forceSendFinish(error, null);
