@@ -26,7 +26,7 @@ jobs:
             yarn
             yarn build
             zip -r build.zip build
-            mv build.zip /tmp/artifacts/version.zip
+            mv build.zip /tmp/artifacts/${APP_VERSION}.zip
       - run:
           name: Create release
           command: |
@@ -42,7 +42,7 @@ jobs:
               -n "$APP_VERSION" \
               -c $CIRCLE_SHA1 \
               -replace \
-              ${APP_VERSION} /tmp/artifacts/version.zip
+              ${APP_VERSION} /tmp/artifacts/${APP_VERSION}.zip
 
 workflows:
   version: 2
