@@ -1,0 +1,58 @@
+version: 2.1
+orbs:
+  slack: circleci/slack@4.1.1
+
+executors:
+  build-executor:
+    docker:
+      - image: cimg/node:12.20.1
+
+jobs:
+  build:
+    executor: build-executor
+    environment:
+      CI: "false"
+    steps:
+      - checkout
+      - run:
+          name: Prepare env
+          command: |
+            echo "export COMMIT_MESSAGE=\"$(git show -s --format=%s)\"" >> $BASH_ENV
+            echo "export APP_VERSION="$(sed 's/.*\"version\": \"\(.*\)\".*/\1/;t;d' ./package.json)"" >> $BASH_ENV
+      - run:
+          name: Build
+          command: |
+            mkdir -p /tmp/artifacts
+            yarn
+            yarn build
+            zip -r build.zip build
+            mv build.zip /tmp/artifacts/build.zip
+      - run:
+          name: Create release
+          command: |
+            echo "msg: $COMMIT_MESSAGE"
+            echo "app: $APP_VERSION"
+            ls -l /tmp/artifacts
+            wget https://github.com/tcnksm/ghr/releases/download/v0.13.0/ghr_v0.13.0_linux_amd64.tar.gz
+            tar xzf ghr_v0.13.0_linux_amd64.tar.gz
+            ./ghr_v0.13.0_linux_amd64/ghr \
+              -t $GITHUB_TOKEN \
+              -u $CIRCLE_PROJECT_USERNAME \
+              -r $CIRCLE_PROJECT_REPONAME \
+              -n $COMMIT_MESSAGE \
+              -c $CIRCLE_SHA1 \
+              -replace \
+              ${APP_VERSION} /tmp/artifacts/build.zip
+
+workflows:
+  version: 2
+  create_github_release:
+    jobs:
+      - build:
+          context: Incognito
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore: /.*/
