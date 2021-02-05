@@ -1,93 +1,107 @@
 import BigNumber from 'bignumber.js';
-import toNumber from 'lodash/toNumber';
+import format from 'src/utils/format';
+import { getDecimalSeparator } from './separator';
 
-export const checkAmount = (amount: number) => {
-  if (!Number.isFinite(amount))
-    throw new Error('Can not format invalid amount');
+const checkAmount = (amount: number) => {
+    if (!Number.isFinite(amount)) throw new Error('Can not format invalid amount');
 };
 
-export const replaceDecimals = ({
-  text,
-  autoCorrect = false,
-  decimalSeparator,
-}: {
-  text: string;
-  autoCorrect?: boolean;
-  decimalSeparator: string;
-}) => {
-  if (typeof text !== 'string') {
-    return text;
-  }
-  if (
-    decimalSeparator === ',' &&
-    !text?.includes?.('e+') &&
-    !text?.includes?.('e-')
-  ) {
-    text = text.replace(/\./g, '_');
-    text = text.replace(/,/g, '.');
-    text = text.replace(/_/g, ',');
-  }
-  if (autoCorrect) {
-    text = text.replace(/,/g, '');
-  }
-  return text;
+const replaceDecimals = ({ text, autoCorrect = false }: { text: string; autoCorrect?: boolean }) => {
+    let result = text;
+    const decimalSeparator = getDecimalSeparator();
+    if (typeof result !== 'string') {
+        return result;
+    }
+    if (decimalSeparator === ',' && !result?.includes?.('e+') && !result?.includes?.('e-')) {
+        result = result.replace(/\./g, '_');
+        result = result.replace(/,/g, '.');
+        result = result.replace(/_/g, ',');
+    }
+    if (autoCorrect) {
+        result = result.replace(/,/g, '');
+    }
+    return result;
 };
 
 interface IHunmanAmount {
-  originAmount: number;
-  decimals: number;
+    originalAmount?: number;
+    decimals: number;
 }
 
-export const toHumanAmount: (payload: IHunmanAmount) => number = (
-  payload: IHunmanAmount
-) => {
-  const { originAmount, decimals } = payload;
-  const amount = new BigNumber(originAmount);
-  if (amount.isNaN()) {
-    return 0;
-  }
-  const indexNumber = new BigNumber(10).pow(decimals);
-  return amount.dividedBy(indexNumber).toNumber();
+const toHumanAmount = (payload: IHunmanAmount) => {
+    const { originalAmount = 0, decimals } = payload;
+    const amount = new BigNumber(originalAmount);
+    if (amount.isNaN()) {
+        return 0;
+    }
+    const indexNumber = new BigNumber(10).pow(decimals);
+    return amount.dividedBy(indexNumber).toNumber();
 };
 
-export const toOriginalAmount = ({
-  humanAmount,
-  decimals,
-  round = true,
-  decimalSeparator,
-}: {
-  humanAmount: string;
-  decimals: number;
-  round?: boolean;
-  decimalSeparator: string;
-}) => {
-  let amount = 0;
-  try {
-    const amountRepDecimals = replaceDecimals({
-      text: humanAmount,
-      decimalSeparator,
+const toHumanAmountString = (payload: IHunmanAmount) => {
+    return format.toFixed({
+        number: toHumanAmount({
+            originalAmount: payload.originalAmount || 0,
+            decimals: payload.decimals,
+        }),
+        decimals: payload.decimals,
     });
-    const bnAmount = new BigNumber(amountRepDecimals);
-    if (bnAmount.isNaN()) {
-      return 0;
+};
+
+const toOriginalAmount = ({
+    humanAmount,
+    decimals,
+    round = true,
+}: {
+    humanAmount: string;
+    decimals: number;
+    round?: boolean;
+}) => {
+    let amount = 0;
+    try {
+        const amountRepDecimals = replaceDecimals({
+            text: humanAmount,
+        });
+        const bnAmount = new BigNumber(amountRepDecimals);
+        if (bnAmount.isNaN()) {
+            return 0;
+        }
+        const indexNumber = new BigNumber(10).pow(decimals || 0).toNumber();
+        amount = bnAmount.multipliedBy(new BigNumber(indexNumber)).toNumber();
+        if (round) {
+            amount = Math.floor(amount);
+        }
+    } catch (error) {
+        amount = 0;
+        throw error;
     }
-    const indexNumber = new BigNumber(10).pow(decimals || 0).toNumber();
-    amount = bnAmount.multipliedBy(new BigNumber(indexNumber)).toNumber();
-    if (round) {
-      amount = Math.floor(amount);
-    }
-  } catch (error) {
-    amount = 0;
-    throw error;
-  }
-  return amount;
+    return amount;
+};
+
+const toNumber = ({ text, autoCorrect = true }: { text: string; autoCorrect?: boolean }) => {
+    const number = replaceDecimals({
+        text,
+        autoCorrect,
+    });
+    return new BigNumber(number).toNumber();
+};
+
+const toString = ({ text, autoCorrect = true }: { text: string; autoCorrect?: boolean }) => {
+    const number = replaceDecimals({
+        text,
+        autoCorrect,
+    });
+    return new BigNumber(number).toString();
 };
 
 const convert = {
-  checkAmount,
-  replaceDecimals,
-  toHumanAmount,
-  toOriginalAmount,
+    checkAmount,
+    replaceDecimals,
+    toHumanAmount,
+    toHumanAmountString,
+    toOriginalAmount,
+    toNumber,
+    toString,
 };
 
 export default convert;

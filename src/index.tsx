@@ -1,18 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { ENVS } from './configs';
 import reportWebVitals from './reportWebVitals';
+import { handleClassForEdge, handleClassForTab, isTab } from './utils';
+import { isEdge } from './utils/browsers';
 
 const rootEl = document.getElementById('root');
 
 ReactDOM.render(<App />, rootEl);
 
-if (module.hot && !!ENVS.REACT_APP_IS_DEV) {
-  module.hot.accept('./App', () => {
-    const NextApp = require('./App').default;
-    ReactDOM.render(<NextApp />, rootEl);
-  });
+if ((isTab() || !!window.location.search) && rootEl) {
+    handleClassForTab();
+}
+
+if (rootEl && isEdge()) {
+    handleClassForEdge();
+}
+
+if (module.hot) {
+    module.hot.accept();
 }
 
 // If you want to start measuring performance in your app, pass a function

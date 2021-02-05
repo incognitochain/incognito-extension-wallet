@@ -1,64 +1,75 @@
-import React from 'react';
-import { compose } from 'recompose';
+import React, { HTMLAttributes } from 'react';
 import { useHistory } from 'react-router-dom';
 import SearchBox from './Header.searchBox';
 
-export interface TOutter {
-  handleClick: () => void;
-  renderHeaderTitle: () => void;
+export interface TInner {
+    handleClick: () => void;
+    renderHeaderTitle: () => void;
 }
 
-export interface TInter {
-  title: string;
-  onGoBack?: () => void;
-  rightHeader?: React.FunctionComponent;
-  selectAccount?: boolean;
-  canSearch?: boolean;
+export interface IProps {
+    title?: string;
+    onGoBack?: () => void;
+    rightHeader?: any;
+    selectAccount?: boolean;
+    canSearch?: boolean;
+    customHeader?: React.FunctionComponent | React.ReactElement;
 }
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (
-  props: TInter & any
-) => {
-  const { canSearch = false, onGoBack, title } = props;
-  const [state, setState] = React.useState({
-    toggleSearch: false,
-  });
-  const { toggleSearch } = state;
-  const onHandleToggleSearch = async () => {
-    if (canSearch) {
-      await setState({
-        ...state,
-        toggleSearch: true,
-      });
-    }
-  };
-  const history = useHistory();
-  const handleClick = () => {
-    if (typeof onGoBack === 'function') {
-      return onGoBack();
-    }
-    history.goBack();
-  };
-  const renderHeaderTitle = () => {
-    if (toggleSearch) {
-      return <SearchBox title={title} />;
-    }
+export interface IMergeProps extends TInner, IProps {}
+
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & HTMLAttributes<HTMLElement>) => {
+    const { canSearch = false, onGoBack, title, customHeader } = props;
+    const [state, setState] = React.useState({
+        toggleSearch: false,
+    });
+    const { toggleSearch } = state;
+    const onHandleToggleSearch = async () => {
+        if (canSearch) {
+            await setState({
+                ...state,
+                toggleSearch: true,
+            });
+        }
+    };
+    const history = useHistory();
+    const handleClick = () => {
+        if (typeof onGoBack === 'function') {
+            return onGoBack();
+        }
+        history.goBack();
+        return null;
+    };
+    const renderHeaderTitle = () => {
+        if (toggleSearch) {
+            return <SearchBox title={title} />;
+        }
+        return (
+            <div className="header-container flex">
+                {!!title && (
+                    <button
+                        type="button"
+                        onClick={onHandleToggleSearch}
+                        className={`header-title fw-medium fs-medium ellipsis ${canSearch ? 'sub-text' : ''}`}
+                    >
+                        {title}
+                    </button>
+                )}
+                {customHeader && customHeader}
+            </div>
+        );
+    };
     return (
-      <h1 onClick={onHandleToggleSearch} className='title ellipsis'>
-        {title}
-      </h1>
+        <WrappedComponent
+            {...{
+                ...props,
+                toggleSearch,
+                renderHeaderTitle,
+                handleClick,
+                title,
+            }}
+        />
     );
-  };
-  return (
-    <WrappedComponent
-      {...{
-        ...props,
-        toggleSearch,
-        renderHeaderTitle,
-        handleClick,
-      }}
-    />
-  );
 };
 
-export default compose<any, TInter & TOutter & any>(enhance);
+export default enhance;

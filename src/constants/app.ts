@@ -1,45 +1,73 @@
 const STATUS = {
-  INIT: 'INIT',
-  READY: 'READY',
-  WALLET_IS_NOT_LOADED: 'WALLET_IS_NOT_LOADED',
-  ACCOUNT_IS_NOT_LOADED: 'ACCOUNT_IS_NOT_LOADED',
+    INIT: 'INIT',
+    READY: 'READY',
+    WALLET_IS_NOT_LOADED: 'WALLET_IS_NOT_LOADED',
+    ACCOUNT_IS_NOT_LOADED: 'ACCOUNT_IS_NOT_LOADED',
 };
 
 const DISABLED = {
-  APP: 'app',
-  TRADE: 'trade',
-  BUY_NODE: 'buynode',
+    APP: 'app',
+    TRADE: 'trade',
+    BUY_NODE: 'buynode',
 };
 
 const FEATURES_ROUTE_MAP = {
-  Wallet: 'wallet',
-  Stake: 'pool',
-  Dex: 'invest',
-  Node: 'node',
+    Wallet: 'wallet',
+    Stake: 'pool',
+    Dex: 'invest',
+    Node: 'node',
 };
 
 const FEATURES_TYPE_MAP = {
-  'balance-update': 'wallet',
-  'reward-node': 'node',
-  'deposit-update': 'wallet',
-  'withdraw-coin': 'wallet',
-  'unstake-success': 'node',
-  'withdraw-success': 'wallet',
+    'balance-update': 'wallet',
+    'reward-node': 'node',
+    'deposit-update': 'wallet',
+    'withdraw-coin': 'wallet',
+    'unstake-success': 'node',
+    'withdraw-success': 'wallet',
 };
 
 const STATUS_MESSAGE = {
-  PENDING: 'Pending',
-  COMPLETE: 'Complete',
-  FAILED: 'Failed',
-  EXPIRED: 'Expired',
+    PENDING: 'Pending',
+    COMPLETE: 'Complete',
+    FAILED: 'Failed',
+    EXPIRED: 'Expired',
+};
+
+const EXTENSION_LISTEN = {
+    MOVE_TO_CONNECT_ACCOUNT: 'EXTENSION_MOVE_TO_CONNECT_ACCOUNT',
+    MOVE_TO_DISCONNECT_ACCOUNT: 'MOVE_TO_DISCONNECT_ACCOUNT',
+    MOVE_TO_SEND_TX: 'EXTENSION_MOVE_TO_SEND_TX',
+};
+
+const BACKGROUND_LISTEN = {
+    SELECTED_CONNECT_ACCOUNT: 'BACKGROUND_SELECTED_CONNECT_ACCOUNT',
+    LOADED_FOLLOWED_BALANCE: 'BACKGROUND_LOADED_FOLLOWED_BALANCE',
+    DISCONNECT_ACCOUNT: 'BACKGROUND_DISCONNECT_ACCOUNT',
+    CHECK_IS_CONNECTED: 'BACKGROUND_CHECK_IS_CONNECTED',
+    SEND_TX_FINISH: 'BACKGROUND_SEND_TX_FINISH',
+    CLEAR_SEND_CURRENT_REQUEST: 'BACKGROUND_CLEAR_SEND_CURRENT_REQUEST',
+    GET_PASS_WORD: 'BACKGROUND_GET_PASS_WORD',
+    UPDATE_PASS_WORD: 'BACKGROUND_UPDATE_PASS_WORD',
+    CHECK_WALLET_HAVE_CONNECTION: 'BACKGROUND_CHECK_WALLET_HAVE_CONNECTION',
+    REMOVE_ACCOUNT: 'BACKGROUND_REMOVE_ACCOUNT',
+};
+
+const SUPPORTED_BROWSERS = {
+    EDGE: 'EDGE',
+    OPERA: 'OPERA',
+    CHROME: 'CHROME',
+    BRAVE: 'BRAVE',
 };
 
 const APP_CONSTANT = {
-  STATUS,
-  DISABLED,
-  STATUS_MESSAGE,
-  FEATURES_ROUTE_MAP,
-  FEATURES_TYPE_MAP,
+    STATUS,
+    DISABLED,
+    STATUS_MESSAGE,
+    FEATURES_ROUTE_MAP,
+    FEATURES_TYPE_MAP,
+    EXTENSION_LISTEN,
+    BACKGROUND_LISTEN,
 };
 
 export default APP_CONSTANT;

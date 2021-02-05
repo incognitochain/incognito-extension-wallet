@@ -1,156 +1,151 @@
 import { BigNumber } from 'bignumber.js';
-import convert from './convert';
 import floor from 'lodash/floor';
 import moment from 'moment';
+import convert from './convert';
+import { getGroupSeparator, getDecimalSeparator } from './separator';
+
 interface IAmount {
-  amount: number;
-  decimals: number;
-  clipAmount?: boolean;
-  decimalDigits?: boolean;
-  decimalSeparator: string;
-  groupSeparator: string;
-  maxDigits?: number;
+    originalAmount?: number;
+    humanAmount?: number;
+    decimals: number;
+    clipAmount?: boolean;
+    decimalDigits?: boolean;
+    maxDigits?: number;
 }
 
-export const removeTrailingZeroes = ({
-  amountString,
-  decimalSeparator,
-}: {
-  amountString: string;
-  decimalSeparator: string;
-}) => {
-  let formattedString = amountString;
-  while (
-    formattedString.length > 0 &&
-    ((formattedString.includes(decimalSeparator) &&
-      formattedString[formattedString.length - 1] === '0') ||
-      formattedString[formattedString.length - 1] === decimalSeparator)
-  ) {
-    formattedString = formattedString.slice(0, formattedString.length - 1);
-  }
+const removeTrailingZeroes = ({ amountString }: { amountString: string }) => {
+    let formattedString = amountString;
+    const decimalSeparator = getDecimalSeparator();
+    while (
+        formattedString.length > 0 &&
+        ((formattedString.includes(decimalSeparator) && formattedString[formattedString.length - 1] === '0') ||
+            formattedString[formattedString.length - 1] === decimalSeparator)
+    ) {
+        formattedString = formattedString.slice(0, formattedString.length - 1);
+    }
 
-  return formattedString;
+    return formattedString;
 };
 
 interface IMaxDigits {
-  decimalDigits?: boolean;
-  clipAmount?: boolean;
-  decimals: number;
-  amount: number;
+    decimalDigits: boolean;
+    clipAmount: boolean;
+    decimals: number;
+    humanAmount: number;
 }
 
-export const getMaxDecimalDigits: (
-  payload: IMaxDigits
-) => {
-  maxDigits: number;
-  humanAmount: number;
-} = (payload: IMaxDigits) => {
-  const { decimals, decimalDigits = true, clipAmount = true, amount } = payload;
-  let maxDigits = decimals;
-  let humanAmount = 0;
-  try {
-    humanAmount = convert.toHumanAmount({
-      originAmount: amount,
-      decimals,
-    });
-    if (clipAmount) {
-      if (humanAmount > 0 && humanAmount < 1 && !!decimalDigits) {
-        maxDigits = 5;
-      }
-      if (humanAmount > 1) {
-        maxDigits = 4;
-      }
-      if (humanAmount > 1e3) {
-        maxDigits = 2;
-      }
-      if (humanAmount > 1e5) {
-        maxDigits = 0;
-      }
-      if (decimals) {
-        humanAmount = floor(humanAmount, Math.min(decimals, maxDigits));
-      } else {
-        humanAmount = floor(humanAmount, maxDigits);
-      }
+const getMaxDecimalDigits = (payload: IMaxDigits) => {
+    const { decimals, decimalDigits, clipAmount, humanAmount } = payload;
+    let maxDigits = decimals;
+    try {
+        if (clipAmount) {
+            if (humanAmount > 0 && humanAmount < 1 && !!decimalDigits) {
+                maxDigits = 5;
+            }
+            if (humanAmount > 1) {
+                maxDigits = 4;
+            }
+            if (humanAmount > 1e3) {
+                maxDigits = 2;
+            }
+            if (humanAmount > 1e5) {
+                maxDigits = 0;
+            }
+        }
+    } catch (error) {
+        maxDigits = decimals;
+        throw error;
     }
-  } catch (error) {
-    maxDigits = decimals;
-    humanAmount = 0;
-    throw error;
-  }
-  return {
-    maxDigits,
-    humanAmount,
-  };
+    return maxDigits;
 };
 
 interface IToFixed {
-  number: number;
-  decimals: number;
-  decimalSeparator: string;
+    number: number;
+    decimals: number;
 }
 
-export const toFixed: (payload: IToFixed) => string = (payload: IToFixed) => {
-  const { number, decimals, decimalSeparator } = payload;
-  const bigNumber = new BigNumber(number);
-  if (bigNumber.isNaN()) {
-    return '0';
-  }
-  return bigNumber.toFixed(decimals).replace('.', decimalSeparator);
+const toFixed = (payload: IToFixed) => {
+    const decimalSeparator = getDecimalSeparator();
+    const { number, decimals } = payload;
+    const bigNumber = new BigNumber(number);
+    if (bigNumber.isNaN()) {
+        return '0';
+    }
+    return removeTrailingZeroes({
+        amountString: bigNumber.toFixed(decimals).replace('.', decimalSeparator),
+    });
 };
 
-export const formatAmount: (payload: IAmount) => string = (
-  payload: IAmount
-) => {
-  const {
-    amount,
-    decimals,
-    decimalSeparator,
-    groupSeparator,
-    clipAmount = true,
-    decimalDigits = true,
-  } = payload;
-  const fmt = {
-    decimalSeparator,
-    groupSeparator,
-    groupSize: 3,
-  };
-  let formatAmount;
-  try {
-    const { maxDigits, humanAmount } = getMaxDecimalDigits({
-      amount,
-      clipAmount,
-      decimalDigits,
-      decimals,
-    });
-    const fixedString = toFixed({
-      number: humanAmount,
-      decimals,
-      decimalSeparator,
-    });
-    const amountString = new BigNumber(fixedString).toFormat(
-      maxDigits,
-      BigNumber.ROUND_DOWN,
-      fmt
-    );
-    formatAmount = removeTrailingZeroes({
-      amountString,
-      decimalSeparator,
-    });
-  } catch (error) {
-    formatAmount = '0';
-    throw error;
-  }
-  return formatAmount;
+const formatAmount = (payload: IAmount) => {
+    const { originalAmount, humanAmount, decimals, clipAmount = true, decimalDigits = true } = payload;
+    const decimalSeparator = getDecimalSeparator();
+    const groupSeparator = getGroupSeparator();
+    const fmt = {
+        decimalSeparator,
+        groupSeparator,
+        groupSize: 3,
+    };
+    let formatedAmount;
+    try {
+        const convertHumanAmount =
+            humanAmount ||
+            convert.toHumanAmount({
+                originalAmount,
+                decimals,
+            });
+        const maxDigits = getMaxDecimalDigits({
+            clipAmount,
+            decimalDigits,
+            decimals,
+            humanAmount: convertHumanAmount,
+        });
+        let fixedNumber = convertHumanAmount;
+        if (decimals) {
+            fixedNumber = floor(convertHumanAmount, Math.min(decimals, maxDigits));
+        } else {
+            fixedNumber = floor(convertHumanAmount, maxDigits);
+        }
+        const fixedString = toFixed({
+            number: fixedNumber,
+            decimals,
+        });
+        const amountString = new BigNumber(fixedString).toFormat(maxDigits, BigNumber.ROUND_DOWN, fmt);
+        formatedAmount = removeTrailingZeroes({
+            amountString,
+        });
+    } catch (error) {
+        formatedAmount = '0';
+        throw error;
+    }
+    return formatedAmount;
 };
 
-export const formatUnixDateTime = (
-  dateTime: number,
-  formatPattern = 'MMM DD YYYY, HH:mm'
-) => moment.unix(dateTime).format(formatPattern);
+const formatUnixDateTime = (dateTime: moment.MomentInput, formatPattern = 'DD MMM hh:mm A') =>
+    moment(dateTime).format(formatPattern);
+
+const number = (num: number) => {
+    const fmt = {
+        decimalSeparator: getDecimalSeparator(),
+        groupSeparator: getGroupSeparator(),
+        groupSize: 3,
+    };
+    const rs = new BigNumber(num);
+    return rs.isFinite() ? rs.toFormat(fmt) : num;
+};
+
+export const formatTime = (seconds: number) => {
+    let h = `0${Math.floor(seconds / 3600)}`.slice(-2);
+    let m = `0${Math.floor(seconds / 60) % 60}`.slice(-2);
+    let s = `0${seconds % 60}`.slice(-2);
+    return `${h}:${m}:${s}`;
+};
 
 const format = {
-  formatAmount,
-  formatUnixDateTime,
+    formatAmount,
+    formatUnixDateTime,
+    number,
+    toFixed,
+    formatTime,
 };
 
 export default format;

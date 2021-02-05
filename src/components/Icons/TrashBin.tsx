@@ -1,0 +1,20 @@
+import React from 'react';
+import { ENVS } from 'src/configs';
+import styled from 'styled-components';
+
+interface IProps {}
+
+const Styled = styled.button`
+    width: 16px;
+    height: 16px;
+`;
+
+const TrashBin = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+    return (
+        <Styled className="icon trash-bin-icon" {...props}>
+            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/trash_bin.png`} alt="trash_bin" />
+        </Styled>
+    );
+};
+
+export default TrashBin;

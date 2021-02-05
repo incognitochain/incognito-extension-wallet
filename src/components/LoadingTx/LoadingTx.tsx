@@ -1,17 +1,41 @@
 import React from 'react';
-import Spinner from 'react-bootstrap/esm/Spinner';
+import { useSelector } from 'react-redux';
+import { IGeneralLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
 import styled from 'styled-components';
+import { LoadingIcon } from 'src/components/Icons';
 
-interface IProps {}
+const Styled = styled.div`
+    position: relative;
+    height: 200px;
+    background: #fff;
+    width: 100%;
+    border-radius: 10px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .title {
+    }
+    .loading-icon {
+        margin-bottom: 15px;
+    }
+`;
 
-const Styled = styled.div``;
-
-const LoadingTx = (props: IProps) => {
-  return (
-    <Styled>
-      <Spinner animation='border' />
-    </Styled>
-  );
+const LoadingTx = () => {
+    const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
+    return (
+        <Styled>
+            <LoadingIcon />
+            <p
+                className="sub-text center-text title"
+                dangerouslySetInnerHTML={{
+                    __html: translate.loadingTx,
+                }}
+            />
+        </Styled>
+    );
 };
 
-export default LoadingTx;
+export default React.memo(LoadingTx);
