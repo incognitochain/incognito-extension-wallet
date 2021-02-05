@@ -39,7 +39,7 @@ jobs:
               -t $GITHUB_TOKEN \
               -u $CIRCLE_PROJECT_USERNAME \
               -r $CIRCLE_PROJECT_REPONAME \
-              -n $COMMIT_MESSAGE \
+              -n "$COMMIT_MESSAGE" \
               -c $CIRCLE_SHA1 \
               -replace \
               ${APP_VERSION} /tmp/artifacts/build.zip
