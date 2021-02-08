@@ -1,7 +1,7 @@
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq';
 import { IFollowedToken, IPTokenFromApi, IPCustomTokenFromApi } from './Token.interface';
 import {
     ACTION_FETCHED_PTOKEN_LIST,

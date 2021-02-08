@@ -42,9 +42,6 @@ const Styled = styled.div`
         flex-direction: row;
         align-items: center;
     }
-    .row > button {
-        margin-right: 15px;
-    }
 `;
 
 const infoId = 'HistoryItemInfo';

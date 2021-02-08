@@ -5,8 +5,8 @@ import { IConnectLanguage } from 'src/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { paymentAddressSelector, defaultAccountSelector } from 'src/module/Account';
-import { isDev } from 'src/configs';
 import APP_CONSTANT from 'src/constants/app';
+import throttle from 'lodash/throttle';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import CheckBox from 'src/components/Core/FillCheckBox';
 import {
@@ -16,7 +16,6 @@ import {
 } from 'src/module/Preload';
 import { useHistory } from 'react-router';
 import { getURL } from 'src/utils/app';
-import _ from 'lodash';
 import withEnhance from './Connect.enhance';
 import { Styled } from './Connect.styled';
 import AccountConnectItem from './feature/AccountConnectItem';
@@ -47,7 +46,7 @@ const Connect = React.memo((props: IProps & any) => {
     const handleChecked = () => setIsAccept(!isAccept);
     const account: AccountInstance = useSelector(defaultAccountSelector);
     const history = useHistory();
-    const handleSendAccount = _.throttle(
+    const handleSendAccount = throttle(
         async () => {
             try {
                 if (connecting) return;

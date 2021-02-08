@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 export const MAINNET_FULLNODE = 'https://lb-fullnode.incognito.org/fullnode';
 export const TESTNET_FULLNODE = 'https://testnet.incognito.org/fullnode';
@@ -119,7 +119,7 @@ export default class Server {
     }
 
     static isMainnet(network: any) {
-        return _.isEqual(network?.id, 'mainnet');
+        return isEqual(network?.id, 'mainnet');
     }
 
     static setDefaultList() {

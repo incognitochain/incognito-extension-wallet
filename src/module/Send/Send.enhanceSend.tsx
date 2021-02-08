@@ -8,7 +8,7 @@ import { defaultAccountSelector } from 'src/module/Account';
 import { AccountInstance, PaymentInfoModel } from 'incognito-js/build/web/browser';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
-import { floor } from 'lodash';
+import floor from 'lodash/floor';
 import { sendDataSelector } from './Send.selector';
 import { ISendData, ISendFormData } from './Send.interface';
 import { route as routeConfirmTx } from './features/ConfirmTx';

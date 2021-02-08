@@ -1,7 +1,7 @@
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import React, { useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { toNumber } from 'lodash';
+import toNumber from 'lodash/toNumber';
 import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
 import styled from 'styled-components';

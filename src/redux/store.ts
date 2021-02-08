@@ -7,7 +7,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import createSagaMiddleware from 'redux-saga';
 import { isToggleReduxLogger, isDev } from 'src/configs';
 import { reducer as formReducer } from 'redux-form';
-import { camelCase } from 'lodash';
+import camelCase from 'lodash/camelCase';
 
 export interface IConfigStore {
     store: any;

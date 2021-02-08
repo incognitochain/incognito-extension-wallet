@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-expressions */
-import _ from 'lodash';
+import toString from 'lodash/toString';
 import Message from './customError/message';
 import ERROR from './customError/code';
 import CustomError from './customError/customError';
@@ -178,7 +178,7 @@ class Exception {
     getMessage(defaultMessage: string) {
         try {
             if (this.exception.stackTrace) {
-                const stackCode = _.toString(this.exception.stackTraceCode) || '';
+                const stackCode = toString(this.exception.stackTraceCode) || '';
                 if (
                     stackCode.indexOf(CODES.REPLACEMENT) === 0 ||
                     stackCode.indexOf(CODES.DOUBLE_SPEND) === 0 ||

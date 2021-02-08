@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { useSelector } from 'react-redux';
 import { themeSelector } from 'src/module/Configs';
 import { IGlobalStyle } from 'src/styles';

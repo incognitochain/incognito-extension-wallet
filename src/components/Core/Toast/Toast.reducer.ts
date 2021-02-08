@@ -1,6 +1,6 @@
 import isString from 'lodash/isString';
 import { IObject } from 'src/utils';
-import { toString } from 'lodash';
+import toString from 'lodash/toString';
 import { CHAIN_ERROR, SDK_ERROR, API_ERROR } from 'src/constants/error';
 import { SDKError } from 'incognito-js/build/web/browser';
 import { IToggleToast, IDefaultMessageToast } from './Toast.interface';

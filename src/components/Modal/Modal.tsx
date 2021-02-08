@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { last, isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
 import { themeSelector } from 'src/module/Configs';
 import { COLORS, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';

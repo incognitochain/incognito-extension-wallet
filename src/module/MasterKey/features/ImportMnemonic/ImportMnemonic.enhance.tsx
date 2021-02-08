@@ -5,7 +5,7 @@ import { batch, useDispatch, useSelector } from 'react-redux';
 import { translateSelector } from 'src/module/Configs';
 import { actionImportWallet } from 'src/module/Wallet';
 import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
-import { trim } from 'lodash';
+import trim from 'lodash/trim';
 import { sendPasswordToBackground } from 'src/utils/sendMessage';
 import { validator } from 'src/utils';
 import { chainURLSelector } from 'src/module/Preload';
