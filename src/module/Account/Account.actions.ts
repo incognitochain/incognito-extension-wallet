@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { actionHandleLoadWallet, actionSaveWallet, actionUpdateWallet, IWalletReducer } from 'src/module/Wallet';

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { compose } from 'recompose';
-import { trim } from 'lodash';
+import trim from 'lodash/trim';
 import { withLayout } from 'src/components/Layout';
 import { validator } from 'src/utils';
 import { useSelector } from 'react-redux';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { MdClose } from 'react-icons/md';
 import { COLORS } from 'src/styles';
+import { CloseIcon } from 'src/components/Icons';
 import { toastSelector } from './Toast.selector';
 import { TOAST_CONFIGS_CLASSNAME } from './Toast.reducer';
 import { actionToggleToast } from './Toast.actions';
@@ -29,6 +29,8 @@ const Styled = styled.div`
         top: 5px;
         right: 5px;
         cursor: pointer;
+        width: 14px;
+        height: 14px;
     }
     .scroll-view {
         max-height: 100%;
@@ -55,7 +57,7 @@ const Toast = () => {
             <div className="scroll-view">
                 <p className={`${className} fs-small`}>{value}</p>
             </div>
-            <MdClose onClick={handleCloseToast} size={18} className="close-icon" />
+            <CloseIcon onClick={handleCloseToast} />
         </Styled>
     );
 };

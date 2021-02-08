@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaCopy, FaQrcode } from 'react-icons/fa';
 import copy from 'copy-to-clipboard';
-import { COLORS, FONT_SIZES } from 'src/styles';
+import { FONT_SIZES } from 'src/styles';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { actionToggleToast, CopyIcon, QrCodeIcon, TOAST_CONFIGS } from 'src/components';
 import { route } from './AccountItem.route';
 
 export interface IProps {
@@ -84,8 +83,8 @@ const AccountItem = (props: IProps) => {
             <div className="hook">
                 <p className="title">{title}</p>
                 <div className="icons">
-                    {hasQrCode && <FaQrcode color={COLORS.colorGreyBold} onClick={handleShowQrCode} />}
-                    {hasCopy && <FaCopy color={COLORS.colorGreyBold} onClick={handleCopy} />}
+                    {hasQrCode && <QrCodeIcon onClick={handleShowQrCode} />}
+                    {hasCopy && <CopyIcon onClick={handleCopy} />}
                 </div>
             </div>
             <p className="decs ellipsis">{desc}</p>

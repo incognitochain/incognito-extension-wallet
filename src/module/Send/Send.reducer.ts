@@ -1,5 +1,5 @@
 import { COINS } from 'src/constants';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { ISendReducer } from './Send.interface';
 import {
     ACTION_FETCHING_FEE,

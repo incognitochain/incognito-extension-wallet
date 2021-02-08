@@ -1,4 +1,5 @@
-import { isEmpty, last } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import last from 'lodash/last';
 import { ACTION_TOGGLE_MODAL, ACTION_TOGGLE_LOADING_MODAL, ACTION_CLEAR_ALL_MODAL } from './Modal.constant';
 
 export interface IModalReducer {

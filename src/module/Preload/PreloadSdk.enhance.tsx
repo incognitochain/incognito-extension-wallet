@@ -2,8 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import styled from 'styled-components';
-import Spinner from 'react-bootstrap/esm/Spinner';
-import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
+import { actionToggleToast, AppIcon, TOAST_CONFIGS } from 'src/components';
 import { actionFetchSdkConfig } from './Preload.actions';
 import { IPreloadReducer } from './Preload.reducer';
 import { preloadSelector } from './Preload.selector';
@@ -21,6 +20,9 @@ const Styled = styled.div`
     > p.desc {
         text-align: center;
         margin-top: 15px;
+    }
+    .app-icon {
+        margin-bottom: 0;
     }
 `;
 
@@ -48,7 +50,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     if (isFetching && !isFetchedSdk) {
         return (
             <Styled className="preloading-container">
-                <Spinner animation="grow" />
+                <AppIcon />
                 <p className="desc">
                     Entering incognito mode
                     <br />
@@ -60,7 +62,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     if (!isFetchedSdk) {
         return (
             <Styled className="preloading-container">
-                <Spinner animation="grow" />
+                <AppIcon />
                 <p className="desc">Something went wrong!</p>
             </Styled>
         );

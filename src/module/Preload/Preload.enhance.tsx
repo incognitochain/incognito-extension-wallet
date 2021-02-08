@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import styled from 'styled-components';
-import Spinner from 'react-bootstrap/esm/Spinner';
 import { IWalletReducer, walletSelector } from 'src/module/Wallet';
 import { AppIcon, Button } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
@@ -16,6 +15,9 @@ import { chainTokensSelector, pTokensSelector } from '../Token';
 const Styled = styled.div`
     > p {
         margin-top: 15px;
+    }
+    .app-icon {
+        margin-bottom: 0;
     }
 `;
 
@@ -34,7 +36,7 @@ export const LoadingContainer = React.memo((props: ILoadingContainerProps) => {
     const { showMessage, message, title, subTitle, buttonTitle, onClick } = props;
     return (
         <Styled className="preload-container">
-            <Spinner animation="grow" />
+            <AppIcon />
             <p className="fw-medium fs-medium sub-text" dangerouslySetInnerHTML={{ __html: title }} />
             {!!showMessage && (
                 <>

@@ -1,10 +1,8 @@
 import React from 'react';
 import { GlobalStyled } from 'src/styles';
 import { useSelector } from 'react-redux';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Modal from 'src/components/Modal';
 import { ThemeProvider } from 'styled-components';
-import 'animate.css';
 import './reset.scss';
 import { createBrowserHistory, createMemoryHistory } from 'history';
 import { Router } from 'react-router';

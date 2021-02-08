@@ -9,7 +9,8 @@ import { translateSelector } from 'src/module/Configs';
 import { listAccountSelector, actionSwitchAccount } from 'src/module/Account';
 import AccountItem from 'src/module/Account/features/AccountItem';
 import { keySearchSelector, useSearchBox } from 'src/components/Header';
-import { includes, toLower } from 'lodash';
+import includes from 'lodash/includes';
+import toLower from 'lodash/toLower';
 
 const Styled = styled.div``;
 

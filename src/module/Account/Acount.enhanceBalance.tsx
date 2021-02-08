@@ -7,7 +7,7 @@ import { COINS } from 'src/constants';
 import APP_CONSTANT from 'src/constants/app';
 import { sendExtensionMessage } from 'src/utils/sendMessage';
 import { cachePromise } from 'src/services';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { bridgeTokensSelector, chainTokensSelector, getPrivacyDataByTokenIDSelector } from '../Token';
 import { defaultAccountSelector, paymentAddressSelector } from './Account.selector';
 

@@ -4,7 +4,7 @@ import { CloseIcon, LoadingIcon } from 'src/components/Icons';
 import { actionToggleModal } from 'src/components/Modal';
 import { BrowserQRCodeReader } from '@zxing/library';
 import { useDispatch, useSelector } from 'react-redux';
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import { openAsTab, isContainsQueryString } from 'src/utils';
 import { selectedPrivacySelector } from 'src/module/Token';
 import { COINS } from 'src/constants';

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { compose } from 'recompose';
-import { shuffle } from 'lodash';
+import shuffle from 'lodash/shuffle';
 import { withLayout } from 'src/components/Layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';

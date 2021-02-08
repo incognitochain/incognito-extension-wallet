@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
 import { Button, Input } from 'src/components/Core';
-import { trim } from 'lodash';
+import trim from 'lodash/trim';
 import enhance from './MasterKeyName.enhance';
 import { IProps } from './MasterKeyName.inteface';
 import FillCheckBox from '../../../../components/Core/FillCheckBox';

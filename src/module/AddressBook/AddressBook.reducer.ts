@@ -1,7 +1,8 @@
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { isEqual, toLower } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import toLower from 'lodash/toLower';
 import {
     ACTION_CREATE,
     ACTION_DELETE,

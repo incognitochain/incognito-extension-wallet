@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { themeSelector } from 'src/module/Configs';
 import styled from 'styled-components';
 import enhance from './TooltipContainer.enhance';
