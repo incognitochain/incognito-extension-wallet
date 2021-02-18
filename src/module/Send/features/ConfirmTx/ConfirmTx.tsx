@@ -10,6 +10,7 @@ import { IConfirmTxLanguage } from 'src/i18n';
 import { serverSelector } from 'src/module/Preload';
 import { route as routeDetail } from 'src/module/Token/features/Detail';
 import { selectedTokenIdSelector } from 'src/module/Token';
+import { BtnAction } from 'src/module/AddressBook/features/Action';
 import { ConfirmTxItem } from './ConfirmTx.interface';
 
 const Styled = styled.div`
@@ -61,6 +62,7 @@ const ConfirmTx = () => {
             {itemsFactories.map((item: IHistoryItem) => (
                 <HistoryItem key={item.title} {...item} />
             ))}
+            <BtnAction data={confirmTx} />
         </Styled>
     );
 };

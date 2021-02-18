@@ -58,6 +58,7 @@ export interface IAddressBookLanguage {
     btnCreate: string;
     btnEdit: string;
     btnRemove: string;
+    btnSave: string;
     msgExist: string;
     keychains: string;
     incognito: string;

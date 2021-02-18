@@ -7,11 +7,10 @@ import uniqBy from 'lodash/uniqBy';
 import toString from 'lodash/toString';
 import reverse from 'lodash/reverse';
 import compact from 'lodash/compact';
-import { preloadSelector } from 'src/module/Preload';
+import { preloadSelector } from 'src/module/Preload/Preload.selector';
 import { format } from 'src/utils';
 import convert from 'src/utils/convert';
 import BigNumber from 'bignumber.js';
-import { accountBalanceSelector } from 'src/module/Account/Account.selector';
 import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
 import { getPrice } from './Token.utils';
 import SelectedPrivacy from './Token.model';
@@ -126,7 +125,7 @@ export const getPrivacyDataByTokenIDSelector = createSelector(
     pTokensSelector,
     followedTokensIdsSelector,
     followedTokensSelect,
-    accountBalanceSelector,
+    (state: IRootState) => state.account.accountBalance || 0,
     popularCoinIdsSelector,
     decimalDigitsSelector,
     (pCustomTokens, pTokens, followedTokensIds, followed, accountBalance, coins, decimalDigits) =>

@@ -1,3 +1,4 @@
+import { IAddressBook } from 'src/module/AddressBook';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
@@ -11,11 +12,15 @@ export const addressBookSelector = createSelector(
 
 export const incognitoAddrSelector = createSelector(
     addressBookSelector,
-    (addressBook) => addressBook.incognitoAddress || [],
+    isMainnetSelector,
+    (addressBook, mainnet) =>
+        addressBook.incognitoAddress.filter((item: IAddressBook) => item.mainnet === mainnet) || [],
 );
 export const externalAddrSelector = createSelector(
     addressBookSelector,
-    (addressBook) => addressBook.externalAddress || [],
+    isMainnetSelector,
+    (addressBook, mainnet) =>
+        addressBook.externalAddress.filter((item: IAddressBook) => item.mainnet === mainnet) || [],
 );
 
 export const keychainAddrSelector = createSelector(
@@ -36,6 +41,24 @@ export const keychainAddrSelector = createSelector(
                     address: account.key.keySet.paymentAddressKeySerialized,
                     type: 1,
                     mainnet,
+                    isKeychain: true,
                 }))) ||
         [],
+);
+
+export const selectedAddressBookSelector = createSelector(
+    addressBookSelector,
+    (addressBookState) => addressBookState.selected,
+);
+
+export const isIncognitoAddressExistSelector = createSelector(
+    incognitoAddrSelector,
+    keychainAddrSelector,
+    (incognitoAddr: IAddressBook[], keychainAddr: IAddressBook[]) => (address: string) =>
+        incognitoAddr.find((item) => item.address === address) || keychainAddr.find((item) => item.address === address),
+);
+
+export const isExternalAddressExistSelector = createSelector(
+    externalAddrSelector,
+    (externalAddr: IAddressBook[]) => (address: string) => externalAddr.find((item) => item.address === address),
 );

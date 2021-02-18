@@ -44,7 +44,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
 
         {
             title: translate.addressBook.title,
-            child: [{ desc: translate.addressBook.desc, link: addressBookRoute }],
+            child: [
+                {
+                    desc: translate.addressBook.desc,
+                    onClick: () => history.push(addressBookRoute, { canRemoveAddrBook: true }),
+                },
+            ],
         },
         {
             title: translate.decimalDigits.title,

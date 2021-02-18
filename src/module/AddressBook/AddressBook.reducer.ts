@@ -1,28 +1,28 @@
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import isEqual from 'lodash/isEqual';
-import toLower from 'lodash/toLower';
 import {
     ACTION_CREATE,
     ACTION_DELETE,
     ACTION_UPDATE,
     ACTION_SELECTED,
     ACTION_REMOVE_SELECTED,
+    ADDRESS_BOOK_TYPE,
 } from './AddressBook.constant';
-import { isAddressBookExist, ADDRESS_BOOK_TYPE } from './AddressBook.utils';
+import { isAddressBookExist } from './AddressBook.utils';
 import { IAddressBook, IAddressBookReducer, IPayload } from './AddressBook.interface';
 
 const initialState: IAddressBookReducer = {
     incognitoAddress: [],
     externalAddress: [],
+    selected: undefined,
 };
 
 const addressBookReducer = (state = initialState, action: { type: string; payload: any }) => {
     switch (action.type) {
         case ACTION_CREATE: {
-            const { addressBook, type }: IPayload = action.payload;
-            const field = ADDRESS_BOOK_TYPE[type];
+            const { addressBook }: IPayload = action.payload;
+            const field = ADDRESS_BOOK_TYPE[addressBook.type];
             const oldAddressedBook: IAddressBook[] = state[field];
             return {
                 ...state,
@@ -30,15 +30,9 @@ const addressBookReducer = (state = initialState, action: { type: string; payloa
             };
         }
         case ACTION_UPDATE: {
-            const { addressBook, type }: IPayload = action.payload;
-            const field = ADDRESS_BOOK_TYPE[type];
+            const { addressBook }: IPayload = action.payload;
+            const field = ADDRESS_BOOK_TYPE[addressBook.type];
             const oldAddressedBook: IAddressBook[] = state[field];
-            const isNameExisted = oldAddressedBook
-                .filter((item) => item?.address !== addressBook?.address)
-                .some((item) => isEqual(toLower(item?.name), toLower(addressBook?.name)));
-            if (isNameExisted) {
-                throw new Error('User name is exist!');
-            }
             return {
                 ...state,
                 [field]: [
@@ -51,8 +45,8 @@ const addressBookReducer = (state = initialState, action: { type: string; payloa
             };
         }
         case ACTION_DELETE: {
-            const { addressBook, type }: IPayload = action.payload;
-            const field = ADDRESS_BOOK_TYPE[type];
+            const { addressBook }: IPayload = action.payload;
+            const field = ADDRESS_BOOK_TYPE[addressBook.type];
             const oldAddressedBook: IAddressBook[] = state[field];
             const isExist = isAddressBookExist(oldAddressedBook, addressBook);
             if (!isExist) {
@@ -64,13 +58,10 @@ const addressBookReducer = (state = initialState, action: { type: string; payloa
             };
         }
         case ACTION_SELECTED: {
-            const { addressBook, type }: IPayload = action.payload;
-            const field = ADDRESS_BOOK_TYPE[type];
-            const oldAddressedBook: IAddressBook[] = state[field];
-            const selected = oldAddressedBook?.find((item) => item?.address === addressBook.address);
+            const { addressBook }: { addressBook: IAddressBook } = action.payload;
             return {
                 ...state,
-                selected,
+                selected: { ...addressBook },
             };
         }
         case ACTION_REMOVE_SELECTED: {

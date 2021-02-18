@@ -167,6 +167,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             symbol,
             fee: totalFeeFormatedNoClip,
             feeSymbol,
+            isExternalAddress: true,
+            addressBookType: 2,
         };
         forceSendFinish(null, confirmTx);
         history.push(routeConfirmTx, { confirmTx });
@@ -276,6 +278,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             symbol,
             fee: totalFeeFormatedNoClip,
             feeSymbol,
+            isExternalAddress: true,
+            addressBookType: 2,
         };
         forceSendFinish(null, confirmTx);
         history.push(routeConfirmTx, { confirmTx });

@@ -2,13 +2,13 @@ import { lazy } from 'react';
 import { IRouteProps } from 'src/module';
 
 const createRoute: IRouteProps = {
-    path: '/create-address-book',
+    path: '/action-address-book',
     exact: true,
-    component: lazy(() => import('./Create')),
+    component: lazy(() => import('./Action')),
     name: 'Create',
-    to: '/create-address-book',
+    to: '/action-address-book',
 };
 
-export const route = '/create-address-book';
+export const route = '/action-address-book';
 
 export default createRoute;

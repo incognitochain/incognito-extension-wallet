@@ -6,7 +6,7 @@ import { LoadingIcon, VerifiedIcon } from 'src/components/Icons';
 import replace from 'lodash/replace';
 import round from 'lodash/round';
 import { COLORS } from 'src/styles';
-import { isGettingBalanceByTokenIdSelector } from 'src/redux';
+import { isGettingBalanceByTokenIdSelector } from 'src/redux/selector';
 import withToken, { IMergePropsToken } from './Token.enhance';
 import { AmountStyled, BalanceStyled, NameStyled, TextStyled, TokenStyled as Styled } from './Token.styled';
 import { getPrivacyDataByTokenIDSelector } from './Token.selector';

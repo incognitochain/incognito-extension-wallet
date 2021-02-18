@@ -19,7 +19,6 @@ import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 import { ERROR_MESSAGE } from 'src/constants/error';
 import withBalance from 'src/module/Account/Acount.enhanceBalance';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
-import { openAsTab } from 'src/utils';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -92,6 +91,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
                             onChangeField(addressBook.address, FORM_CONFIGS.toAddress);
                             dispatch(actionToggleModal({}));
                         }}
+                        filterBySelectedPrivacy
                     />
                 ),
             }),

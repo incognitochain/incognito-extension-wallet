@@ -5,22 +5,23 @@ export interface IIncognitoAddress {}
 export interface IAddressBook {
     address: string;
     name: string;
+    mainnet: boolean;
+    tokenId?: string;
     networkName?: string;
     rootNetworkName?: string;
-    mainnet: boolean;
     createdAt?: number;
     updatedAt?: number;
-    tokenId?: string;
     type: number;
+    isKeychain?: boolean;
 }
 
 export interface IAddressBookReducer {
     incognitoAddress: IAddressBook[];
     externalAddress: IAddressBook[];
+    selected?: IAddressBook | any;
     [x: string]: any;
 }
 
 export interface IPayload {
     addressBook: IAddressBook;
-    type: number;
 }

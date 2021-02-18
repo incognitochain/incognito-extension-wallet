@@ -207,6 +207,7 @@ const language: ILanguage = {
         btnCreate: 'Create',
         btnEdit: 'Edit',
         btnRemove: 'Remove',
+        btnSave: 'Save this address book',
         msgExist: 'Address book is exist!',
         keychains: 'Your keychains',
         incognito: 'Incognito addresses',

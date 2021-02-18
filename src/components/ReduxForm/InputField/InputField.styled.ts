@@ -46,6 +46,9 @@ export const Styled = styled.div`
             border: solid 1px ${COLORS.black};
         }
     }
+    .input-container > input:read-only {
+        color: ${COLORS.colorGreyBold};
+    }
     .input-wrap-suffix {
         display: flex;
         justify-content: flex-end;

@@ -77,6 +77,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     symbol: hc.symbol,
                     fee: hc.feeFormated,
                     feeSymbol: hc.feeSymbol,
+                    isIncognitoAddress: true,
+                    addressBookType: 1,
                 };
                 history.push(routeConfirmTx, { confirmTx });
                 forceSendFinish(null, confirmTx);
