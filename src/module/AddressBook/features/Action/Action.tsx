@@ -6,17 +6,21 @@ import { InputField, validator } from 'src/components/ReduxForm';
 import { IAddressBookLanguage } from 'src/i18n/interface';
 import { translateByFieldSelector } from 'src/module/Configs';
 import styled from 'styled-components';
-import withCreate, { IMergeProps } from './Create.enhance';
+import withAction, { IMergeProps } from './Action.enhance';
 
-const Styled = styled.div``;
+const Styled = styled.div`
+    .btn-container {
+        margin-top: 30px;
+    }
+`;
 
-const Create = (props: IMergeProps & InjectedFormProps & any) => {
+const Action = (props: IMergeProps & InjectedFormProps & any) => {
     const translate: IAddressBookLanguage = useSelector(translateByFieldSelector)('addressBook');
-    const { handleSubmit, handleCreate, valid } = props;
+    const { handleSubmit, handleAction, disabledForm, isCreate }: IMergeProps & InjectedFormProps = props;
     return (
         <Styled>
-            <Header title={translate.headerTitleCreate} />
-            <form onSubmit={handleSubmit(handleCreate)}>
+            <Header title={isCreate ? translate.headerTitleCreate : translate.headerTitleEdit} />
+            <form onSubmit={handleSubmit(handleAction)}>
                 <Field
                     component={InputField}
                     name="name"
@@ -35,13 +39,17 @@ const Create = (props: IMergeProps & InjectedFormProps & any) => {
                     validate={[validator.required]}
                     componentProps={{
                         placeholder: translate.address,
-                        // readOnly: true,
+                        readOnly: true,
                     }}
                 />
-                <Button title={translate.btnCreate} type="submit" disabled={!valid} />
+                <Button
+                    title={isCreate ? translate.btnCreate : translate.btnEdit}
+                    type="submit"
+                    disabled={disabledForm}
+                />
             </form>
         </Styled>
     );
 };
 
-export default withCreate(Create);
+export default withAction(Action);

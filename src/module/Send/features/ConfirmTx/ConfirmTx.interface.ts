@@ -6,4 +6,8 @@ export interface ConfirmTxItem {
     fee: string;
     feeSymbol: string;
     symbol: string;
+    isIncognitoAddress?: boolean;
+    isExternalAddress?: boolean;
+    addressBookType?: number;
+    tokenId?: string;
 }

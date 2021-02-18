@@ -239,6 +239,9 @@ export const GlobalStyled = createGlobalStyle`
     .m-t-50 {
         margin-top: 50px;
     }
+    .m-t-30 {
+        margin-top: 30px;
+    }
     .center-abs-ver {
         position: absolute;
         top: 50%;

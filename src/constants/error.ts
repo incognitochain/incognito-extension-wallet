@@ -59,4 +59,5 @@ export const ERROR_MESSAGE = {
         'Please turn off cellular data on your device. Using Wi-Fi only, make sure your Node is online before proceeding to change networks.',
     PENDING_TRANSACTIONS: 'Please wait for your previous transaction to finish processing. Simply try again later.',
     CAN_NOT_ESTIMATE_FEE: "Can't not estimate fee",
+    ADDRESS_BOOK_IS_EXIST: 'Address book is exist!',
 };

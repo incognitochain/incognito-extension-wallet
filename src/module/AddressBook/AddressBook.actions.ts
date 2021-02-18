@@ -21,11 +21,11 @@ export const actionDelete = (payload: IPayload) => ({
     type: ACTION_DELETE,
     payload,
 });
-export const actionSelectedReceiver = (payload: IPayload) => ({
+export const actionSelectedAddrBook = (payload: IPayload) => ({
     type: ACTION_SELECTED,
     payload,
 });
 
-export const actionRemoveSelectedReceiver = () => ({
+export const actionRemoveSelectedAddrBook = () => ({
     type: ACTION_REMOVE_SELECTED,
 });

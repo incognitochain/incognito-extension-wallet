@@ -5,7 +5,7 @@ import { reset } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { actionSetSelectedToken, ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
 import { accountBalanceSelector, actionGetAccountBalance, defaultAccountSelector } from 'src/module/Account';
-import { isGettingBalanceByTokenIdSelector } from 'src/redux';
+import { isGettingBalanceByTokenIdSelector } from 'src/redux/selector';
 import format from 'src/utils/format';
 import convert from 'src/utils/convert';
 import { COINS } from 'src/constants';
