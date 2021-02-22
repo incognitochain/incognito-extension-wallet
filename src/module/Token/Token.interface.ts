@@ -167,9 +167,26 @@ interface ITokensFactories {
 }
 export interface IAllListTokenInner {
     tokensFactories: ITokensFactories[];
-    // eslint-disable-next-line no-unused-vars
     onToggleUnVerifiedTokens: (toggle: boolean) => void;
     toggleUnVerified: boolean;
-    // eslint-disable-next-line no-unused-vars
     renderItem: (tokenId: string) => any;
+    extra?: React.ReactElement | React.FunctionComponent | any;
+}
+
+export interface IAddManuallyReducer {
+    selected: {
+        type: number;
+        value: string;
+    };
+    data: {
+        fetching: boolean;
+        token: any;
+    };
+    adding: boolean;
+}
+
+export interface IAddManually {
+    type: number;
+    value: string;
+    placeholder?: string;
 }

@@ -21,7 +21,6 @@ const FeeType = React.memo((props: IFeeTypes) => {
     const { feeUnitByTokenId }: ISendData = useSelector(sendDataSelector);
     const dispatch = useDispatch();
     const selected = feeUnitByTokenId === tokenId;
-
     const handleChangeFeeTypes = (e: SyntheticEvent) => {
         e.preventDefault();
         if (!selected) {

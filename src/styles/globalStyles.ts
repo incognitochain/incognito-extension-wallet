@@ -240,7 +240,7 @@ export const GlobalStyled = createGlobalStyle`
         margin-top: 50px;
     }
     .m-t-30 {
-        margin-top: 30px;
+        margin-top: 30px !important;
     }
     .center-abs-ver {
         position: absolute;

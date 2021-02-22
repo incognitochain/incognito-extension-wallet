@@ -12,6 +12,8 @@ import { format } from 'src/utils';
 import convert from 'src/utils/convert';
 import BigNumber from 'bignumber.js';
 import { decimalDigitsSelector } from 'src/module/Setting/Setting.selector';
+import { translateByFieldSelector } from '../Configs/Configs.selector';
+import { ITokenLanguage } from '../../i18n/interface';
 import { getPrice } from './Token.utils';
 import SelectedPrivacy from './Token.model';
 import { ITokenReducer } from './Token.reducer';
@@ -296,3 +298,33 @@ export const isGettingBalanceTokenByIdSelector = createSelector(
     gettingBalanceSelector,
     (gettingBalance: string[]) => (tokenId: string) => gettingBalance.includes(tokenId),
 );
+
+export const addManuallySelector = createSelector(tokenSelector, (token) => token.addManually);
+
+export const selectedAddManuallySelector = createSelector(
+    addManuallySelector,
+    translateByFieldSelector,
+    (addManually, translateByField) => {
+        const translate: ITokenLanguage = translateByField('token');
+        let placeholder = '';
+        const { selected } = addManually;
+        const { type, value } = selected;
+        switch (type) {
+            case 1: // BEP2
+                placeholder = translate.addManually.bep2Placeholder;
+                break;
+            case 2: // ERC20
+                placeholder = translate.addManually.erc20Placeholder;
+                break;
+            default:
+                break;
+        }
+        return {
+            type,
+            value,
+            placeholder,
+        };
+    },
+);
+
+export const detectTokenAddManuallySelector = createSelector(addManuallySelector, (addManually) => addManually.data);

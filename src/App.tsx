@@ -7,7 +7,7 @@ import './reset.scss';
 import { createBrowserHistory, createMemoryHistory } from 'history';
 import { Router } from 'react-router';
 import MainRoute from 'src/module/MainRoute';
-import { Toast } from 'src/components';
+import { Toast } from 'src/components/Core/Toast';
 import { TooltipContainer } from 'src/module/Tooltip';
 import { themeSelector } from './module/Configs';
 import withApp from './App.enhance';
