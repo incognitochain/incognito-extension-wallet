@@ -27,14 +27,15 @@ export const keychainAddrSelector = createSelector(
     listAccountSelector,
     defaultAccountSelector,
     isMainnetSelector,
-    (accounts, defaultAccount, mainnet) =>
+    (accounts, defaultAccount, mainnet) => (filterByDefaultAccount = true) =>
         (accounts &&
             defaultAccount &&
             accounts
-                .filter(
-                    (account: AccountInstance) =>
-                        account.key.keySet.paymentAddressKeySerialized !==
-                        defaultAccount.key.keySet.paymentAddressKeySerialized,
+                .filter((account: AccountInstance) =>
+                    filterByDefaultAccount
+                        ? account.key.keySet.paymentAddressKeySerialized !==
+                          defaultAccount.key.keySet.paymentAddressKeySerialized
+                        : true,
                 )
                 .map((account: AccountInstance) => ({
                     name: account.name,
@@ -54,8 +55,11 @@ export const selectedAddressBookSelector = createSelector(
 export const isIncognitoAddressExistSelector = createSelector(
     incognitoAddrSelector,
     keychainAddrSelector,
-    (incognitoAddr: IAddressBook[], keychainAddr: IAddressBook[]) => (address: string) =>
-        incognitoAddr.find((item) => item.address === address) || keychainAddr.find((item) => item.address === address),
+    (incognitoAddr: IAddressBook[], keychainAddr: (filterByDefaultAccount: boolean) => IAddressBook[]) => (
+        address: string,
+    ) =>
+        incognitoAddr.find((item) => item.address === address) ||
+        keychainAddr(false).find((item) => item.address === address),
 );
 
 export const isExternalAddressExistSelector = createSelector(
