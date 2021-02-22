@@ -7,21 +7,17 @@ import { defaultAccountSelector, listAccountSelector } from 'src/module/Account/
 
 export const addressBookSelector = createSelector(
     (state: IRootState) => state.addressBook,
-    (addressBook) => addressBook,
+    isMainnetSelector,
+    (addressBook, mainnet) => ({
+        ...addressBook,
+        incognitoAddress: addressBook.incognitoAddress.filter((item: IAddressBook) => item.mainnet === mainnet) || [],
+        externalAddress: addressBook.externalAddress.filter((item: IAddressBook) => item.mainnet === mainnet) || [],
+    }),
 );
 
-export const incognitoAddrSelector = createSelector(
-    addressBookSelector,
-    isMainnetSelector,
-    (addressBook, mainnet) =>
-        addressBook.incognitoAddress.filter((item: IAddressBook) => item.mainnet === mainnet) || [],
-);
-export const externalAddrSelector = createSelector(
-    addressBookSelector,
-    isMainnetSelector,
-    (addressBook, mainnet) =>
-        addressBook.externalAddress.filter((item: IAddressBook) => item.mainnet === mainnet) || [],
-);
+export const incognitoAddrSelector = createSelector(addressBookSelector, (addressBook) => addressBook.incognitoAddress);
+
+export const externalAddrSelector = createSelector(addressBookSelector, (addressBook) => addressBook.externalAddress);
 
 export const keychainAddrSelector = createSelector(
     listAccountSelector,
