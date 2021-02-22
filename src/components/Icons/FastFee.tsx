@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLORS, ITheme } from 'src/styles';
+import { ENVS } from 'src/configs';
 
 interface IProps {
     fast2x?: boolean;
@@ -12,19 +12,6 @@ const Lightning = styled.button`
     height: 28px;
     border-radius: 8px;
     margin-left: 5px;
-    &.selected {
-        background-color: ${(props: { theme: ITheme }) => props.theme.button};
-        color: ${COLORS.white};
-        border: solid transparent 0.5px;
-    }
-    &.unSelected {
-        background-color: ${COLORS.lightGrey12};
-        border: solid ${COLORS.lightGrey21} 0.5px;
-        color: ${COLORS.colorManateeGrey};
-    }
-    .p {
-        font-size: 14px;
-    }
 `;
 
 const FastFee = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
@@ -35,11 +22,10 @@ const FastFee = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) 
                 onClick={() => {
                     fast2x && handleClick();
                 }}
-                {...props}
-                className={`${fast2x ? 'unSelected' : 'selected'}`}
                 type="button"
+                {...props}
             >
-                <p>􀋦</p>
+                <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/fast-1x${fast2x ? '' : '-selected'}.png`} alt="" />
             </Lightning>
         );
     };
@@ -49,11 +35,13 @@ const FastFee = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) 
                 onClick={() => {
                     !fast2x && handleClick();
                 }}
-                {...props}
-                className={`${!fast2x ? 'unSelected' : 'selected'}`}
                 type="button"
+                {...props}
             >
-                <p>􀋦􀋦</p>
+                <img
+                    src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/fast-2x${!fast2x ? '' : '-selected'}.png`}
+                    alt=""
+                />
             </Lightning>
         );
     };
