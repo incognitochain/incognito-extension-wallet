@@ -35,7 +35,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const selectedPrivacy = useSelector(selectedPrivacySelector);
     const incognitoAddr: IAddressBook[] = useSelector(incognitoAddrSelector);
     const externalAddr: IAddressBook[] = useSelector(externalAddrSelector);
-    const keychainAddr: IAddressBook[] = useSelector(keychainAddrSelector);
+    const keychainAddr: IAddressBook[] = useSelector(keychainAddrSelector)(true);
     const extAddrFilBySelPrivacy = [
         ...externalAddr.filter((item) =>
             filterBySelectedPrivacy ? item?.rootNetworkName === selectedPrivacy?.rootNetworkName : true,
