@@ -84,6 +84,16 @@ const language: ILanguage = {
             coinInfo: 'See coin info',
             txInfo: 'See tx',
         },
+        addManually: {
+            headerTitle: 'Add manually',
+            btnAction: 'Add a new coin to Incognito',
+            btnAddManually: 'Add manually',
+            bep2Placeholder: 'Search by BEP2 origin symbol',
+            erc20Placeholder: 'Search by ERC20 Address',
+            selectTokenType: 'Select token type',
+            name: 'Name',
+            symbol: 'Symbol',
+        },
     },
     account: {
         create: {

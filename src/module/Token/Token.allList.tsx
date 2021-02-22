@@ -26,7 +26,7 @@ const Styled = styled.div`
 `;
 
 const ListAllToken = (props: IAllListTokenInner) => {
-    const { tokensFactories, onToggleUnVerifiedTokens, toggleUnVerified, renderItem } = props;
+    const { tokensFactories, onToggleUnVerifiedTokens, toggleUnVerified, renderItem, extra } = props;
     return (
         <Styled className="all-list-token scroll-view">
             <ListToken {...tokensFactories[0]} renderItem={renderItem} />
@@ -36,6 +36,7 @@ const ListAllToken = (props: IAllListTokenInner) => {
                 label="Show unverified coins"
             />
             <ListToken {...tokensFactories[1]} renderItem={renderItem} />
+            {extra && extra}
         </Styled>
     );
 };

@@ -17,6 +17,11 @@ import {
     ACTION_SET_FOLLOWED_TOKENS,
     ACTION_SET_SELECTED_TOKEN,
     ACTION_RESET_FOLLOWED_POPULAR_TOKEN,
+    ACTION_CHANGE_TYPE_ADD_MANUALLY,
+    ACTION_FETCHING_DETECT_TOKEN_ADD_MANUALLY,
+    ACTION_FETCHED_DETECT_TOKEN_ADD_MANUALLY,
+    ACTION_TOGGLE_ADDING_MANUALLY_TOKEN,
+    ACTION_FREE_ADD_MANUALLY,
 } from './Token.constant';
 import { apiGetPTokenList, apiGetPCustomTokenList } from './Token.services';
 import { IPToken, IFollowedToken, ISelectedPrivacy } from './Token.interface';
@@ -193,3 +198,28 @@ export const actionFollowTokenById = (tokenId: string) => async (dispatch: Dispa
         actionSaveWallet()(dispatch, getState);
     }
 };
+
+// add manually
+
+export const actionChangeTypeAddManually = (payload: { type: number; value: string }) => ({
+    type: ACTION_CHANGE_TYPE_ADD_MANUALLY,
+    payload,
+});
+
+export const actionFetchingDetectTokenAddManually = () => ({
+    type: ACTION_FETCHING_DETECT_TOKEN_ADD_MANUALLY,
+});
+
+export const actionFetchedDetectTokenAddManually = (payload: any) => ({
+    type: ACTION_FETCHED_DETECT_TOKEN_ADD_MANUALLY,
+    payload,
+});
+
+export const actionAddingManuallyToken = (payload: boolean) => ({
+    type: ACTION_TOGGLE_ADDING_MANUALLY_TOKEN,
+    payload,
+});
+
+export const actionFreeAddManually = () => ({
+    type: ACTION_FREE_ADD_MANUALLY,
+});

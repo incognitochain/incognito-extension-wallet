@@ -5,3 +5,4 @@ export * from './ToggleSwitch';
 export * from './Layout';
 export * from './Input';
 export * from './TextArea';
+export { default as TyniButton } from './TyniButton';

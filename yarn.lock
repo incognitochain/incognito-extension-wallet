@@ -7408,10 +7408,9 @@ in-publish@^2.0.0:
   resolved "https://registry.yarnpkg.com/in-publish/-/in-publish-2.0.1.tgz#948b1a535c8030561cea522f73f78f4be357e00c"
   integrity sha512-oDM0kUSNFC31ShNxHKUyfZKy8ZeXZBWMjMdZHKLOk13uvT27VTL/QzRGfRUcevJhpkZAvlhPYuXkF7eNWrtyxQ==
 
-incognito-js@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/incognito-js/-/incognito-js-1.4.0.tgz#969bb6c8e84f9057ac19d4ece1baf7cfc108129f"
-  integrity sha512-y9UJmJmLZH25eK9+aYKMTdZrePgIcGHuMLsYu2c7St335jL6sf5gfEgicOZn3aWZzUwgujPXTQ7sK/CNdHxutA==
+"incognito-js@https://github.com/incognitochain/sdk-v2#develop":
+  version "1.4.1"
+  resolved "https://github.com/incognitochain/sdk-v2#7b4acb2470717945beb5739c5275eb31b0b3a081"
   dependencies:
     "@types/base64-js" "^1.2.5"
     "@types/circular-json" "^0.4.0"

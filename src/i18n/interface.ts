@@ -235,6 +235,16 @@ export interface ITokenLanguage {
         coinInfo: string;
         txInfo: string;
     };
+    addManually: {
+        headerTitle: string;
+        btnAddManually: string;
+        selectTokenType: string;
+        btnAction: string;
+        bep2Placeholder: string;
+        erc20Placeholder: string;
+        name: string;
+        symbol: string;
+    };
 }
 
 export interface IGeneralLanguage {
