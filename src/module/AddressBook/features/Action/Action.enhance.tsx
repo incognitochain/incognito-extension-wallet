@@ -61,7 +61,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const nameInput = useSelector((state) => trim(selector(state, FORM_CONFIGS.name) || ''));
     const addressInput = useSelector((state) => trim(selector(state, FORM_CONFIGS.address || '')));
     const shouldEdit = selectedAddrBook && !isEqual(toLower(selectedAddrBook?.name), toLower(nameInput));
-    const disabledForm = !valid || (isEdit && !shouldEdit);
+    const disabledForm = !valid || (isEdit && !shouldEdit) || !nameInput;
     const handleCreate = () => {
         const name = trim(nameInput);
         const address = trim(addressInput);
