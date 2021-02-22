@@ -52,9 +52,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const selectedAddrBook: IAddressBook = useSelector(selectedAddressBookSelector);
     const state = useSelector((state) => state);
     const valid = isValid(FORM_CONFIGS.formName)(state);
-    const field = ADDRESS_BOOK_TYPE[type];
     const addressBookState: IAddressBookReducer = useSelector(addressBookSelector);
-    const oldAddressedBook: IAddressBook[] = addressBookState[field];
     const isCreate = !!address;
     const isEdit = !isCreate && !!selectedAddrBook;
     const selector = formValueSelector(FORM_CONFIGS.formName);
@@ -63,6 +61,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const shouldEdit = selectedAddrBook && !isEqual(toLower(selectedAddrBook?.name), toLower(nameInput));
     const disabledForm = !valid || (isEdit && !shouldEdit) || !nameInput;
     const handleCreate = () => {
+        const field = ADDRESS_BOOK_TYPE[type];
+        const oldAddressedBook: IAddressBook[] = addressBookState[field];
         const name = trim(nameInput);
         const address = trim(addressInput);
         const addressBook = { name, address, type, mainnet, networkName, rootNetworkName, tokenId };
@@ -78,6 +78,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         history.push(routeWallet);
     };
     const handleEdit = () => {
+        const field = ADDRESS_BOOK_TYPE[selectedAddrBook.type];
+        const oldAddressedBook: IAddressBook[] = addressBookState[field];
         const name = trim(nameInput);
         const addressBook = { ...selectedAddrBook, name };
         const isExist = isAddressBookExistByName(oldAddressedBook, name);
