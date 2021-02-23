@@ -1,6 +1,6 @@
 import React from 'react';
 import { WrappedFieldInputProps, WrappedFieldMetaProps } from 'redux-form';
-import { AddressBookIcon, InfiniteIcon, ScanIcon } from 'src/components/Icons';
+import { AddressBookIcon, EyeIcon, InfiniteIcon, ScanIcon } from 'src/components/Icons';
 import { INPUT_FIELD } from './InputField.constant';
 import { Styled } from './InputField.styled';
 
@@ -44,6 +44,8 @@ const InputField = (props: IInputFieldProps) => {
     } = props;
     const { error: errorMeta } = meta;
     const error = errorMeta || errorCustom;
+    const [togglePassword, setTogglePassword] = React.useState(false);
+    const handleTogglePassword = () => setTogglePassword(!togglePassword);
     const renderError = () => {
         return (
             <>
@@ -99,6 +101,21 @@ const InputField = (props: IInputFieldProps) => {
                         <div className="wrap-content">
                             <p className="ellipsis">{value}</p>
                             {suffix && <p className="suffix ellipsis">{suffix}</p>}
+                        </div>
+                    </div>
+                );
+            }
+            case INPUT_FIELD.password: {
+                return (
+                    <div className="input-container input-password">
+                        <Input
+                            {...{
+                                input,
+                                componentProps: { ...componentProps, type: togglePassword ? 'text' : 'password' },
+                            }}
+                        />
+                        <div className="sub-icon">
+                            <EyeIcon toggle={togglePassword} onClick={handleTogglePassword} />
                         </div>
                     </div>
                 );

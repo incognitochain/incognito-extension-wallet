@@ -7,10 +7,10 @@ import { AppIcon, Button } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { IPreloadLanguage } from 'src/i18n';
 import { forceSendDataSelector } from 'src/module/Send/Send.selector';
+import { isTab } from 'src/utils';
+import { chainTokensSelector, pTokensSelector } from 'src/module/Token';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
 import { preloadSelector } from './Preload.selector';
-import { isTab } from '../../utils';
-import { chainTokensSelector, pTokensSelector } from '../Token';
 
 const Styled = styled.div`
     > p {

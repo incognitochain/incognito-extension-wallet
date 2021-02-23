@@ -1,8 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { isInitWalletSelector } from '../Wallet';
 import NewUser from './features/NewUser';
 import OldUser from './features/OldUser';
-import enhance from './Welcome.enhance';
+import withWelcome from './Welcome.enhance';
 import { IProps } from './Welcome.interface';
 
 const Styled = styled.div`
@@ -12,18 +14,15 @@ const Styled = styled.div`
 `;
 
 const Welcome = (props: IProps) => {
-    const { isInitWallet, isReset, onForgot, onBack } = props;
+    const { isReset, onForgot, onBack } = props;
+    const isInitWallet = useSelector(isInitWalletSelector);
     const renderContent = () => {
         if (isReset || !isInitWallet) {
             return <NewUser isReset={isReset} onBack={onBack} />;
         }
         return <OldUser onForgot={onForgot} />;
     };
-    return (
-        <Styled>
-            <div>{renderContent()}</div>
-        </Styled>
-    );
+    return <Styled>{renderContent()}</Styled>;
 };
 
-export default enhance(React.memo(Welcome));
+export default withWelcome(React.memo(Welcome));

@@ -134,4 +134,13 @@ export const Styled = styled.div`
         padding-left: 5px;
         display: contents;
     }
+
+    .input-password {
+        > input {
+            padding-right: 40px;
+        }
+        > .sub-icon:last-child {
+            right: 10px;
+        }
+    }
 `;

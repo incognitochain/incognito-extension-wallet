@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { compose } from 'recompose';
 import { withLayout } from 'src/components/Layout';
 import { useSelector } from 'react-redux';
@@ -9,9 +9,6 @@ import { IProps } from './Welcome.interface';
 const enhance = (WrappedComponent: any) => () => {
     const walletId = useSelector(walletIdSelector);
     const [isReset, setIsReset] = useState(walletId > -1 && isTab());
-    const isInitWallet = useMemo(() => {
-        return walletId > -1;
-    }, [walletId]);
     const handleForgot = useCallback(() => {
         setIsReset(true);
         if (!isTab()) {
@@ -21,9 +18,7 @@ const enhance = (WrappedComponent: any) => () => {
     const handleBack = useCallback(() => {
         setIsReset(false);
     }, []);
-    return (
-        <WrappedComponent isReset={isReset} isInitWallet={isInitWallet} onForgot={handleForgot} onBack={handleBack} />
-    );
+    return <WrappedComponent isReset={isReset} onForgot={handleForgot} onBack={handleBack} />;
 };
 
 export default compose<IProps, any>(withLayout, enhance);

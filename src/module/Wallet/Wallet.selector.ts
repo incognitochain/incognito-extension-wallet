@@ -17,3 +17,5 @@ export const walletIdSelector = createSelector(walletSelector, preloadSelector, 
 });
 
 export const walletMnemonicSelector = createSelector(walletDataSelector, (wallet) => wallet.mnemonic);
+
+export const isInitWalletSelector = createSelector(walletIdSelector, (walletId) => walletId > -1);
