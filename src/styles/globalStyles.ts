@@ -85,6 +85,9 @@ export const GlobalStyled = createGlobalStyle`
         line-height: ${FONT_SIZES.regular + 3}px;
         margin: auto;
         padding: 30px;
+        * {
+             box-sizing: border-box;
+        }
     }
     
     #root.incognito-extension-tab {

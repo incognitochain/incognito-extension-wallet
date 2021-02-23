@@ -1,20 +1,16 @@
 import React, { FunctionComponent } from 'react';
 import { useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { withPreloadSdk } from 'src/module/Preload';
-import { passwordSelector } from 'src/module/Password';
+import { withPreloadSdk, withPreload } from 'src/module/Preload';
 import Welcome from 'src/module/Welcome';
-import { walletIdSelector } from 'src/module/Wallet';
-import { IProps } from './MainRoute.inteface';
+import { isAuthenticatedSelector } from './MainRoute.selector';
 
 const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
-    const pass = useSelector(passwordSelector);
-    const walletId = useSelector(walletIdSelector);
-    const isAuthenticated = !!pass && walletId >= 0;
+    const isAuthenticated = useSelector(isAuthenticatedSelector);
     if (!isAuthenticated) {
         return <Welcome />;
     }
     return <WrappedComponent {...props} />;
 };
 
-export default compose<IProps, any>(withPreloadSdk, enhance);
+export default compose(withPreloadSdk, enhance, withPreload);

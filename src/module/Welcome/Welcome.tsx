@@ -17,10 +17,8 @@ const Welcome = (props: IProps) => {
         if (isReset || !isInitWallet) {
             return <NewUser isReset={isReset} onBack={onBack} />;
         }
-
         return <OldUser onForgot={onForgot} />;
     };
-
     return (
         <Styled>
             <div>{renderContent()}</div>

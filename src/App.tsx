@@ -22,10 +22,10 @@ const App: React.FunctionComponent = () => {
             <GlobalStyled />
             <Router history={history}>
                 <MainRoute />
-                <Modal />
-                <Toast />
-                <TooltipContainer />
             </Router>
+            <Modal />
+            <Toast />
+            <TooltipContainer />
         </ThemeProvider>
     );
 };
