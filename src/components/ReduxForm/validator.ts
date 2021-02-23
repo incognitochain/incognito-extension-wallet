@@ -282,6 +282,7 @@ const address = () => {
 const combineInvalidAddress = [required, address];
 
 const validator = {
+    minLength,
     required,
     maxValue,
     minValue,

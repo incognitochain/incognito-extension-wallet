@@ -6,33 +6,45 @@ import { ImportMnemonic, NewMasterKey } from 'src/module/MasterKey';
 import { actionCreatePassword, newPasswordSelector } from 'src/module/Password';
 import { errorTranslateSelector } from 'src/module/Configs';
 import { closeExtensionPopup, isTab, openAsTab } from 'src/utils';
-import { INewUserProps } from './NewUser.interface';
-import GetStarted from './GetStarted';
+import { formValueSelector, InjectedFormProps, isValid, reduxForm, reset } from 'redux-form';
+import trim from 'lodash/trim';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
+import GetStarted from 'src/module/Welcome/features/GetStarted';
+import { FORM_CONFIGS } from './NewUser.constant';
 
-const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
+interface IProps {
+    onBack: () => any;
+    isReset: boolean;
+}
+
+interface TInner {
+    onImport: () => any;
+    disabled: boolean;
+    handleSubmitForm: any;
+    error: string;
+}
+
+export interface IMergeProps extends IProps, TInner, InjectedFormProps {}
+
+const enhance = (WrappedComponent: any) => (props: IProps & any) => {
     const { isReset, onBack } = props;
-    const [error, setError] = useState('');
-    const [pass, setPass] = useState('');
-    const [confirmPass, setConfirmPass] = useState('');
+    const selector = formValueSelector(FORM_CONFIGS.formName);
+    const pass = trim(useSelector((state) => selector(state, FORM_CONFIGS.password)));
+    const confirmPass = trim(useSelector((state) => selector(state, FORM_CONFIGS.confirmPassword)));
     const [isImport, setIsImport] = useState(false);
     const [getStarted, setGetStarted] = useState(isReset || isTab());
     const dispatch = useDispatch();
-
     const appPassword = useSelector(newPasswordSelector);
     const errorDictionary = useSelector(errorTranslateSelector);
-
-    const isDisabledButton = !pass || !confirmPass || !!error;
-
-    const handlePassChange = useCallback((e) => {
-        setPass(e.target.value);
-        setError('');
-    }, []);
-
-    const handleConfirmPassChange = useCallback((e) => {
-        setConfirmPass(e.target.value);
-        setError('');
-    }, []);
-
+    const isCorrectPassword = isEqual(pass, confirmPass);
+    const isFormValid = useSelector((state) => isValid(FORM_CONFIGS.formName)(state));
+    const error = isCorrectPassword
+        ? ''
+        : !isEmpty(pass) && !isEmpty(confirmPass)
+        ? errorDictionary.invalidPassword
+        : '';
+    const disabled = !isFormValid || isEmpty(pass) || isEmpty(confirmPass) || !isCorrectPassword;
     const handleBack = () => {
         if (isReset) {
             onBack();
@@ -40,34 +52,16 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
             setGetStarted(false);
         }
     };
-
-    const isCorrectPassword = () => {
-        if (pass && pass.length < 10) {
-            setError(errorDictionary.invalidPasswordLength);
-            return false;
+    const handleImport = () => setIsImport(true);
+    const handleSubmitForm = (fn: () => any) => {
+        if (!isCorrectPassword) {
+            return;
         }
-
-        if (pass !== confirmPass) {
-            setError(errorDictionary.invalidPassword);
-            return false;
-        }
-
-        return true;
-    };
-
-    const handleImport = () => {
-        if (isCorrectPassword()) {
-            dispatch(actionCreatePassword(pass));
-            setIsImport(true);
+        dispatch(actionCreatePassword(pass));
+        if (typeof fn === 'function') {
+            fn();
         }
     };
-
-    const handleCreate = () => {
-        if (isCorrectPassword()) {
-            dispatch(actionCreatePassword(pass));
-        }
-    };
-
     const handleGetStarted = useCallback(() => {
         setGetStarted(true);
         closeExtensionPopup();
@@ -75,50 +69,42 @@ const enhance = (WrappedComponent: any) => (props: INewUserProps) => {
             openAsTab();
         }
     }, []);
-
+    const handleGoBack = () => {
+        dispatch(actionCreatePassword(''));
+        dispatch(reset(FORM_CONFIGS.formName));
+    };
     if (!getStarted) {
         return <GetStarted onGetStarted={handleGetStarted} />;
     }
-
     if (isImport) {
         return (
             <ImportMnemonic
                 onBack={() => {
                     setIsImport(false);
-                    dispatch(actionCreatePassword(''));
-                    setPass('');
-                    setConfirmPass('');
+                    handleGoBack();
                 }}
             />
         );
     }
-
     if (appPassword) {
-        return (
-            <NewMasterKey
-                onBack={() => {
-                    dispatch(actionCreatePassword(''));
-                    setPass('');
-                    setConfirmPass('');
-                }}
-            />
-        );
+        return <NewMasterKey onBack={handleGoBack} />;
     }
-
     return (
         <WrappedComponent
             {...props}
-            onImport={handleImport}
-            onCreate={handleCreate}
-            onChangePass={handlePassChange}
-            onChangeConfirmPass={handleConfirmPassChange}
-            disabled={isDisabledButton}
             error={error}
+            disabled={disabled}
+            onImport={handleImport}
             onBack={handleBack}
-            pass={pass}
-            confirmPass={confirmPass}
+            handleSubmitForm={handleSubmitForm}
         />
     );
 };
 
-export default compose<INewUserProps, any>(withLayout, enhance);
+export default compose<IMergeProps, any>(
+    withLayout,
+    reduxForm({
+        form: FORM_CONFIGS.formName,
+    }),
+    enhance,
+);

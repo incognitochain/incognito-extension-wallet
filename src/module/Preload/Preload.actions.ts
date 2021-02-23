@@ -6,6 +6,7 @@ import { actionFetchPCustomTokenList, actionFetchPTokenList } from 'src/module/T
 import { IServer } from 'src/services';
 import { loadSeparator } from 'src/utils/separator';
 import { goServices, setConfig, storageService } from 'incognito-js/build/web/browser';
+import { ENVS } from 'src/configs';
 import { preloadSelector } from './Preload.selector';
 import { IPreloadConfigs, IPreloadReducer, IRequestDApp } from './Preload.reducer';
 import {
@@ -20,7 +21,6 @@ import {
     ACTION_CLEAR_REQUEST_FROM_DAPP,
     ACTION_SET_CAMERA_PERMISSION,
 } from './Preload.constant';
-import { ENVS } from '../../configs';
 
 export const actionSetConfigs = (payload: IPreloadConfigs) => ({
     type: ACTION_SET_CONFIGS,

@@ -4,24 +4,15 @@ import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
 import { AppIcon, Button, Layout } from 'src/components';
-import { CONSTANT_COLORS } from 'src/constants';
 
 interface IProps {
-    onGetStarted: () => void;
+    onGetStarted: () => any;
 }
 
 const Styled = styled.div`
-    .title {
-        font-size: 18px;
-        font-weight: bold;
-        color: ${CONSTANT_COLORS.BLACK};
-        letter-spacing: 0;
-    }
-
     .subtitle {
         margin-top: 15px;
         margin-bottom: 30px;
-        color: ${CONSTANT_COLORS.LIGHT_GREY};
     }
 `;
 
@@ -33,12 +24,12 @@ const GetStarted = (props: IProps) => {
         <Layout header="">
             <Styled>
                 <AppIcon />
-                <div className="title">{dictionary.getStartedTitle}</div>
-                <div className="subtitle">{dictionary.getStartedDesc}</div>
+                <div className="fs-medium fw-bold">{dictionary.getStartedTitle}</div>
+                <div className="sub-text subtitle">{dictionary.getStartedDesc}</div>
                 <Button onClick={onGetStarted} title={dictionary.getStartedBtn} />
             </Styled>
         </Layout>
     );
 };
 
-export default GetStarted;
+export default React.memo(GetStarted);

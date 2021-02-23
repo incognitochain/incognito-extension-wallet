@@ -7,12 +7,14 @@ import { chainURLSelector, IRequestDApp } from 'src/module/Preload';
 import { actionUpdateRequestFromDApp as updateRequestFromDApp } from 'src/module/Preload/Preload.actions';
 import { actionLogin } from './module/Password';
 import { sendExtensionMessage } from './utils/sendMessage';
+import { walletIdSelector } from './module/Wallet';
 
 interface IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
     const dispatch = useDispatch();
     const chainURL = useSelector(chainURLSelector);
+    const walletId = useSelector(walletIdSelector);
     // Dispatch event, when wallet screen mount, catch this event and move to
     const handleUpdateRequestFromDApp = (payload: IRequestDApp | null) => {
         dispatch(updateRequestFromDApp(payload));
@@ -20,7 +22,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     const loadPassword = async () => {
         try {
             let pass: any = await sendExtensionMessage(APP_CONSTANT.BACKGROUND_LISTEN.GET_PASS_WORD, { chainURL });
-            if (isDev) pass = ENVS.REACT_APP_PASSWORD_SECRET_KEY;
+            if (isDev && walletId > -1) pass = ENVS.REACT_APP_PASSWORD_SECRET_KEY;
             if (pass) dispatch(actionLogin(pass));
         } catch (error) {
             console.debug('LOAD PASS_WORD WITH ERROR:', error);
