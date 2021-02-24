@@ -3,4 +3,5 @@ export const INPUT_FIELD = {
     address: 2,
     leftTitleDisplayPTag: 3,
     password: 4,
+    textArea: 5,
 };

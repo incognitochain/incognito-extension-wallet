@@ -27,7 +27,6 @@ export interface ILanguage {
 
 export interface IHDWalletLanguage {
     createMasterKeyName: {
-        placeholder: string;
         desc1: string;
         desc2: string;
         agreeDesc: string;
@@ -39,15 +38,20 @@ export interface IHDWalletLanguage {
     };
     verifyMasterKeyMnemonic: {
         desc1: string;
-        createBtn: string;
-        importBtn: string;
-        invalidMnemonic: string;
+    };
+    importMasterKey: {
+        title: string;
     };
     general: {
         qrTitle: string;
+        masterKeyNamePlaceholder: string;
+        mnemonicPlaceholder: string;
+        createBtn: string;
+        importBtn: string;
     };
     error: {
         invalidMasterKeyName: string;
+        invalidMnemonic: string;
     };
 }
 

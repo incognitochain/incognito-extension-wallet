@@ -31,7 +31,12 @@ export const Styled = styled.div`
     p.warning {
         color: ${COLORS.orange};
     }
-    .input-container > input {
+    .textarea-container {
+        min-height: 76px;
+        position: relative;
+    }
+    .input-container > input,
+    .textarea-container > textarea {
         position: absolute;
         left: 0;
         top: 0;
@@ -45,6 +50,10 @@ export const Styled = styled.div`
         :focus {
             border: solid 1px ${COLORS.black};
         }
+    }
+    .textarea-container > textarea {
+        padding: 10px;
+        resize: none;
     }
     .input-container > input:read-only {
         color: ${COLORS.colorGreyBold};

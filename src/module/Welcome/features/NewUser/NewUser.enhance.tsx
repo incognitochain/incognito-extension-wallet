@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { compose } from 'recompose';
 import { useDispatch, useSelector } from 'react-redux';
-import { ImportMnemonic } from 'src/module/MasterKey';
 import { actionCreatePassword, newPasswordSelector } from 'src/module/Password';
 import { errorTranslateSelector } from 'src/module/Configs';
 import { closeExtensionPopup, isTab, openAsTab } from 'src/utils';
@@ -10,12 +9,9 @@ import trim from 'lodash/trim';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import GetStarted from 'src/module/Welcome/features/GetStarted';
-import CreateNewMasterKey, {
-    actionInitCreate,
-    actionSetStep,
-    STEPS_CREATE,
-} from 'src/module/HDWallet/features/CreateMasterKey';
+import CreateNewMasterKey, { actionSetStep, STEPS_CREATE } from 'src/module/HDWallet/features/CreateMasterKey';
 import { actionSetActionType, actionTypeHDWalletSelector, ACTION_TYPES } from 'src/module/HDWallet';
+import ImportMasterKey from 'src/module/HDWallet/features/ImportMasterKey';
 import { FORM_CONFIGS } from './NewUser.constant';
 
 interface IProps {
@@ -57,7 +53,7 @@ const enhance = (WrappedComponent: any) => (props: IProps & any) => {
         }
     };
     const handleSubmitForm = (type: number) => {
-        if (!isCorrectPassword) {
+        if (disabled) {
             return;
         }
         dispatch(actionCreatePassword(pass));
@@ -79,12 +75,12 @@ const enhance = (WrappedComponent: any) => (props: IProps & any) => {
     }, []);
     const onGoBack = () => {
         dispatch(actionCreatePassword(''));
-        dispatch(actionInitCreate());
         dispatch(reset(FORM_CONFIGS.formName));
     };
+    // TODO: mockup
     // React.useEffect(() => {
     //     dispatch(actionCreatePassword('Toilatrieuphu25'));
-    //     dispatch(actionSetActionType(ACTION_TYPES.CREATE));
+    //     dispatch(actionSetActionType(ACTION_TYPES.IMPORT));
     // }, []);
     if (!getStarted) {
         return <GetStarted onGetStarted={handleGetStarted} />;
@@ -93,7 +89,7 @@ const enhance = (WrappedComponent: any) => (props: IProps & any) => {
         return <CreateNewMasterKey onGoBack={onGoBack} />;
     }
     if (ACTION_TYPES.IMPORT === actionType && newPassword) {
-        return <ImportMnemonic onBack={onGoBack} />;
+        return <ImportMasterKey onGoBack={onGoBack} />;
     }
     return (
         <WrappedComponent

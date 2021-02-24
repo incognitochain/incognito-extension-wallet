@@ -69,7 +69,9 @@ const VerifyMasterKeyMnemonic = (props: IMergeProps & any) => {
     const { handleVerifyMnemonic } = props;
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
     const isVerifyMnemonic = useSelector(isVerifyMnemonicSelector);
-    const { desc1, importBtn, createBtn, invalidMnemonic } = translate.verifyMasterKeyMnemonic;
+    const { desc1 } = translate.verifyMasterKeyMnemonic;
+    const { importBtn, createBtn } = translate.general;
+    const { invalidMnemonic } = translate.error;
     const actionType = useSelector(actionTypeHDWalletSelector);
     const selectedWords: string = useSelector(selectedWordsSelector);
     const theme = useSelector(themeSelector);

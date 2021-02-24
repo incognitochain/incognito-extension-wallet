@@ -7,7 +7,7 @@ import { Styled } from './InputField.styled';
 export interface IInputFieldProps {
     meta: WrappedFieldMetaProps;
     input: WrappedFieldInputProps;
-    componentProps: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+    componentProps: React.InputHTMLAttributes<HTMLInputElement> | React.InputHTMLAttributes<HTMLInputElement> | any;
     inputType?: number;
     subtitle?: boolean;
     suffix?: string;
@@ -23,10 +23,20 @@ interface IInputProps {
     componentProps: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-export const Input = (props: IInputProps) => {
+interface ITextAreaProps {
+    input: WrappedFieldInputProps;
+    componentProps: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+}
+
+export const Input = React.memo((props: IInputProps) => {
     const { input: inputProps, componentProps } = props;
     return <input type="text" autoComplete="off" {...inputProps} {...componentProps} />;
-};
+});
+
+export const TextArea = React.memo((props: ITextAreaProps) => {
+    const { input: inputProps, componentProps } = props;
+    return <textarea autoComplete="off" {...inputProps} {...componentProps} />;
+});
 
 const InputField = (props: IInputFieldProps) => {
     const {
@@ -120,6 +130,13 @@ const InputField = (props: IInputFieldProps) => {
                     </div>
                 );
             }
+            case INPUT_FIELD.textArea: {
+                return (
+                    <div className="textarea-container ">
+                        <TextArea {...{ input, componentProps }} />
+                    </div>
+                );
+            }
             default:
                 return (
                     <div className="input-container">
@@ -136,4 +153,4 @@ const InputField = (props: IInputFieldProps) => {
     );
 };
 
-export default InputField;
+export default React.memo(InputField);
