@@ -1,3 +1,6 @@
 export interface IProps {}
 
-export interface IReducer {}
+export interface IReducer {
+    masterKeyName: string;
+    mnemonic: string;
+}

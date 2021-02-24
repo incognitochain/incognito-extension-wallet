@@ -8,6 +8,7 @@ import { Field } from 'redux-form';
 import { InputField, validator } from 'src/components/ReduxForm';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField';
 import { ACTION_TYPES } from 'src/module/HDWallet';
+import { useValidator } from 'src/hooks';
 import withNewUser, { IMergeProps } from './NewUser.enhance';
 import { FORM_CONFIGS } from './NewUser.constant';
 
@@ -34,17 +35,22 @@ const Styled = styled.div`
     }
 `;
 
-const validateInput = [validator.required, validator.minLength(10)];
 const NewUser = (props: IMergeProps & any) => {
     const { isReset, disabled, onBack, handleSubmitForm, error }: IMergeProps = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = isReset ? translate.welcome.forgotPass : translate.welcome.newUser;
+    const [validatePassword] = useValidator({
+        validator: [validator.required, validator.minLength(10)],
+    });
+    const [validateCfmPassword] = useValidator({
+        validator: [validator.required, validator.minLength(10)],
+    });
     return (
         <Styled className="scroll-view">
             <Header title=" " onGoBack={onBack} />
             <AppIcon />
-            <div className="fs-medium fw-bold">{dictionary.title1}</div>
-            <div className="sub-text subtitle">{dictionary.title2}</div>
+            <p className="fs-medium fw-bold">{dictionary.title1}</p>
+            <p className="sub-text subtitle">{dictionary.title2}</p>
             <form className="input-wrapper">
                 <Field
                     component={InputField}
@@ -55,7 +61,7 @@ const NewUser = (props: IMergeProps & any) => {
                         autoFocus: true,
                     }}
                     inputType={INPUT_FIELD.password}
-                    validate={[...validateInput]}
+                    validate={[...validatePassword]}
                 />
                 <Field
                     component={InputField}
@@ -65,7 +71,8 @@ const NewUser = (props: IMergeProps & any) => {
                         maxLength: 50,
                     }}
                     inputType={INPUT_FIELD.password}
-                    validate={[...validateInput]}
+                    validate={[...validateCfmPassword]}
+                    errorCustom={error}
                 />
             </form>
             <div className="actions flex">
@@ -80,7 +87,6 @@ const NewUser = (props: IMergeProps & any) => {
                     title={dictionary.createKey}
                 />
             </div>
-            {error && <p className="error fs-small">{error}</p>}
         </Styled>
     );
 };

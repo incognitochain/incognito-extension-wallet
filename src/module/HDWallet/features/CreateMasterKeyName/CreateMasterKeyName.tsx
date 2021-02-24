@@ -8,6 +8,7 @@ import { InputField, validator } from 'src/components/ReduxForm';
 import { Field } from 'redux-form';
 import FillCheckBox from 'src/components/Core/FillCheckBox';
 import { Button } from 'src/components';
+import { useValidator } from 'src/hooks';
 import withCreateMasterKeyName, { IMergeProps } from './CreateMasterKeyName.enhance';
 import { FORM_CONFIGS } from './CreateMasterKeyName.constant';
 
@@ -24,15 +25,15 @@ const Styled = styled.div`
 `;
 
 const CreateMasterKeyName = (props: IMergeProps & any) => {
-    const [validate, setValidate] = React.useState<Array<any>>([]);
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
     const { onHandleChecked, disabled, onHandleReady }: IMergeProps = props;
     const { invalidMasterKeyName } = translate.error;
-    const { placeholder, desc1, desc2, agreeDesc, btnReady } = translate.createMasterKeyName;
+    const { desc1, desc2, agreeDesc, btnReady } = translate.createMasterKeyName;
+    const { masterKeyNamePlaceholder } = translate.general;
     const { agree }: IReducer = useSelector(createMasterKeySelector);
-    React.useEffect(() => {
-        setValidate([validator.required, validator.validateAlphaNumericText(invalidMasterKeyName)]);
-    }, []);
+    const [validate]: any[] = useValidator({
+        validator: [validator.required, validator.validateAlphaNumericText(invalidMasterKeyName)],
+    });
     return (
         <Styled>
             <form>
@@ -41,7 +42,7 @@ const CreateMasterKeyName = (props: IMergeProps & any) => {
                     name={FORM_CONFIGS.masterKeyName}
                     validate={[...validate]}
                     componentProps={{
-                        placeholder,
+                        placeholder: masterKeyNamePlaceholder,
                     }}
                 />
             </form>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import {
@@ -8,7 +8,7 @@ import {
     masterKeyNameSelector,
     mnemonicSelector,
 } from 'src/module/HDWallet/features/CreateMasterKey';
-import { newPasswordSelector, passwordSelector } from 'src/module/Password';
+import { actionChangePassword, actionCreatePassword, newPasswordSelector } from 'src/module/Password';
 import { actionImportWallet } from 'src/module/Wallet';
 
 interface IProps {}
@@ -22,15 +22,18 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const mnemonic = useSelector(mnemonicSelector);
     const dispatch = useDispatch();
     const masterKeyName = useSelector(masterKeyNameSelector);
-    const currentPass = useSelector(passwordSelector);
-    const newPass = useSelector(newPasswordSelector);
-    const pass = newPass || currentPass;
+    const pass = useSelector(newPasswordSelector);
     const handleVerifyMnemonic = async () => {
         try {
             if (!isVerifyMnemonic) {
                 return;
             }
-            dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
+            await dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
+            batch(() => {
+                dispatch(actionCreatePassword(''));
+                dispatch(actionChangePassword(pass));
+                dispatch(actionInitCreate());
+            });
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -39,8 +42,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     type: TOAST_CONFIGS.error,
                 }),
             );
-        } finally {
-            dispatch(actionInitCreate());
         }
     };
     return (

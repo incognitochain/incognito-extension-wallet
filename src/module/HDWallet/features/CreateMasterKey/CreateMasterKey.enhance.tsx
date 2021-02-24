@@ -4,7 +4,7 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMasterKeySelector } from './CreateMasterKey.selector';
 import { IReducer } from './CreateMasterKey.interface';
-import { actionSetStep } from './CreateMasterKey.actions';
+import { actionInitCreate, actionSetStep } from './CreateMasterKey.actions';
 import { STEPS_CREATE } from './CreateMasterKey.constant';
 
 interface IProps {
@@ -22,6 +22,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const onGoBack = () => {
         switch (step) {
             case STEPS_CREATE.createMasterKeyName: {
+                dispatch(actionInitCreate());
                 onGoBackFromProps();
                 break;
             }

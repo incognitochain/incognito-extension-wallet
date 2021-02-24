@@ -1,6 +1,9 @@
 import { IReducer } from '../ImportMasterKey.interface';
 
-const initialState: IReducer = {};
+const initialState: IReducer = {
+    masterKeyName: '',
+    mnemonic: '',
+};
 
 const reducer = (
     state = initialState,

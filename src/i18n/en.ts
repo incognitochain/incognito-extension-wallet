@@ -346,7 +346,6 @@ const language: ILanguage = {
     },
     hdWallet: {
         createMasterKeyName: {
-            placeholder: 'Enter a name for your master key',
             desc1: 'The next screen will contain 12 special words that will allow you to recover your funds.',
             desc2:
                 'Be prepared to record them in a safe place.  If anyone gains access to them, they will gain access to your funds.',
@@ -359,14 +358,19 @@ const language: ILanguage = {
         },
         verifyMasterKeyMnemonic: {
             desc1: 'Click on these words in the correct order. If you make a mistake, click again to undo.',
-            createBtn: 'Create',
-            importBtn: 'Import',
-            invalidMnemonic: 'That’s not quite right',
+        },
+        importMasterKey: {
+            title: 'Import master key',
         },
         general: {
             qrTitle: 'Your secret phase',
+            masterKeyNamePlaceholder: 'Enter a name for your master key',
+            mnemonicPlaceholder: 'Recover phase',
+            createBtn: 'Create',
+            importBtn: 'Import',
         },
         error: {
+            invalidMnemonic: 'That’s not quite right',
             invalidMasterKeyName: 'Master key names must be alphanumeric. Please choose another.',
         },
     },
