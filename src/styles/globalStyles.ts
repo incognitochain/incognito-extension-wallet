@@ -6,6 +6,7 @@ import { FONT_SIZES } from './fontSize';
 export interface ITheme {
     body: string;
     text: string;
+    inverseBody: string;
     inverseText: string;
     subText: string;
     toggleBorder: string;
@@ -26,6 +27,7 @@ export interface IGlobalStyle {
 
 export const lightTheme: ITheme = {
     body: COLORS.white,
+    inverseBody: COLORS.black,
     text: COLORS.black,
     inverseText: COLORS.white,
     subText: COLORS.colorGreyBold,
@@ -45,6 +47,7 @@ export const darkTheme: ITheme = {
     body: '#363537',
     text: '#FAFAFA',
     inverseText: COLORS.black,
+    inverseBody: COLORS.white,
     subText: COLORS.colorGreyLight,
     toggleBorder: '#6B8096',
     gradient: 'linear-gradient(#091236, #1E215D)',
@@ -191,6 +194,9 @@ export const GlobalStyled = createGlobalStyle`
     }
     .sub-text {
         color: ${(props: IGlobalStyle) => props.theme.subText};
+    }
+    .inverse-text {
+        color: ${(props: IGlobalStyle) => props.theme.inverseText};
     }
     .flex {
         display: flex;

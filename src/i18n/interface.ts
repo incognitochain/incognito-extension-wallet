@@ -22,6 +22,33 @@ export interface ILanguage {
     connect: IConnectLanguage;
     disconnect: IDisconnectLanguage;
     keysExplained: IKeysExplainedLanguage;
+    hdWallet: IHDWalletLanguage;
+}
+
+export interface IHDWalletLanguage {
+    createMasterKeyName: {
+        placeholder: string;
+        desc1: string;
+        desc2: string;
+        agreeDesc: string;
+        btnReady: string;
+    };
+    createMasterKeyMnemonic: {
+        desc1: string;
+        btnSave: string;
+    };
+    verifyMasterKeyMnemonic: {
+        desc1: string;
+        createBtn: string;
+        importBtn: string;
+        invalidMnemonic: string;
+    };
+    general: {
+        qrTitle: string;
+    };
+    error: {
+        invalidMasterKeyName: string;
+    };
 }
 
 export interface IWalletLanguage {

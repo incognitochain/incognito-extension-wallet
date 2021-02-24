@@ -1,20 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { CONSTANT_COLORS } from 'src/constants';
-import { translateSelector } from 'src/module/Configs';
+import { themeSelector, translateSelector } from 'src/module/Configs';
+import { IGlobalStyle } from 'src/styles';
 
 const Styled = styled.div`
-    background-color: ${CONSTANT_COLORS.BLACK2};
+    background-color: ${(props: IGlobalStyle) => props.theme.inverseBody};
     padding: 15px;
     min-height: 70px;
-    font-weight: medium;
-    color: ${CONSTANT_COLORS.WHITE};
+    color: ${(props: IGlobalStyle) => props.theme.inverseText};
     border-radius: 5px;
     line-height: 24px;
-    white-space: pre-line;
-    font-size: 16px;
-
     .hide-mnemonic {
         text-align: center;
     }
@@ -30,24 +26,24 @@ const Mnemonic = (props: IProps) => {
     const { mnemonic, hidden, onClick } = props;
     const translate = useSelector(translateSelector);
     const dictionary = translate.masterKey.showMnemonic;
-
+    const theme = useSelector(themeSelector);
     const renderContent = () => {
         if (hidden) {
             return <div className="hide-mnemonic">{dictionary.hiddenText}</div>;
         }
-
         let words;
-
         if (typeof mnemonic === 'object') {
             words = mnemonic.join(' ');
         } else {
             words = mnemonic;
         }
-
         return words;
     };
-
-    return <Styled onClick={onClick}>{renderContent()}</Styled>;
+    return (
+        <Styled theme={theme} className="mnemonic-container fw-medium" onClick={onClick}>
+            {renderContent()}
+        </Styled>
+    );
 };
 
 export default React.memo(Mnemonic);

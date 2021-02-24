@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
-import { AppIcon, Button, Layout, Header } from 'src/components';
+import { AppIcon, Button, Header } from 'src/components';
 import { Field } from 'redux-form';
 import { InputField, validator } from 'src/components/ReduxForm';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField';
+import { ACTION_TYPES } from 'src/module/HDWallet';
 import withNewUser, { IMergeProps } from './NewUser.enhance';
 import { FORM_CONFIGS } from './NewUser.constant';
 
@@ -35,50 +36,52 @@ const Styled = styled.div`
 
 const validateInput = [validator.required, validator.minLength(10)];
 const NewUser = (props: IMergeProps & any) => {
-    const { isReset, disabled, onImport, onBack, handleSubmitForm, error }: IMergeProps = props;
+    const { isReset, disabled, onBack, handleSubmitForm, error }: IMergeProps = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = isReset ? translate.welcome.forgotPass : translate.welcome.newUser;
     return (
-        <Layout header="">
-            <Styled>
-                <Header title=" " onGoBack={onBack} />
-                <AppIcon />
-                <div className="fs-medium fw-bold">{dictionary.title1}</div>
-                <div className="sub-text subtitle">{dictionary.title2}</div>
-                <form className="input-wrapper">
-                    <Field
-                        component={InputField}
-                        name={FORM_CONFIGS.password}
-                        componentProps={{
-                            placeholder: dictionary.createPass,
-                            maxLength: 50,
-                            autoFocus: true,
-                        }}
-                        inputType={INPUT_FIELD.password}
-                        validate={[...validateInput]}
-                    />
-                    <Field
-                        component={InputField}
-                        name={FORM_CONFIGS.confirmPassword}
-                        componentProps={{
-                            placeholder: dictionary.createPass,
-                            maxLength: 50,
-                        }}
-                        inputType={INPUT_FIELD.password}
-                        validate={[...validateInput]}
-                    />
-                </form>
-                <div className="actions flex">
-                    <Button
-                        disabled={disabled}
-                        onClick={() => handleSubmitForm(onImport)}
-                        title={dictionary.importKey}
-                    />
-                    <Button disabled={disabled} onClick={() => handleSubmitForm()} title={dictionary.createKey} />
-                </div>
-                {error && <p className="error fs-small">{error}</p>}
-            </Styled>
-        </Layout>
+        <Styled className="scroll-view">
+            <Header title=" " onGoBack={onBack} />
+            <AppIcon />
+            <div className="fs-medium fw-bold">{dictionary.title1}</div>
+            <div className="sub-text subtitle">{dictionary.title2}</div>
+            <form className="input-wrapper">
+                <Field
+                    component={InputField}
+                    name={FORM_CONFIGS.password}
+                    componentProps={{
+                        placeholder: dictionary.createPass,
+                        maxLength: 50,
+                        autoFocus: true,
+                    }}
+                    inputType={INPUT_FIELD.password}
+                    validate={[...validateInput]}
+                />
+                <Field
+                    component={InputField}
+                    name={FORM_CONFIGS.confirmPassword}
+                    componentProps={{
+                        placeholder: dictionary.createPass,
+                        maxLength: 50,
+                    }}
+                    inputType={INPUT_FIELD.password}
+                    validate={[...validateInput]}
+                />
+            </form>
+            <div className="actions flex">
+                <Button
+                    disabled={disabled}
+                    onClick={() => handleSubmitForm(ACTION_TYPES.IMPORT)}
+                    title={dictionary.importKey}
+                />
+                <Button
+                    disabled={disabled}
+                    onClick={() => handleSubmitForm(ACTION_TYPES.CREATE)}
+                    title={dictionary.createKey}
+                />
+            </div>
+            {error && <p className="error fs-small">{error}</p>}
+        </Styled>
     );
 };
 

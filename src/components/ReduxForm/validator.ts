@@ -281,7 +281,14 @@ const address = () => {
 
 const combineInvalidAddress = [required, address];
 
+const NAME_PATTERN = /^[A-Za-z0-9]*$/;
+
+const validateAlphaNumericText = (message?: string) => (value: any) => {
+    return !NAME_PATTERN.test(value) ? message : undefined;
+};
+
 const validator = {
+    validateAlphaNumericText,
     minLength,
     required,
     maxValue,

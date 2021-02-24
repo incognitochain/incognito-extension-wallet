@@ -56,7 +56,6 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
             } else {
                 newSelectedOrders = [...oldOrders, index];
             }
-
             return [...newSelectedOrders];
         });
     };
@@ -65,7 +64,6 @@ const enhance = (WrappedComponent: any) => (props: IProps) => {
         if (mnemonic !== selectedWords) {
             return setError(errorDictionary.invalidMnemonic);
         }
-
         dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
     };
 
