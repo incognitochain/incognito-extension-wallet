@@ -202,6 +202,11 @@ export const GlobalStyled = createGlobalStyle`
         display: flex;
         align-items: center;
     }
+    .flex-jcb {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .icon {
         position: relative;
          > img {

@@ -372,6 +372,9 @@ const language: ILanguage = {
         error: {
             invalidMnemonic: 'That’s not quite right',
             invalidMasterKeyName: 'Master key names must be alphanumeric. Please choose another.',
+            existMasterKeyName: 'Master key names is exist',
+            existMasterKeyMnemonic: 'Master key mnemonic is exist',
+            dupMasterless: 'Master key names is not allowed',
         },
     },
     modal: {

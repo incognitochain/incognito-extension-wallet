@@ -57,8 +57,7 @@ const NewUser = (props: IMergeProps & any) => {
                     name={FORM_CONFIGS.password}
                     componentProps={{
                         placeholder: dictionary.createPass,
-                        maxLength: 50,
-                        autoFocus: true,
+                        maxLength: 32,
                     }}
                     inputType={INPUT_FIELD.password}
                     validate={[...validatePassword]}
@@ -68,7 +67,7 @@ const NewUser = (props: IMergeProps & any) => {
                     name={FORM_CONFIGS.confirmPassword}
                     componentProps={{
                         placeholder: dictionary.createPass,
-                        maxLength: 50,
+                        maxLength: 32,
                     }}
                     inputType={INPUT_FIELD.password}
                     validate={[...validateCfmPassword]}

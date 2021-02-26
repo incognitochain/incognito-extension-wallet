@@ -52,6 +52,9 @@ export interface IHDWalletLanguage {
     error: {
         invalidMasterKeyName: string;
         invalidMnemonic: string;
+        existMasterKeyName: string;
+        existMasterKeyMnemonic: string;
+        dupMasterless: string;
     };
 }
 

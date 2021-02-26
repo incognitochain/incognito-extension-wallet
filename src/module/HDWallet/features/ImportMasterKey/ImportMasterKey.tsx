@@ -27,7 +27,8 @@ const ImportMasterKey = (props: IMergeProps & any) => {
     const {
         onGoBack,
         disabled,
-        errorCustom,
+        errorCustomName,
+        errorCustomMnemonic,
         onImportMasterKey,
         // handleScanMnemonic
     } = props;
@@ -53,6 +54,7 @@ const ImportMasterKey = (props: IMergeProps & any) => {
                     componentProps={{
                         placeholder: masterKeyNamePlaceholder,
                     }}
+                    errorCustom={errorCustomName}
                 />
                 <Field
                     component={InputField}
@@ -61,7 +63,7 @@ const ImportMasterKey = (props: IMergeProps & any) => {
                     componentProps={{
                         placeholder: mnemonicPlaceholder,
                     }}
-                    errorCustom={errorCustom}
+                    errorCustom={errorCustomMnemonic}
                     inputType={INPUT_FIELD.textArea}
                 />
                 {/* <div className="scan-qrcode flex">

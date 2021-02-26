@@ -2,16 +2,17 @@ import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { change, formValueSelector, InjectedFormProps, isValid, reduxForm } from 'redux-form';
+import { change, InjectedFormProps, isValid, reduxForm } from 'redux-form';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import {
     actionSetMasterKeyName,
     actionToggleAgree,
     IReducer,
     createMasterKeySelector,
-    actionSetStep,
+    actionSetStepCreateMasterKey,
     STEPS_CREATE,
 } from 'src/module/HDWallet/features/CreateMasterKey';
+import { useMasterKeyName } from 'src/module/HDWallet';
 import { FORM_CONFIGS } from './CreateMasterKeyName.constant';
 
 interface IProps {}
@@ -20,6 +21,7 @@ interface TInner {
     onHandleChecked: () => any;
     disabled: boolean;
     onHandleReady: () => any;
+    errorCustom: string;
 }
 
 export interface IMergeProps extends IProps, TInner, InjectedFormProps {}
@@ -29,10 +31,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const onHandleChecked = () => dispatch(actionToggleAgree());
     const { agree, masterKeyName: oldMasterKeyName }: IReducer = useSelector(createMasterKeySelector);
     const isFormValid = useSelector((state) => isValid(FORM_CONFIGS.formName)(state));
-    const disabled = !isFormValid || !agree;
-    const selector = formValueSelector(FORM_CONFIGS.formName);
-    const masterKeyName = useSelector((state) => selector(state, FORM_CONFIGS.masterKeyName));
-    const onHandleReady = () => dispatch(actionSetStep(STEPS_CREATE.createMasterKeyMnemonic));
+    const { error: errorCustom, masterKeyName } = useMasterKeyName({
+        formName: FORM_CONFIGS.formName,
+        field: FORM_CONFIGS.masterKeyName,
+    });
+    const onHandleReady = () => dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyMnemonic));
+    const disabled = !isFormValid || !agree || !!errorCustom;
     React.useEffect(() => {
         if (!disabled) {
             dispatch(actionSetMasterKeyName(masterKeyName));
@@ -45,12 +49,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     }, [oldMasterKeyName]);
     // TODO: mockup
     // React.useEffect(() => {
-    //     dispatch(actionSetStep(STEPS_CREATE.createMasterKeyMnemonic));
+    //     dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyMnemonic));
     //     dispatch(actionSetMasterKeyName('MASTER'));
     // }, []);
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, onHandleChecked, disabled, onHandleReady }} />
+            <WrappedComponent {...{ ...props, onHandleChecked, disabled, onHandleReady, errorCustom }} />
         </ErrorBoundary>
     );
 };

@@ -1,7 +1,8 @@
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { v4 } from 'uuid';
-import { actionHandleLoadWallet, actionInitWallet, IWalletReducer, walletSelector } from 'src/module/Wallet';
+import { actionHandleLoadWallet, actionInitMasterless, isInitMasterlessSelector } from 'src/module/Wallet';
+import { actionSetListMasterKey } from 'src/module/HDWallet';
 import { actionFetchPCustomTokenList, actionFetchPTokenList } from 'src/module/Token';
 import { IServer } from 'src/services';
 import { loadSeparator } from 'src/utils/separator';
@@ -76,22 +77,16 @@ export const actionLogin = () => async (dispatch: Dispatch, getState: () => IRoo
 
 export const actionFetch = (accountName?: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state: IRootState = getState();
-    const preload: IPreloadReducer = preloadSelector(state);
-    const walletState: IWalletReducer = walletSelector(state);
-    const { configs } = preload;
-    const { mainnet } = configs;
-    const field = mainnet ? 'mainnet' : 'testnet';
-    const { init } = walletState[field];
+    const initMasterless = isInitMasterlessSelector(state);
     try {
         await dispatch(actionFetching());
         loadSeparator();
-        let task: any[] = [];
-        if (!init) {
-            task = [...task, actionInitWallet()(dispatch, getState)];
-        } else {
-            task = [...task, actionHandleLoadWallet(accountName)(dispatch, getState)];
+        let task: any[] = [actionHandleLoadWallet(accountName)(dispatch, getState)];
+        if (!initMasterless) {
+            task.push(actionInitMasterless()(dispatch, getState));
         }
-        await Promise.all(task);
+        await Promise.all([...task]);
+        await actionSetListMasterKey()(dispatch, getState);
         await dispatch(actionFetched({}));
     } catch (error) {
         dispatch(actionFetchFail(error));

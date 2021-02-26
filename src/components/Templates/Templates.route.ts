@@ -9,6 +9,6 @@ const templatesRoute: IRouteProps = {
     to: '/templates',
 };
 
-export const route = '';
+export const route = templatesRoute.path;
 
 export default templatesRoute;

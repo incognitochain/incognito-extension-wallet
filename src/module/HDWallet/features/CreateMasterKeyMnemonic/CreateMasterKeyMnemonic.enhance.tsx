@@ -6,9 +6,10 @@ import { mnemonicService } from 'incognito-js/build/web/browser';
 import {
     createMasterKeySelector,
     actionSetMnemonic,
-    actionSetStep,
+    actionSetStepCreateMasterKey,
     STEPS_CREATE,
 } from 'src/module/HDWallet/features/CreateMasterKey';
+import { isMasterKeyMnemonicExistSelector } from 'src/module/HDWallet';
 
 interface IProps {}
 
@@ -20,10 +21,12 @@ export interface IMergeProps extends IProps, TInner {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     const { mnemonic } = useSelector(createMasterKeySelector);
+    const isMasterKeyMnemonicExist = useSelector(isMasterKeyMnemonicExistSelector);
     const dispatch = useDispatch();
-    const onHandleVerifyMasterKeyMnemonic = () => dispatch(actionSetStep(STEPS_CREATE.verifyMasterKeyMnemonic));
+    const onHandleVerifyMasterKeyMnemonic = () =>
+        dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.verifyMasterKeyMnemonic));
     React.useEffect(() => {
-        if (isEmpty(mnemonic)) {
+        if (isEmpty(mnemonic) || isMasterKeyMnemonicExist(mnemonic)) {
             dispatch(actionSetMnemonic(mnemonicService.newMnemonic()));
         }
     }, [mnemonic]);

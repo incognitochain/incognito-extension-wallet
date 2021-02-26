@@ -2,13 +2,14 @@ import React from 'react';
 import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { createMasterKeySelector } from './CreateMasterKey.selector';
 import { IReducer } from './CreateMasterKey.interface';
-import { actionInitCreate, actionSetStep } from './CreateMasterKey.actions';
+import { actionInitCreate, actionSetStepCreateMasterKey } from './CreateMasterKey.actions';
 import { STEPS_CREATE } from './CreateMasterKey.constant';
 
 interface IProps {
-    onGoBack: () => any;
+    onGoBack?: () => any;
 }
 
 interface TInner {}
@@ -19,25 +20,35 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const { step }: IReducer = useSelector(createMasterKeySelector);
     const { onGoBack: onGoBackFromProps }: IProps = props;
     const dispatch = useDispatch();
+    const history = useHistory();
     const onGoBack = () => {
         switch (step) {
             case STEPS_CREATE.createMasterKeyName: {
                 dispatch(actionInitCreate());
-                onGoBackFromProps();
+                if (typeof onGoBackFromProps === 'function') {
+                    onGoBackFromProps();
+                } else {
+                    history.goBack();
+                }
                 break;
             }
             case STEPS_CREATE.createMasterKeyMnemonic: {
-                dispatch(actionSetStep(STEPS_CREATE.createMasterKeyName));
+                dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
                 break;
             }
             case STEPS_CREATE.verifyMasterKeyMnemonic: {
-                dispatch(actionSetStep(STEPS_CREATE.createMasterKeyMnemonic));
+                dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyMnemonic));
                 break;
             }
             default:
                 break;
         }
     };
+    // // TODO: mockup
+    // React.useEffect(() => {
+    //     dispatch(actionSetActionType(ACTION_TYPES.CREATE));
+    //     dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
+    // }, []);
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, onGoBack }} />

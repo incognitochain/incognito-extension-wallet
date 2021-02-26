@@ -1,16 +1,14 @@
 import React from 'react';
 import { batch, useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { isValid, reduxForm } from 'redux-form';
+import { isValid, reduxForm, reset } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
-import { useFormValue } from 'src/hooks';
-import { IHDWalletLanguage } from 'src/i18n';
-import { translateByFieldSelector } from 'src/module/Configs';
-import { validateMnemonic } from 'src/module/HDWallet';
 import { actionImportWallet } from 'src/module/Wallet';
-import { actionChangePassword, actionCreatePassword, newPasswordSelector } from 'src/module/Password';
+import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { actionToggleModal } from 'src/components/Modal';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useMasterKeyMnemonic, useMasterKeyName } from 'src/module/HDWallet';
 import { FORM_CONFIGS } from './ImportMasterKey.constant';
 
 interface IProps {
@@ -22,27 +20,30 @@ interface TInner {
     errorCustom: string;
     onImportMasterKey: () => any;
     handleScanMnemonic: () => any;
+    errorCustomName: string;
+    errorCustomMnemonic: string;
 }
 
 export interface IMergeProps extends TInner, IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
     const isFormValid = useSelector((state) => isValid(FORM_CONFIGS.formName)(state));
-    const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
-    const pass = useSelector(newPasswordSelector);
+    const newPass = useSelector(newPasswordSelector);
+    const currentPass = useSelector(passwordSelector);
+    const pass = newPass || currentPass;
     const dispatch = useDispatch();
-    const { invalidMnemonic } = translate.error;
-    const [masterKeyName] = useFormValue({
+    const history = useHistory();
+    const { state }: { state: any } = useLocation();
+    const { shouldGoBack } = state || {};
+    const { error: errorCustomName, masterKeyName } = useMasterKeyName({
         formName: FORM_CONFIGS.formName,
         field: FORM_CONFIGS.masterKeyName,
     });
-    const [mnemonic] = useFormValue({
+    const { error: errorCustomMnemonic, mnemonic } = useMasterKeyMnemonic({
         formName: FORM_CONFIGS.formName,
         field: FORM_CONFIGS.mnemonic,
     });
-    const isValidMnemonic = validateMnemonic(mnemonic);
-    const errorCustom = !isValidMnemonic ? invalidMnemonic : '';
-    const disabled = !isFormValid || !masterKeyName || !mnemonic || !isValidMnemonic;
+    const disabled = !isFormValid || !masterKeyName || !mnemonic || !!errorCustomName || !!errorCustomMnemonic;
     const handleScanMnemonic = () => dispatch(actionToggleModal({}));
     const onImportMasterKey = async () => {
         try {
@@ -53,7 +54,11 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             batch(() => {
                 dispatch(actionCreatePassword(''));
                 dispatch(actionChangePassword(pass));
+                dispatch(reset(FORM_CONFIGS.formName));
             });
+            if (shouldGoBack) {
+                history.goBack();
+            }
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -66,7 +71,16 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     };
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, disabled, errorCustom, onImportMasterKey, handleScanMnemonic }} />
+            <WrappedComponent
+                {...{
+                    ...props,
+                    disabled,
+                    errorCustomName,
+                    errorCustomMnemonic,
+                    onImportMasterKey,
+                    handleScanMnemonic,
+                }}
+            />
         </ErrorBoundary>
     );
 };
