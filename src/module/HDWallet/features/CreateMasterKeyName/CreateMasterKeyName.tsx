@@ -26,7 +26,7 @@ const Styled = styled.div`
 
 const CreateMasterKeyName = (props: IMergeProps & any) => {
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
-    const { onHandleChecked, disabled, onHandleReady }: IMergeProps = props;
+    const { onHandleChecked, disabled, onHandleReady, errorCustom }: IMergeProps = props;
     const { invalidMasterKeyName } = translate.error;
     const { desc1, desc2, agreeDesc, btnReady } = translate.createMasterKeyName;
     const { masterKeyNamePlaceholder } = translate.general;
@@ -44,6 +44,7 @@ const CreateMasterKeyName = (props: IMergeProps & any) => {
                     componentProps={{
                         placeholder: masterKeyNamePlaceholder,
                     }}
+                    errorCustom={errorCustom}
                 />
             </form>
             <div className="hook">

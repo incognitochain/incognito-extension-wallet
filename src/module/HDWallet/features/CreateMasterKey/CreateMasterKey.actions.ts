@@ -20,7 +20,7 @@ export const actionSetMasterKeyName = (payload: string) => ({
     payload,
 });
 
-export const actionSetStep = (payload: number) => ({
+export const actionSetStepCreateMasterKey = (payload: number) => ({
     type: ACTION_SET_STEP,
     payload,
 });

@@ -3,19 +3,19 @@ import cloneDeep from 'lodash/cloneDeep';
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wallet.constant';
-import { IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
+import { ACTION_LOADED_WALLET, ACTION_UPDATE_WALLET, ACTION_INITED_MASTER_LESS } from './Wallet.constant';
+import { IWalletReducer } from './Wallet.interface';
 
 const initialState: IWalletReducer = {
     mainnet: {
-        init: false,
         ids: [],
         walletId: -1,
+        masterlessId: -1,
     },
     testnet: {
-        init: false,
         ids: [],
         walletId: -1,
+        masterlessId: -1,
     },
     loaded: false,
     wallet: {},
@@ -29,27 +29,19 @@ const walletReducer = (
     },
 ) => {
     switch (action.type) {
-        case ACTION_FETCHED: {
-            const { mainnet, wallet, walletId }: IPayloadInitWallet = action.payload;
+        case ACTION_LOADED_WALLET: {
+            const { wallet, mainnet, walletId } = action.payload;
             const field = mainnet ? 'mainnet' : 'testnet';
+            const walletIds = state[field].ids;
             return {
                 ...state,
                 [field]: {
                     ...state[field],
-                    init: true,
                     walletId,
-                    ids: [...state[field].ids, walletId],
+                    ids: walletIds.includes(walletId) ? [...walletIds] : [...walletIds, walletId],
                 },
                 wallet: cloneDeep(wallet),
                 loaded: true,
-            };
-        }
-        case ACTION_LOAD_WALLET: {
-            const wallet: WalletInstance = action.payload;
-            return {
-                ...state,
-                loaded: true,
-                wallet,
             };
         }
         case ACTION_UPDATE_WALLET: {
@@ -57,6 +49,20 @@ const walletReducer = (
             return {
                 ...state,
                 wallet,
+            };
+        }
+        case ACTION_INITED_MASTER_LESS: {
+            const { mainnet, walletId } = action.payload;
+            const field = mainnet ? 'mainnet' : 'testnet';
+            const walletState = state[field];
+            const { ids } = walletState;
+            return {
+                ...state,
+                [field]: {
+                    ...walletState,
+                    ids: [...ids, walletId],
+                    masterlessId: walletId,
+                },
             };
         }
         default:

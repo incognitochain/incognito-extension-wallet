@@ -52,14 +52,14 @@ const InputField = (props: IInputFieldProps) => {
         warning,
         errorCustom,
     } = props;
-    const { error: errorMeta } = meta;
+    const { error: errorMeta, touched } = meta;
     const error = errorMeta || errorCustom;
     const [togglePassword, setTogglePassword] = React.useState(false);
     const handleTogglePassword = () => setTogglePassword(!togglePassword);
     const renderError = () => {
         return (
             <>
-                {(error && (
+                {(touched && error && (
                     <p
                         className={`error fs-small fw-regular ${
                             inputType === INPUT_FIELD.leftTitleDisplayPTag ? 'align-right' : ''
@@ -68,7 +68,7 @@ const InputField = (props: IInputFieldProps) => {
                         {error}
                     </p>
                 )) ||
-                    (warning && (
+                    (touched && warning && (
                         <p
                             className={`warning fs-small fw-regular ${
                                 inputType === INPUT_FIELD.leftTitleDisplayPTag ? 'align-right' : ''

@@ -9,7 +9,10 @@ import trim from 'lodash/trim';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import GetStarted from 'src/module/Welcome/features/GetStarted';
-import CreateNewMasterKey, { actionSetStep, STEPS_CREATE } from 'src/module/HDWallet/features/CreateMasterKey';
+import CreateNewMasterKey, {
+    actionSetStepCreateMasterKey,
+    STEPS_CREATE,
+} from 'src/module/HDWallet/features/CreateMasterKey';
 import { actionSetActionType, actionTypeHDWalletSelector, ACTION_TYPES } from 'src/module/HDWallet';
 import ImportMasterKey from 'src/module/HDWallet/features/ImportMasterKey';
 import { FORM_CONFIGS } from './NewUser.constant';
@@ -60,7 +63,7 @@ const enhance = (WrappedComponent: any) => (props: IProps & any) => {
         dispatch(actionSetActionType(type));
         switch (type) {
             case ACTION_TYPES.CREATE:
-                dispatch(actionSetStep(STEPS_CREATE.createMasterKeyName));
+                dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
                 break;
             default:
                 break;

@@ -1,12 +1,12 @@
-import { Field, InjectedFormProps } from 'redux-form';
+import { Field } from 'redux-form';
 import React from 'react';
 import { Button } from 'src/components/Core';
 import InputField from 'src/components/ReduxForm/InputField';
 import { validator } from 'src/components/ReduxForm';
-import withCreateAccount, { TOutter } from './CreateAccount.enhance';
+import withCreateAccount, { IMergeProps } from './CreateAccount.enhance';
 import { Styled } from './CreateAccount.styled';
 
-const CreateAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) => {
+const CreateAccount = (props: IMergeProps & any) => {
     const { disabledForm, handleCreateAccount, createError } = props;
     const { handleSubmit, submitting } = props;
     return (

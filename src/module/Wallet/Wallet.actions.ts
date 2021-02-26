@@ -1,19 +1,26 @@
+import { actionSetListMasterKey, actionUpdateMasterKey } from 'src/module/HDWallet';
 import { actionSetSignPublicKeyEncode } from 'src/module/Account/Account.actions';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { MAINNET_WALLET_NAME, TESTNET_WALLET_NAME } from 'src/configs/walletConfigs';
+import { MASTERLESS_WALLET_NAME } from 'src/configs/walletConfigs';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { updateWallet } from 'src/database/tables/wallet';
 import { actionSetListAccount, actionSelectAccount, defaultAccountNameSelector } from 'src/module/Account';
-import { IPreloadReducer, preloadSelector } from 'src/module/Preload';
+import { IPreloadReducer, isMainnetSelector, preloadSelector } from 'src/module/Preload';
 import { actionChangePassword, actionCreatePassword, passwordSelector } from 'src/module/Password';
 import { batch } from 'react-redux';
 import { actionFollowDefaultToken, actionResetFollowDefaultToken, IEnvToken, ITokenReducer } from 'src/module/Token';
 import { tokenSelector } from 'src/module/Token/Token.selector';
-import { ACTION_FETCHED, ACTION_LOAD_WALLET, ACTION_UPDATE_WALLET } from './Wallet.constant';
+import { ACTION_LOADED_WALLET, ACTION_UPDATE_WALLET, ACTION_INITED_MASTER_LESS } from './Wallet.constant';
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
-import { walletDataSelector, walletIdSelector, walletSelector } from './Wallet.selector';
-import { IDataInitWallet, IPayloadInitWallet, IWalletReducer } from './Wallet.interface';
+import {
+    isInitMasterlessSelector,
+    walletDataSelector,
+    walletIdSelector,
+    walletSelector,
+    isMasterlessSelector,
+} from './Wallet.selector';
+import { IWalletReducer } from './Wallet.interface';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -25,9 +32,14 @@ export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () =>
     return wallet;
 };
 
-export const actionFetched = (payload: IDataInitWallet) => ({
-    type: ACTION_FETCHED,
+export const actionLoadedWallet = (payload: { wallet: WalletInstance; mainnet: boolean; walletId: number }) => ({
+    type: ACTION_LOADED_WALLET,
     payload,
+});
+
+export const actionUpdateWallet = (wallet: WalletInstance) => ({
+    type: ACTION_UPDATE_WALLET,
+    payload: wallet,
 });
 
 export const actionImportWallet = (walletName: string, mnemonic: string, pass: string) => async (
@@ -35,63 +47,30 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
     getState: () => IRootState,
 ) => {
     try {
-        let walletId;
+        let walletId = -1;
         const state: IRootState = getState();
         const preload: IPreloadReducer = preloadSelector(state);
         const { mainnet } = preload.configs;
         const dataImport = await importWallet(walletName, mnemonic, pass);
         walletId = dataImport.walletId;
         const { wallet } = dataImport;
-        const payload: IPayloadInitWallet = {
-            ...dataImport,
-            mainnet,
-        };
         const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
         const defaultAccount: AccountInstance = listAccount && listAccount[0];
-
         batch(() => {
             dispatch(actionSetListAccount(listAccount));
             dispatch(actionSelectAccount(defaultAccount.name));
             dispatch(actionCreatePassword(''));
             dispatch(actionChangePassword(pass));
-            dispatch(actionFetched(payload));
+            dispatch(
+                actionLoadedWallet({
+                    wallet,
+                    mainnet,
+                    walletId,
+                }),
+            );
             dispatch(actionResetFollowDefaultToken(mainnet));
         });
-
-        return walletId;
-    } catch (error) {
-        throw error;
-    }
-};
-
-export const actionLoadWallet = (payload: WalletInstance) => ({
-    type: ACTION_LOAD_WALLET,
-    payload,
-});
-
-export const actionInitWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
-    try {
-        let walletId;
-        const state: IRootState = getState();
-        const preload: IPreloadReducer = preloadSelector(state);
-        const pass = passwordSelector(state);
-        const { mainnet } = preload.configs;
-        const dataInit = await initWallet(mainnet ? MAINNET_WALLET_NAME : TESTNET_WALLET_NAME, pass);
-        walletId = dataInit.walletId;
-        const { wallet } = dataInit;
-        const payload: IPayloadInitWallet = {
-            ...dataInit,
-            mainnet,
-        };
-        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
-        const defaultAccount: AccountInstance = listAccount && listAccount[0];
-        const signPublicKeyEncode = await defaultAccount.getSignPublicKey();
-        batch(() => {
-            dispatch(actionSetListAccount(listAccount));
-            dispatch(actionSelectAccount(defaultAccount.name));
-            dispatch(actionSetSignPublicKeyEncode(signPublicKeyEncode));
-            dispatch(actionFetched(payload));
-        });
+        await actionSetListMasterKey()(dispatch, getState);
         return walletId;
     } catch (error) {
         throw error;
@@ -118,7 +97,10 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
     }
     const wallet = await loadWallet(walletId, pass);
     const listAccount: AccountInstance[] = [...wallet.masterAccount.getAccounts()];
-    await wallet.sync();
+    const isMasterless: boolean = isMasterlessSelector(state)(walletId);
+    if (!isMasterless) {
+        await wallet.sync();
+    }
     const newList = wallet.masterAccount.getAccounts();
     const defaultAccount = wallet.masterAccount.getAccountByName(defaultAccountName) || listAccount[0];
     const signPublicKeyEncode = await defaultAccount.getSignPublicKey();
@@ -126,7 +108,13 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
         batch(() => {
             dispatch(actionSetListAccount(newList));
             dispatch(actionSelectAccount(defaultAccount.name));
-            dispatch(actionLoadWallet(wallet));
+            dispatch(
+                actionLoadedWallet({
+                    wallet,
+                    mainnet,
+                    walletId,
+                }),
+            );
             dispatch(actionSetSignPublicKeyEncode(signPublicKeyEncode));
         });
         if (!followedPopularIds) {
@@ -143,7 +131,65 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
     }
 };
 
-export const actionUpdateWallet = (wallet: WalletInstance) => ({
-    type: ACTION_UPDATE_WALLET,
-    payload: wallet,
+export const actionInitedMasterless = (payload: { mainnet: boolean; walletId: number }) => ({
+    type: ACTION_INITED_MASTER_LESS,
+    payload,
 });
+
+export const actionInitMasterless = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        let walletId = -1;
+        const state: IRootState = getState();
+        const isInitMasterless = isInitMasterlessSelector(state);
+        if (isInitMasterless) {
+            return;
+        }
+        const mainnet = isMainnetSelector(state);
+        const pass = passwordSelector(state);
+        const dataInit = await initWallet(MASTERLESS_WALLET_NAME, pass);
+        walletId = dataInit.walletId;
+        const { wallet }: { wallet: WalletInstance } = dataInit;
+        wallet.masterAccount.removeAccount('Anon');
+        dispatch(
+            actionInitedMasterless({
+                mainnet,
+                walletId,
+            }),
+        );
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const actionSwitchWallet = (walletId: number) => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        if (!walletId) {
+            throw new Error(`Can't not found wallet id`);
+        }
+        const state: IRootState = getState();
+        const pass = passwordSelector(state);
+        const wallet = await loadWallet(walletId, pass);
+        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+        const defaultAccount: AccountInstance = listAccount && listAccount[0];
+        const mainnet = isMainnetSelector(state);
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
+        if (!isMasterless) {
+            await wallet.sync();
+        }
+        batch(() => {
+            dispatch(actionSetListAccount(listAccount));
+            dispatch(actionSelectAccount(defaultAccount.name));
+            dispatch(
+                actionLoadedWallet({
+                    wallet,
+                    mainnet,
+                    walletId,
+                }),
+            );
+            dispatch(actionUpdateMasterKey({ walletId, wallet }));
+        });
+        return wallet;
+    } catch (error) {
+        throw error;
+    }
+};

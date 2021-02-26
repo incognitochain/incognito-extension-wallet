@@ -37,7 +37,7 @@ const Create = (props: IMergeProps & any) => {
         <Styled className="scroll-view">
             <Header title=" " onGoBack={onGoBack} />
             <AppIcon />
-            <Component />
+            <Component {...props} />
         </Styled>
     );
 };

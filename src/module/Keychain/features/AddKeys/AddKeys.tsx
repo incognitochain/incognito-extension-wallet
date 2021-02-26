@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, AddCircleIcon } from 'src/components';
+import { AddCircleIcon, Header } from 'src/components';
 import { modalTranslateSelector, translateByFieldSelector } from 'src/module/Configs';
 import { withLayout } from 'src/components/Layout';
 import styled from 'styled-components';
-import { walletDataSelector } from 'src/module/Wallet';
+import { actionSwitchWallet, masterlessIdSelector, walletIdSelector } from 'src/module/Wallet';
 import { IKeychainLanguage } from 'src/i18n';
 import { actionToggleModal } from 'src/components/Modal';
 import CreateAccount from 'src/module/Account/features/CreateAccount';
+import {
+    actionSetStepCreateMasterKey,
+    route as routeCreateMasterKey,
+    STEPS_CREATE,
+} from 'src/module/HDWallet/features/CreateMasterKey';
+import { route as routeImportMasterKey } from 'src/module/HDWallet/features/ImportMasterKey';
+import { Link, useHistory } from 'react-router-dom';
+import { actionSetActionType, ACTION_TYPES, listMasterKeyIdsAndNamesSelector } from 'src/module/HDWallet';
+import { IGlobalStyle } from 'src/styles';
 
 export const Styled = styled.div`
     .disabled {
@@ -24,16 +33,53 @@ export const Styled = styled.div`
     }
     .import-master-key {
     }
+    .item {
+        > a:hover {
+            color: ${(props: IGlobalStyle) => props.theme.text};
+        }
+    }
 `;
 
+const Item = React.memo(
+    (props: {
+        title: string;
+        onClickItem?: () => any;
+        onClickIcon?: () => any;
+        classNameItem?: string;
+        hasIcon?: boolean;
+    }) => {
+        const { title, onClickItem, classNameItem, onClickIcon, hasIcon = true } = props;
+        return (
+            <div className={`item flex-jcb p-l-15 m-b-30 ${classNameItem || ''}`}>
+                <Link
+                    to="#"
+                    onClick={(e: SyntheticEvent) => {
+                        e.preventDefault();
+                        typeof onClickItem === 'function' ? onClickItem() : null;
+                    }}
+                >
+                    {title}
+                </Link>
+                {hasIcon && (
+                    <AddCircleIcon onClick={() => (typeof onClickIcon === 'function' ? onClickIcon() : null)} />
+                )}
+            </div>
+        );
+    },
+);
+
 const AddKeys = React.memo(() => {
-    const wallet = useSelector(walletDataSelector);
     const translateKeychain: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
     const modalTranslate = useSelector(modalTranslateSelector);
     const dictionary = translateKeychain.addKeys;
+    const history = useHistory();
     const dispatch = useDispatch();
-
-    const handleAddKeyChain = () => {
+    const walletId: number = useSelector(walletIdSelector);
+    const masterlessId: number = useSelector(masterlessIdSelector);
+    const listMasterKeyIdsAndNames: { name: string; walletId: number }[] = useSelector(
+        listMasterKeyIdsAndNamesSelector,
+    );
+    const handleAddKeyChain = (walletId: number) => {
         dispatch(
             actionToggleModal({
                 data: <CreateAccount />,
@@ -42,24 +88,44 @@ const AddKeys = React.memo(() => {
             }),
         );
     };
-
+    const handleSwitchWallet = (walletId: number) => dispatch(actionSwitchWallet(walletId));
+    const handleCreateMasterKey = () => {
+        dispatch(actionSetActionType(ACTION_TYPES.CREATE));
+        dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
+        history.push(routeCreateMasterKey, {
+            shouldGoBack: true,
+        });
+    };
+    const handleImportMasterKey = () => {
+        dispatch(actionSetActionType(ACTION_TYPES.IMPORT));
+        history.push(routeImportMasterKey, {
+            shouldGoBack: true,
+        });
+    };
     return (
         <Styled>
+            <Header title={dictionary.title} />
             <div>
                 <div className="add-keychain-title m-b-30">{dictionary.addKeychain}</div>
                 <div className="p-l-15 m-b-30">
                     <div className="add-keychain-desc m-b-30">{dictionary.addKeyChainDesc}</div>
-                    <Row className="p-l-15 m-b-30">
-                        <div className="master-key">{wallet.name}</div>
-                        <AddCircleIcon onClick={handleAddKeyChain} />
-                    </Row>
+                    {listMasterKeyIdsAndNames.map((item) => (
+                        <Item
+                            key={item.walletId}
+                            title={item.name}
+                            onClickIcon={() => handleAddKeyChain(item.walletId)}
+                            onClickItem={() => handleSwitchWallet(item.walletId)}
+                            classNameItem={`${item.walletId === walletId ? 'main-text' : 'sub-text'}`}
+                            hasIcon={item.walletId !== masterlessId}
+                        />
+                    ))}
                 </div>
             </div>
-            <div className="add-master-key m-t-50 disabled">
+            <div className="add-master-key m-t-50">
                 <div className="m-b-30">{dictionary.addMasterKey}</div>
                 <div className="p-l-15">
-                    <div className="create-master-key m-b-30">{dictionary.createMasterKey}</div>
-                    <div className="import-master-key m-b-30">{dictionary.importMasterKey}</div>
+                    <Item title={dictionary.createMasterKey} onClickIcon={handleCreateMasterKey} />
+                    <Item title={dictionary.importMasterKey} onClickIcon={handleImportMasterKey} />
                 </div>
             </div>
         </Styled>

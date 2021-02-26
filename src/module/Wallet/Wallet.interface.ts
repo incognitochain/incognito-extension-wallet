@@ -1,9 +1,9 @@
 import { WalletInstance } from 'incognito-js/build/web/browser';
 
 export interface IWallet {
-    init: boolean;
-    ids: string[] | number[];
+    ids: number[];
     walletId: number;
+    masterlessId: number;
 }
 
 export interface IWalletReducer {
