@@ -1,33 +1,32 @@
 import { Field } from 'redux-form';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Button } from 'src/components/Core';
 import InputField from 'src/components/ReduxForm/InputField';
 import { validator } from 'src/components/ReduxForm';
-import withCreateAccount, { IMergeProps } from './CreateAccount.enhance';
+import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
+import { IAccountLanguage } from 'src/i18n';
+import withCreateAccount, { IMergeProps, FORM_CONFIGS } from './CreateAccount.enhance';
 import { Styled } from './CreateAccount.styled';
 
 const CreateAccount = (props: IMergeProps & any) => {
-    const { disabledForm, handleCreateAccount, createError } = props;
+    const { disabledForm, handleCreateAccount, errorCustom }: IMergeProps = props;
     const { handleSubmit, submitting } = props;
+    const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
+    const { placeholder, title } = translate.create;
     return (
         <Styled>
-            <form className="form-create-account" onSubmit={handleSubmit(handleCreateAccount)}>
+            <form onSubmit={handleSubmit(handleCreateAccount)}>
                 <Field
                     component={InputField}
-                    name="accountName"
-                    label="Enter a name for your keychain"
+                    name={FORM_CONFIGS.accountName}
                     validate={[...validator.combinedAccountName]}
                     componentProps={{
-                        autoFocus: true,
-                        placeholder: 'Enter a name for your keychain',
+                        placeholder,
                     }}
+                    errorCustom={errorCustom}
                 />
-                <Button
-                    title={!submitting ? 'Create keychain' : 'Creating keychain...'}
-                    disabled={disabledForm || submitting}
-                    type="submit"
-                />
-                <div className="error-message">{createError}</div>
+                <Button title={`${title}${submitting ? '...' : ''}`} disabled={disabledForm} type="submit" />
             </form>
         </Styled>
     );

@@ -52,11 +52,14 @@ const InputField = (props: IInputFieldProps) => {
         warning,
         errorCustom,
     } = props;
-    const { error: errorMeta, touched } = meta;
+    const { error: errorMeta, touched, submitting } = meta;
     const error = errorMeta || errorCustom;
     const [togglePassword, setTogglePassword] = React.useState(false);
     const handleTogglePassword = () => setTogglePassword(!togglePassword);
     const renderError = () => {
+        if (submitting) {
+            return null;
+        }
         return (
             <>
                 {(touched && error && (

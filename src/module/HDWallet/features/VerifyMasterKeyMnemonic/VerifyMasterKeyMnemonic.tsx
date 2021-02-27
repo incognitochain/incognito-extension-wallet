@@ -66,7 +66,7 @@ const Words = React.memo(() => {
 });
 
 const VerifyMasterKeyMnemonic = (props: IMergeProps & any) => {
-    const { handleVerifyMnemonic } = props;
+    const { handleVerifyMnemonic, submitting }: IMergeProps = props;
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
     const isVerifyMnemonic = useSelector(isVerifyMnemonicSelector);
     const { desc1 } = translate.verifyMasterKeyMnemonic;
@@ -82,8 +82,8 @@ const VerifyMasterKeyMnemonic = (props: IMergeProps & any) => {
             <Mnemonic mnemonic={selectedWords} />
             {actionType === ACTION_TYPES.CREATE && (
                 <Button
-                    disabled={!isVerifyMnemonic}
-                    title={isVerifyMnemonic ? createBtn : invalidMnemonic}
+                    disabled={!isVerifyMnemonic || submitting}
+                    title={isVerifyMnemonic ? `${createBtn}${submitting ? '...' : ''}` : invalidMnemonic}
                     onClick={handleVerifyMnemonic}
                 />
             )}

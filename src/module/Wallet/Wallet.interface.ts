@@ -11,6 +11,7 @@ export interface IWalletReducer {
     testnet: IWallet;
     loaded: boolean;
     wallet: WalletInstance | any;
+    switch: boolean;
 }
 
 export interface IDataInitWallet {

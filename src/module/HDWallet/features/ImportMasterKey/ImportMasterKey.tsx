@@ -30,8 +30,9 @@ const ImportMasterKey = (props: IMergeProps & any) => {
         errorCustomName,
         errorCustomMnemonic,
         onImportMasterKey,
-        // handleScanMnemonic
-    } = props;
+        handleSubmit,
+        submitting,
+    }: IMergeProps = props;
     const { masterKeyNamePlaceholder, mnemonicPlaceholder, importBtn } = translate.general;
     const { invalidMasterKeyName } = translate.error;
     const { title } = translate.importMasterKey;
@@ -46,7 +47,7 @@ const ImportMasterKey = (props: IMergeProps & any) => {
             <Header title=" " onGoBack={onGoBack} />
             <AppIcon />
             <p className="fs-medium fw-bold">{title}</p>
-            <form className="m-t-30">
+            <form className="m-t-30" onSubmit={handleSubmit(onImportMasterKey)}>
                 <Field
                     component={InputField}
                     name={FORM_CONFIGS.masterKeyName}
@@ -69,14 +70,13 @@ const ImportMasterKey = (props: IMergeProps & any) => {
                 {/* <div className="scan-qrcode flex">
                     <ScanIcon onClick={handleScanMnemonic} />
                 </div> */}
+                <Button
+                    disabled={disabled || submitting}
+                    title={`${importBtn}${submitting ? '...' : ''}`}
+                    type="submit"
+                    className="m-t-30"
+                />
             </form>
-            <Button
-                disabled={disabled}
-                title={importBtn}
-                type="button"
-                className="m-t-30"
-                onClick={onImportMasterKey}
-            />
         </Styled>
     );
 };

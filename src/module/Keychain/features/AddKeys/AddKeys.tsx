@@ -2,7 +2,6 @@ import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AddCircleIcon, Header } from 'src/components';
 import { modalTranslateSelector, translateByFieldSelector } from 'src/module/Configs';
-import { withLayout } from 'src/components/Layout';
 import styled from 'styled-components';
 import { actionSwitchWallet, masterlessIdSelector, walletIdSelector } from 'src/module/Wallet';
 import { IKeychainLanguage } from 'src/i18n';
@@ -15,23 +14,15 @@ import {
 } from 'src/module/HDWallet/features/CreateMasterKey';
 import { route as routeImportMasterKey } from 'src/module/HDWallet/features/ImportMasterKey';
 import { Link, useHistory } from 'react-router-dom';
-import { actionSetActionType, ACTION_TYPES, listMasterKeyIdsAndNamesSelector } from 'src/module/HDWallet';
+import { ACTION_TYPES } from 'src/module/HDWallet';
+import { listMasterKeyIdsAndNamesSelector } from 'src/module/HDWallet/HDWallet.selector';
+import { actionSetActionType } from 'src/module/HDWallet/HDWallet.actions';
 import { IGlobalStyle } from 'src/styles';
 
 export const Styled = styled.div`
     .disabled {
         opacity: 0.5;
         cursor: not-allowed;
-    }
-    .add-keychain-title {
-    }
-    .add-keychain-desc {
-    }
-    .add-master-key-title {
-    }
-    .create-master-key {
-    }
-    .import-master-key {
     }
     .item {
         > a:hover {
@@ -80,9 +71,10 @@ const AddKeys = React.memo(() => {
         listMasterKeyIdsAndNamesSelector,
     );
     const handleAddKeyChain = (walletId: number) => {
+        dispatch(actionSwitchWallet(walletId));
         dispatch(
             actionToggleModal({
-                data: <CreateAccount />,
+                data: <CreateAccount walletId={walletId} />,
                 title: modalTranslate.createKeyModal,
                 closeable: true,
             }),
@@ -132,4 +124,4 @@ const AddKeys = React.memo(() => {
     );
 });
 
-export default withLayout(AddKeys);
+export default AddKeys;
