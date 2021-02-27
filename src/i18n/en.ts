@@ -50,6 +50,7 @@ const language: ILanguage = {
         addCoin: 'Manage coin list',
         error: {
             walletNotExisted: 'Wallet is not exist',
+            walletIdNotFound: 'Can not found wallet id',
         },
         tooltip: {
             refresh: 'Refresh this page',
@@ -99,6 +100,7 @@ const language: ILanguage = {
         create: {
             title: 'Create',
             desc: 'Create a new keychain',
+            placeholder: 'Enter a name for your keychain',
         },
         import: {
             title: 'Import',
@@ -131,7 +133,10 @@ const language: ILanguage = {
         error: {
             create: 'Keychain was not created! Please try again.',
             import: 'Import keychain failed, please try again.',
-            accountNotExisted: 'Account is not exist',
+            keychainNotExisted: 'Keychain is not exist',
+            canNotCreate: `Can not create keychain`,
+            canNotImport: `Can not import keychain`,
+            keychainExisted: 'Keychain is exist',
         },
         success: {
             create: 'Create keychain successful.',

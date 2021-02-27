@@ -3,7 +3,12 @@ import cloneDeep from 'lodash/cloneDeep';
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { ACTION_LOADED_WALLET, ACTION_UPDATE_WALLET, ACTION_INITED_MASTER_LESS } from './Wallet.constant';
+import {
+    ACTION_LOADED_WALLET,
+    ACTION_UPDATE_WALLET,
+    ACTION_INITED_MASTER_LESS,
+    ACTION_TOGGLE_SWITCH_WALLET,
+} from './Wallet.constant';
 import { IWalletReducer } from './Wallet.interface';
 
 const initialState: IWalletReducer = {
@@ -19,6 +24,7 @@ const initialState: IWalletReducer = {
     },
     loaded: false,
     wallet: {},
+    switch: false,
 };
 
 const walletReducer = (
@@ -63,6 +69,12 @@ const walletReducer = (
                     ids: [...ids, walletId],
                     masterlessId: walletId,
                 },
+            };
+        }
+        case ACTION_TOGGLE_SWITCH_WALLET: {
+            return {
+                ...state,
+                switch: action.payload,
             };
         }
         default:

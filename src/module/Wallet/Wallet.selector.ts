@@ -31,3 +31,5 @@ export const isInitWalletSelector = createSelector(walletIdSelector, (walletId) 
 export const isMasterlessSelector = createSelector(masterlessIdSelector, (masterlessId) => (masterKeyId: number) =>
     isEqual(masterKeyId, masterlessId),
 );
+
+export const switchingWalletSelector = createSelector(walletSelector, (wallet) => wallet.switch);

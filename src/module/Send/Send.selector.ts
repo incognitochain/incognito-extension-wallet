@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
-import { selectedPrivacySelector } from 'src/module/Token';
+import { selectedPrivacySelector } from 'src/module/Token/Token.selector';
 import { getSendData } from './Send.utils';
 
 export const sendSelector = createSelector(

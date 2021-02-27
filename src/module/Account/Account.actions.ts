@@ -1,13 +1,24 @@
 import { BigNumber } from 'bignumber.js';
+import { batch } from 'react-redux';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import isEqual from 'lodash/isEqual';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { actionHandleLoadWallet, actionSaveWallet, actionUpdateWallet, IWalletReducer } from 'src/module/Wallet';
+import { IWalletReducer, loadWallet } from 'src/module/Wallet';
+import {
+    actionHandleLoadWallet,
+    actionLoadedWallet,
+    actionSaveWallet,
+    actionUpdateWallet,
+} from 'src/module/Wallet/Wallet.actions';
 import { walletDataSelector, walletSelector } from 'src/module/Wallet/Wallet.selector';
-import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token';
+import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token/Token.actions';
 import { cachePromise } from 'src/services';
-import { batch } from 'react-redux';
+import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
+import { actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
+import { passwordSelector } from 'src/module/Password/Password.selector';
+import { IAccountLanguage } from 'src/i18n/interface';
+import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import {
     ACTION_FETCHED,
     ACTION_FETCHING_CREATE_ACCOUNT,
@@ -146,29 +157,41 @@ export const actionFetchedCreateAccount = (payload: AccountInstance) => ({
     payload,
 });
 
-export const actionFetchCreateAccount = (accountName: string) => async (
+export const actionFetchCreateAccount = (accountName: string, walletId: number) => async (
     dispatch: Dispatch,
     getState: () => IRootState,
 ) => {
     try {
         const state = getState();
-        const wallet: WalletInstance = walletDataSelector(state);
-        const create = createAccountSelector(state);
-        if (create) {
+        const pass: string = passwordSelector(state);
+        const wallet: WalletInstance = await loadWallet(walletId, pass);
+        const create: boolean = createAccountSelector(state);
+        if (create || !accountName || !walletId || !pass) {
             return;
         }
         await dispatch(actionFetchingCreateAccount());
         const account = await wallet.masterAccount.addAccount(accountName);
+        const translate: IAccountLanguage = translateByFieldSelector(state)('account');
+        const { error } = translate;
         if (!account) {
-            throw new Error(`Can't not create account`);
+            throw new Error(error.canNotCreate);
         }
-        await dispatch(actionFetchedCreateAccount(account));
-        await actionFollowDefaultToken(account)(dispatch, getState);
-        await wallet.update();
+        const mainnet: boolean = isMainnetSelector(state);
+        await dispatch(
+            actionLoadedWallet({
+                wallet,
+                mainnet,
+                walletId,
+            }),
+        );
+        await Promise.all([
+            wallet.update(),
+            actionFollowDefaultToken(account)(dispatch, getState),
+            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+        ]);
+        dispatch(actionFetchedCreateAccount(account));
     } catch (error) {
         throw error;
-    } finally {
-        actionSaveWallet()(dispatch, getState);
     }
 };
 
@@ -196,8 +219,10 @@ export const actionFetchImportAccount = (accountName: string, privateKey: string
         }
         await dispatch(actionFetchingImportAccount());
         const account = await wallet.masterAccount.importAccount(accountName, privateKey);
+        const translate: IAccountLanguage = translateByFieldSelector(state)('account');
+        const { error } = translate;
         if (!account) {
-            throw new Error(`Can't not create account`);
+            throw new Error(error.canNotImport);
         }
         await actionSwitchAccount(accountName)(dispatch, getState);
         await actionFollowDefaultToken(account)(dispatch, getState);

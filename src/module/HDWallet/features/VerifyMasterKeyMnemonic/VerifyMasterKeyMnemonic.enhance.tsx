@@ -14,7 +14,10 @@ import { actionImportWallet } from 'src/module/Wallet';
 
 interface IProps {}
 
-interface TInner {}
+interface TInner {
+    submitting: boolean;
+    handleVerifyMnemonic: () => any;
+}
 
 export interface IMergeProps extends IProps, TInner {}
 
@@ -29,11 +32,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const pass = newPass || currentPass;
     const { state }: { state: any } = useLocation();
     const { shouldGoBack } = state || {};
+    const [submitting, setFormSubmitting] = React.useState<boolean>(false);
     const handleVerifyMnemonic = async () => {
         try {
-            if (!isVerifyMnemonic) {
+            if (!isVerifyMnemonic || submitting) {
                 return;
             }
+            await setFormSubmitting(true);
             await dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
             batch(() => {
                 dispatch(actionCreatePassword(''));
@@ -51,11 +56,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     type: TOAST_CONFIGS.error,
                 }),
             );
+        } finally {
+            setFormSubmitting(false);
         }
     };
     return (
         <ErrorBoundary>
-            <WrappedComponent {...{ ...props, handleVerifyMnemonic }} />
+            <WrappedComponent {...{ ...props, handleVerifyMnemonic, submitting }} />
         </ErrorBoundary>
     );
 };

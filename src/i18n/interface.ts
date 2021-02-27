@@ -66,6 +66,7 @@ export interface IWalletLanguage {
     addCoin: string;
     error: {
         walletNotExisted: string;
+        walletIdNotFound: string;
     };
     tooltip: {
         refresh: string;
@@ -181,6 +182,7 @@ export interface IAccountLanguage {
     create: {
         title: string;
         desc: string;
+        placeholder: string;
     };
     import: {
         title: string;
@@ -213,7 +215,10 @@ export interface IAccountLanguage {
     error: {
         create: string;
         import: string;
-        accountNotExisted: string;
+        canNotCreate: string;
+        canNotImport: string;
+        keychainExisted: string;
+        keychainNotExisted: string;
     };
     success: {
         create: string;

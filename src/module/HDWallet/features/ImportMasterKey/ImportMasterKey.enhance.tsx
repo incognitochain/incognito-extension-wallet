@@ -1,7 +1,7 @@
 import React from 'react';
 import { batch, useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { isValid, reduxForm, reset } from 'redux-form';
+import { InjectedFormProps, isInvalid, reduxForm, reset, isSubmitting } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { actionImportWallet } from 'src/module/Wallet';
@@ -24,10 +24,11 @@ interface TInner {
     errorCustomMnemonic: string;
 }
 
-export interface IMergeProps extends TInner, IProps {}
+export interface IMergeProps extends TInner, IProps, InjectedFormProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
-    const isFormValid = useSelector((state) => isValid(FORM_CONFIGS.formName)(state));
+    const isFormInValid = useSelector((state) => isInvalid(FORM_CONFIGS.formName)(state));
+    const submitting = useSelector((state) => isSubmitting(FORM_CONFIGS.formName)(state));
     const newPass = useSelector(newPasswordSelector);
     const currentPass = useSelector(passwordSelector);
     const pass = newPass || currentPass;
@@ -43,7 +44,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         formName: FORM_CONFIGS.formName,
         field: FORM_CONFIGS.mnemonic,
     });
-    const disabled = !isFormValid || !masterKeyName || !mnemonic || !!errorCustomName || !!errorCustomMnemonic;
+    const disabled =
+        isFormInValid || !masterKeyName || !mnemonic || !!errorCustomName || !!errorCustomMnemonic || submitting;
     const handleScanMnemonic = () => dispatch(actionToggleModal({}));
     const onImportMasterKey = async () => {
         try {

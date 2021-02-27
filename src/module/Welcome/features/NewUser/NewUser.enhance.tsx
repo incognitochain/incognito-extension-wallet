@@ -13,7 +13,9 @@ import CreateNewMasterKey, {
     actionSetStepCreateMasterKey,
     STEPS_CREATE,
 } from 'src/module/HDWallet/features/CreateMasterKey';
-import { actionSetActionType, actionTypeHDWalletSelector, ACTION_TYPES } from 'src/module/HDWallet';
+import { ACTION_TYPES } from 'src/module/HDWallet';
+import { actionTypeHDWalletSelector } from 'src/module/HDWallet/HDWallet.selector';
+import { actionSetActionType } from 'src/module/HDWallet/HDWallet.actions';
 import ImportMasterKey from 'src/module/HDWallet/features/ImportMasterKey';
 import { FORM_CONFIGS } from './NewUser.constant';
 
