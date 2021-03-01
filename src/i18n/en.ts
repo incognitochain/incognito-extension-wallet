@@ -40,6 +40,8 @@ const language: ILanguage = {
             addMasterKey: 'Add a master key',
             createMasterKey: 'Create new master key',
             importMasterKey: 'Import master key',
+            addKeychainHeaderTitle: 'Add a keychain',
+            importKeychainHeaderTitle: 'Import a keychain',
         },
     },
     wallet: {
@@ -98,13 +100,16 @@ const language: ILanguage = {
     },
     account: {
         create: {
-            title: 'Create',
+            title: 'Create keychain',
             desc: 'Create a new keychain',
-            placeholder: 'Enter a name for your keychain',
         },
         import: {
-            title: 'Import',
+            title: 'Import keychain',
             desc: 'Import an existing keychain',
+            subAllMethods:
+                'This keychain is not linked to any of your current master keys. Import its master key to restore all associated keychains, or import this keychain only.',
+            btnImportMasterKey: 'Import master key',
+            btnImportKeychainOnly: 'Import keychain only',
         },
         backup: {
             title: 'Back up',
@@ -141,6 +146,10 @@ const language: ILanguage = {
         success: {
             create: 'Create keychain successful.',
             import: 'Import keychain successful.',
+        },
+        general: {
+            placeholderName: 'Enter a name for your keychain',
+            placeholderPrivateKey: 'Enter private key ',
         },
     },
     setting: {

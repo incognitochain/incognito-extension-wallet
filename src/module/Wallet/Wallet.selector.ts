@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
-import { isMainnetSelector } from 'src/module/Preload';
+import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
 import { IWalletReducer } from './Wallet.interface';
 
 export const walletSelector = createSelector(

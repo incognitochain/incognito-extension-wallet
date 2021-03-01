@@ -182,11 +182,13 @@ export interface IAccountLanguage {
     create: {
         title: string;
         desc: string;
-        placeholder: string;
     };
     import: {
         title: string;
         desc: string;
+        subAllMethods: string;
+        btnImportMasterKey: string;
+        btnImportKeychainOnly: string;
     };
     backup: {
         headerTitle: string;
@@ -224,6 +226,10 @@ export interface IAccountLanguage {
         create: string;
         import: string;
     };
+    general: {
+        placeholderName: string;
+        placeholderPrivateKey: string;
+    };
 }
 
 export interface IKeychainLanguage {
@@ -237,6 +243,8 @@ export interface IKeychainLanguage {
         addMasterKey: string;
         createMasterKey: string;
         importMasterKey: string;
+        addKeychainHeaderTitle: string;
+        importKeychainHeaderTitle: string;
     };
 }
 

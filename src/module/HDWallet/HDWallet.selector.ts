@@ -12,6 +12,10 @@ export const rootHDWalletSelector = createSelector(hdWalletSelector, (hdWallet) 
 
 export const actionTypeHDWalletSelector = createSelector(rootHDWalletSelector, (root) => root.actionType);
 
+export const listSelector = createSelector(rootHDWalletSelector, ({ list }) => (excludeMasterless = false) =>
+    excludeMasterless ? list.filter((item) => !item.isMasterless) : list,
+);
+
 export const listMasterKeySelector = createSelector(rootHDWalletSelector, (root) =>
     root.list.map((item) => item.wallet),
 );
