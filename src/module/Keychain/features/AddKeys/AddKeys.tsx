@@ -1,23 +1,22 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddCircleIcon, Header } from 'src/components';
-import { modalTranslateSelector, translateByFieldSelector } from 'src/module/Configs';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { actionSwitchWallet, masterlessIdSelector, walletIdSelector } from 'src/module/Wallet';
+import { actionSwitchWallet } from 'src/module/Wallet';
+import { AddCircleIcon, Header } from 'src/components';
+import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
+import { masterlessIdSelector, walletIdSelector } from 'src/module/Wallet/Wallet.selector';
 import { IKeychainLanguage } from 'src/i18n';
-import { actionToggleModal } from 'src/components/Modal';
-import CreateAccount from 'src/module/Account/features/CreateAccount';
+import { route as routeCreateAccount } from 'src/module/Account/features/CreateAccount';
 import {
     actionSetStepCreateMasterKey,
     route as routeCreateMasterKey,
     STEPS_CREATE,
 } from 'src/module/HDWallet/features/CreateMasterKey';
 import { route as routeImportMasterKey } from 'src/module/HDWallet/features/ImportMasterKey';
-import { Link, useHistory } from 'react-router-dom';
-import { ACTION_TYPES } from 'src/module/HDWallet';
-import { listMasterKeyIdsAndNamesSelector } from 'src/module/HDWallet/HDWallet.selector';
-import { actionSetActionType } from 'src/module/HDWallet/HDWallet.actions';
+import { ACTION_TYPES, actionSetActionType, listMasterKeyIdsAndNamesSelector } from 'src/module/HDWallet';
 import { IGlobalStyle } from 'src/styles';
+import { route as routeImportAccount } from 'src/module/Account/features/ImportAccount';
 
 export const Styled = styled.div`
     .disabled {
@@ -48,39 +47,66 @@ const Item = React.memo(
                         e.preventDefault();
                         typeof onClickItem === 'function' ? onClickItem() : null;
                     }}
+                    className="ellipsis"
                 >
                     {title}
                 </Link>
                 {hasIcon && (
-                    <AddCircleIcon onClick={() => (typeof onClickIcon === 'function' ? onClickIcon() : null)} />
+                    <div className="add-icon">
+                        <AddCircleIcon onClick={() => (typeof onClickIcon === 'function' ? onClickIcon() : null)} />
+                    </div>
                 )}
             </div>
         );
     },
 );
 
-const AddKeys = React.memo(() => {
-    const translateKeychain: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
-    const modalTranslate = useSelector(modalTranslateSelector);
-    const dictionary = translateKeychain.addKeys;
-    const history = useHistory();
-    const dispatch = useDispatch();
+const BlockAddNewKeychains = React.memo(() => {
     const walletId: number = useSelector(walletIdSelector);
     const masterlessId: number = useSelector(masterlessIdSelector);
     const listMasterKeyIdsAndNames: { name: string; walletId: number }[] = useSelector(
         listMasterKeyIdsAndNamesSelector,
     );
+    const translateKeychain: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
+    const dictionary = translateKeychain.addKeys;
+    const dispatch = useDispatch();
+    const history = useHistory();
     const handleAddKeyChain = (walletId: number) => {
         dispatch(actionSwitchWallet(walletId));
-        dispatch(
-            actionToggleModal({
-                data: <CreateAccount walletId={walletId} />,
-                title: modalTranslate.createKeyModal,
-                closeable: true,
-            }),
-        );
+        history.push(routeCreateAccount, {
+            walletId,
+        });
     };
     const handleSwitchWallet = (walletId: number) => dispatch(actionSwitchWallet(walletId));
+    const onImportPrivateKey = () => {
+        history.push(routeImportAccount, {});
+    };
+    return (
+        <div className="block-add">
+            <div className="add-keychain-title m-b-30">{dictionary.addKeychain}</div>
+            <div className="p-l-15 m-b-30">
+                <div className="add-keychain-desc m-b-30">{dictionary.addKeyChainDesc}</div>
+                {listMasterKeyIdsAndNames.map((item) => (
+                    <Item
+                        key={item.walletId}
+                        title={item.name}
+                        onClickIcon={() => handleAddKeyChain(item.walletId)}
+                        onClickItem={() => handleSwitchWallet(item.walletId)}
+                        classNameItem={`${item.walletId === walletId ? 'main-text' : 'sub-text'}`}
+                        hasIcon={item.walletId !== masterlessId}
+                    />
+                ))}
+            </div>
+            <Item title={dictionary.importKeyChain} onClickItem={onImportPrivateKey} onClickIcon={onImportPrivateKey} />
+        </div>
+    );
+});
+
+const BlockActions = React.memo(() => {
+    const translateKeychain: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
+    const dictionary = translateKeychain.addKeys;
+    const history = useHistory();
+    const dispatch = useDispatch();
     const handleCreateMasterKey = () => {
         dispatch(actionSetActionType(ACTION_TYPES.CREATE));
         dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
@@ -95,30 +121,25 @@ const AddKeys = React.memo(() => {
         });
     };
     return (
+        <div className="block-actions m-t-50">
+            <div className="m-b-30">{dictionary.addMasterKey}</div>
+            <div className="p-l-15">
+                <Item title={dictionary.createMasterKey} onClickIcon={handleCreateMasterKey} />
+                <Item title={dictionary.importMasterKey} onClickIcon={handleImportMasterKey} />
+            </div>
+        </div>
+    );
+});
+
+const AddKeys = React.memo(() => {
+    const translateKeychain: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
+    const dictionary = translateKeychain.addKeys;
+    return (
         <Styled>
             <Header title={dictionary.title} />
-            <div>
-                <div className="add-keychain-title m-b-30">{dictionary.addKeychain}</div>
-                <div className="p-l-15 m-b-30">
-                    <div className="add-keychain-desc m-b-30">{dictionary.addKeyChainDesc}</div>
-                    {listMasterKeyIdsAndNames.map((item) => (
-                        <Item
-                            key={item.walletId}
-                            title={item.name}
-                            onClickIcon={() => handleAddKeyChain(item.walletId)}
-                            onClickItem={() => handleSwitchWallet(item.walletId)}
-                            classNameItem={`${item.walletId === walletId ? 'main-text' : 'sub-text'}`}
-                            hasIcon={item.walletId !== masterlessId}
-                        />
-                    ))}
-                </div>
-            </div>
-            <div className="add-master-key m-t-50">
-                <div className="m-b-30">{dictionary.addMasterKey}</div>
-                <div className="p-l-15">
-                    <Item title={dictionary.createMasterKey} onClickIcon={handleCreateMasterKey} />
-                    <Item title={dictionary.importMasterKey} onClickIcon={handleImportMasterKey} />
-                </div>
+            <div className="main scroll-view">
+                <BlockAddNewKeychains />
+                <BlockActions />
             </div>
         </Styled>
     );

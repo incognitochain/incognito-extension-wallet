@@ -5,8 +5,10 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import {
     ACTION_FETCHING_CREATE_ACCOUNT,
     ACTION_FETCHED_CREATE_ACCOUNT,
+    ACTION_FETCH_FAIL_CREATE_ACCOUNT,
     ACTION_FETCHING_IMPORT_ACCOUNT,
     ACTION_FETCHED_IMPORT_ACCOUNT,
+    ACTION_FETCH_FAIL_IMPORT_ACCOUNT,
     ACTION_SELECT_ACCOUNT,
     ACTION_SET_LIST_ACCOUNT,
     ACTION_SWITCH_ACCOUNT_FETCHING,
@@ -56,10 +58,22 @@ const accountReducer = (
                 defaultAccountName: account.name,
             };
         }
+        case ACTION_FETCH_FAIL_CREATE_ACCOUNT: {
+            return {
+                ...state,
+                create: false,
+            };
+        }
         case ACTION_FETCHING_IMPORT_ACCOUNT: {
             return {
                 ...state,
                 import: true,
+            };
+        }
+        case ACTION_FETCH_FAIL_IMPORT_ACCOUNT: {
+            return {
+                ...state,
+                import: false,
             };
         }
         case ACTION_FETCHED_IMPORT_ACCOUNT: {

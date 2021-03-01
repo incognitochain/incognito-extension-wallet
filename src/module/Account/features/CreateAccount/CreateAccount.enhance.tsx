@@ -2,23 +2,23 @@ import React from 'react';
 import trim from 'lodash/trim';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
-import { InjectedFormProps, reduxForm } from 'redux-form';
-import { useAccount, actionFetchCreateAccount } from 'src/module/Account';
-import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
-import { IAccountLanguage } from 'src/i18n';
-import { actionClearAllModal } from 'src/components/Modal';
+import { InjectedFormProps, reduxForm, isInvalid, isSubmitting } from 'redux-form';
+import { actionFetchCreateAccount } from 'src/module/Account/Account.actions';
 import { actionToggleToast, LoadingIcon, TOAST_CONFIGS } from 'src/components';
 import { switchingWalletSelector, walletIdSelector } from 'src/module/Wallet/Wallet.selector';
+import { useFormValue } from 'src/hooks';
+import { IAccountLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
+import { useHistory, useLocation } from 'react-router-dom';
 
 interface IProps {
-    walletId: number;
+    walletId?: number;
 }
 
 interface TInner {
     disabledForm?: boolean;
     getAccountValidator?: () => any[];
     handleCreateAccount?: (props: any) => void;
-    errorCustom: string;
 }
 
 export interface IMergeProps extends IProps, TInner, InjectedFormProps {}
@@ -29,25 +29,34 @@ export const FORM_CONFIGS = {
 };
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
-    const { walletId }: IProps = props;
+    const { walletId: walletIdFromProps }: IProps = props;
+    const { state }: { state: any } = useLocation() || {};
+    const { walletId: walletIdFromState } = state;
+    const walletId = walletIdFromProps || walletIdFromState;
     const selectedWalletId = useSelector(walletIdSelector);
     const switchingWallet = useSelector(switchingWalletSelector);
     const dispatch = useDispatch();
-    const { isFormValid, isAccountExist } = useAccount({
-        form: FORM_CONFIGS,
-    });
+    const [accountName] = useFormValue({ formName: FORM_CONFIGS.formName, field: FORM_CONFIGS.accountName });
+    const submitting = useSelector((state) => isSubmitting(FORM_CONFIGS.formName)(state));
+    const isInvalidForm = useSelector((state) => isInvalid(FORM_CONFIGS.formName)(state));
+    const disabledForm = isInvalidForm || submitting;
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
-    const { error } = translate;
-    const errorCustom = isAccountExist ? error.keychainExisted : '';
-    const disabledForm = !isFormValid || !!errorCustom;
-    const handleCreateAccount = async (values: { accountName: string }) => {
+    const { create: createSuccess } = translate.success;
+    const history = useHistory();
+    const handleCreateAccount = async () => {
         try {
-            const { accountName } = values;
-            if (disabledForm) {
+            if (disabledForm || submitting) {
                 return;
             }
             await dispatch(actionFetchCreateAccount(trim(accountName), walletId));
-            dispatch(actionClearAllModal());
+            history.goBack();
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: createSuccess,
+                    type: TOAST_CONFIGS.success,
+                }),
+            );
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -61,7 +70,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     if (selectedWalletId !== walletId || switchingWallet) {
         return <LoadingIcon center />;
     }
-    return <WrappedComponent {...{ ...props, disabledForm, handleCreateAccount, errorCustom }} />;
+    return <WrappedComponent {...{ ...props, disabledForm, handleCreateAccount }} />;
 };
 
 export default compose<IMergeProps, any>(

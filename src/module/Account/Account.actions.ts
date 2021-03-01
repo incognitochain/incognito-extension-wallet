@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { batch } from 'react-redux';
+import toLower from 'lodash/toLower';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import isEqual from 'lodash/isEqual';
 import { Dispatch } from 'redux';
@@ -11,7 +12,7 @@ import {
     actionSaveWallet,
     actionUpdateWallet,
 } from 'src/module/Wallet/Wallet.actions';
-import { walletDataSelector, walletSelector } from 'src/module/Wallet/Wallet.selector';
+import { walletDataSelector, walletSelector, isMasterlessSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token/Token.actions';
 import { cachePromise } from 'src/services';
 import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
@@ -19,6 +20,7 @@ import { actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { passwordSelector } from 'src/module/Password/Password.selector';
 import { IAccountLanguage } from 'src/i18n/interface';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
+import { actionFreeHistory } from 'src/module/History/History.actions';
 import {
     ACTION_FETCHED,
     ACTION_FETCHING_CREATE_ACCOUNT,
@@ -32,6 +34,8 @@ import {
     ACTION_GET_ACCOUNT_BALANCE_FETCHING,
     ACTION_GET_ACCOUNT_BALANCE_FETCHED,
     ACTION_SET_SIGN_PUBLIC_KEY_ENCODE,
+    ACTION_FETCH_FAIL_IMPORT_ACCOUNT,
+    ACTION_FETCH_FAIL_CREATE_ACCOUNT,
 } from './Account.constant';
 import {
     defaultAccountNameSelector,
@@ -40,7 +44,6 @@ import {
     importAccountSelector,
     switchAccountSelector,
 } from './Account.selector';
-import { actionFreeHistory } from '../History';
 
 export const actionSetSignPublicKeyEncode = (payload: string) => ({ type: ACTION_SET_SIGN_PUBLIC_KEY_ENCODE, payload });
 
@@ -157,6 +160,10 @@ export const actionFetchedCreateAccount = (payload: AccountInstance) => ({
     payload,
 });
 
+export const actionFetchFailCreateAccount = () => ({
+    type: ACTION_FETCH_FAIL_CREATE_ACCOUNT,
+});
+
 export const actionFetchCreateAccount = (accountName: string, walletId: number) => async (
     dispatch: Dispatch,
     getState: () => IRootState,
@@ -170,9 +177,15 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
             return;
         }
         await dispatch(actionFetchingCreateAccount());
-        const account = await wallet.masterAccount.addAccount(accountName);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
         const { error } = translate;
+        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+        const listAccountName = listAccount.map((item) => item.name);
+        const isAccountExist = listAccountName.some((name: string) => isEqual(toLower(name), toLower(accountName)));
+        if (isAccountExist) {
+            throw new Error(error.keychainExisted);
+        }
+        const account = await wallet.masterAccount.addAccount(accountName);
         if (!account) {
             throw new Error(error.canNotCreate);
         }
@@ -191,6 +204,7 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
         ]);
         dispatch(actionFetchedCreateAccount(account));
     } catch (error) {
+        dispatch(actionFetchFailCreateAccount());
         throw error;
     }
 };
@@ -206,31 +220,67 @@ export const actionFetchedImportAccount = (payload: AccountInstance) => ({
     payload,
 });
 
-export const actionFetchImportAccount = (accountName: string, privateKey: string) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
+export const actionFetchFailImportAccount = () => ({
+    type: ACTION_FETCH_FAIL_IMPORT_ACCOUNT,
+});
+
+export const actionFetchImportAccount = ({
+    accountName,
+    privateKey,
+    walletId,
+}: {
+    accountName: string;
+    privateKey: string;
+    walletId: number;
+}) => async (dispatch: Dispatch, getState: () => IRootState) => {
     try {
         const state = getState();
-        const wallet: WalletInstance = walletDataSelector(state);
         const importing = importAccountSelector(state);
-        if (importing) {
+        if (importing || !accountName || !privateKey) {
             return;
         }
         await dispatch(actionFetchingImportAccount());
-        const account = await wallet.masterAccount.importAccount(accountName, privateKey);
+        const pass: string = passwordSelector(state);
+        const wallet: WalletInstance = await loadWallet(walletId, pass);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
+
         const { error } = translate;
+        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+        const listAccountName = listAccount.map((item) => item.name);
+        const listPrivateKey = listAccount.map((item) => item.key.keySet.privateKeySerialized);
+        const isAccountExist =
+            listAccountName.some((name: string) => isEqual(toLower(name), toLower(accountName))) ||
+            listPrivateKey.some((privateKeySerialized) => isEqual(privateKeySerialized, privateKey));
+        if (isAccountExist) {
+            throw new Error(error.keychainExisted);
+        }
+        const account: AccountInstance = await wallet.masterAccount.importAccount(accountName, privateKey);
+        console.debug('ACCOUNT', account.name);
         if (!account) {
             throw new Error(error.canNotImport);
         }
-        await actionSwitchAccount(accountName)(dispatch, getState);
-        await actionFollowDefaultToken(account)(dispatch, getState);
-        await dispatch(actionFetchedImportAccount(account));
+        const mainnet: boolean = isMainnetSelector(state);
+        await dispatch(
+            actionLoadedWallet({
+                wallet,
+                mainnet,
+                walletId,
+            }),
+        );
+        let task: any[] = [
+            actionFollowDefaultToken(account)(dispatch, getState),
+            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            actionSwitchAccount(accountName)(dispatch, getState),
+        ];
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
+        if (!isMasterless) {
+            task.push(wallet.update());
+        }
+        await Promise.all([...task]);
+        dispatch(actionFetchedImportAccount(account));
     } catch (error) {
+        dispatch(actionFetchFailImportAccount());
         throw error;
-    } finally {
-        await actionSaveWallet()(dispatch, getState);
     }
 };
 

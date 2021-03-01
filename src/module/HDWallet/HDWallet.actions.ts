@@ -2,7 +2,7 @@ import { passwordSelector } from 'src/module/Password';
 import { IRootState } from 'src/redux/interface';
 import { Dispatch } from 'redux';
 import { WalletInstance } from 'incognito-js/build/web/browser';
-import { listIdsWalletSelector, loadWallet } from 'src/module/Wallet';
+import { loadWallet, listIdsWalletSelector, masterlessIdSelector } from 'src/module/Wallet';
 import { ACTION_UPDATE_MASTER_KEY, ACTION_SET_ACTION_TYPE, ACTION_LOADED_LIST_MASTER_KEY } from './HDWallet.constant';
 
 export const actionSetActionType = (payload: number) => ({
@@ -19,14 +19,19 @@ export const actionSetListMasterKey = () => async (dispatch: Dispatch, getState:
     try {
         const state = getState();
         const listIds: number[] = listIdsWalletSelector(state);
+        const masterlessId: number = masterlessIdSelector(state);
         const pass = passwordSelector(state);
         let loadListWalletFromDB = [];
         loadListWalletFromDB = listIds.map((walletId: number) => loadWallet(walletId, pass));
         let listWallet: any[] = await Promise.all([...loadListWalletFromDB]);
-        listWallet = listWallet.map((wallet: WalletInstance, index) => ({
-            walletId: listIds[index],
-            wallet,
-        }));
+        listWallet = listWallet.map((wallet: WalletInstance, index) => {
+            const walletId: number = listIds[index];
+            return {
+                walletId,
+                wallet,
+                isMasterless: masterlessId === walletId,
+            };
+        });
         dispatch(actionLoadedListMasterKey(listWallet));
     } catch (error) {
         throw error;

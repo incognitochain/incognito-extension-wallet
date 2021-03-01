@@ -44,11 +44,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 break;
         }
     };
-    // // TODO: mockup
-    // React.useEffect(() => {
-    //     dispatch(actionSetActionType(ACTION_TYPES.CREATE));
-    //     dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
-    // }, []);
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, onGoBack }} />

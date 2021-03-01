@@ -1,53 +1,48 @@
 import React from 'react';
-import { Field, InjectedFormProps } from 'redux-form';
-import Header from 'src/components/Header';
+import { Field } from 'redux-form';
 import { validator } from 'src/components/ReduxForm';
 import InputField from 'src/components/ReduxForm/InputField';
 import { Button } from 'src/components/Core';
+import { IAccountLanguage } from 'src/i18n';
+import { useSelector } from 'react-redux';
+import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
+import { Header } from 'src/components';
+import withImportAccount, { IMergeProps, FORM_CONFIGS } from './ImportAccount.enhance';
 import { Styled } from './ImportAccount.styled';
-import withImportAccount, { TOutter } from './ImportAccount.enhance';
 
-const ImportAccount = (props: any & TOutter & InjectedFormProps<any, TOutter>) => {
-    const { handleImportAccount, readOnlyName, handleChangeRandomName, disabledForm, handleSubmit, submitting } = props;
+const ImportAccount = (props: IMergeProps & any) => {
+    const { handleImportAccount, disabledForm, handleSubmit, submitting }: IMergeProps = props;
+    const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
+    const { title } = translate.import;
+    const { placeholderName, placeholderPrivateKey } = translate.general;
     return (
         <Styled>
-            <Header title="Import keychain" />
-            <form className="form-import-account" onSubmit={handleSubmit(handleImportAccount)}>
-                <div>
-                    <Field
-                        component={InputField}
-                        componentProps={{
-                            autoFocus: true,
-                            placeholder: 'Enter a name for your keychain',
-                        }}
-                        name="accountName"
-                        label="Enter a name for your keychain"
-                        validate={[...validator.combinedAccountName]}
-                        rightLabel={
-                            readOnlyName && (
-                                <button type="button" onClick={handleChangeRandomName}>
-                                    Edit
-                                </button>
-                            )
-                        }
-                    />
-                    <Field
-                        component={InputField}
-                        name="privateKey"
-                        label="Private Key"
-                        validate={[validator.required]}
-                        componentProps={{
-                            autoFocus: true,
-                            placeholder: 'Enter private key',
-                        }}
-                    />
-                    <Button
-                        title={submitting ? 'Importing keychain...' : 'Import keychain'}
-                        type="submit"
-                        disabled={disabledForm || submitting}
-                    />
-                </div>
-            </form>
+            <Header title={title} />
+            <div className="main scroll-view">
+                <form onSubmit={handleSubmit(handleImportAccount)}>
+                    <div>
+                        <Field
+                            component={InputField}
+                            componentProps={{
+                                autoFocus: true,
+                                placeholder: placeholderName,
+                            }}
+                            name={FORM_CONFIGS.accountName}
+                            validate={[...validator.combinedAccountName]}
+                        />
+                        <Field
+                            component={InputField}
+                            name={FORM_CONFIGS.privateKey}
+                            validate={[validator.required]}
+                            componentProps={{
+                                autoFocus: true,
+                                placeholder: placeholderPrivateKey,
+                            }}
+                        />
+                        <Button title={`${title}${submitting ? '...' : ''}`} type="submit" disabled={disabledForm} />
+                    </div>
+                </form>
+            </div>
         </Styled>
     );
 };

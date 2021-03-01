@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { COLORS } from 'src/styles';
 
 export const Styled = styled.div`
-    margin-top: 15px;
+    margin-bottom: 15px;
     .input-wrapper {
         position: relative;
         flex: 1;

@@ -5,6 +5,7 @@ import { IReducer as IImportReducer } from './features/ImportMasterKey';
 export interface IMasterKey {
     wallet: WalletInstance;
     walletId: number;
+    isMasterless: boolean;
 }
 export interface IRootReducer {
     actionType: number;
