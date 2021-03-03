@@ -6,6 +6,7 @@ import { themeSelector } from 'src/module/Configs';
 import { COLORS, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 import { Header } from 'src/components';
+import useOutsideRef from 'src/hooks/useDetectClickOutside';
 import enhance from './Modal.enhance';
 import { modalSelector } from './Modal.selector';
 import { IProps } from './Modal.interface';
@@ -50,10 +51,12 @@ const Modal = (props: IProps) => {
     const { onClose } = props;
     const { data } = modalState;
     const lastModal = last(data);
+    const ref: any = React.useRef({});
+    const { closeable, data: modalData, customModalStyle, title, isLoadingModal, rightHeader } = lastModal || {};
+    useOutsideRef(ref, closeable ? onClose : undefined);
     if (isEmpty(data) || isEmpty(lastModal)) {
         return null;
     }
-    const { closeable, data: modalData, customModalStyle, title, isLoadingModal, rightHeader } = lastModal;
     const renderModalContent = () => {
         if (isLoadingModal) {
             return (
@@ -63,11 +66,19 @@ const Modal = (props: IProps) => {
             );
         }
         return (
-            <div className="modal-content-wrapper" style={customModalStyle}>
+            <div className="modal-content-wrapper" ref={ref} style={customModalStyle}>
                 {!!title && (
-                    <Header onGoBack={closeable ? onClose : undefined} title={title} rightHeader={rightHeader} />
+                    <Header
+                        onGoBack={() => {
+                            if (closeable) {
+                                onClose();
+                            }
+                        }}
+                        title={title}
+                        rightHeader={rightHeader}
+                    />
                 )}
-                {modalData}
+                <div className="modal-data">{modalData}</div>
             </div>
         );
     };

@@ -23,7 +23,6 @@ const CreateMasterKeyMnemonic = (props: IMergeProps & any) => {
     const { mnemonic } = useSelector(createMasterKeySelector);
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
     const { desc1, btnSave } = translate.createMasterKeyMnemonic;
-    React.useEffect(() => {}, [mnemonic]);
     return (
         <Styled>
             <p className="desc" dangerouslySetInnerHTML={{ __html: desc1 }} />

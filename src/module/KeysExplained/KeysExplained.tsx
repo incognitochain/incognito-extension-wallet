@@ -6,18 +6,15 @@ import { translateSelector } from 'src/module/Configs';
 import enhance from './KeysExplained.enhance';
 
 const Styled = styled.div`
-    .content {
-        line-height 24px;
-    }
-    .desc {
-        margin-bottom: 24px;
-    }
-    .title {
-    }
-    .text {
-    }
+    .desc,
     .item {
-        margin-bottom: 24px;
+        margin-bottom: 30px;
+    }
+    .item .main-text {
+        margin-bottom: 10px;
+    }
+    p {
+        line-height: 24px;
     }
 `;
 
@@ -29,11 +26,11 @@ const KeysExplained = () => {
         <Styled>
             <Header title={dictionary.header} />
             <div className="content scroll-view">
-                <div className="desc text-color-grey">{dictionary.desc}</div>
+                <p className="desc sub-text">{dictionary.desc}</p>
                 {dictionary.content.map((item: any) => (
                     <div className="item">
-                        <div className="title fw-bold">{item.title}</div>
-                        <div dangerouslySetInnerHTML={{ __html: item.text }} />
+                        <p className="main-text fw-medium">{item.title}</p>
+                        <p className="sub-text" dangerouslySetInnerHTML={{ __html: item.text }} />
                     </div>
                 ))}
             </div>

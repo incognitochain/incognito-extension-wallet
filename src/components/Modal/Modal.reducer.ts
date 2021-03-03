@@ -22,14 +22,11 @@ const reducer = (
             let { data: modals } = state;
             const currentModal = last(modals);
             const modal = action.payload;
-
             if (currentModal && currentModal.autoClearOnNewModal) {
                 modals = modals.slice(0, modals.length - 1);
             }
-
             const newData =
                 isEmpty(modal) || isEmpty(modal.data) ? [...modals.slice(0, modals.length - 1)] : [...modals, modal];
-
             return {
                 ...state,
                 ...action.payload,

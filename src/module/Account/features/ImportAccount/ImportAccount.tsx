@@ -24,7 +24,6 @@ const ImportAccount = (props: IMergeProps & any) => {
                         <Field
                             component={InputField}
                             componentProps={{
-                                autoFocus: true,
                                 placeholder: placeholderName,
                             }}
                             name={FORM_CONFIGS.accountName}
@@ -35,7 +34,6 @@ const ImportAccount = (props: IMergeProps & any) => {
                             name={FORM_CONFIGS.privateKey}
                             validate={[validator.required]}
                             componentProps={{
-                                autoFocus: true,
                                 placeholder: placeholderPrivateKey,
                             }}
                         />

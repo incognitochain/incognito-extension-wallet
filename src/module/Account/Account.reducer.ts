@@ -16,6 +16,9 @@ import {
     ACTION_GET_ACCOUNT_BALANCE_FETCHING,
     ACTION_GET_ACCOUNT_BALANCE_FETCHED,
     ACTION_SET_SIGN_PUBLIC_KEY_ENCODE,
+    ACTION_FETCHING_REMOVE_ACCOUNT,
+    ACTION_FETCHED_REMOVE_ACCOUNT,
+    ACTION_FETCH_FAIL_REMOVE_ACCOUNT,
 } from './Account.constant';
 import { IAccountReducer } from './Account.interface';
 
@@ -28,6 +31,7 @@ const initialState: IAccountReducer = {
     import: false,
     accountBalance: 0,
     signPublicKeyEncode: '',
+    remove: false,
 };
 
 const accountReducer = (
@@ -38,6 +42,24 @@ const accountReducer = (
     },
 ) => {
     switch (action.type) {
+        case ACTION_FETCHING_REMOVE_ACCOUNT: {
+            return {
+                ...state,
+                remove: true,
+            };
+        }
+        case ACTION_FETCHED_REMOVE_ACCOUNT: {
+            return {
+                ...state,
+                remove: false,
+            };
+        }
+        case ACTION_FETCH_FAIL_REMOVE_ACCOUNT: {
+            return {
+                ...state,
+                remove: false,
+            };
+        }
         case ACTION_SET_SIGN_PUBLIC_KEY_ENCODE: {
             return {
                 ...state,

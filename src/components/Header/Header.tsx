@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FONT_SIZES } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { ArrowLeftIcon } from 'src/components/Icons';
 import withHeader, { IMergeProps } from './Header.enhance';
@@ -19,7 +18,6 @@ const Styled = styled.div`
         cursor: pointer;
     }
     .left p.header-title {
-        line-height: ${FONT_SIZES.medium + 3}px;
         margin-right: 10px;
     }
     .right {

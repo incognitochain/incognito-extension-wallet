@@ -41,3 +41,7 @@ export const isMasterKeyMnemonicExistSelector = createSelector(
     listMasterKeyMnemonicSelector,
     (list: string[]) => (mnemonic: string) => list.includes(mnemonic),
 );
+
+export const getMasterKeyByIdSelector = createSelector(rootHDWalletSelector, ({ list }) => (masterKeyId: number) =>
+    list.find((masterKey) => masterKey.walletId === masterKeyId),
+);

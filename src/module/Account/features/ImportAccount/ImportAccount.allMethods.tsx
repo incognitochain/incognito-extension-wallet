@@ -8,6 +8,7 @@ import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import styled from 'styled-components';
 import { masterlessIdSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFetchImportAccount } from 'src/module/Account/Account.actions';
+import { importAccountSelector } from '../..';
 
 const Styled = styled.div`
     .group-actions {
@@ -33,6 +34,7 @@ const AllMethodsImport = (props: IProps) => {
     const masterlessId = useSelector(masterlessIdSelector);
     const history = useHistory();
     const dispatch = useDispatch();
+    const importing = useSelector(importAccountSelector);
     const handleImportMasterKey = () => history.push(routeImportMasterKey);
     const handleImportKeychainOnly = async () => {
         try {
@@ -43,6 +45,7 @@ const AllMethodsImport = (props: IProps) => {
                     walletId: masterlessId,
                 }),
             );
+            history.goBack();
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -61,7 +64,11 @@ const AllMethodsImport = (props: IProps) => {
                 <p className="main-text">{subAllMethods}</p>
                 <div className="group-actions">
                     <Button title={btnImportMasterKey} onClick={handleImportMasterKey} />
-                    <Button title={btnImportKeychainOnly} onClick={handleImportKeychainOnly} />
+                    <Button
+                        disabled={importing}
+                        title={`${btnImportKeychainOnly}${importing ? '...' : ''}`}
+                        onClick={handleImportKeychainOnly}
+                    />
                 </div>
             </div>
         </Styled>

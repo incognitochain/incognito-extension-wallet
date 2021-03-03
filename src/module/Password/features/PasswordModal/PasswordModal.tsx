@@ -1,38 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Input, Button } from 'src/components';
+import { Button } from 'src/components';
 import { useSelector } from 'react-redux';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { IProps } from './PasswordModal.interface';
-import enhance from './PasswordModal.enhance';
+import { InputField, validator } from 'src/components/ReduxForm';
+import { Field } from 'redux-form';
+import { useValidator } from 'src/hooks';
+import { INPUT_FIELD } from 'src/components/ReduxForm/InputField';
+import withPassword, { IMergeProps, FORM_CONFIGS } from './PasswordModal.enhance';
 
 const Styled = styled.div`
-    .submit {
+    .btn-container {
         margin-top: 15px;
     }
 `;
 
-const PasswordModal = (props: IProps) => {
+const PasswordModal = (props: IMergeProps & any) => {
     const dictionary = useSelector(translateByFieldSelector)('password');
-
-    const { onSubmit, error, onChangePass, wrapperRef } = props;
-
+    const { handleSubmitForm, handleSubmit, disabledForm, errorCustom }: IMergeProps = props;
+    const [validatePassword] = useValidator({
+        validator: [validator.required],
+    });
     return (
-        <Styled ref={wrapperRef}>
-            <form onSubmit={onSubmit}>
-                <Input
-                    type="password"
-                    autoComplete="off"
-                    placeholder={dictionary.enterPasswordInput}
-                    onChange={onChangePass}
-                    toggleVisible
+        <Styled>
+            <form onSubmit={handleSubmit(handleSubmitForm)}>
+                <Field
+                    component={InputField}
+                    name={FORM_CONFIGS.password}
+                    componentProps={{
+                        placeholder: dictionary.enterPasswordInput,
+                        maxLength: 32,
+                    }}
+                    inputType={INPUT_FIELD.password}
+                    validate={[...validatePassword]}
+                    errorCustom={errorCustom}
                 />
-                <Button disabled={!!error} title={dictionary.enterPasswordBtn} type="submit" className="submit" />
-                <p>{error}</p>
-                <input type="text" name="email" value="..." autoComplete="username email" className="hidden" readOnly />
+                <Button disabled={disabledForm} title={dictionary.enterPasswordBtn} type="submit" />
             </form>
         </Styled>
     );
 };
 
-export default enhance(React.memo(PasswordModal));
+export default withPassword(React.memo(PasswordModal));

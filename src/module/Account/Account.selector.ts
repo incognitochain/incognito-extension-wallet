@@ -57,6 +57,8 @@ export const createAccountSelector = createSelector(accountSelector, (account) =
 
 export const importAccountSelector = createSelector(accountSelector, (account) => account?.import || false);
 
+export const removeAccountSelector = createSelector(accountSelector, (account) => account?.remove || false);
+
 export const getAccountByNameSelector = createSelector(walletDataSelector, (wallet: WalletInstance) =>
     memoize((accountName: string) => wallet.masterAccount.getAccountByName(accountName)),
 );

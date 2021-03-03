@@ -23,6 +23,7 @@ export interface IAccountReducer {
     switch: boolean;
     create: boolean;
     import: boolean;
+    remove: boolean;
     accountBalance: number;
     signPublicKeyEncode: string;
 }

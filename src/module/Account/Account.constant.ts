@@ -8,6 +8,10 @@ export const ACTION_FETCHING_IMPORT_ACCOUNT = `[account] Importing account`;
 export const ACTION_FETCHED_IMPORT_ACCOUNT = `[account] Imported account`;
 export const ACTION_FETCH_FAIL_IMPORT_ACCOUNT = `[account] Import fail account`;
 
+export const ACTION_FETCHING_REMOVE_ACCOUNT = `[account] Removing account`;
+export const ACTION_FETCHED_REMOVE_ACCOUNT = `[account] Removed account`;
+export const ACTION_FETCH_FAIL_REMOVE_ACCOUNT = `[account] Remove fail account`;
+
 export const ACTION_SELECT_ACCOUNT = `[account] Select account`;
 export const ACTION_SET_LIST_ACCOUNT = `[account] Set list account`;
 export const ACTION_SWITCH_ACCOUNT_FETCHING = `[account] Switching account`;

@@ -16,7 +16,6 @@ export interface ILanguage {
     shield: IShieldLanguage;
     welcome: IWelcomeLanguage;
     error: IErrorLanguage;
-    masterKey: IMasterKeyLanguage;
     password: IPasswordLanguage;
     modal: IModalLanguage;
     connect: IConnectLanguage;
@@ -56,6 +55,17 @@ export interface IHDWalletLanguage {
         existMasterKeyMnemonic: string;
         dupMasterless: string;
     };
+    info: {
+        title: string;
+        revealPhrase: string;
+        viewKeys: string;
+    };
+    showMnemonic: {
+        title: string;
+        newMnemonic: string;
+        newMnemonicBtn: string;
+        hiddenText: string;
+    };
 }
 
 export interface IWalletLanguage {
@@ -67,6 +77,8 @@ export interface IWalletLanguage {
     error: {
         walletNotExisted: string;
         walletIdNotFound: string;
+        canNotSwitchWallet: string;
+        canNotLoadWallet: string;
     };
     tooltip: {
         refresh: string;
@@ -208,7 +220,7 @@ export interface IAccountLanguage {
         index: string;
         shard: string;
         keychain: string;
-        delete: string;
+        removeKey: string;
     };
     receive: {
         headerTitle: string;
@@ -219,6 +231,7 @@ export interface IAccountLanguage {
         import: string;
         canNotCreate: string;
         canNotImport: string;
+        canNotRemove: string;
         keychainExisted: string;
         keychainNotExisted: string;
     };
@@ -235,6 +248,7 @@ export interface IAccountLanguage {
 export interface IKeychainLanguage {
     headerTitle: string;
     yourKeychain: string;
+    revealPhraseBtn: string;
     addKeys: {
         title: string;
         addKeychain: string;
@@ -361,38 +375,10 @@ export interface IOldUserLanguage {
     forgotPass: string;
 }
 
-export interface IImportMnemonicLanguage {
-    title: string;
-    nameInput: string;
-    mnemonicInput: string;
-    btn: string;
-}
-
-export interface INewMasterKeyLanguage {
-    createMasterKeyName: string;
-    content: string;
-    content2: string;
-    createKey: string;
-    checkbox: string;
-}
-
-export interface IVerifyMnemonicLanguage {
-    title: string;
-    createBtn: string;
-    importBtn: string;
-}
-
 export interface IWelcomeLanguage {
     newUser: INewUserLanguage;
     oldUser: IOldUserLanguage;
     forgotPass: IForgotPassLanguage;
-}
-
-export interface IShowMnemonicLanguage {
-    title: string;
-    newMnemonic: string;
-    newMnemonicBtn: string;
-    hiddenText: string;
 }
 
 export interface IPasswordLanguage {
@@ -407,21 +393,6 @@ export interface IErrorLanguage {
     invalidPassword: string;
     invalidPasswordLength: string;
 }
-
-export interface IMasterKeyLanguage {
-    verifyMnemonic: IVerifyMnemonicLanguage;
-    importMnemonic: IImportMnemonicLanguage;
-    showMnemonic: IShowMnemonicLanguage;
-    newMasterKey: INewMasterKeyLanguage;
-    info: {
-        title: string;
-        revealPhrase: string;
-        viewKeys: string;
-        revealPhraseBtn: string;
-        removeKey: string;
-    };
-}
-
 export interface IModalLanguage {
     addKeysModal: string;
     createKeyModal: string;

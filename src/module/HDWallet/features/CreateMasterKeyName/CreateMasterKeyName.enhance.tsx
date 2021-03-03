@@ -47,11 +47,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             dispatch(change(FORM_CONFIGS.formName, FORM_CONFIGS.masterKeyName, oldMasterKeyName));
         }
     }, [oldMasterKeyName]);
-    // TODO: mockup
-    // React.useEffect(() => {
-    //     dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyMnemonic));
-    //     dispatch(actionSetMasterKeyName('MASTER'));
-    // }, []);
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, onHandleChecked, disabled, onHandleReady, errorCustom }} />

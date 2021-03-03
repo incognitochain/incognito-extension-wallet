@@ -1,19 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { themeSelector, translateSelector } from 'src/module/Configs';
+import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
 import { IGlobalStyle } from 'src/styles';
+import { IHDWalletLanguage } from 'src/i18n';
 
 const Styled = styled.div`
+    cursor: pointer;
     background-color: ${(props: IGlobalStyle) => props.theme.inverseBody};
     padding: 15px;
     min-height: 70px;
     color: ${(props: IGlobalStyle) => props.theme.inverseText};
     border-radius: 5px;
     line-height: 24px;
-    .hide-mnemonic {
-        text-align: center;
-    }
 `;
 
 interface IProps {
@@ -24,12 +23,17 @@ interface IProps {
 
 const Mnemonic = (props: IProps) => {
     const { mnemonic, hidden, onClick } = props;
-    const translate = useSelector(translateSelector);
-    const dictionary = translate.masterKey.showMnemonic;
+    const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
+    const dictionary = translate.showMnemonic;
     const theme = useSelector(themeSelector);
     const renderContent = () => {
         if (hidden) {
-            return <div className="hide-mnemonic">{dictionary.hiddenText}</div>;
+            return (
+                <p
+                    className="fw-medium center-text hide-mnemonic"
+                    dangerouslySetInnerHTML={{ __html: dictionary.hiddenText }}
+                />
+            );
         }
         let words;
         if (typeof mnemonic === 'object') {
@@ -37,10 +41,10 @@ const Mnemonic = (props: IProps) => {
         } else {
             words = mnemonic;
         }
-        return words;
+        return <p className="fw-medium center-text">{words}</p>;
     };
     return (
-        <Styled theme={theme} className="mnemonic-container fw-medium" onClick={onClick}>
+        <Styled theme={theme} className="mnemonic-container" onClick={onClick}>
             {renderContent()}
         </Styled>
     );
