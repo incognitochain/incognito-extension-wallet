@@ -3,7 +3,7 @@ import { ACTION_SHOW_TOOLTIP, ACTION_REMOVE_TOOLTIP } from './Tooltip.constant';
 export const actionShowTooltip = ({
     id = '',
     text,
-    timeout = 5,
+    timeout = 2,
     ref,
     width = 200,
     height = 100,
