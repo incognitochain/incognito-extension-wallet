@@ -38,7 +38,7 @@ export const actionSetListMasterKey = () => async (dispatch: Dispatch, getState:
     }
 };
 
-export const actionUpdateMasterKey = (payload: { walletId: number; wallet: WalletInstance }) => ({
+export const actionUpdateMasterKey = (payload: { walletId: number; wallet: WalletInstance | any }) => ({
     type: ACTION_UPDATE_MASTER_KEY,
     payload,
 });

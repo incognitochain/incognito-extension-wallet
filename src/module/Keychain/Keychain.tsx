@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { AddCircleIcon, Header, QuestionIcon } from 'src/components';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { IKeychainLanguage } from 'src/i18n';
-import { withLayout } from 'src/components/Layout';
 import { useHistory } from 'react-router';
 import { keyExplainedRoute } from 'src/module/KeysExplained';
 import { route as routeAddKeys } from './features/AddKeys';
@@ -22,8 +21,8 @@ const Keychain = React.memo(() => {
             <Header
                 title=" "
                 customHeader={
-                    <div className="custom-header">
-                        <div className="fw-medium fs-medium">{translateKeychain.headerTitle}</div>
+                    <div className="custom-header flex">
+                        <p className="fw-medium fs-medium">{translateKeychain.headerTitle}</p>
                         <QuestionIcon onClick={handleClickHelp} />
                     </div>
                 }
@@ -34,4 +33,4 @@ const Keychain = React.memo(() => {
     );
 });
 
-export default withLayout(Keychain);
+export default Keychain;

@@ -47,7 +47,7 @@ const Item = React.memo(
                         e.preventDefault();
                         typeof onClickItem === 'function' ? onClickItem() : null;
                     }}
-                    className="ellipsis"
+                    className="fs-medium ellipsis"
                 >
                     {title}
                 </Link>
@@ -83,9 +83,9 @@ const BlockAddNewKeychains = React.memo(() => {
     };
     return (
         <div className="block-add">
-            <div className="add-keychain-title m-b-30">{dictionary.addKeychain}</div>
+            <div className="fs-medium fw-medium m-b-30">{dictionary.addKeychain}</div>
             <div className="p-l-15 m-b-30">
-                <div className="add-keychain-desc m-b-30">{dictionary.addKeyChainDesc}</div>
+                <div className="fs-medium desc m-b-30">{dictionary.addKeyChainDesc}</div>
                 {listMasterKeyIdsAndNames.map((item) => (
                     <Item
                         key={item.walletId}
@@ -122,7 +122,7 @@ const BlockActions = React.memo(() => {
     };
     return (
         <div className="block-actions m-t-50">
-            <div className="m-b-30">{dictionary.addMasterKey}</div>
+            <div className="fs-medium fw-medium m-b-30">{dictionary.addMasterKey}</div>
             <div className="p-l-15">
                 <Item title={dictionary.createMasterKey} onClickIcon={handleCreateMasterKey} />
                 <Item title={dictionary.importMasterKey} onClickIcon={handleImportMasterKey} />

@@ -1,5 +1,5 @@
-import React, { HTMLAttributes } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { HTMLAttributes, SyntheticEvent } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import SearchBox from './Header.searchBox';
 
 export interface TInner {
@@ -24,7 +24,8 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         toggleSearch: false,
     });
     const { toggleSearch } = state;
-    const onHandleToggleSearch = async () => {
+    const onHandleToggleSearch = async (e: SyntheticEvent) => {
+        e.preventDefault();
         if (canSearch) {
             await setState({
                 ...state,
@@ -47,13 +48,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         return (
             <div className="header-container flex">
                 {!!title && (
-                    <button
-                        type="button"
+                    <Link
+                        to="#"
                         onClick={onHandleToggleSearch}
                         className={`header-title fw-medium fs-medium ellipsis ${canSearch ? 'sub-text' : ''}`}
                     >
                         {title}
-                    </button>
+                    </Link>
                 )}
                 {customHeader && customHeader}
             </div>

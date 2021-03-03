@@ -32,6 +32,7 @@ const language: ILanguage = {
     keychain: {
         headerTitle: 'Keychain',
         yourKeychain: 'Your keychains',
+        revealPhraseBtn: 'View keys',
         addKeys: {
             title: 'Add keys',
             addKeychain: 'Add a keychain',
@@ -53,6 +54,8 @@ const language: ILanguage = {
         error: {
             walletNotExisted: 'Wallet is not exist',
             walletIdNotFound: 'Can not found wallet id',
+            canNotSwitchWallet: 'Can not switch wallet',
+            canNotLoadWallet: 'Can not load wallet',
         },
         tooltip: {
             refresh: 'Refresh this page',
@@ -129,7 +132,7 @@ const language: ILanguage = {
             index: 'Index',
             shard: 'Shard',
             keychain: 'keychain',
-            delete: 'Delete',
+            removeKey: 'Remove keychain',
         },
         receive: {
             headerTitle: 'Receive anonymously',
@@ -141,6 +144,7 @@ const language: ILanguage = {
             keychainNotExisted: 'Keychain is not exist',
             canNotCreate: `Can not create keychain`,
             canNotImport: `Can not import keychain`,
+            canNotRemove: `Can not remove keychain`,
             keychainExisted: 'Keychain is exist',
         },
         success: {
@@ -324,40 +328,6 @@ const language: ILanguage = {
         enterPasswordInput: 'Enter your password',
         enterPasswordBtn: 'OK',
     },
-    masterKey: {
-        newMasterKey: {
-            createMasterKeyName: 'Enter a name for your master key',
-            content: 'The next screen will contain 12 special words that will allow you to recover your funds.',
-            content2:
-                'Be prepared to record them in a safe place.  If anyone gains access to them, they will gain access to your funds.',
-            createKey: "I'm ready",
-            checkbox: 'I accept that if I lose these words I will lose access to my funds.',
-        },
-        verifyMnemonic: {
-            title: 'Click on these words in the correct order. If you make a mistake, click again to undo.',
-            createBtn: 'Create',
-            importBtn: 'Import',
-        },
-        importMnemonic: {
-            title: 'Import master key',
-            nameInput: 'Enter a name for your master key',
-            mnemonicInput: 'Enter your seed phrase',
-            btn: 'Import',
-        },
-        showMnemonic: {
-            title: 'Back up',
-            newMnemonic: 'Save these words in the correct order. Never share this phrase with anyone else.',
-            newMnemonicBtn: "I've saved my phrase",
-            hiddenText: 'Click to reveal.\n Back it up if you haven’t!',
-        },
-        info: {
-            title: 'View keys',
-            revealPhrase: 'Reveal master key phrase',
-            viewKeys: 'View keychains',
-            revealPhraseBtn: 'View keys',
-            removeKey: 'Remove keychain',
-        },
-    },
     hdWallet: {
         createMasterKeyName: {
             desc1: 'The next screen will contain 12 special words that will allow you to recover your funds.',
@@ -376,6 +346,11 @@ const language: ILanguage = {
         importMasterKey: {
             title: 'Import master key',
         },
+        info: {
+            title: 'View keys',
+            revealPhrase: 'Reveal master key phrase',
+            viewKeys: 'View keychains',
+        },
         general: {
             qrTitle: 'Your secret phase',
             masterKeyNamePlaceholder: 'Enter a name for your master key',
@@ -389,6 +364,12 @@ const language: ILanguage = {
             existMasterKeyName: 'Master key names is exist',
             existMasterKeyMnemonic: 'Master key mnemonic is exist',
             dupMasterless: 'Master key names is not allowed',
+        },
+        showMnemonic: {
+            title: 'Back up',
+            newMnemonic: 'Save these words in the correct order. Never share this phrase with anyone else.',
+            newMnemonicBtn: "I've saved my phrase",
+            hiddenText: `Click to reveal.<br /> Back it up if you haven’t!`,
         },
     },
     modal: {

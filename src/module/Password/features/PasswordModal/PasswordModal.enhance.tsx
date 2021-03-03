@@ -1,63 +1,69 @@
-import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose } from 'recompose';
 import { translateSelector } from 'src/module/Configs';
-import { useDispatch, useSelector } from 'react-redux';
-import { useDetectClickOutside } from 'src/hooks';
-import { actionToggleModal } from 'src/components/Modal';
-import { IProps } from './PasswordModal.interface';
-import { passwordSelector } from '../../Password.selector';
+import { useSelector } from 'react-redux';
+import { passwordSelector } from 'src/module/Password/Password.selector';
+import { InjectedFormProps, isInvalid, reduxForm, getFormValues } from 'redux-form';
+import { useFormValue } from 'src/hooks';
 
-const enhance = (WrappedComponent: any) => (props: IProps) => {
-    const wrapperRef = useRef(null);
-    const { onSuccess } = props;
+interface IProps {
+    onSuccess: () => any;
+}
 
-    const [userPass, setUserPass] = useState('');
-    const [error, setError] = useState('');
+interface TInner {
+    disabledForm: boolean;
+    handleSubmitForm: () => any;
+    errorCustom: string;
+}
 
-    const dispatch = useDispatch();
+export interface IMergeProps extends IProps, TInner, InjectedFormProps {}
+
+export const FORM_CONFIGS = {
+    formName: 'form-password-modal',
+    password: 'password',
+};
+
+const enhance = (WrappedComponent: any) => (props: IProps & any) => {
+    const { onSuccess }: IProps = props;
+    const [errorCustom, setError] = useState('');
+    const [userPass] = useFormValue({
+        formName: FORM_CONFIGS.formName,
+        field: FORM_CONFIGS.password,
+    });
+    const isFormInValid = useSelector((state) => isInvalid(FORM_CONFIGS.formName)(state));
+    const formData = useSelector((state) => getFormValues(FORM_CONFIGS.formName)(state));
+    const disabledForm = !!errorCustom || isFormInValid;
     const password = useSelector(passwordSelector);
     const errorDictionary = useSelector(translateSelector).error;
-
-    const handleChangePass = useCallback((e) => {
-        setError('');
-        setUserPass(e.target.value);
-    }, []);
-
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (userPass !== password) {
-            setError(errorDictionary.invalidPassword);
-        } else {
-            onSuccess();
+    const handleSubmitForm = () => {
+        try {
+            if (userPass !== password) {
+                setError(errorDictionary.invalidPassword);
+            } else {
+                onSuccess();
+            }
+        } catch (error) {
+            throw error;
         }
     };
-
-    const handleClickOutside = () => {
-        dispatch(actionToggleModal({}));
-    };
-
-    useDetectClickOutside(wrapperRef, handleClickOutside);
-
     useEffect(() => {
         if (!password) {
             onSuccess();
         }
     }, []);
-
+    useEffect(() => {
+        setError('');
+    }, [formData]);
     if (!password) {
         return null;
     }
 
-    return (
-        <WrappedComponent
-            {...props}
-            wrapperRef={wrapperRef}
-            onSubmit={handleSubmit}
-            onChangePass={handleChangePass}
-            error={error}
-        />
-    );
+    return <WrappedComponent {...{ ...props, handleSubmitForm, errorCustom, disabledForm }} />;
 };
 
-export default compose<IProps, any>(enhance);
+export default compose<IMergeProps, any>(
+    reduxForm({
+        form: FORM_CONFIGS.formName,
+    }),
+    enhance,
+);

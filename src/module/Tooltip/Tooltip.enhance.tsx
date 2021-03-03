@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { compose } from 'recompose';
 import { useDispatch } from 'react-redux';
-import useOutsideRef from 'src/utils/useOutsideRef';
+import useOutsideRef from 'src/hooks/useDetectClickOutside';
 import { ITooltipProps } from './Tooltip.interface';
 import { actionRemoveTooltip } from './Tooltip.actions';
 
