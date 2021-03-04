@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { COLORS } from 'src/styles';
 import styled from 'styled-components';
 
@@ -12,7 +12,7 @@ interface IProps {
 
 const Styled = styled.button`
     border-radius: 5px;
-    background-color: ${COLORS.black};
+    background-color: ${COLORS.black1};
     color: ${COLORS.white};
     font-size: 13px;
     padding: 3px 5px;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Header, LoadingIcon } from 'src/components';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs/Configs.selector';
+import { themeSelector } from 'src/module/Setting';
 import HistoryItem from 'src/module/History/features/HistoryItem';
 import withHistory, { IMergeProps } from './History.enhance';
 

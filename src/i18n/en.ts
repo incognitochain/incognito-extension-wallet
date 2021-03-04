@@ -177,6 +177,10 @@ const language: ILanguage = {
             title: 'Decimal Digits',
             desc: 'Limit main asset<br />displays to 5 decimal digits',
         },
+        darkMode: {
+            title: 'Theme',
+            desc: 'Use dark mode and light mode',
+        },
         logout: {
             title: 'Logout',
         },

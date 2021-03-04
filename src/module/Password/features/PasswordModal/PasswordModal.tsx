@@ -7,22 +7,25 @@ import { InputField, validator } from 'src/components/ReduxForm';
 import { Field } from 'redux-form';
 import { useValidator } from 'src/hooks';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField';
+import { darkModeSelector } from 'src/module/Setting';
 import withPassword, { IMergeProps, FORM_CONFIGS } from './PasswordModal.enhance';
 
-const Styled = styled.div`
+const Styled = styled.div<{ darkMode: boolean }>`
     .btn-container {
         margin-top: 15px;
+        background: ${(props) => props?.darkMode && '#121212'};
     }
 `;
 
 const PasswordModal = (props: IMergeProps & any) => {
     const dictionary = useSelector(translateByFieldSelector)('password');
+    const darkMode = useSelector(darkModeSelector);
     const { handleSubmitForm, handleSubmit, disabledForm, errorCustom }: IMergeProps = props;
     const [validatePassword] = useValidator({
         validator: [validator.required],
     });
     return (
-        <Styled>
+        <Styled darkMode={darkMode}>
             <form onSubmit={handleSubmit(handleSubmitForm)}>
                 <Field
                     component={InputField}

@@ -185,6 +185,10 @@ export interface ISettingLanguage {
         title: string;
         desc: string;
     };
+    darkMode: {
+        title: string;
+        desc: string;
+    };
     logout: {
         title: string;
     };

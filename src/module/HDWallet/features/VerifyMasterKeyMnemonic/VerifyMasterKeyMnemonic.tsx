@@ -2,7 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Mnemonic } from 'src/components';
 import { IHDWalletLanguage } from 'src/i18n';
-import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import styled from 'styled-components';
 import { actionTypeHDWalletSelector, ACTION_TYPES } from 'src/module/HDWallet';
 import {

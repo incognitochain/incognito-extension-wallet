@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs';
-import { COLORS, ITheme } from 'src/styles';
+import { themeSelector } from 'src/module/Setting';
+import { ITheme } from 'src/styles';
 import styled from 'styled-components';
 
 interface IProps {
@@ -23,7 +23,8 @@ const Styled = styled.button`
     color: ${(props: { theme: ITheme }) => props.theme.textButton};
     width: 100%;
     &.btn-disabled {
-        background-color: ${COLORS.colorGreyLight};
+        color: ${(props: { theme: ITheme }) => props.theme.disableTextButton};
+        background-color: ${(props: { theme: ITheme }) => props.theme.disableButton};
     }
     .loading {
         position: absolute;

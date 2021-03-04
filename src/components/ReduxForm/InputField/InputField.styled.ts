@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLORS } from 'src/styles';
+import { COLORS, ITheme } from 'src/styles';
 
 export const Styled = styled.div`
     margin-bottom: 15px;
@@ -44,11 +44,11 @@ export const Styled = styled.div`
         height: 100%;
         border-radius: 8px;
         padding: 0 10px;
-        background-color: ${COLORS.colorGrey};
-        color: ${COLORS.black};
-        border: solid 0.5px ${COLORS.colorGreyLight};
+        background-color: ${(props: { theme: ITheme }) => props.theme.input};
+        color: ${(props: { theme: ITheme }) => props.theme.text};
+        border: solid 0.5px ${(props: { theme: ITheme }) => props.theme.inputBorder};
         :focus {
-            border: solid 1px ${COLORS.black};
+            border: solid 1px ${(props: { theme: ITheme }) => props.theme.text};
         }
     }
     .textarea-container > textarea {
@@ -78,9 +78,9 @@ export const Styled = styled.div`
         height: 100%;
         border-radius: 8px;
         padding: 0 10px;
-        background-color: ${COLORS.colorGrey};
-        color: ${COLORS.black};
-        border: solid 0.5px ${COLORS.colorGreyLight};
+        background-color: ${(props: { theme: ITheme }) => props.theme.input};
+        color: ${(props: { theme: ITheme }) => props.theme.text};
+        border: solid 0.5px ${(props: { theme: ITheme }) => props.theme.inputBorder};
     }
     .input-wrap-suffix > p {
         margin-left: 3px;

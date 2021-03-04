@@ -9,7 +9,7 @@ import { Router } from 'react-router';
 import MainRoute from 'src/module/MainRoute';
 import Toast from 'src/components/Core/Toast/Toast';
 import { TooltipContainer } from 'src/module/Tooltip';
-import { themeSelector } from './module/Configs';
+import { themeSelector } from './module/Setting';
 import withApp from './App.enhance';
 import { isDev } from './configs';
 

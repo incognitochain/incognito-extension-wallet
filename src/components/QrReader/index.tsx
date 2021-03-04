@@ -11,11 +11,12 @@ import { COINS } from 'src/constants';
 import { actionSetCameraPermission } from 'src/module/Preload';
 import AppReady from 'src/components/AppReady';
 import { IGeneralLanguage } from 'src/i18n';
-import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { IGlobalStyle } from 'src/styles';
 
 const Styled = styled.div`
-    background: ${(props: IGlobalStyle) => props.theme.body};
+    background: ${(props: IGlobalStyle) => props.theme.modalBg};
     padding: 20p;
     padding: 20px;
     border-radius: 5%;

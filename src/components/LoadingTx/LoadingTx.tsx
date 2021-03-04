@@ -4,11 +4,12 @@ import { IGeneralLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
 import styled from 'styled-components';
 import { LoadingIcon } from 'src/components/Icons';
+import { IGlobalStyle } from 'src/styles';
 
 const Styled = styled.div`
     position: relative;
     height: 200px;
-    background: #fff;
+    background: ${(props: IGlobalStyle) => props.theme.modalBg};
     width: 100%;
     border-radius: 10px;
     padding: 25px;

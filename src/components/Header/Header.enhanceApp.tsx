@@ -34,8 +34,8 @@ const Styled = styled.div`
         margin-left: 15px;
     }
     .refresh-icon {
-        -webkit-filter: ${(props: { theme: ITheme }) => props.theme.text};
-        -webkit-filter: brightness(0%);
+        /* -webkit-filter: ${(props: { theme: ITheme }) => props.theme.text};
+        -webkit-filter: brightness(0%); */
     }
 `;
 
