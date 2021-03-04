@@ -1,6 +1,7 @@
 import React, { ChangeEvent, InputHTMLAttributes, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { CONSTANT_COLORS } from 'src/constants';
+import { ITheme } from 'src/styles';
 import { EyeIcon } from '../../Icons';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -21,10 +22,10 @@ const Styled = styled.div`
     input {
         width: 100%;
         padding: 10px;
-        border: 1px solid ${CONSTANT_COLORS.GREY};
+        border: 1px solid ${(props: { theme: ITheme }) => props.theme.inputBorder};
         border-radius: 8px;
-        background-color: ${CONSTANT_COLORS.GREY2};
-
+        color: ${(props: { theme: ITheme }) => props.theme.inputTextColor};
+        background-color: ${(props: { theme: ITheme }) => props.theme.input};
         &.borderless {
             border: none;
             background-color: transparent;

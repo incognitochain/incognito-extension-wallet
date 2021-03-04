@@ -5,6 +5,7 @@ import {
     ACTION_TOGGLE_DEV_MODE,
     ACTION_TOGGLE_MODE_SAVE_BURN_TX,
     ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX,
+    ACTION_TOGGLE_DARK_MODE,
 } from './Setting.constant';
 
 export const actionFetched = (payload: any) => ({
@@ -30,4 +31,8 @@ export const actionToggleModeSaveBurnTx = () => ({
 
 export const actionToggleModeSaveRawBurnTx = () => ({
     type: ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX,
+});
+
+export const actionToggleDarkMode = () => ({
+    type: ACTION_TOGGLE_DARK_MODE,
 });

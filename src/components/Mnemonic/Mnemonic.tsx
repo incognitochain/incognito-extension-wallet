@@ -7,10 +7,10 @@ import { IHDWalletLanguage } from 'src/i18n';
 
 const Styled = styled.div`
     cursor: pointer;
-    background-color: ${(props: IGlobalStyle) => props.theme.inverseBody};
+    background-color: ${(props: IGlobalStyle) => props.theme.button};
     padding: 15px;
     min-height: 70px;
-    color: ${(props: IGlobalStyle) => props.theme.inverseText};
+    color: #fff;
     border-radius: 5px;
     line-height: 24px;
 `;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import last from 'lodash/last';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { COLORS, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 import { Header } from 'src/components';
@@ -27,7 +27,7 @@ const Styled = styled.div`
         max-width: ${(props: IGlobalStyle) => props.theme.maxWidth};
         width: ${(props: IGlobalStyle) => props.theme.width};
         height: ${(props: IGlobalStyle) => props.theme.height};
-        background: ${(props: IGlobalStyle) => props.theme.body};
+        background: ${(props: IGlobalStyle) => props.theme.modalBg};
         padding: 30px;
         overflow: hidden;
     }

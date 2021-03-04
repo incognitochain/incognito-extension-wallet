@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import QRCodeReact, { BaseQRCodeProps } from 'qrcode.react';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { useSelector } from 'react-redux';
 import { COLORS, ITheme } from 'src/styles';
 import Copy from '../Copy';

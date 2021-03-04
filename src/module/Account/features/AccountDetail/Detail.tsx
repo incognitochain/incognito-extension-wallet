@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FONT_SIZES } from 'src/styles';
+import { FONT_SIZES, ITheme, COLORS } from 'src/styles';
 import { useDispatch } from 'react-redux';
 import { CopyIcon, QrCodeIcon, QrCodeModal } from 'src/components';
 import { actionToggleModal } from 'src/components/Modal';
-import { CONSTANT_COLORS } from 'src/constants';
 
 export interface IProps {
     title: string | number;
@@ -33,10 +32,10 @@ const Styled = styled.div`
         align-items: center;
         margin-top: 15px;
         padding: 10px;
-        color: ${CONSTANT_COLORS.LIGHT_GREY};
-        background-color: ${CONSTANT_COLORS.GREY2};
+        color: ${COLORS.colorGreyBold};
+        background-color: ${(props: { theme: ITheme }) => props.theme.input};
         border-radius: 8px;
-        border: 1px solid ${CONSTANT_COLORS.GREY};
+        border: 1px solid ${(props: { theme: ITheme }) => props.theme.inputBorder};
     }
     .hook .icons {
         display: flex;

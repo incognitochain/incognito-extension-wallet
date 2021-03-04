@@ -19,6 +19,16 @@ export interface ITheme {
     height: string;
     tooltipBg: string;
     tooltipText: string;
+    input: string;
+    inputBorder: string;
+    inputTextColor: string;
+    modalBg: string;
+    switchButton: string;
+    switchActiveButton: string;
+    typeButton: string;
+    typeTextButton: string;
+    disableButton: string;
+    disableTextButton: string;
 }
 
 export interface IGlobalStyle {
@@ -41,17 +51,27 @@ export const lightTheme: ITheme = {
     height: '600px',
     tooltipBg: COLORS.black,
     tooltipText: COLORS.white,
+    input: COLORS.colorGrey,
+    inputBorder: '#CBCBCB',
+    inputTextColor: '#222',
+    modalBg: '#fff',
+    switchButton: '#D2D2D2',
+    switchActiveButton: '#333335',
+    typeButton: '#F3F3F3',
+    typeTextButton: '#000000',
+    disableButton: 'rgba(51, 53, 52, 0.3)',
+    disableTextButton: '#FFFFFF',
 };
 
 export const darkTheme: ITheme = {
-    body: '#363537',
-    text: '#FAFAFA',
+    body: '#121212',
+    text: '#fff',
     inverseText: COLORS.black,
     inverseBody: COLORS.white,
-    subText: COLORS.colorGreyLight,
+    subText: COLORS.colorGreyBold,
     toggleBorder: '#6B8096',
     gradient: 'linear-gradient(#091236, #1E215D)',
-    button: COLORS.colorGreyBold,
+    button: '#333335',
     textButton: COLORS.white,
     width: '357px',
     minWidth: '320px',
@@ -59,6 +79,16 @@ export const darkTheme: ITheme = {
     height: '600px',
     tooltipBg: COLORS.white,
     tooltipText: COLORS.black,
+    input: '#121212',
+    inputBorder: '#333335',
+    inputTextColor: '#fff',
+    modalBg: '#333335',
+    switchButton: '#333335',
+    switchActiveButton: '#D2D2D2',
+    typeButton: '#121212',
+    typeTextButton: '#8A8A8E',
+    disableButton: '#222223',
+    disableTextButton: '#8A8A8E',
 };
 
 export const DEFAULT_THEME = lightTheme;
@@ -283,6 +313,11 @@ export const GlobalStyled = createGlobalStyle`
     }
     .m-t-15 {
         margin-top: 15px;
+    }
+    svg {
+        text {
+            fill: ${(props: { theme: ITheme }) => props.theme.text};
+        }
     }
     
     // Remove eye icon for password input on Edge Chromium

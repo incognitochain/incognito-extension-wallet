@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { COLORS, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 
@@ -9,10 +9,10 @@ interface IProps {
     selected?: boolean;
 }
 const Styled = styled.button`
-    background-color: ${COLORS.lightGrey12};
-    border: solid ${COLORS.lightGrey21} 0.5px;
+    background-color: ${(props: IGlobalStyle) => props.theme.typeButton};
+    border: solid 0.5px ${(props: IGlobalStyle) => props.theme.inputBorder};
     border-radius: 8px;
-    color: ${COLORS.black};
+    color: ${(props: IGlobalStyle) => props.theme.typeTextButton};
     min-width: 54px;
     height: 28px;
     margin-left: 5px;

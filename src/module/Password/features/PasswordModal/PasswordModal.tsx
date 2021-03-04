@@ -12,6 +12,7 @@ import withPassword, { IMergeProps, FORM_CONFIGS } from './PasswordModal.enhance
 const Styled = styled.div`
     .btn-container {
         margin-top: 15px;
+        background: ${(props) => props?.darkMode && '#121212'};
     }
 `;
 

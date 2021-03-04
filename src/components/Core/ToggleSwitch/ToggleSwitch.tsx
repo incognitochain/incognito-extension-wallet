@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { ITheme, IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 
@@ -27,7 +27,7 @@ const Styled = styled.div`
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #ccc;
+        background-color: ${(props: IGlobalStyle) => props.theme.switchButton};
         -webkit-transition: 0.4s;
         transition: 0.4s;
     }
@@ -43,10 +43,10 @@ const Styled = styled.div`
         transition: 0.4s;
     }
     input:checked + .slider {
-        background-color: ${(props: IGlobalStyle) => props.theme.button};
+        background-color: ${(props: IGlobalStyle) => props.theme.switchActiveButton};
     }
     input:focus + .slider {
-        box-shadow: 0 0 1px ${(props: IGlobalStyle) => props.theme.button};
+        box-shadow: 0 0 1px ${(props: IGlobalStyle) => props.theme.switchActiveButton};
     }
     input:checked + .slider:before {
         transform: translateX(18px);

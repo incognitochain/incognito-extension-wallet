@@ -22,3 +22,7 @@ export const defaultListServerSelector = createSelector(isDevSelector, (isDev) =
 export const toggleSaveBurnTxSelector = createSelector(devSettingSelector, (dev) => dev.toggleSaveBurnTx);
 
 export const toggleSaveRawBurnTxSelector = createSelector(devSettingSelector, (dev) => dev.toggleSaveRawBurnTx);
+
+export const themeSelector = createSelector(settingSelector, (configs) => configs.theme);
+
+export const darkModeSelector = createSelector(settingSelector, (setting) => setting.darkMode);
