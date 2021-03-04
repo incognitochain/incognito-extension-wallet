@@ -66,7 +66,7 @@ const NewUser = (props: IMergeProps & any) => {
                     component={InputField}
                     name={FORM_CONFIGS.confirmPassword}
                     componentProps={{
-                        placeholder: dictionary.createPass,
+                        placeholder: dictionary.confirmCreatePass,
                         maxLength: 32,
                     }}
                     inputType={INPUT_FIELD.password}
