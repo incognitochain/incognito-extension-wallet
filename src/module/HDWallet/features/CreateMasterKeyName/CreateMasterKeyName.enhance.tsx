@@ -35,8 +35,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         formName: FORM_CONFIGS.formName,
         field: FORM_CONFIGS.masterKeyName,
     });
-    const onHandleReady = () => dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyMnemonic));
     const disabled = !isFormValid || !agree || !!errorCustom;
+    const onHandleReady = () =>
+        !disabled ? dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyMnemonic)) : null;
     React.useEffect(() => {
         if (!disabled) {
             dispatch(actionSetMasterKeyName(masterKeyName));
