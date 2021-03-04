@@ -3,8 +3,9 @@ import { compose } from 'recompose';
 import { withLayout } from 'src/components/Layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionLogin } from 'src/module/Password';
+import { errorTranslateSelector } from 'src/module/Configs';
+import { useHistory } from 'react-router-dom';
 import { IOldUserProps } from './OldUser.interface';
-import { errorTranslateSelector } from '../../../Configs';
 
 const enhance = (WrappedComponent: any) => (props: IOldUserProps) => {
     const [pass, setPass] = useState('');
@@ -12,7 +13,7 @@ const enhance = (WrappedComponent: any) => (props: IOldUserProps) => {
     const [error, setError] = useState('');
     const dispatch = useDispatch();
     const errorDictionary = useSelector(errorTranslateSelector);
-
+    const history = useHistory();
     const isDisabledButton = !pass || loading || !!error;
 
     const handlePassChange = useCallback((e) => {
@@ -25,6 +26,7 @@ const enhance = (WrappedComponent: any) => (props: IOldUserProps) => {
         try {
             setLoading(true);
             await dispatch(actionLogin(pass));
+            history.push('/');
         } catch (e) {
             setError(errorDictionary.invalidMnemonic);
         } finally {
