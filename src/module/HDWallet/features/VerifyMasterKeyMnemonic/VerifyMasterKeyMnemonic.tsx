@@ -48,7 +48,6 @@ const Word = React.memo(({ data }: { data: { text: string; index: number; isSele
             type="button"
             className={`word ${isSelected ? 'word-selected' : ''}`}
         >
-            <span className="index sub-text">{index}</span>
             <span className={`text ${isSelected ? 'inverse-text' : 'main-text'}`}>{` ${text}`}</span>
         </button>
     );
@@ -59,7 +58,7 @@ const Words = React.memo(() => {
     return (
         <div className="words flex">
             {words.map((item) => (
-                <Word key={`${item.text}-${item.index}`} data={item} />
+                <Word key={`${item.text}`} data={item} />
             ))}
         </div>
     );
