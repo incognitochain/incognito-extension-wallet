@@ -33,3 +33,5 @@ export const isMasterlessSelector = createSelector(masterlessIdSelector, (master
 );
 
 export const switchingWalletSelector = createSelector(walletSelector, (wallet) => wallet.switch);
+
+export const removingWalletSelector = createSelector(walletSelector, (wallet) => wallet.remove);

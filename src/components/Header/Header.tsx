@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FONT_SIZES, ITheme } from 'src/styles';
+import { ITheme } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { ArrowLeftIcon } from 'src/components/Icons';
 import withHeader, { IMergeProps } from './Header.enhance';

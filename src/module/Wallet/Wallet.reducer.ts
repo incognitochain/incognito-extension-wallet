@@ -8,6 +8,9 @@ import {
     ACTION_UPDATE_WALLET,
     ACTION_INITED_MASTER_LESS,
     ACTION_TOGGLE_SWITCH_WALLET,
+    ACTION_FETCHING_REMOVE_MASTER_KEY,
+    ACTION_FETCHED_REMOVE_MASTER_KEY,
+    ACTION_FETCH_FAIL_REMOVE_MASTER_KEY,
 } from './Wallet.constant';
 import { IWalletReducer } from './Wallet.interface';
 
@@ -25,6 +28,7 @@ const initialState: IWalletReducer = {
     loaded: false,
     wallet: {},
     switch: false,
+    remove: false,
 };
 
 const walletReducer = (
@@ -61,12 +65,10 @@ const walletReducer = (
             const { mainnet, walletId } = action.payload;
             const field = mainnet ? 'mainnet' : 'testnet';
             const walletState = state[field];
-            const { ids } = walletState;
             return {
                 ...state,
                 [field]: {
                     ...walletState,
-                    ids: [...ids, walletId],
                     masterlessId: walletId,
                 },
             };
@@ -75,6 +77,44 @@ const walletReducer = (
             return {
                 ...state,
                 switch: action.payload,
+            };
+        }
+        case ACTION_FETCHING_REMOVE_MASTER_KEY: {
+            return {
+                ...state,
+                remove: true,
+            };
+        }
+        case ACTION_FETCHED_REMOVE_MASTER_KEY: {
+            const {
+                walletId,
+                mainnet,
+                wallet,
+                walletIdWillSwitch,
+            }: {
+                walletId: number;
+                mainnet: boolean;
+                walletIdWillSwitch: number;
+                wallet: WalletInstance;
+            } = action.payload;
+            const field = mainnet ? 'mainnet' : 'testnet';
+            const walletState = state[field];
+            const { ids } = walletState;
+            return {
+                ...state,
+                remove: false,
+                [field]: {
+                    ...walletState,
+                    ids: [...ids].filter((item: number) => item !== walletId),
+                    walletId: walletIdWillSwitch,
+                },
+                wallet: cloneDeep(wallet),
+            };
+        }
+        case ACTION_FETCH_FAIL_REMOVE_MASTER_KEY: {
+            return {
+                ...state,
+                remove: false,
             };
         }
         default:

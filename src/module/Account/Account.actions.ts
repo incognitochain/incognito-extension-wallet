@@ -1,18 +1,19 @@
+import { actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { BigNumber } from 'bignumber.js';
 import { batch } from 'react-redux';
 import toLower from 'lodash/toLower';
+import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
+import { actionLoadedWallet, actionSaveWallet } from 'src/module/Wallet/Wallet.actions';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import isEqual from 'lodash/isEqual';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { IWalletReducer, loadWallet, actionSwitchWallet } from 'src/module/Wallet';
-import { actionHandleLoadWallet, actionSaveWallet, actionUpdateWallet } from 'src/module/Wallet/Wallet.actions';
+import { IWalletReducer, loadWallet } from 'src/module/Wallet';
 import { walletDataSelector, walletSelector, isMasterlessSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token/Token.actions';
 import { cachePromise } from 'src/services';
-import { actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { passwordSelector } from 'src/module/Password/Password.selector';
-import { IAccountLanguage } from 'src/i18n/interface';
+import { IAccountLanguage, IHDWalletLanguage } from 'src/i18n/interface';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { actionFreeHistory } from 'src/module/History/History.actions';
 import {
@@ -171,14 +172,18 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
     try {
         const state = getState();
         const pass: string = passwordSelector(state);
-        const wallet: WalletInstance = await loadWallet(walletId, pass);
+        let wallet: WalletInstance | undefined = await loadWallet(walletId, pass);
         const create: boolean = createAccountSelector(state);
+        const translate: IAccountLanguage = translateByFieldSelector(state)('account');
+        const { error: errorHDWallet }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
+        const { error } = translate;
         if (create || !accountName || !walletId || !pass) {
             return;
         }
+        if (!wallet) {
+            throw new Error(errorHDWallet.canNotFoundMasterKey);
+        }
         await dispatch(actionFetchingCreateAccount());
-        const translate: IAccountLanguage = translateByFieldSelector(state)('account');
-        const { error } = translate;
         const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
         const listAccountName = listAccount.map((item) => item.name);
         const isAccountExist = listAccountName.some((name: string) => isEqual(toLower(name), toLower(accountName)));
@@ -189,18 +194,19 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
         if (!account) {
             throw new Error(error.canNotCreate);
         }
-        await dispatch(actionUpdateWallet(wallet));
-        await actionSaveWallet()(dispatch, getState);
+        const mainnet: boolean = isMainnetSelector(state);
+        await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
+        await actionSwitchAccount(accountName)(dispatch, getState);
         let task: any[] = [
             actionFollowDefaultToken(account)(dispatch, getState),
             dispatch(actionUpdateMasterKey({ walletId, wallet })),
-            actionSwitchAccount(accountName)(dispatch, getState),
         ];
         const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         if (!isMasterless) {
             task.push(wallet.update());
         }
         await Promise.all(task);
+        await actionSaveWallet()(dispatch, getState);
         dispatch(actionFetchedCreateAccount(account));
     } catch (error) {
         dispatch(actionFetchFailCreateAccount());
@@ -239,9 +245,10 @@ export const actionFetchImportAccount = ({
             return;
         }
         await dispatch(actionFetchingImportAccount());
+        const pass = passwordSelector(state);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
         const { error } = translate;
-        const wallet: WalletInstance | undefined = await actionSwitchWallet(walletId)(dispatch, getState);
+        let wallet: WalletInstance | undefined = await loadWallet(walletId, pass);
         if (!wallet) {
             throw new Error(error.canNotImport);
         }
@@ -258,18 +265,21 @@ export const actionFetchImportAccount = ({
         if (!account) {
             throw new Error(error.canNotImport);
         }
-        await dispatch(actionUpdateWallet(wallet));
-        await actionSaveWallet()(dispatch, getState);
+        const mainnet: boolean = isMainnetSelector(state);
+        await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
+        await actionSwitchAccount(accountName)(dispatch, getState);
+        const accounts: AccountInstance[] = wallet.masterAccount.getAccounts();
         let task: any[] = [
             actionFollowDefaultToken(account)(dispatch, getState),
-            dispatch(actionUpdateMasterKey({ wallet, walletId })),
-            actionSwitchAccount(accountName)(dispatch, getState),
+            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            dispatch(actionSetListAccount(accounts)),
         ];
         const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         if (!isMasterless) {
             task.push(wallet.update());
         }
         await Promise.all([...task]);
+        await actionSaveWallet()(dispatch, getState);
         dispatch(actionFetchedImportAccount(account));
     } catch (error) {
         dispatch(actionFetchFailImportAccount());
@@ -303,22 +313,39 @@ export const actionFetchRemoveAccount = (accountName: string, walletId: number) 
             return;
         }
         await dispatch(actionFetchingRemoveAccount());
-        const wallet = await loadWallet(walletId, pass);
-        const accounts = wallet.masterAccount.getAccounts();
+        let wallet = await loadWallet(walletId, pass);
+        let accounts = wallet.masterAccount.getAccounts();
         const account: AccountInstance = wallet.masterAccount.getAccountByName(accountName);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
+        const { error: errorHDWallet }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
         const { error } = translate;
+        if (!wallet) {
+            throw new Error(errorHDWallet.canNotFoundMasterKey);
+        }
         if (accounts.length === 1 || !account) {
             throw new Error(error.canNotRemove);
         }
         wallet.masterAccount.removeAccount(accountName);
-        await dispatch(actionUpdateWallet(wallet));
+        const mainnet: boolean = isMainnetSelector(state);
+        await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
+        accounts = wallet.masterAccount.getAccounts();
+        let defaultAccount: AccountInstance = accounts[0];
+        let task: any[] = [
+            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            dispatch(actionSetListAccount(accounts)),
+        ];
+        if (defaultAccount) {
+            task.push(actionSwitchAccount(defaultAccount?.name)(dispatch, getState));
+        }
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
+        if (!isMasterless) {
+            task.push(wallet.update());
+        }
+        await Promise.all([...task]);
         await actionSaveWallet()(dispatch, getState);
         await dispatch(actionFetchedRemoveAccount());
     } catch (error) {
         await dispatch(actionFetchFailRemoveAccount());
         throw error;
-    } finally {
-        actionHandleLoadWallet()(dispatch, getState);
     }
 };

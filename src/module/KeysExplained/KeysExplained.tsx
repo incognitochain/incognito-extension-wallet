@@ -28,7 +28,7 @@ const KeysExplained = () => {
             <div className="content scroll-view">
                 <p className="desc sub-text">{dictionary.desc}</p>
                 {dictionary.content.map((item: any) => (
-                    <div className="item">
+                    <div className="item" key={item}>
                         <p className="main-text fw-medium">{item.title}</p>
                         <p className="sub-text" dangerouslySetInnerHTML={{ __html: item.text }} />
                     </div>

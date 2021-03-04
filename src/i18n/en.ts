@@ -56,6 +56,7 @@ const language: ILanguage = {
             walletIdNotFound: 'Can not found wallet id',
             canNotSwitchWallet: 'Can not switch wallet',
             canNotLoadWallet: 'Can not load wallet',
+            canNotRemoveWallet: 'Can not remove wallet',
         },
         tooltip: {
             refresh: 'Refresh this page',
@@ -368,6 +369,9 @@ const language: ILanguage = {
             existMasterKeyName: 'Master key names is exist',
             existMasterKeyMnemonic: 'Master key mnemonic is exist',
             dupMasterless: 'Master key names is not allowed',
+            canNotCreateMasterKey: 'Master key can be created',
+            canNotFoundMasterKey: 'Master key not found',
+            canNotRemoveMasterKey: 'Master key can be removed',
         },
         showMnemonic: {
             title: 'Back up',

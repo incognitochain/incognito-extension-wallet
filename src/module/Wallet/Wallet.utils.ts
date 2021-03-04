@@ -36,10 +36,18 @@ export const loadWallet = async (walletId: number, pass: string) => {
     return wallet;
 };
 
-export const importWallet = async (walletName: string, mnemonic: string, pass: string) => {
+export const importWallet = async (
+    walletName: string,
+    mnemonic: string,
+    pass: string,
+    autoImportAnonAccount = true,
+) => {
     let wallet = new WalletInstance();
     let walletId;
     await wallet.import(walletName, mnemonic);
+    if (autoImportAnonAccount) {
+        await wallet.masterAccount.addAccount('Anon');
+    }
     const encryptWallet = wallet.backup(pass);
     if (!wallet) {
         throw new Error(`Can't create wallet`);
@@ -52,6 +60,7 @@ export const importWallet = async (walletName: string, mnemonic: string, pass: s
     if (!walletId) {
         throw new Error(`Can't store wallet`);
     }
+
     const result: IDataInitWallet = {
         wallet,
         walletId,

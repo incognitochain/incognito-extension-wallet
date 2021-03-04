@@ -44,10 +44,13 @@ export const updateWallet = async (wallet: WalletInstance, walletId: number, pas
     return updated;
 };
 
-export const deleteWallet = async () => {
+export const removeWallet = async (walletId: number) => {
+    let removed;
     try {
-        // TODO: implement method delete
+        const incognitoDB = await initIncognitoDB();
+        removed = await incognitoDB.deleteValue(TABLE_NAME, walletId);
     } catch (error) {
-        console.debug(error);
+        throw error;
     }
+    return removed;
 };
