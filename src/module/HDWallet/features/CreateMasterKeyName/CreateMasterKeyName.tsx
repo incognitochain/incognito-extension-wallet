@@ -26,7 +26,7 @@ const Styled = styled.div`
 
 const CreateMasterKeyName = (props: IMergeProps & any) => {
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
-    const { onHandleChecked, disabled, onHandleReady, errorCustom }: IMergeProps = props;
+    const { onHandleChecked, disabled, onHandleReady, errorCustom, handleSubmit }: IMergeProps = props;
     const { invalidMasterKeyName } = translate.error;
     const { desc1, desc2, agreeDesc, btnReady } = translate.createMasterKeyName;
     const { masterKeyNamePlaceholder } = translate.general;
@@ -36,7 +36,7 @@ const CreateMasterKeyName = (props: IMergeProps & any) => {
     });
     return (
         <Styled>
-            <form>
+            <form onSubmit={handleSubmit(onHandleReady)}>
                 <Field
                     component={InputField}
                     name={FORM_CONFIGS.masterKeyName}
@@ -46,13 +46,13 @@ const CreateMasterKeyName = (props: IMergeProps & any) => {
                     }}
                     errorCustom={errorCustom}
                 />
+                <Button title={btnReady} disabled={disabled} type="submit" />
             </form>
             <div className="hook">
                 <p className="desc">{desc1}</p>
                 <p className="desc">{desc2}</p>
             </div>
             <FillCheckBox checked={agree} onHandleChecked={onHandleChecked} label={agreeDesc} />
-            <Button title={btnReady} disabled={disabled} onClick={onHandleReady} />
         </Styled>
     );
 };
