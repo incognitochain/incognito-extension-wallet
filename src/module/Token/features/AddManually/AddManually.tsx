@@ -18,6 +18,8 @@ import withAddManually, { IMergeProps } from './AddManually.enhance';
 const Styled = styled.div`
     .hook {
         justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 13px;
     }
     .form-item {
         justify-content: space-between;

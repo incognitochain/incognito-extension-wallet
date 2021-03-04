@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import styled from 'styled-components';
 import { COLORS } from 'src/styles';
 
@@ -10,6 +10,7 @@ const Styled = styled.div`
     background-color: ${COLORS.black};
     border-radius: 50%;
     margin-bottom: 30px;
+    border: 1px solid #fff;
 `;
 
 const AppIcon = () => {

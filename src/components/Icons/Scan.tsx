@@ -1,5 +1,4 @@
 import React from 'react';
-import { ENVS } from 'src/configs';
 import styled from 'styled-components';
 
 interface IProps {}
@@ -9,11 +8,30 @@ const Styled = styled.button`
     height: 16px;
 `;
 
+const ScanVector = React.memo((props: any) => {
+    return (
+        <svg width={17} height={17}>
+            <text
+                transform="translate(-261 -227)"
+                fill="#FFF"
+                fillRule="evenodd"
+                fontFamily="SFProDisplay-Regular, SF Pro Display"
+                fontSize={16}
+                {...props}
+            >
+                <tspan x={260} y={241}>
+                    {'\uDBC0\uDFB9'}
+                </tspan>
+            </text>
+        </svg>
+    );
+});
+
 const Scan = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     const { className = '' } = props;
     return (
         <Styled type="button" className={`icon ${className || ''}`} {...props}>
-            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/scan.png`} alt="" />
+            <ScanVector />
         </Styled>
     );
 };

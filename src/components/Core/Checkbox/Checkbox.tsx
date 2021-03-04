@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { ENVS } from 'src/configs';
+import { IGlobalStyle } from 'src/styles';
 
 interface IProps {
     onHandleChecked: () => any;
@@ -17,19 +17,56 @@ const Styled = styled.button`
     }
     .checkbox-label {
         line-height: 14px;
+        color: ${(props: IGlobalStyle) => props.theme.text};
     }
 `;
+
+const CheckboxVector = React.memo((props: any) => {
+    return (
+        <svg width={15} height={15}>
+            <text
+                transform="translate(-1 -1)"
+                fill="#FFF"
+                fillRule="evenodd"
+                fontFamily="SFProDisplay-Medium, SF Pro Display"
+                fontSize={15}
+                fontWeight={400}
+                {...props}
+            >
+                <tspan x={0} y={14}>
+                    {'\uDBC0\uDC92'}
+                </tspan>
+            </text>
+        </svg>
+    );
+});
+
+const CheckedboxVector = React.memo((props: any) => {
+    return (
+        <svg width={15} height={15}>
+            <text
+                transform="translate(-31 -385)"
+                fill="#FFF"
+                fillRule="evenodd"
+                fontFamily="SFProDisplay-Medium, SF Pro Display"
+                fontSize={15}
+                fontWeight={400}
+                {...props}
+            >
+                <tspan x={30} y={398}>
+                    {'\uDBC0\uDCF3'}
+                </tspan>
+            </text>
+        </svg>
+    );
+});
 
 const Checkbox = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
     const { onHandleChecked, label, checked } = props;
     return (
         <Styled className="checkbox-container flex" onClick={onHandleChecked}>
             <div className="icon checkbox-icon">
-                <img
-                    src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/${!checked ? 'checkbox' : 'checked-box'}.png`}
-                    alt=""
-                    className="icon-abs"
-                />
+                {!checked ? <CheckboxVector className="icon-abs" /> : <CheckedboxVector className="icon-abs" />}
             </div>
             {label && <p className="checkbox-label fw-medium">{label}</p>}
         </Styled>

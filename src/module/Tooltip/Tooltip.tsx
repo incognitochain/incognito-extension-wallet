@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import { useSelector } from 'react-redux';
-import { themeSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { IGlobalStyle } from 'src/styles';
 import enhance from './Tooltip.enhance';
 import { ITooltipProps } from './Tooltip.interface';

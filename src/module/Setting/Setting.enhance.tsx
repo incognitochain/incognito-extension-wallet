@@ -17,6 +17,7 @@ import {
     actionToggleHomeConfigs,
     actionToggleModeSaveBurnTx,
     actionToggleModeSaveRawBurnTx,
+    actionToggleDarkMode,
 } from './Setting.actions';
 import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
@@ -28,7 +29,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const handleToggleHomeConfigs = () => dispatch(actionToggleHomeConfigs());
     const chainURL = useSelector(chainURLSelector);
-    const { decimalDigits } = useSelector(settingSelector);
+    const { decimalDigits, darkMode } = useSelector(settingSelector);
     const { stagingHomeConfigs, toggleSaveBurnTx, toggleSaveRawBurnTx } = useSelector(devSettingSelector);
     const history = useHistory();
     const isDev = useSelector(isDevSelector);
@@ -59,6 +60,17 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                     toggle: true,
                     onClick: () => dispatch(actionToggleDecimalDigits()),
                     toggleValue: decimalDigits,
+                },
+            ],
+        },
+        {
+            title: translate.darkMode.title,
+            child: [
+                {
+                    desc: translate.darkMode.desc,
+                    toggle: true,
+                    onClick: () => dispatch(actionToggleDarkMode()),
+                    toggleValue: darkMode,
                 },
             ],
         },

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { ENVS } from 'src/configs';
 import styled from 'styled-components';
 import copy from 'copy-to-clipboard';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,9 +11,28 @@ interface IProps {
 }
 
 const Styled = styled.button`
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
 `;
+
+const CopyVector = React.memo((props: any) => {
+    return (
+        <svg width={19} height={19}>
+            <text
+                transform="translate(-263 -180)"
+                fill="#FFF"
+                fillRule="evenodd"
+                fontFamily="SFProDisplay-Regular, SF Pro Display"
+                fontSize={18}
+                {...props}
+            >
+                <tspan x={261} y={196}>
+                    {'\uDBC1\uDC05'}
+                </tspan>
+            </text>
+        </svg>
+    );
+});
 
 const id = 'copy';
 
@@ -66,7 +84,9 @@ const Copy = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => 
             onMouseOver={handleHover}
             onMouseOut={handleHoverOut}
         >
-            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/copy.png`} alt="" ref={iconRef} />
+            <div ref={iconRef}>
+                <CopyVector />
+            </div>
         </Styled>
     );
 };

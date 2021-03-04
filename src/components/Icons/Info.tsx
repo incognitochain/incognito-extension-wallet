@@ -1,5 +1,4 @@
 import React from 'react';
-import { ENVS } from 'src/configs';
 import styled from 'styled-components';
 
 interface IProps {
@@ -7,14 +6,33 @@ interface IProps {
 }
 
 const Styled = styled.button`
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
 `;
+
+const InfoVector = React.memo((props: any) => {
+    return (
+        <svg width={16} height={17}>
+            <text
+                transform="translate(-242.5 -31)"
+                fill="#FFF"
+                fillRule="evenodd"
+                fontFamily="SFProDisplay-Regular, SF Pro Display"
+                fontSize={15}
+                {...props}
+            >
+                <tspan x={241.5} y={45}>
+                    {'\uDBC0\uDD75'}
+                </tspan>
+            </text>
+        </svg>
+    );
+});
 
 const Info = React.forwardRef((props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>, ref: any) => {
     return (
         <Styled className="icon info-icon" ref={ref} {...props}>
-            <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/info${props?.isGreyIcon ? '-grey' : ''}.png`} alt="" />
+            <InfoVector />
         </Styled>
     );
 });

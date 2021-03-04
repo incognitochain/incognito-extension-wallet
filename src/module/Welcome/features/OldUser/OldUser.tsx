@@ -4,7 +4,7 @@ import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
 import { AppIcon, Button, Input, Layout } from 'src/components';
-import { CONSTANT_COLORS } from 'src/constants';
+import { IGlobalStyle } from 'src/styles';
 import enhance from './OldUser.enhance';
 import { IOldUserProps } from './OldUser.interface';
 
@@ -12,7 +12,7 @@ const Styled = styled.div`
     .title {
         font-size: 18px;
         font-weight: bold;
-        color: ${CONSTANT_COLORS.BLACK};
+        color: ${(props: IGlobalStyle) => props.theme.text};
         letter-spacing: 0;
     }
 

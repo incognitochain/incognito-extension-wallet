@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FONT_SIZES, ITheme } from 'src/styles';
 import { BtnSelectAccount } from 'src/module/Account/features/SelectAccount';
 import { ArrowLeftIcon } from 'src/components/Icons';
 import withHeader, { IMergeProps } from './Header.enhance';
@@ -16,6 +17,9 @@ const Styled = styled.div`
         flex-direction: row;
         align-items: center;
         cursor: pointer;
+        input {
+            color: ${(props: { theme: ITheme }) => props.theme.inputTextColor};
+        }
     }
     .left p.header-title {
         margin-right: 10px;
