@@ -37,10 +37,11 @@ const customModalStyle = {
 interface IProps {
     wallet: WalletInstance;
     walletId: number;
+    isMasterless: boolean;
 }
 
 const KeychainItem = React.memo((props: IProps) => {
-    const { wallet, walletId } = props;
+    const { wallet, walletId, isMasterless } = props;
     const translate: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
     const { revealPhraseBtn } = translate;
     const dispatch = useDispatch();
@@ -65,6 +66,9 @@ const KeychainItem = React.memo((props: IProps) => {
         return wallet.masterAccount.getAccounts();
     };
     const listAccount = getListAccount();
+    if (isMasterless && listAccount.length === 0) {
+        return null;
+    }
     return (
         <div className="hook-container">
             <div className="master-key flex">
@@ -86,7 +90,12 @@ const KeychainList = () => {
     return (
         <Styled className="keychain-list scroll-view">
             {listMasterKey.map((masterKey) => (
-                <KeychainItem wallet={masterKey.wallet} walletId={masterKey.walletId} key={masterKey.walletId} />
+                <KeychainItem
+                    wallet={masterKey.wallet}
+                    walletId={masterKey.walletId}
+                    isMasterless={masterKey.isMasterless}
+                    key={masterKey.walletId}
+                />
             ))}
         </Styled>
     );

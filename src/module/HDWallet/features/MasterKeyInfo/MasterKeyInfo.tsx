@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import { IHDWalletLanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { Mnemonic, CopyIcon, KeyIcon, Header, LoadingIcon } from 'src/components';
+import { Mnemonic, CopyIcon, KeyIcon, Header, LoadingIcon, TrashBinIcon } from 'src/components';
 import { MnemonicQRCodeIcon } from 'src/components/Mnemonic';
-import { switchingWalletSelector } from 'src/module/Wallet/Wallet.selector';
+import { removingWalletSelector, switchingWalletSelector } from 'src/module/Wallet/Wallet.selector';
 import enhance, { IMergeProps } from './MasterKeyInfo.enhance';
 
 const Styled = styled.div`
@@ -29,13 +29,33 @@ const Styled = styled.div`
 `;
 
 const MasterKeyInfo = (props: IMergeProps & any) => {
-    const { keychains, mnemonic, onShowMnemonic, showMnemonic, onClickKey }: IMergeProps = props;
+    const {
+        handleRemoveMasterKey,
+        keychains,
+        mnemonic,
+        onShowMnemonic,
+        showMnemonic,
+        onClickKey,
+        shouldShowRemove,
+    }: IMergeProps = props;
     const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
     const dictionary = translate.info;
     const switching = useSelector(switchingWalletSelector);
+    const removing: boolean = useSelector(removingWalletSelector);
     return (
         <Styled>
-            <Header title={dictionary.title} />
+            <Header
+                title={dictionary.title}
+                rightHeader={
+                    shouldShowRemove ? (
+                        removing ? (
+                            <LoadingIcon />
+                        ) : (
+                            <TrashBinIcon onClick={handleRemoveMasterKey} />
+                        )
+                    ) : null
+                }
+            />
             {switching ? (
                 <LoadingIcon center />
             ) : (

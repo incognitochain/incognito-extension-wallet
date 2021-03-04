@@ -6,9 +6,10 @@ import { actionToggleToast, Button, Header, TOAST_CONFIGS } from 'src/components
 import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import styled from 'styled-components';
-import { masterlessIdSelector } from 'src/module/Wallet/Wallet.selector';
+import { isInitMasterlessSelector, masterlessIdSelector } from 'src/module/Wallet/Wallet.selector';
 import { actionFetchImportAccount } from 'src/module/Account/Account.actions';
-import { importAccountSelector } from '../..';
+import { importAccountSelector } from 'src/module/Account/Account.selector';
+import { actionInitMasterless } from 'src/module/Wallet';
 
 const Styled = styled.div`
     .group-actions {
@@ -32,17 +33,22 @@ const AllMethodsImport = (props: IProps) => {
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
     const { title, subAllMethods, btnImportKeychainOnly, btnImportMasterKey } = translate.import;
     const masterlessId = useSelector(masterlessIdSelector);
+    const isInitMasterless = useSelector(isInitMasterlessSelector);
     const history = useHistory();
     const dispatch = useDispatch();
     const importing = useSelector(importAccountSelector);
     const handleImportMasterKey = () => history.push(routeImportMasterKey);
     const handleImportKeychainOnly = async () => {
         try {
+            let walletId: any = masterlessId;
+            if (!isInitMasterless) {
+                walletId = await dispatch(actionInitMasterless());
+            }
             await dispatch(
                 actionFetchImportAccount({
                     accountName,
                     privateKey,
-                    walletId: masterlessId,
+                    walletId,
                 }),
             );
             history.goBack();

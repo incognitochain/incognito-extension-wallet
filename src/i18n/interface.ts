@@ -54,6 +54,9 @@ export interface IHDWalletLanguage {
         existMasterKeyName: string;
         existMasterKeyMnemonic: string;
         dupMasterless: string;
+        canNotCreateMasterKey: string;
+        canNotFoundMasterKey: string;
+        canNotRemoveMasterKey: string;
     };
     info: {
         title: string;
@@ -79,6 +82,7 @@ export interface IWalletLanguage {
         walletIdNotFound: string;
         canNotSwitchWallet: string;
         canNotLoadWallet: string;
+        canNotRemoveWallet: string;
     };
     tooltip: {
         refresh: string;

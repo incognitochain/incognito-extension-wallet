@@ -1,15 +1,20 @@
+import cloneDeep from 'lodash/cloneDeep';
 import toLower from 'lodash/toLower';
 import isEqual from 'lodash/isEqual';
 import { listIdsWalletSelector } from 'src/module/Wallet';
-import { IWalletLanguage } from 'src/i18n';
+import { IWalletLanguage, IHDWalletLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
-import { actionSetListMasterKey, actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
+import {
+    actionSetListMasterKey,
+    actionUpdateMasterKey,
+    actionRemoveMasterKey,
+} from 'src/module/HDWallet/HDWallet.actions';
 import { actionSetSignPublicKeyEncode } from 'src/module/Account/Account.actions';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { MASTERLESS_WALLET_NAME } from 'src/configs/walletConfigs';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
-import { updateWallet } from 'src/database/tables/wallet';
+import { updateWallet, removeWallet } from 'src/database/tables/wallet';
 import { actionSetListAccount, actionSelectAccount, defaultAccountNameSelector } from 'src/module/Account';
 import { IPreloadReducer } from 'src/module/Preload';
 import { isMainnetSelector, preloadSelector } from 'src/module/Preload/Preload.selector';
@@ -23,6 +28,9 @@ import {
     ACTION_UPDATE_WALLET,
     ACTION_INITED_MASTER_LESS,
     ACTION_TOGGLE_SWITCH_WALLET,
+    ACTION_FETCHING_REMOVE_MASTER_KEY,
+    ACTION_FETCHED_REMOVE_MASTER_KEY,
+    ACTION_FETCH_FAIL_REMOVE_MASTER_KEY,
 } from './Wallet.constant';
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import {
@@ -167,18 +175,15 @@ export const actionInitedMasterless = (payload: { mainnet: boolean; walletId: nu
 });
 
 export const actionInitMasterless = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    let walletId = -1;
+    let wallet: WalletInstance | undefined;
     try {
-        let walletId = -1;
         const state: IRootState = getState();
         const isInitMasterless = isInitMasterlessSelector(state);
         const walletIds = listIdsWalletSelector(state);
         const pass = passwordSelector(state);
         let loadListWallet = walletIds.map((walletId: number) => loadWallet(walletId, pass));
         const listWallet: any[] = await Promise.all([loadListWallet]);
-        console.debug(
-            'listWallet',
-            listWallet.map((item: WalletInstance) => item.name),
-        );
         const findIndex: number = listWallet.findIndex((wallet: WalletInstance) =>
             isEqual(toLower(wallet.name), toLower(MASTERLESS_WALLET_NAME)),
         );
@@ -186,11 +191,21 @@ export const actionInitMasterless = () => async (dispatch: Dispatch, getState: (
             return;
         }
         const mainnet = isMainnetSelector(state);
-
         const dataInit = await initWallet(MASTERLESS_WALLET_NAME, pass);
+        const { error }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
         walletId = dataInit.walletId;
-        const { wallet }: { wallet: WalletInstance } = dataInit;
-        wallet.masterAccount.removeAccount('Anon');
+        wallet = cloneDeep(dataInit.wallet);
+        if (typeof wallet === 'undefined') {
+            throw new Error(error.canNotCreateMasterKey);
+        }
+        dispatch(actionUpdateMasterKey({ walletId, wallet, isMasterless: true }));
+        dispatch(
+            actionLoadedWallet({
+                wallet,
+                mainnet,
+                walletId,
+            }),
+        );
         dispatch(
             actionInitedMasterless({
                 mainnet,
@@ -200,6 +215,7 @@ export const actionInitMasterless = () => async (dispatch: Dispatch, getState: (
     } catch (error) {
         throw error;
     }
+    return walletId;
 };
 
 export const actionToggleSwitchWallet = (payload: boolean) => ({
@@ -224,31 +240,89 @@ export const actionSwitchWallet = (walletId: number) => async (dispatch: Dispatc
         await dispatch(actionToggleSwitchWallet(true));
         const pass = passwordSelector(state);
         wallet = await loadWallet(walletId, pass);
-        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
-        const defaultAccount: AccountInstance = listAccount && listAccount[0];
         const mainnet = isMainnetSelector(state);
         if (!wallet) {
             throw new Error(error.canNotSwitchWallet);
         }
-        batch(() => {
+        const accounts: AccountInstance[] = wallet.masterAccount.getAccounts();
+        await Promise.all([
             dispatch(
                 actionLoadedWallet({
                     wallet,
                     mainnet,
                     walletId,
                 }),
-            );
-            dispatch(actionUpdateMasterKey({ walletId, wallet }));
-            dispatch(actionSetListAccount(listAccount));
-            dispatch(actionSelectAccount(defaultAccount.name));
-        });
+            ),
+            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            accounts.length > 0 && dispatch(actionSetListAccount(accounts)),
+        ]);
     } catch (error) {
         throw error;
     } finally {
+        await dispatch(actionToggleSwitchWallet(false));
         if (!isMasterless && wallet) {
             wallet.sync();
         }
-        await dispatch(actionToggleSwitchWallet(false));
     }
     return wallet;
+};
+
+export const actionFetchingRemoveMasterKey = () => ({
+    type: ACTION_FETCHING_REMOVE_MASTER_KEY,
+});
+
+export const actionFetchedRemoveMasterKey = (payload: {
+    walletId: number;
+    mainnet: boolean;
+    walletIdWillSwitch: number;
+    wallet: WalletInstance;
+}) => ({
+    type: ACTION_FETCHED_REMOVE_MASTER_KEY,
+    payload,
+});
+
+export const actionFetchFailRemoveMasterKey = () => ({
+    type: ACTION_FETCH_FAIL_REMOVE_MASTER_KEY,
+});
+
+export const actionFetchRemoveMasterKey = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        const state = getState();
+        const walletId: number = walletIdSelector(state);
+        const listWalletIds: number[] = listIdsWalletSelector(state);
+        if (listWalletIds.length === 1) {
+            return;
+        }
+        const { error }: IWalletLanguage = translateByFieldSelector(state)('wallet');
+        if (!walletId) {
+            throw new Error(error.walletIdNotFound);
+        }
+        await dispatch(actionFetchingRemoveMasterKey());
+        const mainnet: boolean = isMainnetSelector(state);
+        const walletIdWillSwitch: number | undefined = listWalletIds.find((id: number) => id !== walletId);
+        if (walletIdWillSwitch) {
+            const pass = passwordSelector(state);
+            const wallet = await loadWallet(walletIdWillSwitch, pass);
+            if (!wallet) {
+                throw new Error(error.canNotLoadWallet);
+            }
+            let removed = await removeWallet(walletId);
+            if (removed) {
+                await dispatch(
+                    actionFetchedRemoveMasterKey({
+                        mainnet,
+                        walletId,
+                        wallet,
+                        walletIdWillSwitch,
+                    }),
+                );
+                await dispatch(actionRemoveMasterKey({ walletId }));
+            } else {
+                throw new Error(error.canNotRemoveWallet);
+            }
+        }
+    } catch (error) {
+        await dispatch(actionFetchFailRemoveMasterKey());
+        throw error;
+    }
 };

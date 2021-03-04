@@ -3,7 +3,12 @@ import { IRootState } from 'src/redux/interface';
 import { Dispatch } from 'redux';
 import { WalletInstance } from 'incognito-js/build/web/browser';
 import { loadWallet, listIdsWalletSelector, masterlessIdSelector } from 'src/module/Wallet';
-import { ACTION_UPDATE_MASTER_KEY, ACTION_SET_ACTION_TYPE, ACTION_LOADED_LIST_MASTER_KEY } from './HDWallet.constant';
+import {
+    ACTION_REMOVE_MASTER_KEY,
+    ACTION_UPDATE_MASTER_KEY,
+    ACTION_SET_ACTION_TYPE,
+    ACTION_LOADED_LIST_MASTER_KEY,
+} from './HDWallet.constant';
 
 export const actionSetActionType = (payload: number) => ({
     type: ACTION_SET_ACTION_TYPE,
@@ -38,7 +43,16 @@ export const actionSetListMasterKey = () => async (dispatch: Dispatch, getState:
     }
 };
 
-export const actionUpdateMasterKey = (payload: { walletId: number; wallet: WalletInstance | any }) => ({
+export const actionUpdateMasterKey = (payload: {
+    walletId: number;
+    wallet: WalletInstance | any;
+    isMasterless?: boolean;
+}) => ({
     type: ACTION_UPDATE_MASTER_KEY,
+    payload,
+});
+
+export const actionRemoveMasterKey = (payload: { walletId: number }) => ({
+    type: ACTION_REMOVE_MASTER_KEY,
     payload,
 });
