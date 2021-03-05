@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { darkModeSelector } from 'src/module/Setting';
-import { IGeneralLanguage } from '../../i18n';
-import { translateByFieldSelector } from '../../module/Configs';
-import { actionRemoveTooltip, actionShowTooltip } from '../../module/Tooltip';
+import { IGeneralLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { actionRemoveTooltip, actionShowTooltip } from 'src/module/Tooltip';
+import { COLORS } from 'src/styles';
 
 interface IProps {}
 
@@ -13,8 +14,8 @@ const Styled = styled.button<{ darkMode: boolean }>`
     height: 23px;
     svg {
         .stroke {
-            fill: ${(props) => (props?.darkMode ? '#121212' : '#F3F3F3')};
-            stroke: ${(props) => (props?.darkMode ? '#333335' : '#CBCBCB')};
+            fill: ${(props) => (props?.darkMode ? COLORS.black2 : COLORS.colorGrey)};
+            stroke: ${(props) => (props?.darkMode ? COLORS.black1 : COLORS.colorKeyGrey)};
         }
     }
 `;

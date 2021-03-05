@@ -10,7 +10,7 @@ const Styled = styled.div`
     background-color: ${COLORS.black};
     border-radius: 50%;
     margin-bottom: 30px;
-    border: 1px solid #fff;
+    border: 1px solid ${COLORS.white};
 `;
 
 const AppIcon = () => {

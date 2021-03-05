@@ -11,18 +11,13 @@ const Styled = styled.button`
 
 const ArrowLeftVector = React.memo((props: any) => {
     return (
-        <svg width={9} height={17}>
-            <text
+        <svg width={9} height={16}>
+            <path
+                d="M7.912 15.283a.788.788 0 00.809-.8.826.826 0 00-.238-.57L2.085 7.653l6.398-6.258a.843.843 0 00.238-.57c0-.458-.352-.8-.809-.8a.782.782 0 00-.571.228L.37 7.074a.778.778 0 00-.246.58c0 .22.08.413.246.58l6.97 6.812c.15.158.343.237.571.237z"
+                fill="#000"
                 fillRule="nonzero"
-                transform="translate(-31 -32)"
-                fontFamily="SFProDisplay-Regular, SF Pro Display"
-                fontSize={18}
                 {...props}
-            >
-                <tspan x={30} y={47}>
-                    {'\uDBC2\uDFF6'}
-                </tspan>
-            </text>
+            />
         </svg>
     );
 });

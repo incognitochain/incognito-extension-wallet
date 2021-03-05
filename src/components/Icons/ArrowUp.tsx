@@ -11,18 +11,12 @@ const Styled = styled.button`
 const ArrowUpVector = React.memo((props: any) => {
     return (
         <svg width={16} height={10}>
-            <text
-                transform="translate(-272 -173)"
+            <path
+                d="M14.708 8.6c.457 0 .8-.342.8-.8a.775.775 0 00-.237-.57L8.468.268a.8.8 0 00-1.187 0L.48 7.229a.775.775 0 00-.238.572c0 .457.343.8.8.8.229 0 .44-.08.571-.229L7.88 1.974l6.258 6.398c.14.15.351.229.571.229z"
                 fill="#000"
-                fillRule="evenodd"
-                fontFamily="SFProDisplay-Regular, SF Pro Display"
-                fontSize={18}
+                fillRule="nonzero"
                 {...props}
-            >
-                <tspan x={270} y={185}>
-                    {'\uDBC0\uDD87'}
-                </tspan>
-            </text>
+            />
         </svg>
     );
 });
