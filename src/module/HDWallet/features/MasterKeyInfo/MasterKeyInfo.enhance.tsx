@@ -12,6 +12,7 @@ import {
 import { darkModeSelector } from 'src/module/Setting';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { actionFetchRemoveMasterKey } from 'src/module/Wallet/Wallet.actions';
+import { COLORS } from 'src/styles';
 import { useHistory } from 'react-router-dom';
 
 interface TInner {
@@ -48,7 +49,7 @@ const enhance = (WrappedComponent: any) => (props: IProps & any) => {
             actionToggleModal({
                 data: <AccountDetails account={account} canRemove={keychains.length > 1} />,
                 customModalStyle: {
-                    backgroundColor: darkMode && '#121212',
+                    backgroundColor: darkMode && COLORS.black2,
                 },
             }),
         );

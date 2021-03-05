@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
-import { IGlobalStyle } from 'src/styles';
+import { IGlobalStyle, COLORS } from 'src/styles';
 import { IHDWalletLanguage } from 'src/i18n';
 
 const Styled = styled.div`
@@ -10,7 +10,7 @@ const Styled = styled.div`
     background-color: ${(props: IGlobalStyle) => props.theme.button};
     padding: 15px;
     min-height: 70px;
-    color: #fff;
+    color: ${COLORS.white};
     border-radius: 5px;
     line-height: 24px;
 `;

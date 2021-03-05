@@ -29,6 +29,12 @@ export interface ITheme {
     typeTextButton: string;
     disableButton: string;
     disableTextButton: string;
+    copyButton: string;
+    copyTextButton: string;
+    copyBorderButton: string;
+    fastFeeButton: string;
+    fastFeeBorderButton: string;
+    fastFeeTextButton: string;
 }
 
 export interface IGlobalStyle {
@@ -43,7 +49,7 @@ export const lightTheme: ITheme = {
     subText: COLORS.colorGreyBold,
     toggleBorder: COLORS.white,
     gradient: 'linear-gradient(#39598A, #79D7ED)',
-    button: '#333335',
+    button: COLORS.black1,
     textButton: COLORS.white,
     width: '357px',
     minWidth: '320px',
@@ -52,26 +58,32 @@ export const lightTheme: ITheme = {
     tooltipBg: COLORS.black,
     tooltipText: COLORS.white,
     input: COLORS.colorGrey,
-    inputBorder: '#CBCBCB',
-    inputTextColor: '#222',
-    modalBg: '#fff',
-    switchButton: '#D2D2D2',
-    switchActiveButton: '#333335',
-    typeButton: '#F3F3F3',
-    typeTextButton: '#000000',
+    inputBorder: COLORS.colorKeyGrey,
+    inputTextColor: COLORS.black4,
+    modalBg: COLORS.white,
+    switchButton: COLORS.lightGrey22,
+    switchActiveButton: COLORS.black1,
+    typeButton: COLORS.colorGrey,
+    typeTextButton: COLORS.colorGreyBold,
     disableButton: 'rgba(51, 53, 52, 0.3)',
-    disableTextButton: '#FFFFFF',
+    disableTextButton: COLORS.white,
+    copyButton: COLORS.colorGrey,
+    copyTextButton: COLORS.colorGreyBold,
+    copyBorderButton: COLORS.colorKeyGrey,
+    fastFeeButton: COLORS.colorGrey,
+    fastFeeBorderButton: COLORS.colorKeyGrey,
+    fastFeeTextButton: COLORS.colorGreyBold,
 };
 
 export const darkTheme: ITheme = {
-    body: '#121212',
-    text: '#fff',
+    body: COLORS.black2,
+    text: COLORS.white,
     inverseText: COLORS.black,
     inverseBody: COLORS.white,
     subText: COLORS.colorGreyBold,
     toggleBorder: '#6B8096',
     gradient: 'linear-gradient(#091236, #1E215D)',
-    button: '#333335',
+    button: COLORS.black1,
     textButton: COLORS.white,
     width: '357px',
     minWidth: '320px',
@@ -79,16 +91,22 @@ export const darkTheme: ITheme = {
     height: '600px',
     tooltipBg: COLORS.white,
     tooltipText: COLORS.black,
-    input: '#121212',
-    inputBorder: '#333335',
-    inputTextColor: '#fff',
-    modalBg: '#333335',
-    switchButton: '#333335',
-    switchActiveButton: '#D2D2D2',
-    typeButton: '#121212',
-    typeTextButton: '#8A8A8E',
-    disableButton: '#222223',
-    disableTextButton: '#8A8A8E',
+    input: COLORS.black2,
+    inputBorder: COLORS.black1,
+    inputTextColor: COLORS.white,
+    modalBg: COLORS.black1,
+    switchButton: COLORS.black1,
+    switchActiveButton: COLORS.lightGrey22,
+    typeButton: COLORS.black2,
+    typeTextButton: COLORS.colorGreyBold,
+    disableButton: COLORS.black3,
+    disableTextButton: COLORS.colorGreyBold,
+    copyButton: COLORS.black2,
+    copyTextButton: COLORS.white,
+    copyBorderButton: COLORS.black1,
+    fastFeeButton: COLORS.black2,
+    fastFeeBorderButton: COLORS.black1,
+    fastFeeTextButton: COLORS.colorGreyBold,
 };
 
 export const DEFAULT_THEME = lightTheme;
@@ -315,7 +333,7 @@ export const GlobalStyled = createGlobalStyle`
         margin-top: 15px;
     }
     svg {
-        text {
+        path {
             fill: ${(props: { theme: ITheme }) => props.theme.text};
         }
     }

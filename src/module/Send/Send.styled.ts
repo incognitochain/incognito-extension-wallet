@@ -19,10 +19,10 @@ export const Styled = styled.div`
         max-width: 120px;
     }
     .fee-types .fee-type {
-        background-color: ${COLORS.lightGrey12};
-        border: solid ${COLORS.lightGrey21} 0.5px;
+        background-color: ${(props: IGlobalStyle) => props.theme.typeButton};
+        border: solid 0.5px ${(props: IGlobalStyle) => props.theme.inputBorder};
+        color: ${(props: IGlobalStyle) => props.theme.typeTextButton};
         border-radius: 8px;
-        color: ${COLORS.black};
         padding-top: 1px;
         min-width: 54px;
         height: 28px;

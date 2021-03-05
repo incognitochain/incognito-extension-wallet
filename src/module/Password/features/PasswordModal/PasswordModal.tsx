@@ -8,12 +8,13 @@ import { Field } from 'redux-form';
 import { useValidator } from 'src/hooks';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField';
 import { darkModeSelector } from 'src/module/Setting';
+import { COLORS } from 'src/styles';
 import withPassword, { IMergeProps, FORM_CONFIGS } from './PasswordModal.enhance';
 
 const Styled = styled.div<{ darkMode: boolean }>`
     .btn-container {
         margin-top: 15px;
-        background: ${(props) => props?.darkMode && '#121212'};
+        background: ${(props) => props?.darkMode && COLORS.black2};
     }
 `;
 
