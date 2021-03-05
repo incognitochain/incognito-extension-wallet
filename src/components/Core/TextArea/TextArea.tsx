@@ -1,6 +1,6 @@
 import React, { ChangeEvent, TextareaHTMLAttributes } from 'react';
 import styled from 'styled-components';
-import { CONSTANT_COLORS } from 'src/constants';
+import { COLORS } from 'src/styles';
 
 interface IProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -17,9 +17,9 @@ const Styled = styled.div`
     textarea {
         width: 100%;
         padding: 10px;
-        border: 1px solid ${CONSTANT_COLORS.GREY};
+        border: 1px solid ${COLORS.colorKeyGrey};
         border-radius: 8px;
-        background-color: ${CONSTANT_COLORS.GREY2};
+        background-color: ${COLORS.colorGrey};
         resize: none;
         font-weight: 100;
 
@@ -34,7 +34,7 @@ const Styled = styled.div`
     }
 
     textarea::placeholder {
-        color: ${CONSTANT_COLORS.LIGHT_GREY};
+        color: ${COLORS.colorGreyBold};
         font-weight: 100;
     }
 `;

@@ -4,7 +4,7 @@ import QRCodeReact, { BaseQRCodeProps } from 'qrcode.react';
 import { themeSelector } from 'src/module/Setting';
 import { useSelector } from 'react-redux';
 import { COLORS, ITheme } from 'src/styles';
-import Copy from '../Copy';
+import Copy from 'src/components/Copy';
 
 interface IProps {
     hook?: any;

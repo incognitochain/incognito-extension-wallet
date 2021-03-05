@@ -4,6 +4,9 @@ export const COLORS = {
     white: 'white',
     black: '#000000',
     black1: '#333335',
+    black2: '#121212',
+    black3: '#222223',
+    black4: '#222222',
     blue: '#25CDD6',
     blue1: '#0A3A3C',
     blue2: '#01828A',
@@ -41,6 +44,7 @@ export const COLORS = {
     lightGrey19: '#F4F4F4',
     lightGrey20: '#F7F7F7',
     lightGrey21: '#BCBCBC',
+    lightGrey22: '#D2D2D2',
     newGrey: '#8A8A8E',
     toastBackgroundDefault: 'rgba(107, 141, 143, 0.8)',
     toastBackgroundError: 'rgba(255, 101, 47, 0.8)',
@@ -61,4 +65,5 @@ export const COLORS = {
     colorGreyMedium: '#C4C4C6',
     colorGreyLight: '#D8D8D8',
     colorManateeGrey: '#959599',
+    colorKeyGrey: '#CBCBCB',
 };

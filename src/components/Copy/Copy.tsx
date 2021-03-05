@@ -2,25 +2,24 @@ import React from 'react';
 import styled from 'styled-components';
 import copy from 'copy-to-clipboard';
 import { Button } from 'src/components/Core';
-import { darkModeSelector } from 'src/module/Setting';
-import { useSelector } from 'react-redux';
+import { IGlobalStyle } from 'src/styles';
 
 interface IProps {
     text: string;
 }
 
-const Styled = styled.div<{ darkMode: boolean }>`
+const Styled = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: ${(props) => (props?.darkMode ? '#121212' : '#F3F3F3')};
-    border: solid 0.5px ${(props) => (props?.darkMode ? '#333335' : '#CBCBCB')};
+    background-color: ${(props: IGlobalStyle) => props.theme.copyButton};
+    border: solid 0.5px ${(props: IGlobalStyle) => props.theme.copyBorderButton};
     border-radius: 20px;
     height: 40px;
     margin-top: 30px;
     .text {
         margin-right: 15px;
-        color: ${(props) => (props?.darkMode ? '#fff' : '#8A8A8E')};
+        color: ${(props: IGlobalStyle) => props.theme.copyTextButton};
         padding-left: 15px;
     }
     .btn-container {
@@ -33,7 +32,6 @@ const Styled = styled.div<{ darkMode: boolean }>`
 
 const Copy: React.FunctionComponent<IProps> = (props) => {
     const { text } = props;
-    const darkMode = useSelector(darkModeSelector);
     const [copied, setCopied] = React.useState(false);
     const handleCopyData = (e: any) => {
         try {
@@ -45,7 +43,7 @@ const Copy: React.FunctionComponent<IProps> = (props) => {
         }
     };
     return (
-        <Styled darkMode={darkMode}>
+        <Styled>
             <p className="text ellipsis">{text}</p>
             <Button title={copied ? `Copied` : `Copy`} onClick={handleCopyData} />
         </Styled>

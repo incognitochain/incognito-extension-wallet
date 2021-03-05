@@ -4,10 +4,6 @@ import { actionSwitchAccount } from 'src/module/Account';
 import { defaultAccountSelector } from 'src/module/Account/Account.selector';
 // import { actionShowTooltip } from 'src/module/Tooltip';
 // import { IGeneralLanguage } from 'src/i18n';
-import {
-    themeSelector,
-    // translateByFieldSelector
-} from 'src/module/Configs/Configs.selector';
 import styled from 'styled-components';
 import { IGlobalStyle } from 'src/styles';
 import { AccountInstance } from 'incognito-js/build/web/browser';
@@ -33,7 +29,6 @@ const AccountItem = React.memo((props: IProps) => {
     const ref: any = useRef();
     const { account, walletId } = props;
     const dispatch = useDispatch();
-    const theme = useSelector(themeSelector);
     const defaultAccount: AccountInstance = useSelector(defaultAccountSelector);
     const isSelected =
         defaultAccount?.key.keySet.paymentAddressKeySerialized === account?.key.keySet.paymentAddressKeySerialized;
@@ -72,7 +67,6 @@ const AccountItem = React.memo((props: IProps) => {
     }
     return (
         <Styled
-            theme={theme}
             onClick={handleSelectAccount}
             className={`account-item flex fs-medium ${isSelected ? 'main-text' : 'sub-text'}`}
         >
