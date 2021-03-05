@@ -17,6 +17,7 @@ import { route as routeImportMasterKey } from 'src/module/HDWallet/features/Impo
 import { ACTION_TYPES, actionSetActionType, listMasterKeyIdsAndNamesSelector } from 'src/module/HDWallet';
 import { IGlobalStyle } from 'src/styles';
 import { route as routeImportAccount } from 'src/module/Account/features/ImportAccount';
+import { route as routeKeyChain } from 'src/module/Keychain';
 
 export const Styled = styled.div`
     .disabled {
@@ -134,9 +135,10 @@ const BlockActions = React.memo(() => {
 const AddKeys = React.memo(() => {
     const translateKeychain: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
     const dictionary = translateKeychain.addKeys;
+    const history = useHistory();
     return (
         <Styled>
-            <Header title={dictionary.title} />
+            <Header title={dictionary.title} onGoBack={() => history.push(routeKeyChain)} />
             <div className="main scroll-view">
                 <BlockAddNewKeychains />
                 <BlockActions />
