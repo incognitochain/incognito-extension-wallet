@@ -69,6 +69,11 @@ export interface IHDWalletLanguage {
         newMnemonicBtn: string;
         hiddenText: string;
     };
+    success: {
+        create: string;
+        import: string;
+        remove: string;
+    };
 }
 
 export interface IWalletLanguage {
@@ -246,6 +251,7 @@ export interface IAccountLanguage {
     success: {
         create: string;
         import: string;
+        remove: string;
     };
     general: {
         placeholderName: string;

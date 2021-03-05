@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ImportMasterKey from 'src/module/HDWallet/features/ImportMasterKey';
-import { route as routeAddKeys } from 'src/module/Keychain/features/AddKeys';
 import { actionToggleToast, Button, Header, TOAST_CONFIGS } from 'src/components';
 import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
@@ -12,6 +11,7 @@ import { actionFetchImportAccount } from 'src/module/Account/Account.actions';
 import { importAccountSelector } from 'src/module/Account/Account.selector';
 import { actionInitMasterless } from 'src/module/Wallet';
 import { actionToggleModal } from 'src/components/Modal';
+import { route as routeKeychain } from 'src/module/Keychain';
 
 const Styled = styled.div`
     .group-actions {
@@ -44,7 +44,7 @@ const AllMethodsImport = (props: IProps) => {
             actionToggleModal({
                 data: (
                     <ImportMasterKey
-                        onImportedMasterKey={() => history.push(routeAddKeys)}
+                        onImportedMasterKey={() => history.push(routeKeychain)}
                         onGoBack={() => dispatch(actionToggleModal({}))}
                     />
                 ),
@@ -64,7 +64,7 @@ const AllMethodsImport = (props: IProps) => {
                     walletId,
                 }),
             );
-            history.goBack();
+            history.push(routeKeychain);
         } catch (error) {
             dispatch(
                 actionToggleToast({

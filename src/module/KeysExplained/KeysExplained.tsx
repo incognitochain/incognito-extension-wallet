@@ -21,14 +21,13 @@ const Styled = styled.div`
 const KeysExplained = () => {
     const translate = useSelector(translateSelector);
     const dictionary = translate.keysExplained;
-
     return (
         <Styled>
             <Header title={dictionary.header} />
             <div className="content scroll-view">
                 <p className="desc sub-text">{dictionary.desc}</p>
-                {dictionary.content.map((item: any) => (
-                    <div className="item" key={item}>
+                {dictionary.content.map((item: any, index) => (
+                    <div className="item" key={`${index}-${item.title}`}>
                         <p className="main-text fw-medium">{item.title}</p>
                         <p className="sub-text" dangerouslySetInnerHTML={{ __html: item.text }} />
                     </div>

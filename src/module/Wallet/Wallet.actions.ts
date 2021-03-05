@@ -9,6 +9,7 @@ import {
     actionUpdateMasterKey,
     actionRemoveMasterKey,
 } from 'src/module/HDWallet/HDWallet.actions';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components/Core/Toast';
 import { actionSetSignPublicKeyEncode } from 'src/module/Account/Account.actions';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
@@ -63,7 +64,7 @@ export const actionUpdateWallet = (wallet: WalletInstance) => ({
     payload: wallet,
 });
 
-export const actionImportWallet = (walletName: string, mnemonic: string, pass: string) => async (
+export const actionImportWallet = (walletName: string, mnemonic: string, pass: string, isImport = true) => async (
     dispatch: Dispatch,
     getState: () => IRootState,
 ) => {
@@ -77,6 +78,7 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
         const { wallet } = dataImport;
         const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
         const defaultAccount: AccountInstance = listAccount && listAccount[0];
+        const { success }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
         batch(() => {
             dispatch(actionSetListAccount(listAccount));
             dispatch(actionSelectAccount(defaultAccount.name));
@@ -92,6 +94,13 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
             dispatch(actionResetFollowDefaultToken(mainnet));
         });
         await actionSetListMasterKey()(dispatch, getState);
+        dispatch(
+            actionToggleToast({
+                toggle: true,
+                value: isImport ? success.import : success.create,
+                type: TOAST_CONFIGS.success,
+            }),
+        );
         return walletId;
     } catch (error) {
         throw error;
@@ -294,6 +303,7 @@ export const actionFetchRemoveMasterKey = () => async (dispatch: Dispatch, getSt
             return;
         }
         const { error }: IWalletLanguage = translateByFieldSelector(state)('wallet');
+        const { success }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
         if (!walletId) {
             throw new Error(error.walletIdNotFound);
         }
@@ -317,6 +327,7 @@ export const actionFetchRemoveMasterKey = () => async (dispatch: Dispatch, getSt
                     }),
                 );
                 await dispatch(actionRemoveMasterKey({ walletId }));
+                dispatch(actionToggleToast({ type: TOAST_CONFIGS.success, value: success.remove, toggle: true }));
             } else {
                 throw new Error(error.canNotRemoveWallet);
             }

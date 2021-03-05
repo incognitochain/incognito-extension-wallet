@@ -1,19 +1,26 @@
-import { actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { BigNumber } from 'bignumber.js';
 import { batch } from 'react-redux';
 import toLower from 'lodash/toLower';
 import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
-import { actionLoadedWallet, actionSaveWallet } from 'src/module/Wallet/Wallet.actions';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import isEqual from 'lodash/isEqual';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
-import { IWalletReducer, loadWallet } from 'src/module/Wallet';
-import { walletDataSelector, walletSelector, isMasterlessSelector } from 'src/module/Wallet/Wallet.selector';
+import {
+    IWalletReducer,
+    loadWallet,
+    actionLoadedWallet,
+    actionSaveWallet,
+    walletDataSelector,
+    walletSelector,
+    isMasterlessSelector,
+} from 'src/module/Wallet';
 import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token/Token.actions';
 import { cachePromise } from 'src/services';
 import { passwordSelector } from 'src/module/Password/Password.selector';
 import { IAccountLanguage, IHDWalletLanguage } from 'src/i18n/interface';
+import { actionToggleToast, TOAST_CONFIGS } from 'src/components/Core/Toast';
+import { actionUpdateMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { actionFreeHistory } from 'src/module/History/History.actions';
 import {
@@ -176,7 +183,7 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
         const create: boolean = createAccountSelector(state);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
         const { error: errorHDWallet }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
-        const { error } = translate;
+        const { error, success } = translate;
         if (create || !accountName || !walletId || !pass) {
             return;
         }
@@ -208,6 +215,7 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
         await Promise.all(task);
         await actionSaveWallet()(dispatch, getState);
         dispatch(actionFetchedCreateAccount(account));
+        dispatch(actionToggleToast({ toggle: true, value: success.create, type: TOAST_CONFIGS.success }));
     } catch (error) {
         dispatch(actionFetchFailCreateAccount());
         throw error;
@@ -247,7 +255,7 @@ export const actionFetchImportAccount = ({
         await dispatch(actionFetchingImportAccount());
         const pass = passwordSelector(state);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
-        const { error } = translate;
+        const { error, success } = translate;
         let wallet: WalletInstance | undefined = await loadWallet(walletId, pass);
         if (!wallet) {
             throw new Error(error.canNotImport);
@@ -281,6 +289,7 @@ export const actionFetchImportAccount = ({
         await Promise.all([...task]);
         await actionSaveWallet()(dispatch, getState);
         dispatch(actionFetchedImportAccount(account));
+        dispatch(actionToggleToast({ toggle: true, value: success.import, type: TOAST_CONFIGS.success }));
     } catch (error) {
         dispatch(actionFetchFailImportAccount());
         throw error;
@@ -318,7 +327,7 @@ export const actionFetchRemoveAccount = (accountName: string, walletId: number) 
         const account: AccountInstance = wallet.masterAccount.getAccountByName(accountName);
         const translate: IAccountLanguage = translateByFieldSelector(state)('account');
         const { error: errorHDWallet }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
-        const { error } = translate;
+        const { error, success } = translate;
         if (!wallet) {
             throw new Error(errorHDWallet.canNotFoundMasterKey);
         }
@@ -344,6 +353,7 @@ export const actionFetchRemoveAccount = (accountName: string, walletId: number) 
         await Promise.all([...task]);
         await actionSaveWallet()(dispatch, getState);
         await dispatch(actionFetchedRemoveAccount());
+        dispatch(actionToggleToast({ toggle: true, value: success.remove, type: TOAST_CONFIGS.success }));
     } catch (error) {
         await dispatch(actionFetchFailRemoveAccount());
         throw error;

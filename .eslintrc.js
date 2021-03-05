@@ -71,5 +71,6 @@ module.exports = {
         ],
         'no-unsafe-finally': 'off',
         'jsx-a11y/anchor-is-valid': 'off',
+        'react/no-array-index-key': 'off',
     },
 };
