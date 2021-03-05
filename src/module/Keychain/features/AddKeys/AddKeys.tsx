@@ -112,13 +112,13 @@ const BlockActions = React.memo(() => {
         dispatch(actionSetActionType(ACTION_TYPES.CREATE));
         dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
         history.push(routeCreateMasterKey, {
-            shouldGoBack: true,
+            shouldRedirectToKeyChain: true,
         });
     };
     const handleImportMasterKey = () => {
         dispatch(actionSetActionType(ACTION_TYPES.IMPORT));
         history.push(routeImportMasterKey, {
-            shouldGoBack: true,
+            shouldRedirectToKeyChain: true,
         });
     };
     return (

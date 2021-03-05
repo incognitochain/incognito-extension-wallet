@@ -1,15 +1,16 @@
 import React from 'react';
-import trim from 'lodash/trim';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import { InjectedFormProps, reduxForm, isInvalid, isSubmitting } from 'redux-form';
+import trim from 'lodash/trim';
 import { actionFetchCreateAccount } from 'src/module/Account/Account.actions';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { switchingWalletSelector, walletIdSelector } from 'src/module/Wallet/Wallet.selector';
 import { useFormValue } from 'src/hooks';
 import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { route as routeKeyChain } from 'src/module/Keychain';
 
 interface IProps {
     walletId?: number;
@@ -54,7 +55,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 return;
             }
             await dispatch(actionFetchCreateAccount(trim(accountName), walletId));
-            history.goBack();
             dispatch(
                 actionToggleToast({
                     toggle: true,
@@ -62,6 +62,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     type: TOAST_CONFIGS.success,
                 }),
             );
+            history.push(routeKeyChain);
         } catch (error) {
             dispatch(
                 actionToggleToast({

@@ -9,6 +9,7 @@ import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwo
 import { actionToggleModal } from 'src/components/Modal';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useMasterKeyMnemonic, useMasterKeyName } from 'src/module/HDWallet';
+import { route as routeKeyChain } from 'src/module/Keychain';
 import { FORM_CONFIGS } from './ImportMasterKey.constant';
 
 interface IProps {
@@ -37,7 +38,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const dispatch = useDispatch();
     const history = useHistory();
     const { state }: { state: any } = useLocation();
-    const { shouldGoBack } = state || {};
+    const { shouldGoBack, shouldRedirectToKeyChain } = state || {};
     const { error: errorCustomName, masterKeyName } = useMasterKeyName({
         formName: FORM_CONFIGS.formName,
         field: FORM_CONFIGS.masterKeyName,
@@ -62,6 +63,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             });
             if (typeof onImportedMasterKey === 'function') {
                 return onImportedMasterKey();
+            }
+            if (shouldRedirectToKeyChain) {
+                return history.push(routeKeyChain);
             }
             if (shouldGoBack) {
                 history.goBack();

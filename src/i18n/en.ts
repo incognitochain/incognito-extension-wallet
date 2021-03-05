@@ -151,6 +151,7 @@ const language: ILanguage = {
         success: {
             create: 'Create keychain successful.',
             import: 'Import keychain successful.',
+            remove: 'Remove keychain successful.',
         },
         general: {
             placeholderName: 'Enter a name for your keychain',
@@ -378,6 +379,11 @@ const language: ILanguage = {
             newMnemonic: 'Save these words in the correct order. Never share this phrase with anyone else.',
             newMnemonicBtn: "I've saved my phrase",
             hiddenText: `Click to reveal.<br /> Back it up if you haven’t!`,
+        },
+        success: {
+            create: 'Creat masterkey successful',
+            import: 'Import masterkey successull',
+            remove: 'Remove masterkey successful.',
         },
     },
     modal: {

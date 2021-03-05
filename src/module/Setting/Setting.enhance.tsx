@@ -115,7 +115,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     }
     return (
         <ErrorBoundary>
-            <Header title={translate.headerTitle} />
+            <Header title={translate.headerTitle} onGoBack={() => history.push('/')} />
             <WrappedComponent {...{ ...props, settingFactories }} />
         </ErrorBoundary>
     );
