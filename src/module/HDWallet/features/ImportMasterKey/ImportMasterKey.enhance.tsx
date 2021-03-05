@@ -13,6 +13,7 @@ import { FORM_CONFIGS } from './ImportMasterKey.constant';
 
 interface IProps {
     onGoBack: () => any;
+    onImportedMasterKey?: () => any;
 }
 
 interface TInner {
@@ -27,6 +28,7 @@ interface TInner {
 export interface IMergeProps extends TInner, IProps, InjectedFormProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & any) => {
+    const { onImportedMasterKey } = props;
     const isFormInValid = useSelector((state) => isInvalid(FORM_CONFIGS.formName)(state));
     const submitting = useSelector((state) => isSubmitting(FORM_CONFIGS.formName)(state));
     const newPass = useSelector(newPasswordSelector);
@@ -58,6 +60,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 dispatch(actionChangePassword(pass));
                 dispatch(reset(FORM_CONFIGS.formName));
             });
+            if (typeof onImportedMasterKey === 'function') {
+                return onImportedMasterKey();
+            }
             if (shouldGoBack) {
                 history.goBack();
             }

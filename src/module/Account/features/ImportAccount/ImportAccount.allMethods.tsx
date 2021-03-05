@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { route as routeImportMasterKey } from 'src/module/HDWallet/features/ImportMasterKey';
+import ImportMasterKey from 'src/module/HDWallet/features/ImportMasterKey';
+import { route as routeAddKeys } from 'src/module/Keychain/features/AddKeys';
 import { actionToggleToast, Button, Header, TOAST_CONFIGS } from 'src/components';
 import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
@@ -10,6 +11,7 @@ import { isInitMasterlessSelector, masterlessIdSelector } from 'src/module/Walle
 import { actionFetchImportAccount } from 'src/module/Account/Account.actions';
 import { importAccountSelector } from 'src/module/Account/Account.selector';
 import { actionInitMasterless } from 'src/module/Wallet';
+import { actionToggleModal } from 'src/components/Modal';
 
 const Styled = styled.div`
     .group-actions {
@@ -37,7 +39,18 @@ const AllMethodsImport = (props: IProps) => {
     const history = useHistory();
     const dispatch = useDispatch();
     const importing = useSelector(importAccountSelector);
-    const handleImportMasterKey = () => history.push(routeImportMasterKey);
+    const handleImportMasterKey = () => {
+        dispatch(
+            actionToggleModal({
+                data: (
+                    <ImportMasterKey
+                        onImportedMasterKey={() => history.push(routeAddKeys)}
+                        onGoBack={() => dispatch(actionToggleModal({}))}
+                    />
+                ),
+            }),
+        );
+    };
     const handleImportKeychainOnly = async () => {
         try {
             let walletId: any = masterlessId;
