@@ -1,8 +1,7 @@
 import React, { ChangeEvent, InputHTMLAttributes, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { CONSTANT_COLORS } from 'src/constants';
-import { ITheme } from 'src/styles';
-import { EyeIcon } from '../../Icons';
+import { ITheme, COLORS } from 'src/styles';
+import { EyeIcon } from 'src/components/Icons';
 
 interface IProps extends InputHTMLAttributes<HTMLInputElement> {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -37,7 +36,7 @@ const Styled = styled.div`
     }
 
     input::placeholder {
-        color: ${CONSTANT_COLORS.LIGHT_GREY};
+        color: ${COLORS.colorGreyBold};
     }
 
     .toggle-visible {
