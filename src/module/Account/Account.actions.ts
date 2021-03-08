@@ -43,11 +43,9 @@ import {
     ACTION_FETCH_FAIL_REMOVE_ACCOUNT,
 } from './Account.constant';
 import {
-    defaultAccountNameSelector,
     defaultAccountSelector,
     createAccountSelector,
     importAccountSelector,
-    switchAccountSelector,
     removeAccountSelector,
 } from './Account.selector';
 
@@ -128,17 +126,12 @@ export const actionSwitchAccountFetched = () => ({
 export const actionSwitchAccount = (accountName: string) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
     const wallet: WalletInstance = walletDataSelector(state);
-    const switchAccount: boolean = switchAccountSelector(state);
-    const defaultAccountName = defaultAccountNameSelector(state);
     const account: AccountInstance = wallet.masterAccount.getAccountByName(accountName);
     const translate: IAccountLanguage = translateByFieldSelector(state)('account');
     const { error } = translate;
     try {
         if (!account) {
             throw new Error(error.keychainNotExisted);
-        }
-        if (isEqual(account?.name, defaultAccountName) || switchAccount) {
-            return account;
         }
         await dispatch(actionSwitchAccountFetching());
         await dispatch(actionSelectAccount(account.name));

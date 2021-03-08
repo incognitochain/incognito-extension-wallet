@@ -1,6 +1,7 @@
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import memoize from 'lodash/memoize';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
 import { walletDataSelector, walletSelector } from 'src/module/Wallet/Wallet.selector';
@@ -78,4 +79,15 @@ export const paymentAddressSelector = createSelector(
 export const signPublicKeyEncodeSelector = createSelector(
     accountSelector,
     (account) => account.signPublicKeyEncode || '',
+);
+
+export const isAccountSelectedSelector = createSelector(
+    defaultAccountSelector,
+    (defaultAccount: AccountInstance) => (account: AccountInstance) =>
+        defaultAccount && account
+            ? isEqual(
+                  account?.key?.keySet?.paymentAddressKeySerialized,
+                  defaultAccount?.key?.keySet?.paymentAddressKeySerialized,
+              )
+            : false,
 );
