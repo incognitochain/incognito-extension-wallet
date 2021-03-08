@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import withSetting from 'src/module/Setting/Setting.enhance';
+import withSetting, { IMergeProps } from 'src/module/Setting/Setting.enhance';
 import { SettingItem, ISettingItem } from './features/SettingItem';
-import { IInner } from './Setting.interface';
 
 const Styled = styled.div``;
 
-const Setting = (props: IInner) => {
-    const { settingFactories } = props;
+const Setting = (props: IMergeProps & any) => {
+    const { settingFactories }: IMergeProps = props;
     return (
         <Styled className="scroll-view">
             {settingFactories.map((item: ISettingItem) => (

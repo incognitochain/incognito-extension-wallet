@@ -1,5 +1,4 @@
 import React from 'react';
-import { compose } from 'recompose';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { useDispatch, useSelector } from 'react-redux';
 import { ISettingLanguage } from 'src/i18n/interface';
@@ -19,10 +18,16 @@ import {
     actionToggleModeSaveRawBurnTx,
     actionToggleDarkMode,
 } from './Setting.actions';
-import { IInner } from './Setting.interface';
 import { ISettingItem } from './features/SettingItem';
 import { devSettingSelector, isDevSelector, settingSelector } from './Setting.selector';
 import { route as networkRoute } from './features/Network';
+
+interface IProps {}
+interface TInner {
+    settingFactories: any[];
+}
+
+export interface IMergeProps extends IProps, TInner {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const translate: ISettingLanguage = useSelector(translateByFieldSelector)('setting');
@@ -121,4 +126,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose<IInner, any>(enhance);
+export default enhance;

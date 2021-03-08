@@ -1,11 +1,11 @@
 import React from 'react';
-import { batch, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import { InjectedFormProps, isInvalid, reduxForm, reset, isSubmitting } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { actionImportWallet } from 'src/module/Wallet';
-import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
+import { newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { actionToggleModal } from 'src/components/Modal';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useMasterKeyMnemonic, useMasterKeyName } from 'src/module/HDWallet';
@@ -38,7 +38,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const dispatch = useDispatch();
     const history = useHistory();
     const { state }: { state: any } = useLocation();
-    const { shouldGoBack, shouldRedirectToKeyChain } = state || {};
+    const { shouldGoBack, shouldRedirectToKeyChain, showToast } = state || {};
     const { error: errorCustomName, masterKeyName } = useMasterKeyName({
         formName: FORM_CONFIGS.formName,
         field: FORM_CONFIGS.masterKeyName,
@@ -55,12 +55,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             if (disabled) {
                 return;
             }
-            await dispatch(actionImportWallet(masterKeyName, mnemonic, pass));
-            batch(() => {
-                dispatch(actionCreatePassword(''));
-                dispatch(actionChangePassword(pass));
-                dispatch(reset(FORM_CONFIGS.formName));
-            });
+            await dispatch(actionImportWallet(masterKeyName, mnemonic, pass, true, showToast));
             if (typeof onImportedMasterKey === 'function') {
                 return onImportedMasterKey();
             }
@@ -70,6 +65,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             if (shouldGoBack) {
                 history.goBack();
             }
+            dispatch(reset(FORM_CONFIGS.formName));
         } catch (error) {
             dispatch(
                 actionToggleToast({

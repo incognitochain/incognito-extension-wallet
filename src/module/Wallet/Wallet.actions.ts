@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import toLower from 'lodash/toLower';
 import isEqual from 'lodash/isEqual';
 import { listIdsWalletSelector } from 'src/module/Wallet';
+import { actionChangePassword } from 'src/module/Password';
 import { IWalletLanguage, IHDWalletLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { actionUpdateMasterKey, actionRemoveMasterKey } from 'src/module/HDWallet/HDWallet.actions';
@@ -79,6 +80,7 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
         if (!walletId) {
             throw new Error(error.walletIdNotFound);
         }
+        console.debug('password', pass);
         wallet = await loadWallet(walletId, pass);
         if (!wallet) {
             throw new Error(error.canNotLoadWallet);
@@ -117,6 +119,7 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
             }
         }
         wallet = await loadWallet(walletId, pass);
+        await dispatch(actionUpdateWallet(wallet));
         await dispatch(actionUpdateMasterKey({ wallet, walletId }));
     } catch (error) {
         throw error;
@@ -197,15 +200,22 @@ export const actionSwitchWallet = (walletId: number) => async (dispatch: Dispatc
     return wallet;
 };
 
-export const actionImportWallet = (walletName: string, mnemonic: string, pass: string, isImport = true) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
+export const actionImportWallet = (
+    walletName: string,
+    mnemonic: string,
+    pass: string,
+    isImport = true,
+    showToast?: boolean,
+) => async (dispatch: Dispatch, getState: () => IRootState) => {
     try {
         let walletId = -1;
         const state: IRootState = getState();
         const preload: IPreloadReducer = preloadSelector(state);
         const { mainnet } = preload.configs;
+        const password = passwordSelector(state);
+        if (!password) {
+            dispatch(actionChangePassword(pass));
+        }
         const dataImport = await importWallet(walletName, mnemonic, pass);
         walletId = dataImport.walletId;
         let { wallet } = dataImport;
@@ -217,13 +227,15 @@ export const actionImportWallet = (walletName: string, mnemonic: string, pass: s
         }
         await dispatch(actionResetFollowDefaultToken(mainnet));
         await actionHandleLoadWallet(defaultAccount.name, walletId)(dispatch, getState);
-        dispatch(
-            actionToggleToast({
-                toggle: true,
-                value: isImport ? success.import : success.create,
-                type: TOAST_CONFIGS.success,
-            }),
-        );
+        if (showToast) {
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: isImport ? success.import : success.create,
+                    type: TOAST_CONFIGS.success,
+                }),
+            );
+        }
         return walletId;
     } catch (error) {
         throw error;

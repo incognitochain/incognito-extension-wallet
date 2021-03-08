@@ -29,7 +29,6 @@ export const actionLogin = (newPass: string) => async (dispatch: Dispatch, getSt
     if (!walletId) {
         throw new Error(`Can't not found wallet id`);
     }
-
     await loadWallet(walletId, newPass);
     dispatch(loginEvent(newPass));
     await sendPasswordToBackground(newPass, chainURL);
@@ -51,5 +50,8 @@ export const actionLogout = () => async (dispatch: Dispatch, getState: () => IRo
         password: null,
         chainURL,
     });
-    dispatch(logoutEvent());
+    await dispatch(logoutEvent());
+    if (typeof window !== 'undefined') {
+        window?.location?.replace('/');
+    }
 };

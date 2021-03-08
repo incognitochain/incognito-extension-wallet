@@ -32,7 +32,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const currentPass = useSelector(passwordSelector);
     const pass = newPass || currentPass;
     const { state }: { state: any } = useLocation();
-    const { shouldRedirectToKeyChain, shouldGoBack } = state || {};
+    const { shouldRedirectToKeyChain, shouldGoBack, showToast } = state || {};
     const [submitting, setFormSubmitting] = React.useState<boolean>(false);
     const handleVerifyMnemonic = async () => {
         try {
@@ -40,7 +40,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 return;
             }
             await setFormSubmitting(true);
-            await dispatch(actionImportWallet(masterKeyName, mnemonic, pass, false));
+            await dispatch(actionImportWallet(masterKeyName, mnemonic, pass, false, showToast));
             dispatch(actionInitCreate());
             if (shouldRedirectToKeyChain) {
                 return history.push(routeKeyChain);
