@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { compose } from 'recompose';
 import styled from 'styled-components';
 import { IWalletReducer, walletSelector } from 'src/module/Wallet';
 import { AppIcon, Button } from 'src/components';
@@ -20,8 +19,6 @@ const Styled = styled.div`
         margin-bottom: 0;
     }
 `;
-
-interface IProps {}
 
 interface ILoadingContainerProps {
     showMessage?: boolean;
@@ -49,7 +46,7 @@ export const LoadingContainer = React.memo((props: ILoadingContainerProps) => {
     );
 });
 
-const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) => {
+const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const { loaded }: IWalletReducer = useSelector(walletSelector);
     const translate: IPreloadLanguage = useSelector(translateByFieldSelector)('preload');
@@ -87,4 +84,4 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
     return <WrappedComponent {...props} />;
 };
 
-export default compose<IProps, any>(enhance);
+export default enhance;
