@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { goServices, setConfig, storageService } from 'incognito-js/build/web/browser';
+import { actionFetchProfile } from 'src/module/Profile';
 import { v4 } from 'uuid';
 import { actionHandleLoadWallet } from 'src/module/Wallet';
 import { actionSetListMasterKey } from 'src/module/HDWallet';
@@ -125,6 +126,7 @@ export const actionFetchSdkConfig = () => async (dispatch: Dispatch, getState: (
             deviceId,
             deviceToken,
         });
+        await actionFetchProfile()(dispatch, getState);
         await dispatch(actionFetchedSdkConfig({}));
     } catch (error) {
         dispatch(actionFetchFail(error));

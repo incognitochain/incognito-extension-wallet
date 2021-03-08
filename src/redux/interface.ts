@@ -15,6 +15,7 @@ import { IHeaderReducer } from 'src/components/Header';
 import { IPasswordReducers } from 'src/module/Password';
 import { ITooltipReducer } from 'src/module/Tooltip';
 import { IHdWalletReducer } from 'src/module/HDWallet';
+import { IProfileReducer } from 'src/module/Profile';
 
 export interface IAction {
     type: string;
@@ -39,4 +40,5 @@ export interface IRootState {
     tooltip: ITooltipReducer;
     unShield: IUnshieldReducer;
     hdWallet: IHdWalletReducer;
+    profile: IProfileReducer;
 }
