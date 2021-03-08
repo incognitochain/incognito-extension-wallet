@@ -13,6 +13,7 @@ export interface IWalletReducer {
     wallet: WalletInstance | any;
     switch: boolean;
     remove: boolean;
+    import: boolean;
 }
 
 export interface IDataInitWallet {

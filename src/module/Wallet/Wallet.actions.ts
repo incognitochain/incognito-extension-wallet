@@ -4,24 +4,17 @@ import isEqual from 'lodash/isEqual';
 import { listIdsWalletSelector } from 'src/module/Wallet';
 import { IWalletLanguage, IHDWalletLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
-import {
-    actionSetListMasterKey,
-    actionUpdateMasterKey,
-    actionRemoveMasterKey,
-} from 'src/module/HDWallet/HDWallet.actions';
+import { actionUpdateMasterKey, actionRemoveMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components/Core/Toast';
-import { actionSetSignPublicKeyEncode } from 'src/module/Account/Account.actions';
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
 import { MASTERLESS_WALLET_NAME } from 'src/configs/walletConfigs';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { updateWallet, removeWallet } from 'src/database/tables/wallet';
-import { actionSetListAccount, actionSelectAccount, defaultAccountNameSelector } from 'src/module/Account';
+import { actionSetListAccount, defaultAccountNameSelector, actionSwitchAccount } from 'src/module/Account';
 import { IPreloadReducer } from 'src/module/Preload';
 import { isMainnetSelector, preloadSelector } from 'src/module/Preload/Preload.selector';
-import { actionChangePassword, actionCreatePassword } from 'src/module/Password/Password.actions';
 import { passwordSelector } from 'src/module/Password/Password.selector';
-import { batch } from 'react-redux';
 import { actionFollowDefaultToken, actionResetFollowDefaultToken, IEnvToken, ITokenReducer } from 'src/module/Token';
 import { tokenSelector } from 'src/module/Token/Token.selector';
 import {
@@ -40,7 +33,6 @@ import {
     walletIdSelector,
     walletSelector,
     isMasterlessSelector,
-    switchingWalletSelector,
 } from './Wallet.selector';
 import { IWalletReducer } from './Wallet.interface';
 
@@ -64,50 +56,7 @@ export const actionUpdateWallet = (wallet: WalletInstance) => ({
     payload: wallet,
 });
 
-export const actionImportWallet = (walletName: string, mnemonic: string, pass: string, isImport = true) => async (
-    dispatch: Dispatch,
-    getState: () => IRootState,
-) => {
-    try {
-        let walletId = -1;
-        const state: IRootState = getState();
-        const preload: IPreloadReducer = preloadSelector(state);
-        const { mainnet } = preload.configs;
-        const dataImport = await importWallet(walletName, mnemonic, pass);
-        walletId = dataImport.walletId;
-        const { wallet } = dataImport;
-        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
-        const defaultAccount: AccountInstance = listAccount && listAccount[0];
-        const { success }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
-        batch(() => {
-            dispatch(actionSetListAccount(listAccount));
-            dispatch(actionSelectAccount(defaultAccount.name));
-            dispatch(actionCreatePassword(''));
-            dispatch(actionChangePassword(pass));
-            dispatch(
-                actionLoadedWallet({
-                    wallet,
-                    mainnet,
-                    walletId,
-                }),
-            );
-            dispatch(actionResetFollowDefaultToken(mainnet));
-        });
-        await actionSetListMasterKey()(dispatch, getState);
-        dispatch(
-            actionToggleToast({
-                toggle: true,
-                value: isImport ? success.import : success.create,
-                type: TOAST_CONFIGS.success,
-            }),
-        );
-        return walletId;
-    } catch (error) {
-        throw error;
-    }
-};
-
-export const actionHandleLoadWallet = (accountName?: string) => async (
+export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: number) => async (
     dispatch: Dispatch,
     getState: () => IRootState,
 ) => {
@@ -122,7 +71,7 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
         const mainnet: boolean = isMainnetSelector(state);
         const field = mainnet ? 'mainnet' : 'testnet';
         const { walletId: walletIdFormState } = walletState[field];
-        walletId = walletIdFormState;
+        walletId = defaultWalletId || walletIdFormState;
         const envToken: IEnvToken = tokenState[field];
         const { followedPopularIds } = envToken;
         const translate: IWalletLanguage = translateByFieldSelector(state)('wallet');
@@ -135,45 +84,42 @@ export const actionHandleLoadWallet = (accountName?: string) => async (
             throw new Error(error.canNotLoadWallet);
         }
         const listAccount: AccountInstance[] = [...wallet.masterAccount.getAccounts()];
-        const newList: AccountInstance[] = wallet.masterAccount.getAccounts();
-        const defaultAccount: AccountInstance =
-            wallet.masterAccount.getAccountByName(defaultAccountName) || listAccount[0];
-        const signPublicKeyEncode = await defaultAccount.getSignPublicKey();
-        if (defaultAccount) {
-            batch(() => {
-                dispatch(actionSetListAccount(newList));
-                dispatch(actionSelectAccount(defaultAccount.name));
-                dispatch(
-                    actionLoadedWallet({
-                        wallet,
-                        mainnet,
-                        walletId,
-                    }),
-                );
-                dispatch(actionSetSignPublicKeyEncode(signPublicKeyEncode));
-                dispatch(actionUpdateMasterKey({ wallet, walletId }));
-            });
-            if (!followedPopularIds) {
-                await actionFollowDefaultToken(defaultAccount)(dispatch, getState);
-            }
-            if (listAccount.length !== newList.length) {
-                for (const account of newList) {
-                    if (!listAccount.includes(account)) {
-                        // eslint-disable-next-line no-await-in-loop
-                        await actionFollowDefaultToken(account)(dispatch, getState);
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        throw error;
-    } finally {
         if (walletId > -1 && typeof wallet !== 'undefined') {
             const isMasterless: boolean = isMasterlessSelector(state)(walletId);
             if (!isMasterless) {
-                wallet.sync();
+                await wallet.sync();
             }
         }
+        const newList: AccountInstance[] = [...wallet.masterAccount.getAccounts()];
+        let defaultAccount: AccountInstance =
+            wallet.masterAccount.getAccountByName(defaultAccountName) || listAccount[0];
+        if (!defaultAccount) {
+            defaultAccount = await wallet.masterAccount.addAccount('Anon');
+        }
+        await dispatch(
+            actionLoadedWallet({
+                wallet,
+                mainnet,
+                walletId,
+            }),
+        );
+        await dispatch(actionSetListAccount(newList));
+        await actionSwitchAccount(defaultAccount.name)(dispatch, getState);
+        if (!followedPopularIds) {
+            await actionFollowDefaultToken(defaultAccount)(dispatch, getState);
+        }
+        if (listAccount.length !== newList.length) {
+            for (const account of newList) {
+                if (!listAccount.includes(account)) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await actionFollowDefaultToken(account)(dispatch, getState);
+                }
+            }
+        }
+        wallet = await loadWallet(walletId, pass);
+        await dispatch(actionUpdateMasterKey({ wallet, walletId }));
+    } catch (error) {
+        throw error;
     }
     return wallet;
 };
@@ -234,47 +180,57 @@ export const actionToggleSwitchWallet = (payload: boolean) => ({
 
 export const actionSwitchWallet = (walletId: number) => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state: IRootState = getState();
-    const isMasterless: boolean = isMasterlessSelector(state)(walletId);
     let wallet: WalletInstance | undefined;
     try {
-        const switchingWallet: boolean = switchingWalletSelector(state);
         const translate: IWalletLanguage = translateByFieldSelector(state)('wallet');
         const { error } = translate;
         if (!walletId) {
             throw new Error(error.walletIdNotFound);
         }
-        if (switchingWallet) {
-            return;
-        }
         await dispatch(actionToggleSwitchWallet(true));
-        const pass = passwordSelector(state);
-        wallet = await loadWallet(walletId, pass);
-        const mainnet = isMainnetSelector(state);
-        if (!wallet) {
-            throw new Error(error.canNotSwitchWallet);
-        }
-        const accounts: AccountInstance[] = wallet.masterAccount.getAccounts();
-        await Promise.all([
-            dispatch(
-                actionLoadedWallet({
-                    wallet,
-                    mainnet,
-                    walletId,
-                }),
-            ),
-            dispatch(actionUpdateMasterKey({ walletId, wallet })),
-            accounts.length > 0 && dispatch(actionSetListAccount(accounts)),
-        ]);
+        await actionHandleLoadWallet('', walletId)(dispatch, getState);
     } catch (error) {
         throw error;
     } finally {
         await dispatch(actionToggleSwitchWallet(false));
-        if (!isMasterless && wallet) {
-            wallet.sync();
-        }
     }
     return wallet;
 };
+
+export const actionImportWallet = (walletName: string, mnemonic: string, pass: string, isImport = true) => async (
+    dispatch: Dispatch,
+    getState: () => IRootState,
+) => {
+    try {
+        let walletId = -1;
+        const state: IRootState = getState();
+        const preload: IPreloadReducer = preloadSelector(state);
+        const { mainnet } = preload.configs;
+        const dataImport = await importWallet(walletName, mnemonic, pass);
+        walletId = dataImport.walletId;
+        let { wallet } = dataImport;
+        const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
+        const defaultAccount: AccountInstance = listAccount && listAccount[0];
+        const { success }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
+        if (!defaultAccount) {
+            wallet.masterAccount.addAccount('Anon');
+        }
+        await dispatch(actionResetFollowDefaultToken(mainnet));
+        await actionHandleLoadWallet(defaultAccount.name, walletId)(dispatch, getState);
+        dispatch(
+            actionToggleToast({
+                toggle: true,
+                value: isImport ? success.import : success.create,
+                type: TOAST_CONFIGS.success,
+            }),
+        );
+        return walletId;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// create master key
 
 export const actionFetchingRemoveMasterKey = () => ({
     type: ACTION_FETCHING_REMOVE_MASTER_KEY,
@@ -327,6 +283,7 @@ export const actionFetchRemoveMasterKey = () => async (dispatch: Dispatch, getSt
                     }),
                 );
                 await dispatch(actionRemoveMasterKey({ walletId }));
+                await actionHandleLoadWallet('', walletIdWillSwitch)(dispatch, getState);
                 dispatch(actionToggleToast({ type: TOAST_CONFIGS.success, value: success.remove, toggle: true }));
             } else {
                 throw new Error(error.canNotRemoveWallet);
