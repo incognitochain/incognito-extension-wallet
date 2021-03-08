@@ -21,17 +21,20 @@ export const passwordReducer = (
     switch (action.type) {
         case ACTION_CREATE_PASSWORD: {
             return {
+                ...state,
                 newPass: action.payload,
             };
         }
         case ACTION_CHANGE_PASSWORD:
         case ACTION_LOGIN: {
             return {
+                ...state,
                 pass: action.payload,
             };
         }
         case ACTION_LOGOUT: {
             return {
+                ...state,
                 pass: '',
                 newPass: '',
             };
