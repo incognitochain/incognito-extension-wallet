@@ -29,6 +29,7 @@ const initialState: IWalletReducer = {
     wallet: {},
     switch: false,
     remove: false,
+    import: false,
 };
 
 const walletReducer = (

@@ -2,13 +2,13 @@ import React, { useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionSwitchAccount } from 'src/module/Account';
 import { defaultAccountSelector } from 'src/module/Account/Account.selector';
-// import { actionShowTooltip } from 'src/module/Tooltip';
-// import { IGeneralLanguage } from 'src/i18n';
+import { IGeneralLanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { IGlobalStyle } from 'src/styles';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { actionSwitchWallet } from 'src/module/Wallet';
+import { translateByFieldSelector } from 'src/module/Configs';
 
 const Styled = styled.div`
     justify-content: space-between;
@@ -33,7 +33,7 @@ const AccountItem = React.memo((props: IProps) => {
     const isSelected =
         defaultAccount?.key.keySet.paymentAddressKeySerialized === account?.key.keySet.paymentAddressKeySerialized;
     const { paymentAddressKeySerialized: paymentAddress } = account.key.keySet;
-    // const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
+    const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const displayAddress = useMemo(() => {
         return `...${paymentAddress.substring(paymentAddress.length - 6)}`;
     }, [paymentAddress]);
@@ -44,14 +44,13 @@ const AccountItem = React.memo((props: IProps) => {
             }
             await dispatch(actionSwitchWallet(walletId));
             await dispatch(actionSwitchAccount(account.name));
-            // if (!!ref && !!ref.current) {
-            //     dispatch(
-            //         actionShowTooltip({
-            //             text: translate.switched,
-            //             ref: ref ? ref.current : null,
-            //         }),
-            //     );
-            // }
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    type: TOAST_CONFIGS.success,
+                    value: `${translate.switched} ${account.name}`,
+                }),
+            );
         } catch (error) {
             dispatch(
                 actionToggleToast({
