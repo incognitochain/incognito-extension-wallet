@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { actionToggleToast, Header, TOAST_CONFIGS } from 'src/components';
 import { ILanguage } from 'src/i18n';
 import { translateSelector } from 'src/module/Configs';
-import { listAccountSelector, actionSwitchAccount } from 'src/module/Account';
+import { listAccountSelector, actionSwitchAccount, isAccountSelectedSelector } from 'src/module/Account';
 import AccountItem from 'src/module/Account/features/AccountItem';
 import { keySearchSelector, useSearchBox } from 'src/components/Header';
 import includes from 'lodash/includes';
@@ -20,6 +20,7 @@ const SelectAccount = React.memo(() => {
     const history = useHistory();
     const dispatch = useDispatch();
     const keySearch = useSelector(keySearchSelector);
+    const isAccountSelected = useSelector(isAccountSelectedSelector);
     const { result } = useSearchBox({
         data: listAccount,
         handleFilter: () => [
@@ -30,9 +31,13 @@ const SelectAccount = React.memo(() => {
             ),
         ],
     });
-    const handleSelectAccount = async (accountName: string) => {
+    const handleSelectAccount = async (account: AccountInstance) => {
         try {
-            dispatch(actionSwitchAccount(accountName));
+            const isSelected = isAccountSelected(account);
+            if (isSelected) {
+                return;
+            }
+            dispatch(actionSwitchAccount(account.name));
         } catch (error) {
             dispatch(actionToggleToast({ value: error, toggle: true, type: TOAST_CONFIGS.error }));
         } finally {
@@ -51,7 +56,7 @@ const SelectAccount = React.memo(() => {
                         hasCopy={false}
                         hasQrCode={false}
                         selectable
-                        onSelectAccount={() => handleSelectAccount(account.name)}
+                        onSelectAccount={() => handleSelectAccount(account)}
                         key={account.name}
                     />
                 ))}

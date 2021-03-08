@@ -1,7 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { actionSwitchAccount } from 'src/module/Account';
-import { defaultAccountSelector } from 'src/module/Account/Account.selector';
+import { actionSwitchAccount, isAccountSelectedSelector } from 'src/module/Account';
 import { IGeneralLanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { IGlobalStyle } from 'src/styles';
@@ -29,9 +28,7 @@ const AccountItem = React.memo((props: IProps) => {
     const ref: any = useRef();
     const { account, walletId } = props;
     const dispatch = useDispatch();
-    const defaultAccount: AccountInstance = useSelector(defaultAccountSelector);
-    const isSelected =
-        defaultAccount?.key.keySet.paymentAddressKeySerialized === account?.key.keySet.paymentAddressKeySerialized;
+    const isSelected = useSelector(isAccountSelectedSelector)(account);
     const { paymentAddressKeySerialized: paymentAddress } = account.key.keySet;
     const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const displayAddress = useMemo(() => {
