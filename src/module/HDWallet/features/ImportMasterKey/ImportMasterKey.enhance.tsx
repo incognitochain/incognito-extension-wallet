@@ -1,11 +1,11 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { compose } from 'recompose';
 import { InjectedFormProps, isInvalid, reduxForm, reset, isSubmitting } from 'redux-form';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
 import { actionImportWallet } from 'src/module/Wallet';
-import { newPasswordSelector, passwordSelector } from 'src/module/Password';
+import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { actionToggleModal } from 'src/components/Modal';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useMasterKeyMnemonic, useMasterKeyName } from 'src/module/HDWallet';
@@ -56,6 +56,14 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 return;
             }
             await dispatch(actionImportWallet(masterKeyName, mnemonic, pass, true, showToast));
+            batch(() => {
+                if (newPass) {
+                    dispatch(actionCreatePassword(''));
+                }
+                if (!currentPass) {
+                    dispatch(actionChangePassword(pass));
+                }
+            });
             if (typeof onImportedMasterKey === 'function') {
                 return onImportedMasterKey();
             }

@@ -8,6 +8,7 @@ import { actionSetConfigs, actionSetServer, serverSelector } from 'src/module/Pr
 import { IServer } from 'src/services';
 import styled from 'styled-components';
 import { isDevSelector, actionToggleDevMode, defaultListServerSelector } from 'src/module/Setting';
+import { reloadApp } from 'src/utils';
 
 interface INetworkItem {
     title: string;
@@ -38,8 +39,6 @@ const NetworkItem = React.memo((props: INetworkItem) => {
     );
 });
 
-declare const window: Window;
-
 const Network = React.memo(() => {
     const translate: ILanguage = useSelector(translateSelector);
     const networkTranslate = translate.setting.network;
@@ -64,8 +63,8 @@ const Network = React.memo(() => {
             );
             await dispatch(actionSetServer(server));
             setTimeout(() => {
-                window?.location?.reload();
-            }, 2000);
+                reloadApp();
+            }, 1000);
         }
     };
     return (
