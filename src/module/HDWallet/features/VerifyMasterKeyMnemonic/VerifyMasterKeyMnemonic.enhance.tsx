@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import ErrorBoundary from 'src/components/ErrorBoundary';
@@ -9,7 +9,7 @@ import {
     masterKeyNameSelector,
     mnemonicSelector,
 } from 'src/module/HDWallet/features/CreateMasterKey';
-import { newPasswordSelector, passwordSelector } from 'src/module/Password';
+import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { actionImportWallet } from 'src/module/Wallet';
 import { route as routeKeyChain } from 'src/module/Keychain';
 
@@ -41,7 +41,15 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             }
             await setFormSubmitting(true);
             await dispatch(actionImportWallet(masterKeyName, mnemonic, pass, false, showToast));
-            dispatch(actionInitCreate());
+            batch(() => {
+                if (newPass) {
+                    dispatch(actionCreatePassword(''));
+                }
+                if (!currentPass) {
+                    dispatch(actionChangePassword(pass));
+                }
+                dispatch(actionInitCreate());
+            });
             if (shouldRedirectToKeyChain) {
                 return history.push(routeKeyChain);
             }

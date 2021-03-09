@@ -2,7 +2,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import toLower from 'lodash/toLower';
 import isEqual from 'lodash/isEqual';
 import { listIdsWalletSelector } from 'src/module/Wallet';
-import { actionChangePassword } from 'src/module/Password';
 import { IWalletLanguage, IHDWalletLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { actionUpdateMasterKey, actionRemoveMasterKey } from 'src/module/HDWallet/HDWallet.actions';
@@ -13,8 +12,7 @@ import { MASTERLESS_WALLET_NAME } from 'src/configs/walletConfigs';
 import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { updateWallet, removeWallet } from 'src/database/tables/wallet';
 import { actionSetListAccount, defaultAccountNameSelector, actionSwitchAccount } from 'src/module/Account';
-import { IPreloadReducer } from 'src/module/Preload';
-import { isMainnetSelector, preloadSelector } from 'src/module/Preload/Preload.selector';
+import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
 import { passwordSelector } from 'src/module/Password/Password.selector';
 import { actionFollowDefaultToken, actionResetFollowDefaultToken, IEnvToken, ITokenReducer } from 'src/module/Token';
 import { tokenSelector } from 'src/module/Token/Token.selector';
@@ -68,6 +66,9 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
         const walletState: IWalletReducer = walletSelector(state);
         const tokenState: ITokenReducer = tokenSelector(state);
         const pass: string = passwordSelector(state);
+        if (!pass) {
+            return;
+        }
         const defaultAccountName: string = accountName || defaultAccountNameSelector(state);
         const mainnet: boolean = isMainnetSelector(state);
         const field = mainnet ? 'mainnet' : 'testnet';
@@ -80,7 +81,6 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
         if (!walletId) {
             throw new Error(error.walletIdNotFound);
         }
-        console.debug('password', pass);
         wallet = await loadWallet(walletId, pass);
         if (!wallet) {
             throw new Error(error.canNotLoadWallet);
@@ -206,16 +206,11 @@ export const actionImportWallet = (
     pass: string,
     isImport = true,
     showToast?: boolean,
-) => async (dispatch: Dispatch, getState: () => IRootState) => {
+) => async (dispatch: Dispatch | any, getState: () => IRootState) => {
     try {
         let walletId = -1;
         const state: IRootState = getState();
-        const preload: IPreloadReducer = preloadSelector(state);
-        const { mainnet } = preload.configs;
-        const password = passwordSelector(state);
-        if (!password) {
-            dispatch(actionChangePassword(pass));
-        }
+        const mainnet: boolean = isMainnetSelector(state);
         const dataImport = await importWallet(walletName, mnemonic, pass);
         walletId = dataImport.walletId;
         let { wallet } = dataImport;
@@ -226,7 +221,8 @@ export const actionImportWallet = (
             wallet.masterAccount.addAccount('Anon');
         }
         await dispatch(actionResetFollowDefaultToken(mainnet));
-        await actionHandleLoadWallet(defaultAccount.name, walletId)(dispatch, getState);
+        await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
+        await dispatch(actionHandleLoadWallet(defaultAccount.name, walletId));
         if (showToast) {
             dispatch(
                 actionToggleToast({
