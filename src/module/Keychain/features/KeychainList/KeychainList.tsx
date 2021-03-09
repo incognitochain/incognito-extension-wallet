@@ -22,6 +22,10 @@ const Styled = styled.div`
     .master-key {
         justify-content: space-between;
     }
+    .master-key .small-button {
+        min-width: 70px;
+        justify-content: flex-end;
+    }
 `;
 
 const customModalStyle = {
@@ -62,8 +66,12 @@ const KeychainItem = React.memo((props: IMasterKeyWithKeychains) => {
     return (
         <div className="hook-container">
             <div className="master-key flex">
-                <p className={`fw-medium fs-medium ${selected ? 'main-text' : 'sub-text'}`}>{wallet.name}</p>
-                <SmallButton title={revealPhraseBtn} onClick={handleCheckPassword} />
+                <p className={`fw-medium fs-medium ellipsis m-r-15 ${selected ? 'main-text' : 'sub-text'}`}>
+                    {wallet.name}
+                </p>
+                <div className="small-button flex">
+                    <SmallButton title={revealPhraseBtn} onClick={handleCheckPassword} />
+                </div>
             </div>
             <div className="keychains">
                 {listAccount &&

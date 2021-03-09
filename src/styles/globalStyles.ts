@@ -304,6 +304,9 @@ export const GlobalStyled = createGlobalStyle`
     .m-t-30 {
         margin-top: 30px !important;
     }
+    .m-r-15 {
+        margin-right: 15px;
+    }
     .center-abs-ver {
         position: absolute;
         top: 50%;
