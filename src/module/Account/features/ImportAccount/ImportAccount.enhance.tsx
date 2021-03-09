@@ -13,6 +13,7 @@ import { useFormValue } from 'src/hooks';
 import { hasKeychainCreatedByMasterKey } from 'src/module/HDWallet/HDWallet.utils';
 import { listSelector } from 'src/module/HDWallet/HDWallet.selector';
 import { useHistory } from 'react-router-dom';
+import { isPrivateKey } from 'incognito-js/build/web/browser';
 import AllMethodsImport from './ImportAccount.allMethods';
 
 interface IProps {}
@@ -41,7 +42,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const accountNameList = useSelector(listAccountNameSelector);
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
-    const { import: importSuccess } = translate.success;
+    const { error, success } = translate;
     const list = useSelector(listSelector)(true);
     const [accountName] = useFormValue({ formName: FORM_CONFIGS.formName, field: FORM_CONFIGS.accountName });
     const [privateKey] = useFormValue({ formName: FORM_CONFIGS.formName, field: FORM_CONFIGS.privateKey });
@@ -55,6 +56,10 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
         try {
             if (disabledForm || submitting) {
                 return;
+            }
+            // check private key
+            if (!isPrivateKey(privateKey)) {
+                throw new Error(error.keychainInvalid);
             }
             const walletId = await hasKeychainCreatedByMasterKey(list, privateKey);
             if (walletId > -1) {
@@ -70,7 +75,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                 dispatch(
                     actionToggleToast({
                         toggle: true,
-                        value: importSuccess,
+                        value: success.import,
                         type: TOAST_CONFIGS.success,
                     }),
                 );
