@@ -5,7 +5,9 @@ import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { selectedPrivacySelector } from 'src/module/Token/Token.selector';
 import { IAddressBookLanguage } from 'src/i18n/interface';
 import { useSearchBox, keySearchSelector } from 'src/components/Header';
-import { externalAddrSelector, incognitoAddrSelector, keychainAddrSelector } from './AddressBook.selector';
+import { listMasterKeyWithKeychainsSelector } from 'src/module/HDWallet/HDWallet.selector';
+import { IMasterKeyWithKeychains } from 'src/module/HDWallet/HDWallet.interface';
+import { externalAddrSelector, incognitoAddrSelector } from './AddressBook.selector';
 import { IAddressBook } from './AddressBook.interface';
 import { filterAddressByKey } from './AddressBook.utils';
 import { actionRemoveSelectedAddrBook } from './AddressBook.actions';
@@ -35,16 +37,12 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const selectedPrivacy = useSelector(selectedPrivacySelector);
     const incognitoAddr: IAddressBook[] = useSelector(incognitoAddrSelector);
     const externalAddr: IAddressBook[] = useSelector(externalAddrSelector);
-    const keychainAddr: IAddressBook[] = useSelector(keychainAddrSelector)(true);
     const extAddrFilBySelPrivacy = [
         ...externalAddr.filter((item) =>
             filterBySelectedPrivacy ? item?.rootNetworkName === selectedPrivacy?.rootNetworkName : true,
         ),
     ];
-    const { result: keychainAddrFil } = useSearchBox({
-        data: keychainAddr,
-        handleFilter: () => filterAddressByKey(keychainAddr, keySearch),
-    });
+    const listMasterKeyWithKeychains = useSelector(listMasterKeyWithKeychainsSelector);
     const { result: incognitoAddrFil } = useSearchBox({
         data: incognitoAddr,
         handleFilter: () => filterAddressByKey(incognitoAddr, keySearch),
@@ -53,25 +51,42 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         data: extAddrFilBySelPrivacy,
         handleFilter: () => filterAddressByKey(extAddrFilBySelPrivacy, keySearch),
     });
-    const addressBook = [
-        {
-            data: keychainAddrFil,
-            title: translate.keychains,
-        },
-        {
+    let addressBook: any[] = [];
+    listMasterKeyWithKeychains.map((masterKey: IMasterKeyWithKeychains) => {
+        const { listAccount, wallet } = masterKey;
+        const data = listAccount.map((account) => ({
+            name: account.name,
+            address: account.key.keySet.paymentAddressKeySerialized,
+        }));
+        const { result: keychainAddrFil } = useSearchBox({
+            data,
+            handleFilter: () => filterAddressByKey(data, keySearch),
+        });
+        if (keychainAddrFil.length !== 0) {
+            const payload = {
+                data: [...keychainAddrFil],
+                title: wallet.name,
+            };
+            addressBook.push(payload);
+        }
+        addressBook.push();
+        return masterKey;
+    });
+    if (incognitoAddrFil.length !== 0) {
+        addressBook.push({
             data: incognitoAddrFil,
             title: translate.incognito,
-        },
-        {
+        });
+    }
+    if (externalAddrFil.length !== 0) {
+        addressBook.push({
             data: externalAddrFil,
             title: translate.external,
-        },
-    ];
-
+        });
+    }
     React.useEffect(() => {
         dispatch(actionRemoveSelectedAddrBook());
     }, []);
-
     return (
         <ErrorBoundary>
             <WrappedComponent {...{ ...props, addressBook }} />

@@ -1,7 +1,7 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actionToggleToast, Header, TOAST_CONFIGS } from 'src/components';
-import { IAddressBookLanguage } from 'src/i18n/interface';
+import { IAddressBookLanguage, IGeneralLanguage } from 'src/i18n/interface';
 import styled from 'styled-components';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { themeSelector } from 'src/module/Setting';
@@ -37,8 +37,9 @@ const Item = React.memo((props: { item: IPropsAddrBook; onSelectedAddrBook?: any
     const { title, data } = item;
     const [toggle, setToggle] = React.useState(false);
     const location: any = useLocation();
-    const { state = {} }: { state: any } = location || {};
-    const { canRemoveAddrBook = false } = state;
+    const { state = {} }: { state: any } = location;
+    const { showRemoveAddressBook = false } = state || {};
+    const { removed }: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const history = useHistory();
     const dispatch = useDispatch();
     const handleToggle = () => setToggle(!toggle);
@@ -48,6 +49,13 @@ const Item = React.memo((props: { item: IPropsAddrBook; onSelectedAddrBook?: any
                 return;
             }
             dispatch(actionDelete({ addressBook }));
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: removed,
+                    type: TOAST_CONFIGS.success,
+                }),
+            );
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -62,9 +70,22 @@ const Item = React.memo((props: { item: IPropsAddrBook; onSelectedAddrBook?: any
         if (typeof onSelectedAddrBook === 'function') {
             return onSelectedAddrBook(addressBook);
         }
-        if (!addressBook.isKeychain) {
+        if (!addressBook.isKeychain && addressBook?.canBeEdit) {
             await dispatch(actionSelectedAddrBook({ addressBook }));
             return history.push(routeAction, {});
+        }
+        return null;
+    };
+    const renderRemoveAddressBook = (addressBook: IAddressBook) => {
+        if (!showRemoveAddressBook) {
+            return null;
+        }
+        if (addressBook.canBeRemoved && !addressBook.isKeychain) {
+            return (
+                <div>
+                    <TrashBinIcon onClick={() => handleRemoveAddrBook(addressBook)} />
+                </div>
+            );
         }
         return null;
     };
@@ -89,11 +110,7 @@ const Item = React.memo((props: { item: IPropsAddrBook; onSelectedAddrBook?: any
                             >
                                 {addressBook.address}
                             </Link>
-                            {canRemoveAddrBook && !addressBook.isKeychain && (
-                                <div>
-                                    <TrashBinIcon onClick={() => handleRemoveAddrBook(addressBook)} />
-                                </div>
-                            )}
+                            {renderRemoveAddressBook(addressBook)}
                         </div>
                     </div>
                 ))}

@@ -11,7 +11,8 @@ export const isAddressBookExist = (list: IAddressBook[], addressBook: { name: st
         (item) => isEqual(item.address, addressBook.address) || isEqual(toLower(item.name), toLower(addressBook.name)),
     );
 
-export const filterAddressByKey = (addressBook: IAddressBook[], keySearch: string) =>
+export const filterAddressByKey = (addressBook: { name: string; address: string }[], keySearch: string) =>
     addressBook?.filter(
-        (item) => includes(item?.name.toLowerCase(), keySearch) || includes(item?.address.toLowerCase(), keySearch),
+        (item) =>
+            includes(toLower(item?.name), toLower(keySearch)) || includes(toLower(item?.address), toLower(keySearch)),
     );

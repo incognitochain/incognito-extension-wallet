@@ -3,7 +3,8 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
 import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
-import { defaultAccountSelector, listAccountSelector } from 'src/module/Account/Account.selector';
+import { defaultAccountSelector } from 'src/module/Account/Account.selector';
+import { fullListAccountSelector } from 'src/module/HDWallet/HDWallet.selector';
 
 export const addressBookSelector = createSelector(
     (state: IRootState) => state.addressBook,
@@ -15,12 +16,16 @@ export const addressBookSelector = createSelector(
     }),
 );
 
-export const incognitoAddrSelector = createSelector(addressBookSelector, (addressBook) => addressBook.incognitoAddress);
+export const incognitoAddrSelector = createSelector(addressBookSelector, (addressBook) =>
+    addressBook.incognitoAddress.map((item) => ({ ...item, canBeRemoved: true, canBeEdit: true })),
+);
 
-export const externalAddrSelector = createSelector(addressBookSelector, (addressBook) => addressBook.externalAddress);
+export const externalAddrSelector = createSelector(addressBookSelector, (addressBook) =>
+    addressBook.externalAddress.map((item) => ({ ...item, canBeRemoved: true, canBeEdit: true })),
+);
 
 export const keychainAddrSelector = createSelector(
-    listAccountSelector,
+    fullListAccountSelector,
     defaultAccountSelector,
     isMainnetSelector,
     (accounts, defaultAccount, mainnet) => (filterByDefaultAccount = true) =>
