@@ -14,6 +14,7 @@ import { hasKeychainCreatedByMasterKey } from 'src/module/HDWallet/HDWallet.util
 import { listSelector } from 'src/module/HDWallet/HDWallet.selector';
 import { useHistory } from 'react-router-dom';
 import { isPrivateKey } from 'incognito-js/build/web/browser';
+import { route as routeKeychain } from 'src/module/Keychain';
 import AllMethodsImport from './ImportAccount.allMethods';
 
 interface IProps {}
@@ -42,7 +43,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const dispatch = useDispatch();
     const accountNameList = useSelector(listAccountNameSelector);
     const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
-    const { error, success } = translate;
+    const { error } = translate;
     const list = useSelector(listSelector)(true);
     const [accountName] = useFormValue({ formName: FORM_CONFIGS.formName, field: FORM_CONFIGS.accountName });
     const [privateKey] = useFormValue({ formName: FORM_CONFIGS.formName, field: FORM_CONFIGS.privateKey });
@@ -71,14 +72,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                         walletId,
                     }),
                 );
-                history.goBack();
-                dispatch(
-                    actionToggleToast({
-                        toggle: true,
-                        value: success.import,
-                        type: TOAST_CONFIGS.success,
-                    }),
-                );
+                history.push(routeKeychain);
             } else {
                 // toggle popup choose import to masterless or import master key
                 setMethod(METHOD_IMPORT.all);

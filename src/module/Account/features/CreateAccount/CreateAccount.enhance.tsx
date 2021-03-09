@@ -8,8 +8,6 @@ import { actionFetchCreateAccount } from 'src/module/Account/Account.actions';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { switchingWalletSelector, walletIdSelector } from 'src/module/Wallet/Wallet.selector';
 import { useFormValue } from 'src/hooks';
-import { IAccountLanguage } from 'src/i18n';
-import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { route as routeKeyChain } from 'src/module/Keychain';
 
 interface IProps {
@@ -45,8 +43,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const submitting = useSelector((state) => isSubmitting(FORM_CONFIGS.formName)(state));
     const isInvalidForm = useSelector((state) => isInvalid(FORM_CONFIGS.formName)(state));
     const disabledForm = isInvalidForm || submitting;
-    const translate: IAccountLanguage = useSelector(translateByFieldSelector)('account');
-    const { create: createSuccess } = translate.success;
     const history = useHistory();
     const loading = selectedWalletId !== walletId || switchingWallet;
     const handleCreateAccount = async () => {
@@ -55,13 +51,6 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                 return;
             }
             await dispatch(actionFetchCreateAccount(trim(accountName), walletId));
-            dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    value: createSuccess,
-                    type: TOAST_CONFIGS.success,
-                }),
-            );
             history.push(routeKeyChain);
         } catch (error) {
             dispatch(
