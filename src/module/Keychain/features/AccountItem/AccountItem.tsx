@@ -66,7 +66,7 @@ const AccountItem = React.memo((props: IProps) => {
             onClick={handleSelectAccount}
             className={`account-item flex fs-medium ${isSelected ? 'main-text' : 'sub-text'}`}
         >
-            <p ref={ref} className="account-name ellipsis">
+            <p ref={ref} className="account-name ellipsis m-r-15">
                 {account.name}
             </p>
             <p>{displayAddress}</p>
