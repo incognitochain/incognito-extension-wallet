@@ -11,10 +11,10 @@ interface IProps {
 const Styled = styled.button`
     background-color: ${(props: IGlobalStyle) => props.theme.typeButton};
     border: solid 0.5px ${(props: IGlobalStyle) => props.theme.inputBorder};
-    border-radius: 8px;
+    border-radius: 5px;
     color: ${(props: IGlobalStyle) => props.theme.typeTextButton};
     min-width: 54px;
-    height: 28px;
+    height: 23px;
     margin-left: 5px;
     &.selected {
         color: ${COLORS.white};
