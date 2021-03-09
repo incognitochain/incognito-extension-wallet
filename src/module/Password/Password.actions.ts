@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import { IRootState } from 'src/redux/interface';
+import { reloadApp } from 'src/utils/app';
 import { walletIdSelector } from 'src/module/Wallet';
 import { loadWallet } from 'src/module/Wallet/Wallet.utils';
 import { sendExtensionMessage, sendPasswordToBackground } from 'src/utils/sendMessage';
@@ -52,6 +53,6 @@ export const actionLogout = () => async (dispatch: Dispatch, getState: () => IRo
     });
     await dispatch(logoutEvent());
     if (typeof window !== 'undefined') {
-        window?.location?.replace('/');
+        reloadApp();
     }
 };

@@ -101,3 +101,9 @@ export const handleClassForEdge = () => {
         console.debug(error);
     }
 };
+
+export const reloadApp = () => {
+    if (typeof window !== 'undefined') {
+        window.location.href = '';
+    }
+};

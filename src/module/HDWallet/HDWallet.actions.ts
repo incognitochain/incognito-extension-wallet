@@ -20,29 +20,6 @@ export const actionLoadedListMasterKey = (payload: { wallet: WalletInstance; wal
     payload,
 });
 
-export const actionSetListMasterKey = () => async (dispatch: Dispatch, getState: () => IRootState) => {
-    try {
-        const state = getState();
-        const listIds: number[] = listIdsWalletSelector(state);
-        const masterlessId: number = masterlessIdSelector(state);
-        const pass = passwordSelector(state);
-        let loadListWalletFromDB = [];
-        loadListWalletFromDB = listIds.map((walletId: number) => loadWallet(walletId, pass));
-        let listWallet: any[] = await Promise.all([...loadListWalletFromDB]);
-        listWallet = listWallet.map((wallet: WalletInstance, index) => {
-            const walletId: number = listIds[index];
-            return {
-                walletId,
-                wallet,
-                isMasterless: masterlessId === walletId,
-            };
-        });
-        dispatch(actionLoadedListMasterKey(listWallet));
-    } catch (error) {
-        throw error;
-    }
-};
-
 export const actionUpdateMasterKey = (payload: {
     walletId: number;
     wallet: WalletInstance | any;
@@ -51,6 +28,35 @@ export const actionUpdateMasterKey = (payload: {
     type: ACTION_UPDATE_MASTER_KEY,
     payload,
 });
+
+export const actionSetListMasterKey = () => async (dispatch: Dispatch, getState: () => IRootState) => {
+    try {
+        const state = getState();
+        const listIds: number[] = listIdsWalletSelector(state);
+        const masterlessId: number = masterlessIdSelector(state);
+        const pass = passwordSelector(state);
+        listIds.map((walletId: number, index) =>
+            loadWallet(walletId, pass)
+                .then((wallet) => {
+                    if (wallet && wallet instanceof WalletInstance) {
+                        const walletId: number = listIds[index];
+                        const payload = {
+                            walletId,
+                            wallet,
+                            isMasterless: masterlessId === walletId,
+                        };
+                        dispatch(actionUpdateMasterKey(payload));
+                    } else {
+                        throw new Error(`LOAD WALLET ${walletId} ERROR`);
+                    }
+                    return wallet;
+                })
+                .catch((error) => error),
+        );
+    } catch (error) {
+        console.debug(error);
+    }
+};
 
 export const actionRemoveMasterKey = (payload: { walletId: number }) => ({
     type: ACTION_REMOVE_MASTER_KEY,
