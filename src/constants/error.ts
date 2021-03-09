@@ -59,7 +59,7 @@ export const ERROR_MESSAGE = {
         'Please turn off cellular data on your device. Using Wi-Fi only, make sure your Node is online before proceeding to change networks.',
     PENDING_TRANSACTIONS: 'Please wait for your previous transaction to finish processing. Simply try again later.',
     CAN_NOT_ESTIMATE_FEE: "Can't not estimate fee",
-    ADDRESS_BOOK_IS_EXIST: 'Address book is exist!',
+    ADDRESS_BOOK_IS_EXIST: 'Address book name is exist!',
     CAN_NOT_DETECT_ERC20_TOKEN: 'Can not search this ERC20 coin, please try again.',
     CAN_NOT_DETECT_BEP2_TOKEN: 'Can not search this BEP2 coin, please try again.',
     ADDED_MANUALLY_TOKEN: 'Success! You added a coin.',

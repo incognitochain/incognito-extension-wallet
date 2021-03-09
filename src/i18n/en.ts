@@ -146,7 +146,8 @@ const language: ILanguage = {
             canNotCreate: `Can not create keychain`,
             canNotImport: `Can not import keychain`,
             canNotRemove: `Can not remove keychain`,
-            keychainExisted: 'Keychain is exist',
+            keychainExisted: 'This keychain already exists on this extension.',
+            keychainInvalid: 'Please try again with a valid private key.',
         },
         success: {
             create: 'Create keychain successful.',

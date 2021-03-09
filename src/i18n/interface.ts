@@ -247,6 +247,7 @@ export interface IAccountLanguage {
         canNotRemove: string;
         keychainExisted: string;
         keychainNotExisted: string;
+        keychainInvalid: string;
     };
     success: {
         create: string;
