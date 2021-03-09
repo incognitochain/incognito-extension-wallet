@@ -1,14 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
+import { AccountInstance } from 'incognito-js/build/web/browser';
 import { route as routeMasterKeyInfo } from 'src/module/HDWallet/features/MasterKeyInfo';
 import { PasswordModal } from 'src/module/Password';
 import { actionToggleModal } from 'src/components/Modal';
 import { SmallButton } from 'src/components';
 import AccountItem from 'src/module/Keychain/features/AccountItem';
-import { listSelector } from 'src/module/HDWallet/HDWallet.selector';
-import { IMasterKey } from 'src/module/HDWallet';
+import { listMasterKeyWithKeychainsSelector } from 'src/module/HDWallet/HDWallet.selector';
+import { IMasterKeyWithKeychains } from 'src/module/HDWallet';
 import styled from 'styled-components';
 import { walletIdSelector } from 'src/module/Wallet/Wallet.selector';
 import { useHistory } from 'react-router-dom';
@@ -34,14 +34,8 @@ const customModalStyle = {
     boxShadow: '0 20px 30px 0 rgba(0,0,0,0.15)',
 };
 
-interface IProps {
-    wallet: WalletInstance;
-    walletId: number;
-    isMasterless: boolean;
-}
-
-const KeychainItem = React.memo((props: IProps) => {
-    const { wallet, walletId, isMasterless } = props;
+const KeychainItem = React.memo((props: IMasterKeyWithKeychains) => {
+    const { wallet, walletId, isMasterless, listAccount } = props;
     const translate: IKeychainLanguage = useSelector(translateByFieldSelector)('keychain');
     const { revealPhraseBtn } = translate;
     const dispatch = useDispatch();
@@ -62,10 +56,6 @@ const KeychainItem = React.memo((props: IProps) => {
             }),
         );
     };
-    const getListAccount = () => {
-        return wallet.masterAccount.getAccounts();
-    };
-    const listAccount = getListAccount();
     if (isMasterless && listAccount.length === 0) {
         return null;
     }
@@ -86,16 +76,11 @@ const KeychainItem = React.memo((props: IProps) => {
 });
 
 const KeychainList = () => {
-    const listMasterKey: IMasterKey[] = useSelector(listSelector)();
+    const listMasterKey: IMasterKeyWithKeychains[] = useSelector(listMasterKeyWithKeychainsSelector);
     return (
         <Styled className="keychain-list scroll-view">
             {listMasterKey.map((masterKey) => (
-                <KeychainItem
-                    wallet={masterKey.wallet}
-                    walletId={masterKey.walletId}
-                    isMasterless={masterKey.isMasterless}
-                    key={masterKey.walletId}
-                />
+                <KeychainItem {...masterKey} key={masterKey.walletId} />
             ))}
         </Styled>
     );

@@ -2,6 +2,7 @@ import toLower from 'lodash/toLower';
 import { WalletInstance } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
+import { IMasterKey } from './HDWallet.interface';
 
 export const hdWalletSelector = createSelector(
     (state: IRootState) => state.hdWallet,
@@ -45,3 +46,21 @@ export const isMasterKeyMnemonicExistSelector = createSelector(
 export const getMasterKeyByIdSelector = createSelector(rootHDWalletSelector, ({ list }) => (masterKeyId: number) =>
     list.find((masterKey) => masterKey.walletId === masterKeyId),
 );
+
+export const listMasterKeyWithKeychainsSelector = createSelector(listSelector, (getListMasterKey) => {
+    const listMasterKey = getListMasterKey();
+    return listMasterKey.map((masterKey: IMasterKey) => {
+        const { wallet }: { wallet: WalletInstance } = masterKey;
+        const listAccount = wallet.masterAccount.getAccounts();
+        return {
+            ...masterKey,
+            listAccount,
+        };
+    });
+});
+
+export const fullListAccountSelector = createSelector(listMasterKeyWithKeychainsSelector, (listMasterKey) => {
+    let fullListAccount: any[] = [];
+    listMasterKey.map((masterKey) => [...fullListAccount, ...masterKey.listAccount]);
+    return fullListAccount;
+});

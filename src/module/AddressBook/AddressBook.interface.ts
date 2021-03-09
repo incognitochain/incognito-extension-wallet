@@ -13,6 +13,8 @@ export interface IAddressBook {
     updatedAt?: number;
     type: number;
     isKeychain?: boolean;
+    canBeRemoved?: boolean;
+    canBeEdit?: boolean;
 }
 
 export interface IAddressBookReducer {

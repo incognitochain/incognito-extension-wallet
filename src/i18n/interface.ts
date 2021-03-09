@@ -339,6 +339,7 @@ export interface IGeneralLanguage {
     hasCameraDesc: string;
     scanQrCode: string;
     placeQrCode: string;
+    success: string;
 }
 
 export interface IShieldLanguage {

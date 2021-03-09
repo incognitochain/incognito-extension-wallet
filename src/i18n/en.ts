@@ -25,6 +25,7 @@ const language: ILanguage = {
         scanQrCode: 'Scan QR Code',
         placeQrCode: 'Place the QR code in front of your camera',
         cameraReadyDesc: 'Scan function enabled.',
+        success: 'Success',
     },
     home: {
         title: 'Incognito Wallet',

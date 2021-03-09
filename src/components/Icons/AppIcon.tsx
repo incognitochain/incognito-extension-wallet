@@ -13,9 +13,9 @@ const Styled = styled.div`
     border: 1px solid ${COLORS.white};
 `;
 
-const AppIcon = () => {
+const AppIcon = (props: any) => {
     const theme = useSelector(themeSelector);
-    return <Styled theme={theme} className="app-icon" />;
+    return <Styled theme={theme} className="app-icon" {...props} />;
 };
 
 export default React.memo(AppIcon);

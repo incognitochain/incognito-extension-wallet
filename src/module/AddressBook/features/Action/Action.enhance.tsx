@@ -24,6 +24,8 @@ import { ISelectedPrivacy } from 'src/module/Token';
 import isEqual from 'lodash/isEqual';
 import trim from 'lodash/trim';
 import toLower from 'lodash/toLower';
+import { IGeneralLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
 
 interface IProps {}
 
@@ -46,6 +48,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const dispatch = useDispatch();
     const mainnet = useSelector(isMainnetSelector);
     const history = useHistory();
+    const { success }: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const { tokenId, networkName, rootNetworkName }: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const { state: locationState }: { state: any } = useLocation();
     const { type = 1, address = '' }: { type?: number; address?: string } = locationState;
@@ -103,6 +106,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
             } else {
                 handleEdit();
             }
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: success,
+                    type: TOAST_CONFIGS.success,
+                }),
+            );
         } catch (error) {
             dispatch(
                 actionToggleToast({

@@ -1,6 +1,7 @@
 import isEqual from 'lodash/isEqual';
 import { IRootState } from 'src/redux/interface';
 import { createSelector } from 'reselect';
+import { isDevSelector } from 'src/module/Setting/Setting.selector';
 
 export const createMasterKeySelector = createSelector(
     (state: IRootState) => state.hdWallet,
@@ -34,5 +35,6 @@ export const selectedWordsSelector = createSelector(
 export const isVerifyMnemonicSelector = createSelector(
     mnemonicSelector,
     selectedWordsSelector,
-    (mnemonic, selectedWords) => isEqual(mnemonic, selectedWords),
+    isDevSelector,
+    (mnemonic, selectedWords, isDev) => (isDev ? true : isEqual(mnemonic, selectedWords)),
 );
