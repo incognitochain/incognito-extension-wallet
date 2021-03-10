@@ -53,7 +53,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
             child: [
                 {
                     desc: translate.addressBook.desc,
-                    onClick: () => history.push(addressBookRoute, { showRemoveAddressBook: true }),
+                    onClick: () => history.push(addressBookRoute, { showRemoveItem: true }),
                 },
             ],
         },

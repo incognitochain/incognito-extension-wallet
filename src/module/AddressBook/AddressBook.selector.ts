@@ -3,7 +3,6 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
 import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
-import { defaultAccountSelector } from 'src/module/Account/Account.selector';
 import { fullListAccountSelector } from 'src/module/HDWallet/HDWallet.selector';
 
 export const addressBookSelector = createSelector(
@@ -24,28 +23,11 @@ export const externalAddrSelector = createSelector(addressBookSelector, (address
     addressBook.externalAddress.map((item) => ({ ...item, canBeRemoved: true, canBeEdit: true })),
 );
 
-export const keychainAddrSelector = createSelector(
-    fullListAccountSelector,
-    defaultAccountSelector,
-    isMainnetSelector,
-    (accounts, defaultAccount, mainnet) => (filterByDefaultAccount = true) =>
-        (accounts &&
-            defaultAccount &&
-            accounts
-                .filter((account: AccountInstance) =>
-                    filterByDefaultAccount
-                        ? account.key.keySet.paymentAddressKeySerialized !==
-                          defaultAccount.key.keySet.paymentAddressKeySerialized
-                        : true,
-                )
-                .map((account: AccountInstance) => ({
-                    name: account.name,
-                    address: account.key.keySet.paymentAddressKeySerialized,
-                    type: 1,
-                    mainnet,
-                    isKeychain: true,
-                }))) ||
-        [],
+export const keychainAddrSelector = createSelector(fullListAccountSelector, (accounts) =>
+    accounts.map((account: AccountInstance) => ({
+        name: account.name,
+        address: account.key.keySet.paymentAddressKeySerialized,
+    })),
 );
 
 export const selectedAddressBookSelector = createSelector(
@@ -56,11 +38,9 @@ export const selectedAddressBookSelector = createSelector(
 export const isIncognitoAddressExistSelector = createSelector(
     incognitoAddrSelector,
     keychainAddrSelector,
-    (incognitoAddr: IAddressBook[], keychainAddr: (filterByDefaultAccount: boolean) => IAddressBook[]) => (
-        address: string,
-    ) =>
-        incognitoAddr.find((item) => item.address === address) ||
-        keychainAddr(false).find((item) => item.address === address),
+    (incognitoAddr: IAddressBook[], keychainAddr: { address: string; name: string }[]) => (address: string) =>
+        incognitoAddr.findIndex((item) => item.address === address) > -1 ||
+        keychainAddr.findIndex((item) => item.address === address) > -1,
 );
 
 export const isExternalAddressExistSelector = createSelector(

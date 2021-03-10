@@ -5,13 +5,13 @@ export interface IIncognitoAddress {}
 export interface IAddressBook {
     address: string;
     name: string;
-    mainnet: boolean;
+    mainnet?: boolean;
     tokenId?: string;
     networkName?: string;
     rootNetworkName?: string;
     createdAt?: number;
     updatedAt?: number;
-    type: number;
+    type: 1 | 2 | number;
     isKeychain?: boolean;
     canBeRemoved?: boolean;
     canBeEdit?: boolean;

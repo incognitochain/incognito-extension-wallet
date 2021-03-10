@@ -22,10 +22,29 @@ export const useSearchBox = (props: IProps) => {
     const keySearch = useSelector(keySearchSelector);
     const isKeyEmpty = isEmpty(keySearch);
     const result: any[] = isKeyEmpty ? data : handleFilter();
+    const filter = (data: any[], handleFilter: () => any) => {
+        const result: any[] = isKeyEmpty ? data : handleFilter();
+        return result;
+    };
     React.useEffect(() => {
         dispatch(reset(FORM_CONFIGS.formName));
     }, []);
     return {
         result,
+        filter,
     };
+};
+
+export const useSearchBoxVer2 = () => {
+    const dispatch = useDispatch();
+    const keySearch = useSelector(keySearchSelector);
+    const isKeyEmpty = isEmpty(keySearch);
+    const filter = (data: any[], handleFilter: () => any) => {
+        const result: any[] = isKeyEmpty ? data : handleFilter();
+        return result;
+    };
+    React.useEffect(() => {
+        dispatch(reset(FORM_CONFIGS.formName));
+    }, []);
+    return [filter];
 };

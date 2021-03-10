@@ -14,6 +14,7 @@ import {
     walletDataSelector,
     walletSelector,
     isMasterlessSelector,
+    actionSwitchWallet,
 } from 'src/module/Wallet';
 import { actionFollowDefaultToken, actionGetPrivacyTokensBalance } from 'src/module/Token/Token.actions';
 import { cachePromise } from 'src/services';
@@ -47,6 +48,7 @@ import {
     createAccountSelector,
     importAccountSelector,
     removeAccountSelector,
+    isAccountSelectedSelector,
 } from './Account.selector';
 
 export const actionSetSignPublicKeyEncode = (payload: string) => ({ type: ACTION_SET_SIGN_PUBLIC_KEY_ENCODE, payload });
@@ -148,6 +150,26 @@ export const actionSwitchAccount = (accountName: string) => async (dispatch: Dis
         await dispatch(actionSwitchAccountFetched());
     }
     return account;
+};
+
+export const actionHandleSwitchAccount = (account: AccountInstance, walletId: number) => async (
+    dispatch: Dispatch | any,
+    getState: () => IRootState,
+) => {
+    try {
+        if (!account || !walletId) {
+            return;
+        }
+        const state = getState();
+        const isSelected = isAccountSelectedSelector(state)(account);
+        if (isSelected) {
+            return;
+        }
+        await dispatch(actionSwitchWallet(walletId));
+        await dispatch(actionSwitchAccount(account.name));
+    } catch (error) {
+        throw error;
+    }
 };
 
 // create account

@@ -1,6 +1,7 @@
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import { isKeyChainExist } from 'src/utils/keychain';
 import {
     ACTION_CREATE,
     ACTION_DELETE,
@@ -9,7 +10,6 @@ import {
     ACTION_REMOVE_SELECTED,
     ADDRESS_BOOK_TYPE,
 } from './AddressBook.constant';
-import { isAddressBookExist } from './AddressBook.utils';
 import { IAddressBook, IAddressBookReducer, IPayload } from './AddressBook.interface';
 
 const initialState: IAddressBookReducer = {
@@ -48,7 +48,7 @@ const addressBookReducer = (state = initialState, action: { type: string; payloa
             const { addressBook }: IPayload = action.payload;
             const field = ADDRESS_BOOK_TYPE[addressBook.type];
             const oldAddressedBook: IAddressBook[] = state[field];
-            const isExist = isAddressBookExist(oldAddressedBook, addressBook);
+            const isExist = isKeyChainExist(oldAddressedBook, addressBook);
             if (!isExist) {
                 return state;
             }
