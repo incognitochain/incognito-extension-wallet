@@ -219,11 +219,11 @@ export const actionFetchCreateAccount = (accountName: string, walletId: number) 
         const mainnet: boolean = isMainnetSelector(state);
         await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
         await actionSwitchAccount(accountName)(dispatch, getState);
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         let task: any[] = [
             actionFollowDefaultToken(account)(dispatch, getState),
-            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            dispatch(actionUpdateMasterKey({ walletId, wallet, isMasterless })),
         ];
-        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         if (!isMasterless) {
             task.push(wallet.update());
         }
@@ -292,12 +292,12 @@ export const actionFetchImportAccount = ({
         await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
         await actionSwitchAccount(accountName)(dispatch, getState);
         const accounts: AccountInstance[] = wallet.masterAccount.getAccounts();
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         let task: any[] = [
             actionFollowDefaultToken(account)(dispatch, getState),
-            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            dispatch(actionUpdateMasterKey({ walletId, wallet, isMasterless })),
             dispatch(actionSetListAccount(accounts)),
         ];
-        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         if (!isMasterless) {
             task.push(wallet.update());
         }
@@ -354,14 +354,14 @@ export const actionFetchRemoveAccount = (accountName: string, walletId: number) 
         await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));
         accounts = wallet.masterAccount.getAccounts();
         let defaultAccount: AccountInstance = accounts[0];
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         let task: any[] = [
-            dispatch(actionUpdateMasterKey({ walletId, wallet })),
+            dispatch(actionUpdateMasterKey({ walletId, wallet, isMasterless })),
             dispatch(actionSetListAccount(accounts)),
         ];
         if (defaultAccount) {
             task.push(actionSwitchAccount(defaultAccount?.name)(dispatch, getState));
         }
-        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         if (!isMasterless) {
             task.push(wallet.update());
         }

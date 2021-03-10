@@ -26,6 +26,12 @@ const language: ILanguage = {
         placeQrCode: 'Place the QR code in front of your camera',
         cameraReadyDesc: 'Scan function enabled.',
         success: 'Success',
+        masterKey: 'Master keys',
+        masterLess: 'Masterless',
+        keychainName: 'Keychain name',
+        masterKeyName: 'Master key name',
+        privateKey: 'Private key',
+        phrase: 'Phrase',
     },
     home: {
         title: 'Incognito Wallet',
@@ -358,6 +364,16 @@ const language: ILanguage = {
             title: 'View keys',
             revealPhrase: 'Reveal master key phrase',
             viewKeys: 'View keychains',
+            keychains: 'Keychains',
+            masterlessKeychains: 'Masterless keychains',
+            importTitle: 'Import a keychain',
+            importDesc: 'Using a private key',
+            backupTitle: 'Back up',
+            backupDesc: 'Back up all masteriess private keys',
+            masterlessDesc1:
+                'You will not be able to back up these keychains with a master key phrase. Each keychain is only recoverable using its unique private key, so please keep them all safe.',
+            masterlessDesc2:
+                'Alternatively, you may wish to transfer funds to keychains that are linked to a master key.',
         },
         general: {
             qrTitle: 'Your secret phase',

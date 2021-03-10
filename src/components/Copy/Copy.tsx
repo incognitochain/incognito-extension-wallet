@@ -28,6 +28,9 @@ const Styled = styled.div`
         padding: unset;
         max-width: 60px;
     }
+    .btn-copy-container {
+        min-width: 70px;
+    }
 `;
 
 const Copy: React.FunctionComponent<IProps> = (props) => {
@@ -45,7 +48,9 @@ const Copy: React.FunctionComponent<IProps> = (props) => {
     return (
         <Styled>
             <p className="text ellipsis">{text}</p>
-            <Button title={copied ? `Copied` : `Copy`} onClick={handleCopyData} />
+            <div className="btn-copy-container">
+                <Button title={copied ? `Copied` : `Copy`} onClick={handleCopyData} />
+            </div>
         </Styled>
     );
 };

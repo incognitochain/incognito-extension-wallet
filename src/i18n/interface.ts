@@ -62,6 +62,14 @@ export interface IHDWalletLanguage {
         title: string;
         revealPhrase: string;
         viewKeys: string;
+        keychains: string;
+        masterlessKeychains: string;
+        importTitle: string;
+        importDesc: string;
+        backupTitle: string;
+        backupDesc: string;
+        masterlessDesc1: string;
+        masterlessDesc2: string;
     };
     showMnemonic: {
         title: string;
@@ -340,6 +348,12 @@ export interface IGeneralLanguage {
     scanQrCode: string;
     placeQrCode: string;
     success: string;
+    masterKey: string;
+    masterLess: string;
+    keychainName: string;
+    masterKeyName: string;
+    privateKey: string;
+    phrase: string;
 }
 
 export interface IShieldLanguage {

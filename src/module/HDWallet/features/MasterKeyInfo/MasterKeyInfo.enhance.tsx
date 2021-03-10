@@ -19,10 +19,11 @@ interface TInner {
     onShowMnemonic: () => void;
     showMnemonic: boolean;
     onClickKey: (account: AccountInstance) => void;
-    mnemonic: string;
     keychains: AccountInstance[];
+    mnemonic: string;
     handleRemoveMasterKey: () => any;
     shouldShowRemove: boolean;
+    isMasterless: boolean;
 }
 
 interface IProps {}
@@ -73,6 +74,7 @@ const enhance = (WrappedComponent: any) => (props: IProps & any) => {
                 mnemonic,
                 keychains,
                 shouldShowRemove,
+                isMasterless,
             }}
         />
     );
