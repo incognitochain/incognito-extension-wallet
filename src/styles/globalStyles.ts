@@ -264,6 +264,13 @@ export const GlobalStyled = createGlobalStyle`
             bottom: 0;
             top: 0;
          }
+          > svg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+          }
     }
     .icon-abs {
         position: absolute;
