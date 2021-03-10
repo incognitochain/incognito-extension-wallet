@@ -1,63 +1,70 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AccountInstance } from 'incognito-js/build/web/browser';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { actionToggleToast, Header, TOAST_CONFIGS } from 'src/components';
-import { ILanguage } from 'src/i18n';
-import { translateSelector } from 'src/module/Configs';
-import { listAccountSelector, actionSwitchAccount, isAccountSelectedSelector } from 'src/module/Account';
-import AccountItem from 'src/module/Account/features/AccountItem';
-import { keySearchSelector, useSearchBox } from 'src/components/Header';
-import includes from 'lodash/includes';
-import toLower from 'lodash/toLower';
+import { IAccountLanguage, IGeneralLanguage } from 'src/i18n';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { useMasterKeyWithKeychains } from 'src/hooks/useMasterKeyWithKeychains';
+import MasterKeyItem from 'src/module/HDWallet/features/MasterKeyItem';
+import { useHistory } from 'react-router';
+import { actionHandleSwitchAccount } from 'src/module/Account/Account.actions';
+import { isAccountSelectedSelector } from '../..';
 
 const Styled = styled.div``;
 
 const SelectAccount = React.memo(() => {
-    const translate: ILanguage = useSelector(translateSelector);
-    const listAccount = useSelector(listAccountSelector);
-    const history = useHistory();
+    const tsAccount: IAccountLanguage = useSelector(translateByFieldSelector)('account');
+    const ts: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const dispatch = useDispatch();
-    const keySearch = useSelector(keySearchSelector);
+    const history = useHistory();
+    const [listMasterKeyWithKeychains] = useMasterKeyWithKeychains();
     const isAccountSelected = useSelector(isAccountSelectedSelector);
-    const { result } = useSearchBox({
-        data: listAccount,
-        handleFilter: () => [
-            ...listAccount.filter(
-                (account) =>
-                    includes(toLower(account.name), keySearch) ||
-                    includes(toLower(account.key.keySet.paymentAddressKeySerialized), keySearch),
-            ),
-        ],
+    const factories = listMasterKeyWithKeychains.map((item) => {
+        const result = {
+            masterKeyId: item.walletId,
+            masterKeyName: item.walletName,
+            listAccount: item.listAccount.map((account: AccountInstance) => {
+                return {
+                    ...account,
+                    name: account.name,
+                    address: account.key.keySet.paymentAddressKeySerialized,
+                    isSelected: isAccountSelected(account),
+                };
+            }),
+        };
+        return result;
     });
-    const handleSelectAccount = async (account: AccountInstance) => {
+    const handleSelectAccount = async (account: AccountInstance, walletId: number) => {
         try {
-            const isSelected = isAccountSelected(account);
-            if (isSelected) {
-                return;
-            }
-            dispatch(actionSwitchAccount(account.name));
-        } catch (error) {
-            dispatch(actionToggleToast({ value: error, toggle: true, type: TOAST_CONFIGS.error }));
-        } finally {
+            await dispatch(actionHandleSwitchAccount(account, walletId));
             history.goBack();
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: `${ts.switched} ${account.name}`,
+                    type: TOAST_CONFIGS.success,
+                }),
+            );
+        } catch (error) {
+            dispatch(
+                actionToggleToast({
+                    toggle: true,
+                    value: error,
+                    type: TOAST_CONFIGS.error,
+                }),
+            );
         }
     };
-
     return (
         <Styled>
-            <Header title={translate.wallet.selectAccount.headerTitle} canSearch />
+            <Header title={tsAccount.selectAccount.headerTitle} canSearch />
             <div className="scroll-view">
-                {result.map((account: AccountInstance) => (
-                    <AccountItem
-                        title={account.name}
-                        desc={account.key.keySet.paymentAddressKeySerialized}
-                        hasCopy={false}
-                        hasQrCode={false}
-                        selectable
-                        onSelectAccount={() => handleSelectAccount(account)}
-                        key={account.name}
+                {factories.map((item) => (
+                    <MasterKeyItem
+                        key={item.masterKeyName}
+                        data={{ masterKeyName: item.masterKeyName, listAccount: item.listAccount }}
+                        onSelectedItem={(account: AccountInstance) => handleSelectAccount(account, item.masterKeyId)}
                     />
                 ))}
             </div>

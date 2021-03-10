@@ -78,9 +78,6 @@ export interface IHDWalletLanguage {
 
 export interface IWalletLanguage {
     headerTitle: string;
-    selectAccount: {
-        headerTitle: string;
-    };
     addCoin: string;
     error: {
         walletNotExisted: string;
@@ -257,6 +254,9 @@ export interface IAccountLanguage {
     general: {
         placeholderName: string;
         placeholderPrivateKey: string;
+    };
+    selectAccount: {
+        headerTitle: string;
     };
 }
 

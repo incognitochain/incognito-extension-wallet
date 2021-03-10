@@ -9,11 +9,9 @@ import { withLayout } from 'src/components/Layout';
 import { ERROR_MESSAGE } from 'src/constants/error';
 import { route as routeWallet } from 'src/module/Wallet';
 import {
-    isAddressBookExist,
     actionCreate,
     IAddressBook,
     IAddressBookReducer,
-    isAddressBookExistByName,
     actionUpdate,
     ADDRESS_BOOK_TYPE,
 } from 'src/module/AddressBook';
@@ -26,6 +24,7 @@ import trim from 'lodash/trim';
 import toLower from 'lodash/toLower';
 import { IGeneralLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
+import { isKeyChainExist, isKeychainExistByName } from 'src/utils/keychain';
 
 interface IProps {}
 
@@ -69,7 +68,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         const name = trim(nameInput);
         const address = trim(addressInput);
         const addressBook = { name, address, type, mainnet, networkName, rootNetworkName, tokenId };
-        const isExist = isAddressBookExist(oldAddressedBook, addressBook);
+        const isExist = isKeyChainExist(oldAddressedBook, addressBook);
         if (isExist) {
             throw new Error(ERROR_MESSAGE.ADDRESS_BOOK_IS_EXIST);
         }
@@ -85,7 +84,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
         const oldAddressedBook: IAddressBook[] = addressBookState[field];
         const name = trim(nameInput);
         const addressBook = { ...selectedAddrBook, name };
-        const isExist = isAddressBookExistByName(oldAddressedBook, name);
+        const isExist = isKeychainExistByName(oldAddressedBook, name);
         if (isExist) {
             throw new Error(ERROR_MESSAGE.ADDRESS_BOOK_IS_EXIST);
         }

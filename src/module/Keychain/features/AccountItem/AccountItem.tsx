@@ -1,12 +1,11 @@
 import React, { useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { actionSwitchAccount, isAccountSelectedSelector } from 'src/module/Account';
+import { actionHandleSwitchAccount, isAccountSelectedSelector } from 'src/module/Account';
 import { IGeneralLanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { IGlobalStyle } from 'src/styles';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
-import { actionSwitchWallet } from 'src/module/Wallet';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { actionShowTooltip } from 'src/module/Tooltip';
 
@@ -38,11 +37,7 @@ const AccountItem = React.memo((props: IProps) => {
     }, [paymentAddress]);
     const handleSelectAccount = async () => {
         try {
-            if (isSelected) {
-                return;
-            }
-            await dispatch(actionSwitchWallet(walletId));
-            await dispatch(actionSwitchAccount(account.name));
+            await dispatch(actionHandleSwitchAccount(account, walletId));
             dispatch(
                 actionShowTooltip({
                     ref: ref ? ref?.current : null,

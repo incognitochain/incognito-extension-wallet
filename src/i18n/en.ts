@@ -48,9 +48,6 @@ const language: ILanguage = {
     },
     wallet: {
         headerTitle: 'Assets',
-        selectAccount: {
-            headerTitle: 'Search keychains',
-        },
         addCoin: 'Manage coin list',
         error: {
             walletNotExisted: 'Wallet is not exist',
@@ -158,6 +155,9 @@ const language: ILanguage = {
         general: {
             placeholderName: 'Enter a name for your keychain',
             placeholderPrivateKey: 'Enter private key ',
+        },
+        selectAccount: {
+            headerTitle: 'Search keychains',
         },
     },
     setting: {

@@ -61,6 +61,8 @@ export const listMasterKeyWithKeychainsSelector = createSelector(listSelector, (
 
 export const fullListAccountSelector = createSelector(listMasterKeyWithKeychainsSelector, (listMasterKey) => {
     let fullListAccount: any[] = [];
-    listMasterKey.map((masterKey) => [...fullListAccount, ...masterKey.listAccount]);
+    listMasterKey.forEach((masterKey) => {
+        fullListAccount = [...fullListAccount, ...masterKey.listAccount];
+    });
     return fullListAccount;
 });

@@ -44,7 +44,8 @@ module.exports = {
 
         'react/jsx-props-no-spreading': 'off',
         'react/require-default-props': 'off',
-        'react-hooks/exhaustive-deps': 'off',
+        'react-hooks/rules-of-hooks': 'off', // Checks rules of Hooks
+        'react-hooks/exhaustive-deps': 'warn', // Checks effect
 
         'jsx-a11y/click-events-have-key-events': 'off',
         'jsx-a11y/no-static-element-interactions': 'off',
