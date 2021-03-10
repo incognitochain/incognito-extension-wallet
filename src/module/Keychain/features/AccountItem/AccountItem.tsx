@@ -8,8 +8,10 @@ import { AccountInstance } from 'incognito-js/build/web/browser';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components';
 import { actionSwitchWallet } from 'src/module/Wallet';
 import { translateByFieldSelector } from 'src/module/Configs';
+import { actionShowTooltip } from 'src/module/Tooltip';
 
 const Styled = styled.div`
+    position: relative;
     justify-content: space-between;
     margin-top: 30px;
     padding-left: 15px;
@@ -42,10 +44,10 @@ const AccountItem = React.memo((props: IProps) => {
             await dispatch(actionSwitchWallet(walletId));
             await dispatch(actionSwitchAccount(account.name));
             dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    type: TOAST_CONFIGS.success,
-                    value: `${translate.switched} ${account.name}`,
+                actionShowTooltip({
+                    ref: ref ? ref?.current : null,
+                    text: `${translate.switched} ${account.name}`,
+                    timeout: 1,
                 }),
             );
         } catch (error) {
@@ -70,6 +72,7 @@ const AccountItem = React.memo((props: IProps) => {
                 {account.name}
             </p>
             <p>{displayAddress}</p>
+            <div className="center-abs-hor" ref={ref} />
         </Styled>
     );
 });
