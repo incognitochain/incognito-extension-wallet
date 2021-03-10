@@ -17,7 +17,7 @@ export const useMasterKeyWithKeychains: () => [IHooks[]] = () => {
     const listMasterKeyWithKeychains = useSelector(listMasterKeyWithKeychainsSelector);
     listMasterKeyWithKeychains
         .map((masterKey) => ({
-            data: masterKey.listAccount.map((account) => ({
+            data: masterKey.listAccount.map((account: AccountInstance) => ({
                 ...account,
                 name: account.name,
                 address: account.key.keySet.paymentAddressKeySerialized,

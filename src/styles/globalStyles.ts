@@ -287,6 +287,7 @@ export const GlobalStyled = createGlobalStyle`
         overflow-x: hidden;
         overflow-y: scroll;
         max-height: 518px;
+        padding-bottom: 30px;
     }
     .linear-bg {
         background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.5), rgba(0,0,0,0.6)) !important;
@@ -313,6 +314,9 @@ export const GlobalStyled = createGlobalStyle`
     }
     .m-r-15 {
         margin-right: 15px;
+    }
+    .m-b-10 {
+        margin-bottom: 10px;
     }
     .center-abs-ver {
         position: absolute;
@@ -352,6 +356,9 @@ export const GlobalStyled = createGlobalStyle`
     input::-ms-reveal,
     input::-ms-clear {
         display: none;
+    }
+    .pointer {
+        cursor: pointer;
     }
 `;
 

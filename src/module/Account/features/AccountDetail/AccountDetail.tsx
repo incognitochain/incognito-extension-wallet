@@ -11,7 +11,9 @@ import { sendExtensionMessage } from 'src/utils/sendMessage';
 import APP_CONSTANT from 'src/constants/app';
 import { actionClearAllModal, actionToggleModal } from 'src/components/Modal';
 import { walletIdSelector } from 'src/module/Wallet';
-import Item from './Detail';
+import QrCodeV2 from 'src/components/QrCode/QrCodeV2';
+import isString from 'lodash/isString';
+import toString from 'lodash/toString';
 
 interface IProps {
     account: AccountInstance;
@@ -108,7 +110,11 @@ const AccountDetails = (props: IProps) => {
             />
             <div className="scroll-view">
                 {factories.map((item) => (
-                    <Item key={item.title} {...item} />
+                    <QrCodeV2
+                        key={item.title}
+                        title={item.title}
+                        desc={isString(item.desc) ? item.desc : toString(item.desc)}
+                    />
                 ))}
             </div>
         </Styled>

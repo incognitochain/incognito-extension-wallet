@@ -48,10 +48,12 @@ const rootReducer = (
             }
             return {
                 ...state,
-                list: list.map((item: IMasterKey) => ({
-                    ...item,
-                    wallet: walletId === item.walletId ? cloneDeep(wallet) : item.wallet,
-                })),
+                list: [
+                    ...list.map((item: IMasterKey) => ({
+                        ...item,
+                        wallet: walletId === item.walletId ? cloneDeep(wallet) : item.wallet,
+                    })),
+                ],
             };
         }
         case ACTION_REMOVE_MASTER_KEY: {

@@ -120,7 +120,8 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
         }
         wallet = await loadWallet(walletId, pass);
         await dispatch(actionUpdateWallet(wallet));
-        await dispatch(actionUpdateMasterKey({ wallet, walletId }));
+        const isMasterless = isMasterlessSelector(state)(walletId);
+        await dispatch(actionUpdateMasterKey({ wallet, walletId, isMasterless }));
     } catch (error) {
         throw error;
     }

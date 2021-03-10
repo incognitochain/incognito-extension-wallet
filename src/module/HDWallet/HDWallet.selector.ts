@@ -1,7 +1,11 @@
 import toLower from 'lodash/toLower';
-import { WalletInstance } from 'incognito-js/build/web/browser';
+import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser';
 import { createSelector } from 'reselect';
 import { IRootState } from 'src/redux/interface';
+import { moveEleToEndByIndex } from 'src/utils/array';
+import { IGeneralLanguage } from 'src/i18n';
+import toUpper from 'lodash/toUpper';
+import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { IMasterKey } from './HDWallet.interface';
 
 export const hdWalletSelector = createSelector(
@@ -47,16 +51,26 @@ export const getMasterKeyByIdSelector = createSelector(rootHDWalletSelector, ({ 
     list.find((masterKey) => masterKey.walletId === masterKeyId),
 );
 
+export const getlistAccountByMasterKeySelector = createSelector(
+    getMasterKeyByIdSelector,
+    (getMasterKeyById) => (masterKeyId: number) => getMasterKeyById(masterKeyId)?.wallet.masterAccount.getAccounts(),
+);
+
 export const listMasterKeyWithKeychainsSelector = createSelector(listSelector, (getListMasterKey) => {
-    const listMasterKey = getListMasterKey();
-    return listMasterKey.map((masterKey: IMasterKey) => {
-        const { wallet }: { wallet: WalletInstance } = masterKey;
-        const listAccount = wallet.masterAccount.getAccounts();
-        return {
-            ...masterKey,
-            listAccount,
-        };
-    });
+    let listMasterKey = getListMasterKey();
+    let listMasterKeyWithListAccount = listMasterKey
+        .map((masterKey: IMasterKey) => {
+            const { wallet }: { wallet: WalletInstance } = masterKey;
+            const listAccount = wallet.masterAccount.getAccounts();
+            return {
+                ...masterKey,
+                listAccount,
+            };
+        })
+        .sort((a, b) => (toLower(a.wallet.name) < toLower(b.wallet.name) ? -1 : 1));
+    const indexMasterless = listMasterKeyWithListAccount.findIndex((item) => item.isMasterless);
+    let result = moveEleToEndByIndex(listMasterKeyWithListAccount, indexMasterless);
+    return result;
 });
 
 export const fullListAccountSelector = createSelector(listMasterKeyWithKeychainsSelector, (listMasterKey) => {
@@ -66,3 +80,35 @@ export const fullListAccountSelector = createSelector(listMasterKeyWithKeychains
     });
     return fullListAccount;
 });
+
+export const backupAllMasterKeySelector = createSelector(
+    listMasterKeyWithKeychainsSelector,
+    translateByFieldSelector,
+    (listMasterKey, translateByField) => {
+        const translate: IGeneralLanguage = translateByField('general');
+        let result = listMasterKey.reduce((prev, masterKey) => {
+            const { wallet, isMasterless } = masterKey;
+            const { name, mnemonic, masterAccount } = wallet;
+            let prevRes = prev;
+            if (!isMasterless) {
+                prevRes += `
+                \n${translate.masterKeyName}: ${name}
+                \n${translate.phrase}: ${mnemonic}
+                \n
+                `;
+            } else {
+                prevRes += `\n------- ${toUpper(translate.masterLess)} -------\n`;
+                const listAccount: AccountInstance[] = masterAccount.getAccounts();
+                listAccount.forEach((account: AccountInstance) => {
+                    prevRes += `
+                        \n${translate.keychainName}: ${account.name}
+                        \n${translate.privateKey}: ${account.key.keySet.privateKeySerialized}
+                        \n
+                        `;
+                });
+            }
+            return prevRes;
+        }, `------- ${toUpper(translate.masterKey)} -------\n`);
+        return result;
+    },
+);

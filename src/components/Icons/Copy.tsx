@@ -35,11 +35,9 @@ const Copy = (props: IProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => 
     const iconRef: any = useRef();
     const dispatch = useDispatch();
     const translate: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
-
     const handleCopyText = () => {
         if (text) {
             copy(text);
-
             dispatch(
                 actionShowTooltip({
                     text: translate.copied,
