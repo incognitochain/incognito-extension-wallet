@@ -92,8 +92,8 @@ const Item = React.memo((props: { item: IPropsAddrBook; onSelectedAddrBook?: any
     return (
         <div className="item">
             <div className="sub flex" onClick={handleToggle}>
-                <p className="title fs-medium fw-medium">{title}</p>
-                {toggle ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                <p className="title fs-medium fw-medium ellipsis">{title}</p>
+                <div className="arrow-icon">{toggle ? <ArrowUpIcon /> : <ArrowDownIcon />}</div>
             </div>
             {toggle &&
                 data.map((addressBook: IAddressBook) => (
