@@ -8,7 +8,7 @@ interface IProps {
 
 const Styled = styled.button<{ isGreyIcon?: boolean }>`
     width: 16px;
-    height: 14px;
+    height: 16px;
     svg {
         path {
             fill: ${(props) => props?.isGreyIcon && COLORS.colorGreyBold};

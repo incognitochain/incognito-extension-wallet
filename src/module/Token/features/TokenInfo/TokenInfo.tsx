@@ -44,7 +44,7 @@ const TokenInfo = (
                     <p className="ellipsis subtext" style={{ color: isVerified ? COLORS.green : COLORS.colorGreyBold }}>
                         {isVerified ? 'Verified' : 'Unverified'}
                     </p>
-                    <QuestionIcon onClick={handlePressVerifiedInfo} />
+                    <QuestionIcon width={15} height={15} onClick={handlePressVerifiedInfo} />
                 </div>
                 {infosFactories.map((info: IInfo) => (
                     <InfoItem {...info} key={info.label} />

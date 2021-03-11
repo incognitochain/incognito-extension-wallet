@@ -4,8 +4,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 15px;
 `;
 
 const OpenLinkVector = React.memo((props: any) => {
