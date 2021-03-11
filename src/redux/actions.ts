@@ -3,6 +3,7 @@ import { actionGetAccountBalance } from 'src/module/Account';
 import { Dispatch } from 'redux';
 import { selectedPrivacySelector } from 'src/module/Token/Token.selector';
 import { IRootState } from './interface';
+import { ACTION_INIT_APP_STATE } from './constants';
 
 export const actionGetBalanceByTokenId = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     try {
@@ -16,3 +17,7 @@ export const actionGetBalanceByTokenId = () => async (dispatch: Dispatch, getSta
         throw error;
     }
 };
+
+export const actionInitAppState = () => ({
+    type: ACTION_INIT_APP_STATE,
+});

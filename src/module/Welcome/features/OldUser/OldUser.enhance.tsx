@@ -15,7 +15,6 @@ const enhance = (WrappedComponent: any) => (props: IOldUserProps) => {
     const errorDictionary = useSelector(errorTranslateSelector);
     const history = useHistory();
     const isDisabledButton = !pass || loading || !!error;
-
     const handlePassChange = useCallback((e) => {
         setPass(e.target.value);
         setError('');
@@ -33,7 +32,6 @@ const enhance = (WrappedComponent: any) => (props: IOldUserProps) => {
             setLoading(false);
         }
     };
-
     return (
         <WrappedComponent
             {...props}

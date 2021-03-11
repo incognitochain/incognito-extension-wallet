@@ -11,3 +11,8 @@ export const newPasswordSelector = createSelector(
     (state: IRootState) => state.password,
     (password: IPasswordReducers) => password.newPass,
 );
+
+export const isForgetPasswordSelector = createSelector(
+    (state: IRootState) => state.password,
+    (password) => password.forgetPassword,
+);

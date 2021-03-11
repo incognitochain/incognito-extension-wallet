@@ -4,6 +4,7 @@ import isEqual from 'lodash/isEqual';
 import { listIdsWalletSelector } from 'src/module/Wallet';
 import { IWalletLanguage, IHDWalletLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
+import { actionInitAppState } from 'src/redux/actions';
 import { actionUpdateMasterKey, actionRemoveMasterKey } from 'src/module/HDWallet/HDWallet.actions';
 import { actionToggleToast, TOAST_CONFIGS } from 'src/components/Core/Toast';
 import { Dispatch } from 'redux';
@@ -13,7 +14,7 @@ import { AccountInstance, WalletInstance } from 'incognito-js/build/web/browser'
 import { updateWallet, removeWallet } from 'src/database/tables/wallet';
 import { actionSetListAccount, defaultAccountNameSelector, actionSwitchAccount } from 'src/module/Account';
 import { isMainnetSelector } from 'src/module/Preload/Preload.selector';
-import { passwordSelector } from 'src/module/Password/Password.selector';
+import { isForgetPasswordSelector, passwordSelector } from 'src/module/Password/Password.selector';
 import { actionFollowDefaultToken, actionResetFollowDefaultToken, IEnvToken, ITokenReducer } from 'src/module/Token';
 import { tokenSelector } from 'src/module/Token/Token.selector';
 import {
@@ -34,6 +35,7 @@ import {
     isMasterlessSelector,
 } from './Wallet.selector';
 import { IWalletReducer } from './Wallet.interface';
+import { actionToggleForgetPassword } from '../Password';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -208,11 +210,15 @@ export const actionImportWallet = (
     isImport = true,
     showToast?: boolean,
 ) => async (dispatch: Dispatch | any, getState: () => IRootState) => {
+    const state: IRootState = getState();
+    const mainnet: boolean = isMainnetSelector(state);
+    const isForgetPassword: boolean = isForgetPasswordSelector(state);
     try {
         let walletId = -1;
-        const state: IRootState = getState();
-        const mainnet: boolean = isMainnetSelector(state);
-        const dataImport = await importWallet(walletName, mnemonic, pass);
+        const dataImport = await importWallet({ walletName, mnemonic, pass, isForgetPassword });
+        if (isForgetPassword) {
+            dispatch(actionToggleForgetPassword(false));
+        }
         walletId = dataImport.walletId;
         let { wallet } = dataImport;
         const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
@@ -220,6 +226,9 @@ export const actionImportWallet = (
         const { success }: IHDWalletLanguage = translateByFieldSelector(state)('hdWallet');
         if (!defaultAccount) {
             wallet.masterAccount.addAccount('Anon');
+        }
+        if (isForgetPassword) {
+            await dispatch(actionInitAppState());
         }
         await dispatch(actionResetFollowDefaultToken(mainnet));
         await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));

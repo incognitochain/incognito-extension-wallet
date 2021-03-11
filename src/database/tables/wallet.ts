@@ -54,3 +54,12 @@ export const removeWallet = async (walletId: number) => {
     }
     return removed;
 };
+
+export const clearAllWallet = async () => {
+    try {
+        const incognitoDB = await initIncognitoDB();
+        return incognitoDB.clearCache(TABLE_NAME);
+    } catch (error) {
+        throw error;
+    }
+};
