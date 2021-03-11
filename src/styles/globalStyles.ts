@@ -35,6 +35,7 @@ export interface ITheme {
     fastFeeButton: string;
     fastFeeBorderButton: string;
     fastFeeTextButton: string;
+    toastBg: string;
 }
 
 export interface IGlobalStyle {
@@ -73,6 +74,7 @@ export const lightTheme: ITheme = {
     fastFeeButton: COLORS.colorGrey,
     fastFeeBorderButton: COLORS.colorKeyGrey,
     fastFeeTextButton: COLORS.colorGreyBold,
+    toastBg: COLORS.colorGrey,
 };
 
 export const darkTheme: ITheme = {
@@ -107,9 +109,10 @@ export const darkTheme: ITheme = {
     fastFeeButton: COLORS.black2,
     fastFeeBorderButton: COLORS.black1,
     fastFeeTextButton: COLORS.colorGreyBold,
+    toastBg: COLORS.black3,
 };
 
-export const DEFAULT_THEME = lightTheme;
+export const DEFAULT_THEME = darkTheme;
 
 export const GlobalStyled = createGlobalStyle`
     html {
@@ -138,6 +141,7 @@ export const GlobalStyled = createGlobalStyle`
         padding: 30px;
         * {
              box-sizing: border-box;
+             font-family: 'SF-Pro-Display';
         }
     }
     
@@ -270,6 +274,8 @@ export const GlobalStyled = createGlobalStyle`
             right: 0;
             bottom: 0;
             top: 0;
+            width: 100%;
+            height: 100%;
           }
     }
     .icon-abs {
@@ -359,6 +365,9 @@ export const GlobalStyled = createGlobalStyle`
     }
     .pointer {
         cursor: pointer;
+    }
+    .modal-data .label {
+        margin-bottom: 30px;
     }
 `;
 

@@ -5,7 +5,7 @@ interface IProps {}
 
 const Styled = styled.button`
     width: 20px;
-    height: 15px;
+    height: 11px;
 `;
 
 const InfiniteVector = React.memo((props: any) => {

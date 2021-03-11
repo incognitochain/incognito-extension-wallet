@@ -25,7 +25,7 @@ const Keychain = React.memo(() => {
                 customHeader={
                     <div className="custom-header flex">
                         <p className="fw-medium fs-medium">{translateKeychain.headerTitle}</p>
-                        <QuestionIcon onClick={handleClickHelp} />
+                        <QuestionIcon width={19} height={19} onClick={handleClickHelp} />
                     </div>
                 }
                 rightHeader={<AddCircleIcon onClick={handleAdd} />}
