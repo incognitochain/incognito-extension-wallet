@@ -49,7 +49,7 @@ const QrCode = (props: IProps) => {
     const theme = useSelector(themeSelector);
     return (
         <Styled theme={theme} className="qrcode-container">
-            <div className="label fs-medium fw-bold">{label}</div>
+            <div className="label fs-medium fw-bold ellipsis">{label}</div>
             <div className="qrcode-react">
                 <QRCodeReact {...{ ...qrCodeProps, size: qrCodeProps?.size || 175 }} />
             </div>
