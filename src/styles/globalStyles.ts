@@ -116,7 +116,7 @@ export const DEFAULT_THEME = darkTheme;
 
 export const GlobalStyled = createGlobalStyle`
     html {
-        background: ${COLORS.lightGrey19};
+        // background: ${COLORS.lightGrey19};
     }
 
     #root {
@@ -150,6 +150,20 @@ export const GlobalStyled = createGlobalStyle`
         margin-bottom: 100px;
         border-radius: 30px;
         border: 1px solid ${COLORS.lightGrey21};
+    }
+
+    #root{
+        &.incognito-browser-tab {
+            background: ${(props: IGlobalStyle) => props.theme.body};
+            width: 100vw;
+            height: 100vh;
+            max-width: unset;
+            min-width: unset;
+            margin-top: 0;
+            margin-bottom: 0;
+            border: none;
+            padding: 0;
+        }
     }
 
     #root.incognito-extension-tab .modal-content-wrapper{ 

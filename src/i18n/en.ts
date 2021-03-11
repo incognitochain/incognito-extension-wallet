@@ -439,6 +439,18 @@ const language: ILanguage = {
             },
         ],
     },
+    bridge: {
+        info: {
+            title1: 'Incognito Bridge',
+            title2: 'Turn your public coins \ninto privacy coins.',
+            title3:
+                'You can anonymize your Bitcoin, Ether, USDT, and hundreds of thousands of other currencies. Disappear from public ledgers in a matter of minutes.',
+            btn1: 'How it works',
+            btn2: 'Privacy for Bitcoin, Ethereum and more',
+        },
+        shield: 'Shield',
+        unShield: 'Unshield',
+    },
 };
 
 export default language;

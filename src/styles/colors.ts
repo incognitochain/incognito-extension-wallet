@@ -45,6 +45,7 @@ export const COLORS = {
     lightGrey20: '#F7F7F7',
     lightGrey21: '#BCBCBC',
     lightGrey22: '#D2D2D2',
+    lightGrey23: '#797979',
     newGrey: '#8A8A8E',
     toastBackgroundDefault: 'rgba(107, 141, 143, 0.8)',
     toastBackgroundError: 'rgba(255, 101, 47, 0.8)',

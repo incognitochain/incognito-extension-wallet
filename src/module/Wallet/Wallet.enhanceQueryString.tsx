@@ -6,6 +6,7 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { actionSetSelectedToken } from 'src/module/Token';
 import { route as routeSend } from 'src/module/Send';
 import { getURLSearchParams } from 'src/utils';
+import { route as routeBridge } from 'src/module/Bridge';
 
 interface IProps {}
 
@@ -25,9 +26,14 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps) =
                     }
                     break;
                 }
+                case 'bridge': {
+                    history.push(routeBridge.path);
+                    break;
+                }
                 default:
                     break;
             }
+            history.push(routeBridge.path);
         } catch (error) {
             console.debug(error);
         }

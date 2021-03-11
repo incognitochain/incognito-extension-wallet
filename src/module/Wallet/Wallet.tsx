@@ -17,6 +17,7 @@ import { route as routeShield } from 'src/module/Shield';
 import { route as routeWhyShield } from 'src/module/Shield/features/WhyShield';
 import withWallet from './Wallet.enhance';
 import { Styled } from './Wallet.styled';
+import ConnectMetamask from '../../components/ConnectMetamask';
 
 const ListFollowToken = React.memo(() => {
     const listFollowTokenIds = useSelector(followedTokensIdsSelector)(false);
@@ -63,6 +64,7 @@ const Wallet = React.memo(() => {
     return (
         <Styled>
             <Header />
+            <ConnectMetamask />
             <TotalShield />
             <ListFollowToken />
             <AddCoin />

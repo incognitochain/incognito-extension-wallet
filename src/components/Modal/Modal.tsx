@@ -10,6 +10,7 @@ import useOutsideRef from 'src/hooks/useDetectClickOutside';
 import enhance from './Modal.enhance';
 import { modalSelector } from './Modal.selector';
 import { IProps } from './Modal.interface';
+import { isBrowser } from '../../utils';
 
 const Styled = styled.div`
     position: fixed;
@@ -29,6 +30,17 @@ const Styled = styled.div`
         height: ${(props: IGlobalStyle) => props.theme.height};
         background: ${(props: IGlobalStyle) => props.theme.modalBg};
         padding: 30px;
+        overflow: hidden;
+    }
+    .browser-modal-content-wrapper {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        max-width: 413px;
+        background: ${(props: IGlobalStyle) => props.theme.modalBg};
+        border-radius: 30px;
         overflow: hidden;
     }
     .close-icon {
@@ -60,13 +72,17 @@ const Modal = (props: IProps) => {
     const renderModalContent = () => {
         if (isLoadingModal) {
             return (
-                <div className="modal-content-wrapper linear-bg">
+                <div className={`${isBrowser() ? 'browser-modal-content-wrapper' : 'modal-content-wrapper'} linear-bg`}>
                     <div className="flex modal-loading-tx">{modalData}</div>
                 </div>
             );
         }
         return (
-            <div className="modal-content-wrapper" ref={ref} style={customModalStyle}>
+            <div
+                className={`${isBrowser() ? 'browser-modal-content-wrapper' : 'modal-content-wrapper'}`}
+                ref={ref}
+                style={customModalStyle}
+            >
                 {!!title && (
                     <Header
                         onGoBack={() => {

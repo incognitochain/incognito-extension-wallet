@@ -20,6 +20,7 @@ export interface IMergeProps extends TInner, IProps {}
 
 const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & HTMLAttributes<HTMLElement>) => {
     const { canSearch = false, onGoBack, title, customHeader } = props;
+    console.log(canSearch);
     const [state, setState] = React.useState({
         toggleSearch: false,
     });

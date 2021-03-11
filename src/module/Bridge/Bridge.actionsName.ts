@@ -1,0 +1,5 @@
+const BRIDGE_ACTION_NAME = {
+    CHANGE_HEADER_TAB: 'CHANGE_HEADER_TAB',
+};
+
+export default BRIDGE_ACTION_NAME;

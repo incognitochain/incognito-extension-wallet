@@ -72,3 +72,17 @@ declare module '*.module.sass' {
 
 declare module 'wallet-address-validator';
 declare module 'react-detect-offline';
+
+interface Window {
+    ethereum: {
+        isMetaMask?: boolean;
+        selectedAddress?: string;
+        chainId?: string;
+        on: (...args: any) => void;
+        removeListener?: (...args: any[]) => void;
+        autoRefreshOnNetworkChange?: boolean;
+        isConnected: any;
+        request: ({ method, params }: { method: string; params?: any }) => Promise<any>;
+    };
+    web3: any;
+}

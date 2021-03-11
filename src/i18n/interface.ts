@@ -22,6 +22,7 @@ export interface ILanguage {
     disconnect: IDisconnectLanguage;
     keysExplained: IKeysExplainedLanguage;
     hdWallet: IHDWalletLanguage;
+    bridge: IBridgeLanguage;
 }
 
 export interface IHDWalletLanguage {
@@ -436,4 +437,16 @@ export interface IKeysExplainedLanguage {
         title: string;
         text: string;
     }[];
+}
+
+export interface IBridgeLanguage {
+    info: {
+        title1: string;
+        title2: string;
+        title3: string;
+        btn1: string;
+        btn2: string;
+    };
+    shield: string;
+    unShield: string;
 }

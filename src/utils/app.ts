@@ -67,6 +67,13 @@ export const isTab = () => {
     return window.location.hash === '#window';
 };
 
+export const isBrowser = (page = 'bridge') => {
+    // const urlParams: any = getURLSearchParams();
+    // const curPage = urlParams.get('page');
+    // return curPage && curPage === page;
+    return true;
+};
+
 export const openAsTab = (url = 'index.html#window') => {
     if (chrome && chrome.tabs && chrome.tabs.create) {
         chrome.tabs.create({ url: chrome.extension.getURL(url) });
@@ -79,11 +86,11 @@ export const closeCurrentTab = () => {
     }
 };
 
-export const handleClassForTab = () => {
+export const handleClassForTab = (className = 'incognito-extension-tab') => {
     try {
         const root: any = document.querySelector('#root');
-        if (!root.classList.contains('incognito-extension-tab')) {
-            root.classList.add('incognito-extension-tab');
+        if (!root.classList.contains(className)) {
+            root.classList.add(className);
         }
     } catch (error) {
         console.debug(error);
