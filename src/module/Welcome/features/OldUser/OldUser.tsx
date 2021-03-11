@@ -1,10 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ILanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateSelector } from 'src/module/Configs';
 import { AppIcon, Button, Input, Layout } from 'src/components';
 import { IGlobalStyle } from 'src/styles';
+import { actionToggleForgetPassword } from 'src/module/Password';
 import enhance from './OldUser.enhance';
 import { IOldUserProps } from './OldUser.interface';
 
@@ -34,6 +35,11 @@ const OldUser = (props: IOldUserProps) => {
     const { disabled, onChangePass, onNext, onForgot, error } = props;
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = translate.welcome.oldUser;
+    const dispatch = useDispatch();
+    const onForgotPassword = () => {
+        dispatch(actionToggleForgetPassword(true));
+        onForgot();
+    };
     return (
         <Layout header="">
             <Styled>
@@ -60,7 +66,7 @@ const OldUser = (props: IOldUserProps) => {
                     />
                     <Button disabled={disabled} onClick={onNext} title={error || dictionary.btn} type="submit" />
                 </form>
-                <div onClick={onForgot} className="forgot-pass">
+                <div onClick={onForgotPassword} className="forgot-pass">
                     {dictionary.forgotPass}
                 </div>
             </Styled>

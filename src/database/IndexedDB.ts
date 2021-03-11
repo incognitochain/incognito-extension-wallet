@@ -88,6 +88,13 @@ class IndexedDb {
         console.log('Deleted Data', id);
         return id;
     }
+
+    public async clearCache(tableName: string) {
+        const tx = this.db.transaction(tableName, 'readwrite');
+        const store = tx.objectStore(tableName);
+        let clear = await store.clear();
+        return clear;
+    }
 }
 
 export default IndexedDb;

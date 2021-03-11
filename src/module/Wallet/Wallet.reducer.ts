@@ -1,3 +1,4 @@
+import { ACTION_INIT_APP_STATE } from 'src/redux/constants';
 import { WalletInstance } from 'incognito-js/build/web/browser';
 import cloneDeep from 'lodash/cloneDeep';
 import { persistReducer } from 'redux-persist';
@@ -40,6 +41,9 @@ const walletReducer = (
     },
 ) => {
     switch (action.type) {
+        case ACTION_INIT_APP_STATE: {
+            return { ...initialState };
+        }
         case ACTION_LOADED_WALLET: {
             const { wallet, mainnet, walletId } = action.payload;
             const field = mainnet ? 'mainnet' : 'testnet';

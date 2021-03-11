@@ -11,10 +11,17 @@ import {
     ACTION_CREATE_PASSWORD,
     ACTION_LOGIN,
     ACTION_LOGOUT,
-} from 'src/module/Password/Password.events';
+    ACTION_TOGGLE_FORGET_PASSWORD,
+} from './Password.events';
+import { isForgetPasswordSelector } from './Password.selector';
 
 const loginEvent = (payload: string) => ({
     type: ACTION_LOGIN,
+    payload,
+});
+
+export const actionToggleForgetPassword = (payload: boolean) => ({
+    type: ACTION_TOGGLE_FORGET_PASSWORD,
     payload,
 });
 
@@ -27,8 +34,12 @@ export const actionLogin = (newPass: string) => async (dispatch: Dispatch, getSt
     const state: IRootState = getState();
     const walletId = walletIdSelector(state);
     const chainURL = chainURLSelector(state);
+    const isForgetPassword = isForgetPasswordSelector(state);
     if (!walletId) {
         throw new Error(`Can't not found wallet id`);
+    }
+    if (isForgetPassword) {
+        await dispatch(actionToggleForgetPassword(false));
     }
     await loadWallet(walletId, newPass);
     dispatch(loginEvent(newPass));
