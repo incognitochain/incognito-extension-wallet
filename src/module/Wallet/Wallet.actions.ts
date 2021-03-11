@@ -25,6 +25,7 @@ import {
     ACTION_FETCHING_REMOVE_MASTER_KEY,
     ACTION_FETCHED_REMOVE_MASTER_KEY,
     ACTION_FETCH_FAIL_REMOVE_MASTER_KEY,
+    ACTION_REMOVE_MASTERLESS,
 } from './Wallet.constant';
 import { importWallet, initWallet, loadWallet } from './Wallet.utils';
 import {
@@ -33,6 +34,7 @@ import {
     walletIdSelector,
     walletSelector,
     isMasterlessSelector,
+    masterlessIdSelector,
 } from './Wallet.selector';
 import { IWalletReducer } from './Wallet.interface';
 import { actionToggleForgetPassword } from '../Password';
@@ -45,6 +47,53 @@ export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () =>
     await updateWallet(wallet, walletId, pass);
     await dispatch(actionSetListAccount(wallet.masterAccount.getAccounts()));
     return wallet;
+};
+
+export const actionRemoveMasterless = (payload: { mainnet: boolean }) => ({
+    type: ACTION_REMOVE_MASTERLESS,
+    payload,
+});
+
+export const checkListAccountExistMasterless = (listAccount: AccountInstance[]) => async (
+    dispatch: Dispatch | any,
+    getState: () => IRootState,
+) => {
+    try {
+        if (!listAccount) {
+            return;
+        }
+        const state = getState();
+        const masterlessId: number = masterlessIdSelector(state);
+        const mainnet: boolean = isMainnetSelector(state);
+        if (masterlessId === -1) {
+            return;
+        }
+        const pass: string = passwordSelector(state);
+        let masterless: WalletInstance | undefined = await loadWallet(masterlessId, pass);
+        if (!masterless) {
+            return;
+        }
+        const accounts = masterless.masterAccount.getAccounts();
+        accounts.forEach((account: AccountInstance) => {
+            const index = listAccount.findIndex((i) => isEqual(i.key.keySet.privateKey, account.key.keySet.privateKey));
+            if (index > -1) {
+                masterless?.masterAccount.removeAccount(account.name);
+            }
+        });
+        const newAccounts = masterless.masterAccount.getAccounts();
+        if (newAccounts.length === 0) {
+            let removed = await removeWallet(masterlessId);
+            if (removed) {
+                dispatch(actionRemoveMasterless({ mainnet }));
+                dispatch(actionRemoveMasterKey({ walletId: masterlessId }));
+            }
+        } else {
+            await dispatch(actionUpdateMasterKey({ walletId: masterlessId, wallet: masterless, isMasterless: true }));
+            await updateWallet(masterless, masterlessId, pass);
+        }
+    } catch (error) {
+        console.debug('ERROR', error);
+    }
 };
 
 export const actionLoadedWallet = (payload: { wallet: WalletInstance | any; mainnet: boolean; walletId: number }) => ({
@@ -88,8 +137,8 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
             throw new Error(error.canNotLoadWallet);
         }
         const listAccount: AccountInstance[] = [...wallet.masterAccount.getAccounts()];
+        const isMasterless: boolean = isMasterlessSelector(state)(walletId);
         if (walletId > -1 && typeof wallet !== 'undefined') {
-            const isMasterless: boolean = isMasterlessSelector(state)(walletId);
             if (!isMasterless) {
                 await wallet.sync();
             }
@@ -122,8 +171,10 @@ export const actionHandleLoadWallet = (accountName?: string, defaultWalletId?: n
         }
         wallet = await loadWallet(walletId, pass);
         await dispatch(actionUpdateWallet(wallet));
-        const isMasterless = isMasterlessSelector(state)(walletId);
         await dispatch(actionUpdateMasterKey({ wallet, walletId, isMasterless }));
+        if (!isMasterless) {
+            await checkListAccountExistMasterless(newList)(dispatch, getState);
+        }
     } catch (error) {
         throw error;
     }

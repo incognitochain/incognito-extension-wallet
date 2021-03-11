@@ -9,6 +9,7 @@ import { useMasterKeyWithKeychains } from 'src/hooks/useMasterKeyWithKeychains';
 import MasterKeyItem from 'src/module/HDWallet/features/MasterKeyItem';
 import { actionHandleSwitchAccount } from 'src/module/Account/Account.actions';
 import { isAccountSelectedSelector } from 'src/module/Account/Account.selector';
+import { useHistory } from 'react-router';
 
 const Styled = styled.div``;
 
@@ -17,6 +18,7 @@ const SelectAccount = React.memo(() => {
     const dispatch = useDispatch();
     const [listMasterKeyWithKeychains] = useMasterKeyWithKeychains();
     const isAccountSelected = useSelector(isAccountSelectedSelector);
+    const history = useHistory();
     const factories = listMasterKeyWithKeychains.map((item) => {
         const result = {
             masterKeyId: item.walletId,
@@ -35,6 +37,7 @@ const SelectAccount = React.memo(() => {
     const handleSelectAccount = async (account: AccountInstance, walletId: number) => {
         try {
             await dispatch(actionHandleSwitchAccount(account, walletId));
+            history.goBack();
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -54,7 +57,6 @@ const SelectAccount = React.memo(() => {
                         key={item.masterKeyName}
                         data={{ masterKeyName: item.masterKeyName, listAccount: item.listAccount }}
                         onSelectedItem={(account: AccountInstance) => handleSelectAccount(account, item.masterKeyId)}
-                        showTooltip
                     />
                 ))}
             </div>
