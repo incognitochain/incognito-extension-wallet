@@ -58,6 +58,8 @@ export const COLORS = {
     colorBlue: '#5995F0',
     green2: '#64A121',
     green3: '#018775',
+    colorOrange: '#FF9500',
+    colorRed: '#FF3B30',
 
     mottoGrey: '#8c9c9d',
     colorGrey: '#F3F3F3',

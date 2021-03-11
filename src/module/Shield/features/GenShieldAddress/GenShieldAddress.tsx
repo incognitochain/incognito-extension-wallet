@@ -60,12 +60,13 @@ const GenShieldAddress = (props: IMergedProps & any) => {
                     hook={
                         <div className="hook">
                             <p>
-                                {title2} <span className="fw-bold">{remainTime}</span>
+                                <span className="sub-text">{title2}</span>
+                                <span className="fw-medium">{remainTime}</span>
                             </p>
                             {!!min && min !== '0' && (
                                 <>
                                     <p>
-                                        {title3}{' '}
+                                        <span className="sub-text">{title3}</span>{' '}
                                         <span className="fw-bold">{`${min} ${
                                             selectedPrivacy.symbol || selectedPrivacy.pSymbol
                                         }`}</span>

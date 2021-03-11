@@ -87,7 +87,7 @@ const AccountItem = (props: IProps) => {
                     {hasCopy && <CopyIcon onClick={handleCopy} />}
                 </div>
             </div>
-            <p className="decs ellipsis">{desc}</p>
+            <p className="decs ellipsis sub-text">{desc}</p>
         </Styled>
     );
 };

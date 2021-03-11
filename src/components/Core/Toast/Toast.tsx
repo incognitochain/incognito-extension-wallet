@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { COLORS } from 'src/styles';
+import { IGlobalStyle } from 'src/styles';
 import { CloseIcon } from 'src/components/Icons';
 import { toastSelector } from './Toast.selector';
 import { TOAST_CONFIGS_CLASSNAME } from './Toast.reducer';
@@ -22,15 +22,15 @@ const Styled = styled.div`
     &.show {
         visibility: visible;
         animation: fadeInDown 0.5s, fadeOutUp 0.5s 4s;
-        background-color: ${COLORS.colorGreyLight};
+        background-color: ${(props: IGlobalStyle) => props.theme.toastBg};
     }
     .close-icon {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 7px;
+        right: 7px;
         cursor: pointer;
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
     }
     .scroll-view {
         max-height: 100%;

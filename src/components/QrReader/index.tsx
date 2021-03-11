@@ -13,7 +13,7 @@ import AppReady from 'src/components/AppReady';
 import { IGeneralLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { themeSelector } from 'src/module/Setting';
-import { IGlobalStyle } from 'src/styles';
+import { IGlobalStyle, COLORS } from 'src/styles';
 
 const Styled = styled.div`
     background: ${(props: IGlobalStyle) => props.theme.modalBg};
@@ -25,8 +25,8 @@ const Styled = styled.div`
         width: 16px;
         height: 16px;
         position: absolute;
-        top: 15px;
-        right: 20px;
+        top: 10px;
+        right: 10px;
     }
     .btn-container {
         margin-top: 30px;
@@ -35,6 +35,7 @@ const Styled = styled.div`
         width: 100%;
         min-height: 192.75px;
         background-color: ${(props: IGlobalStyle) => props.theme.button};
+        border: 1px solid ${COLORS.colorKeyGrey};
     }
 `;
 

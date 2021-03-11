@@ -31,12 +31,12 @@ const getStatusDataShield = (history: TxBridgeHistoryModel) => {
         if (STATUS_CODE_SHIELD_DECENTRALIZED.COMPLETE === status) {
             statusColor = COLORS.green;
         } else {
-            statusColor = COLORS.colorGreyBold;
+            statusColor = COLORS.colorOrange;
         }
     } else if (STATUS_CODE_SHIELD_CENTRALIZED.COMPLETE.includes(status)) {
         statusColor = COLORS.green;
     } else {
-        statusColor = COLORS.colorGreyBold;
+        statusColor = COLORS.colorOrange;
     }
     return { statusColor, statusMessage };
 };
@@ -47,13 +47,15 @@ const getStatusDataUnShield = (history: any) => {
     if (history?.isDecentralized) {
         if (STATUS_CODE_UNSHIELD_DECENTRALIZED.COMPLETE === status) {
             statusColor = COLORS.green;
+        } else if (STATUS_CODE_UNSHIELD_DECENTRALIZED.FAILED === status) {
+            statusColor = COLORS.colorRed;
         } else {
-            statusColor = COLORS.colorGreyBold;
+            statusColor = COLORS.colorOrange;
         }
     } else if (STATUS_CODE_UNSHIELD_CENTRALIZED.COMPLETE === status) {
         statusColor = COLORS.green;
     } else {
-        statusColor = COLORS.colorGreyBold;
+        statusColor = COLORS.colorOrange;
     }
     return { statusColor, statusMessage };
 };
@@ -74,6 +76,7 @@ export const getStatusData = (history: any) => {
         case STATUS_TEXT.PENDING:
         case TX_STATUS.SUCCESS:
             statusMessage = 'Pending';
+            statusColor = COLORS.colorOrange;
             break;
         case STATUS_TEXT.SUCCESS:
         case TX_STATUS.CONFIRMED:
@@ -83,9 +86,11 @@ export const getStatusData = (history: any) => {
         case STATUS_TEXT.FAILED:
         case TX_STATUS.FAILED:
             statusMessage = 'Failed';
+            statusColor = COLORS.colorRed;
             break;
         case STATUS_TEXT.EXPIRED:
             statusMessage = 'Expired';
+            statusColor = COLORS.colorOrange;
             break;
         default:
             statusMessage = '';

@@ -38,7 +38,6 @@ const Styled = styled.div`
         max-width: 100%;
     }
     .label {
-        margin-bottom: 30px;
         text-align: center;
     }
 `;
