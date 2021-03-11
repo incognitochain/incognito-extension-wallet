@@ -12,6 +12,7 @@ import {
     ACTION_FETCHING_REMOVE_MASTER_KEY,
     ACTION_FETCHED_REMOVE_MASTER_KEY,
     ACTION_FETCH_FAIL_REMOVE_MASTER_KEY,
+    ACTION_REMOVE_MASTERLESS,
 } from './Wallet.constant';
 import { IWalletReducer } from './Wallet.interface';
 
@@ -120,6 +121,21 @@ const walletReducer = (
             return {
                 ...state,
                 remove: false,
+            };
+        }
+        case ACTION_REMOVE_MASTERLESS: {
+            const { mainnet } = action.payload;
+            const field = mainnet ? 'mainnet' : 'testnet';
+            const walletState = state[field];
+            const { ids, masterlessId } = walletState;
+            return {
+                ...state,
+                remove: false,
+                [field]: {
+                    ...walletState,
+                    ids: [...ids].filter((item: number) => item !== masterlessId),
+                    masterlessId: -1,
+                },
             };
         }
         default:
