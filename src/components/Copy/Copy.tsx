@@ -52,7 +52,7 @@ const Copy: React.FunctionComponent<IProps> = (props) => {
     };
     return (
         <Styled>
-            <p className="text">{ellipsisCenter({ str: text, limit: 12 })}</p>
+            <p className="text">{ellipsisCenter({ str: text, limit: 11 })}</p>
             <div className="btn-copy-container">
                 <Button title={copied ? `Copied` : `Copy`} onClick={handleCopyData} />
             </div>
