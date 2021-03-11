@@ -3,21 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import styled from 'styled-components';
 import { actionToggleToast, Header, TOAST_CONFIGS } from 'src/components';
-import { IAccountLanguage, IGeneralLanguage } from 'src/i18n';
+import { IAccountLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { useMasterKeyWithKeychains } from 'src/hooks/useMasterKeyWithKeychains';
 import MasterKeyItem from 'src/module/HDWallet/features/MasterKeyItem';
-import { useHistory } from 'react-router';
 import { actionHandleSwitchAccount } from 'src/module/Account/Account.actions';
-import { isAccountSelectedSelector } from '../..';
+import { isAccountSelectedSelector } from 'src/module/Account/Account.selector';
 
 const Styled = styled.div``;
 
 const SelectAccount = React.memo(() => {
     const tsAccount: IAccountLanguage = useSelector(translateByFieldSelector)('account');
-    const ts: IGeneralLanguage = useSelector(translateByFieldSelector)('general');
     const dispatch = useDispatch();
-    const history = useHistory();
     const [listMasterKeyWithKeychains] = useMasterKeyWithKeychains();
     const isAccountSelected = useSelector(isAccountSelectedSelector);
     const factories = listMasterKeyWithKeychains.map((item) => {
@@ -38,14 +35,6 @@ const SelectAccount = React.memo(() => {
     const handleSelectAccount = async (account: AccountInstance, walletId: number) => {
         try {
             await dispatch(actionHandleSwitchAccount(account, walletId));
-            history.goBack();
-            dispatch(
-                actionToggleToast({
-                    toggle: true,
-                    value: `${ts.switched} ${account.name}`,
-                    type: TOAST_CONFIGS.success,
-                }),
-            );
         } catch (error) {
             dispatch(
                 actionToggleToast({
@@ -65,6 +54,7 @@ const SelectAccount = React.memo(() => {
                         key={item.masterKeyName}
                         data={{ masterKeyName: item.masterKeyName, listAccount: item.listAccount }}
                         onSelectedItem={(account: AccountInstance) => handleSelectAccount(account, item.masterKeyId)}
+                        showTooltip
                     />
                 ))}
             </div>
