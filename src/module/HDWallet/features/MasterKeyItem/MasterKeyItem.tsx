@@ -45,7 +45,7 @@ const MasterKeyItem = React.memo((props: IProps) => {
     const { data, onSelectedItem, showRemoveItem, onRemoveItem } = props;
     const { masterKeyName, listAccount } = data;
     const theme = useSelector(themeSelector);
-    const [toggle, setToggle] = React.useState(false);
+    const [toggle, setToggle] = React.useState(true);
     const handleToggle = () => setToggle(!toggle);
     const onSelectedAddress = async (item: IItem) => {
         if (typeof onSelectedItem === 'function') {
