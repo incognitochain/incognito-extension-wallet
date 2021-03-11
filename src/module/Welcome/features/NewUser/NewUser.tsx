@@ -40,10 +40,10 @@ const NewUser = (props: IMergeProps & any) => {
     const translate: ILanguage = useSelector(translateSelector);
     const dictionary = isReset ? translate.welcome.forgotPass : translate.welcome.newUser;
     const [validatePassword] = useValidator({
-        validator: [validator.required, validator.minLength(10)],
+        validator: [validator.required, validator.minLength(10), validator.maxLength(32)],
     });
     const [validateCfmPassword] = useValidator({
-        validator: [validator.required, validator.minLength(10)],
+        validator: [validator.required, validator.minLength(10), validator.maxLength(32)],
     });
     return (
         <Styled className="scroll-view">
@@ -57,7 +57,7 @@ const NewUser = (props: IMergeProps & any) => {
                     name={FORM_CONFIGS.password}
                     componentProps={{
                         placeholder: dictionary.createPass,
-                        maxLength: 32,
+                        maxLength: 33,
                     }}
                     inputType={INPUT_FIELD.password}
                     validate={[...validatePassword]}
@@ -67,7 +67,7 @@ const NewUser = (props: IMergeProps & any) => {
                     name={FORM_CONFIGS.confirmPassword}
                     componentProps={{
                         placeholder: dictionary.confirmCreatePass,
-                        maxLength: 32,
+                        maxLength: 33,
                     }}
                     inputType={INPUT_FIELD.password}
                     validate={[...validateCfmPassword]}

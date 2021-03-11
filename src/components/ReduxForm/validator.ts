@@ -290,6 +290,7 @@ const validateAlphaNumericText = (message?: string) => (value: any) => {
 const validator = {
     validateAlphaNumericText,
     minLength,
+    maxLength,
     required,
     maxValue,
     minValue,
