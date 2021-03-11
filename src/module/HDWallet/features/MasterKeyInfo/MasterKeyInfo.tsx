@@ -26,6 +26,9 @@ const Styled = styled.div`
     .icons {
         justify-content: flex-end;
         margin-top: 10px;
+        .icon {
+            margin-left: 10px;
+        }
     }
 `;
 

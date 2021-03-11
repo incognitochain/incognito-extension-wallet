@@ -11,12 +11,12 @@ const Styled = styled.div`
         max-width: 190px;
     }
     .shield-address {
-        margin-top: 50px;
+        margin-top: 26px;
         > p {
             text-align: center;
         }
         .qrcode-container {
-            margin: 30px 0;
+            margin: 15px 0px 30px 0px;
         }
     }
     .remove-history-container .trash-bin-icon {

@@ -19,6 +19,8 @@ import withWalletBalance from 'src/module/Wallet/Wallet.enhanceBalance';
 import { ERROR_MESSAGE } from 'src/constants/error';
 import withBalance from 'src/module/Account/Acount.enhanceBalance';
 import { ISelectedPrivacy, selectedPrivacySelector } from 'src/module/Token';
+import { darkModeSelector } from 'src/module/Setting';
+import { COLORS } from 'src/styles';
 import withSend, { TInner as TInnerSend } from './Send.enhanceSend';
 import withValAddress, { TInner as TInnerAddress } from './Send.enhanceAddressValidator';
 import withValAmount, { TInner as TInnerAmount } from './Send.enhanceAmountValidator';
@@ -52,6 +54,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
     const { clearForceSendData, clearCurrentRequest, handleSendAnonymously, handleUnShieldCrypto }: IMergeProps = props;
     const history = useHistory();
     const dispatch = useDispatch();
+    const darkMode = useSelector(darkModeSelector);
     const handleStandardizedAddress = (value: string) => standardizedAddress(value);
     const selectedPrivacy: ISelectedPrivacy = useSelector(selectedPrivacySelector);
     const { disabledForm, isSend, isUnShield }: ISendData = useSelector(sendDataSelector);
@@ -94,6 +97,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IMergePro
                         filterBySelectedPrivacy
                     />
                 ),
+                customModalStyle: {
+                    backgroundColor: darkMode && COLORS.black2,
+                },
             }),
         );
     };
