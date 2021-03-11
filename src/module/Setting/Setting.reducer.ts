@@ -31,7 +31,7 @@ const initialState: ISettingReducer = {
     },
     decimalDigits: true,
     isDev: false,
-    darkMode: false,
+    darkMode: true,
     theme: DEFAULT_THEME,
 };
 
