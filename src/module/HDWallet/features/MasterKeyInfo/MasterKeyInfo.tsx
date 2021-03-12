@@ -8,7 +8,6 @@ import { MnemonicQRCodeIcon } from 'src/components/Mnemonic';
 import { removingWalletSelector, switchingWalletSelector } from 'src/module/Wallet/Wallet.selector';
 import { AccountInstance } from 'incognito-js/build/web/browser';
 import { useHistory } from 'react-router';
-import { route as routeImportAccount } from 'src/module/Account/features/ImportAccount';
 import { route as routeBackupAccount } from 'src/module/Account/features/BackupAccount';
 import enhance, { IMergeProps } from './MasterKeyInfo.enhance';
 
@@ -89,11 +88,6 @@ const MasterKey = React.memo((props: IMergeProps) => {
     const renderMasterKey = () => {
         if (isMasterless) {
             const factories = [
-                {
-                    title: dictionary.importTitle,
-                    desc: dictionary.importDesc,
-                    onClickItem: () => history.push(routeImportAccount),
-                },
                 {
                     title: dictionary.backupTitle,
                     desc: dictionary.backupDesc,

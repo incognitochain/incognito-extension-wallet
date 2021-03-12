@@ -154,9 +154,9 @@ const language: ILanguage = {
             keychainInvalid: 'Please try again with a valid private key.',
         },
         success: {
-            create: 'Create keychain successful.',
-            import: 'Import keychain successful.',
-            remove: 'Remove keychain successful.',
+            create: 'Keychain successfully created.',
+            import: 'Import successful.',
+            remove: 'Keychain removed.',
         },
         general: {
             placeholderName: 'Enter a name for your keychain',
@@ -402,9 +402,9 @@ const language: ILanguage = {
             hiddenText: `Click to reveal.<br /> Back it up if you haven’t!`,
         },
         success: {
-            create: 'Creat masterkey successful',
-            import: 'Import masterkey successull',
-            remove: 'Remove masterkey successful.',
+            create: 'Master key successfully created.',
+            import: 'Import successful.',
+            remove: 'Master key removed.',
         },
     },
     modal: {
