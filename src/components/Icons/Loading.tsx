@@ -1,4 +1,5 @@
 import React from 'react';
+import { COLORS } from 'src/styles';
 import styled from 'styled-components';
 
 export interface ILoadingIconProps {
@@ -29,7 +30,7 @@ const Styled: any = styled.div`
     div.spinner div {
         width: 9%;
         height: 28%;
-        background: #80858e;
+        background: ${COLORS.white};
         position: absolute;
         left: 49%;
         top: 43%;
@@ -42,7 +43,7 @@ const Styled: any = styled.div`
             opacity: 1;
         }
         to {
-            opacity: 0.1;
+            opacity: 0;
         }
     }
     div.spinner div.bar1 {

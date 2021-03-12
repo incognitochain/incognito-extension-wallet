@@ -10,11 +10,11 @@ const isSafeInteger = (number: number) => Math.abs(number) <= Number.MAX_SAFE_IN
 
 const required = (value: any) => (isEmpty(value) ? 'Required' : undefined);
 
-const maxLength = (max: number) => (value: string) =>
-    value && value.length > max ? `Must be ${max} characters or less` : undefined;
+const maxLength = (max: number, message?: string) => (value: string) =>
+    value && value.length > max ? message || `Must be ${max} characters or less` : undefined;
 
-const minLength = (min: number) => (value: string) =>
-    value && value.length < min ? `Must be ${min} characters or more` : undefined;
+const minLength = (min: number, message?: string) => (value: string) =>
+    value && value.length < min ? message || `Must be ${min} characters or more` : undefined;
 
 const isInteger = (value: string) =>
     value && !new BigNumber(value).isInteger() ? 'Must be a integer number' : undefined;

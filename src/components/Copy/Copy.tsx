@@ -7,6 +7,7 @@ import { ellipsisCenter } from 'src/utils';
 
 interface IProps {
     text: string;
+    ellipsis?: boolean;
 }
 
 const Styled = styled.div`
@@ -23,6 +24,9 @@ const Styled = styled.div`
         margin-right: 15px;
         color: ${(props: IGlobalStyle) => props.theme.copyTextButton};
         padding-left: 15px;
+        &.ellipsis {
+            max-width: calc(100% - 70px);
+        }
     }
     .btn-container {
         height: 36px;
@@ -39,7 +43,7 @@ const Styled = styled.div`
 `;
 
 const Copy: React.FunctionComponent<IProps> = (props) => {
-    const { text } = props;
+    const { text, ellipsis = true } = props;
     const [copied, setCopied] = React.useState(false);
     const handleCopyData = (e: any) => {
         try {
@@ -52,7 +56,9 @@ const Copy: React.FunctionComponent<IProps> = (props) => {
     };
     return (
         <Styled>
-            <p className="text">{ellipsisCenter({ str: text, limit: 11 })}</p>
+            <p className={`text ${!ellipsis ? 'ellipsis' : ''}`}>
+                {ellipsis ? ellipsisCenter({ str: text, limit: 11 }) : text}{' '}
+            </p>
             <div className="btn-copy-container">
                 <Button title={copied ? `Copied` : `Copy`} onClick={handleCopyData} />
             </div>

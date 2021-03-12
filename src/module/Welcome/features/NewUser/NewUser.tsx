@@ -1,10 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { ILanguage } from 'src/i18n';
+import { useDispatch, useSelector } from 'react-redux';
+import { IWelcomeLanguage } from 'src/i18n';
 import styled from 'styled-components';
-import { translateSelector } from 'src/module/Configs';
+import { translateByFieldSelector } from 'src/module/Configs';
 import { AppIcon, Button, Header } from 'src/components';
-import { Field } from 'redux-form';
+import { Field, reset } from 'redux-form';
 import { InputField, validator } from 'src/components/ReduxForm';
 import { INPUT_FIELD } from 'src/components/ReduxForm/InputField';
 import { ACTION_TYPES } from 'src/module/HDWallet';
@@ -36,15 +36,27 @@ const Styled = styled.div`
 `;
 
 const NewUser = (props: IMergeProps & any) => {
+    const dispatch = useDispatch();
     const { isReset, disabled, onBack, handleSubmitForm, error }: IMergeProps = props;
-    const translate: ILanguage = useSelector(translateSelector);
-    const dictionary = isReset ? translate.welcome.forgotPass : translate.welcome.newUser;
+    const { forgotPass, error: errorTs, newUser }: IWelcomeLanguage = useSelector(translateByFieldSelector)('welcome');
+    const dictionary = isReset ? forgotPass : newUser;
     const [validatePassword] = useValidator({
-        validator: [validator.required, validator.minLength(10), validator.maxLength(32)],
+        validator: [
+            validator.required,
+            validator.minLength(10, errorTs.passwordLength),
+            validator.maxLength(32, errorTs.passwordLength),
+        ],
     });
     const [validateCfmPassword] = useValidator({
-        validator: [validator.required, validator.minLength(10), validator.maxLength(32)],
+        validator: [
+            validator.required,
+            validator.minLength(10, errorTs.passwordLength),
+            validator.maxLength(32, errorTs.passwordLength),
+        ],
     });
+    React.useEffect(() => {
+        dispatch(reset(FORM_CONFIGS.formName));
+    }, []);
     return (
         <Styled className="scroll-view">
             <Header title=" " onGoBack={onBack} />
