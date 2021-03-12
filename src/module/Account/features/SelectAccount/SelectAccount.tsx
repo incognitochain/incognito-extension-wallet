@@ -10,6 +10,8 @@ import MasterKeyItem from 'src/module/HDWallet/features/MasterKeyItem';
 import { actionHandleSwitchAccount } from 'src/module/Account/Account.actions';
 import { isAccountSelectedSelector } from 'src/module/Account/Account.selector';
 import { useHistory } from 'react-router';
+import { actionToggleModal } from 'src/components/Modal';
+import Loading from 'src/components/Icons/Loading';
 
 const Styled = styled.div``;
 
@@ -36,6 +38,7 @@ const SelectAccount = React.memo(() => {
     });
     const handleSelectAccount = async (account: AccountInstance, walletId: number) => {
         try {
+            await dispatch(actionToggleModal({ isLoadingModal: true, data: <Loading center /> }));
             await dispatch(actionHandleSwitchAccount(account, walletId));
             history.goBack();
         } catch (error) {
@@ -46,6 +49,8 @@ const SelectAccount = React.memo(() => {
                     type: TOAST_CONFIGS.error,
                 }),
             );
+        } finally {
+            await dispatch(actionToggleModal({}));
         }
     };
     return (

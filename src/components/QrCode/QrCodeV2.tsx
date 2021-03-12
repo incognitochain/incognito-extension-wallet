@@ -1,15 +1,15 @@
-import copy from 'copy-to-clipboard';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { COLORS } from 'src/styles';
+import { COLORS, IGlobalStyle } from 'src/styles';
+import { themeSelector } from 'src/module/Setting';
 import QrCode from './QrCode';
 import { CopyIcon, QrCodeIcon } from '../Icons';
 import { actionToggleModal } from '../Modal';
 
 const Styled = styled.div`
     .hook {
-        background-color: ${COLORS.colorGrey};
+        background: ${(props: IGlobalStyle) => props.theme.body};
         border: solid 0.5px ${COLORS.colorGreyBold};
         border-radius: 11px;
         padding: 10px;
@@ -24,6 +24,7 @@ const Styled = styled.div`
 
 const QrCodeV2 = ({ title, desc }: { title: string; desc: string }) => {
     const dispatch = useDispatch();
+    const theme = useSelector(themeSelector);
     const handleShowQr = () =>
         dispatch(
             actionToggleModal({
@@ -33,7 +34,7 @@ const QrCodeV2 = ({ title, desc }: { title: string; desc: string }) => {
             }),
         );
     return (
-        <Styled className="m-b-30">
+        <Styled theme={theme} className="m-b-30">
             <p className="fw-medium fs-medium ellipsis m-b-10">{title}</p>
             <div className="hook">
                 <p className="sub-text m-b-10">{desc}</p>

@@ -4,7 +4,8 @@ import { ArrowDownIcon, ArrowUpIcon, TrashBinIcon } from 'src/components/Icons';
 import { Link } from 'react-router-dom';
 import { IGlobalStyle } from 'src/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting/Setting.selector';
 import { actionShowTooltip } from 'src/module/Tooltip';
 import { IGeneralLanguage } from 'src/i18n';
 

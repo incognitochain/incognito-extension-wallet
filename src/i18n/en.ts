@@ -123,7 +123,7 @@ const language: ILanguage = {
             title: 'Back up',
             desc: 'Backup your private keys',
             headerTitle: 'Backup your private keys',
-            copyAll: 'Copy all',
+            copyAll: 'Copy all keys',
             copied: 'Copied',
         },
         accountDetail: {
@@ -337,6 +337,9 @@ const language: ILanguage = {
             btn: 'Go Incognito',
             forgotPass: 'Forgot your password?',
         },
+        error: {
+            passwordLength: 'Password must be between 10 and 33 characters long.',
+        },
     },
     password: {
         enterPasswordInput: 'Enter your password',
@@ -385,9 +388,9 @@ const language: ILanguage = {
         error: {
             invalidMnemonic: 'That’s not quite right',
             invalidMasterKeyName: 'Master key names must be alphanumeric. Please choose another.',
-            existMasterKeyName: 'Master key names is exist',
+            existMasterKeyName: 'You already have a master key with this name. Please try another.',
             existMasterKeyMnemonic: 'Master key mnemonic is exist',
-            dupMasterless: 'Master key names is not allowed',
+            dupMasterless: 'Please choose another name.',
             canNotCreateMasterKey: 'Master key can be created',
             canNotFoundMasterKey: 'Master key not found',
             canNotRemoveMasterKey: 'Master key can be removed',

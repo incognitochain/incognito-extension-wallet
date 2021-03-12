@@ -409,6 +409,7 @@ export interface IWelcomeLanguage {
     newUser: INewUserLanguage;
     oldUser: IOldUserLanguage;
     forgotPass: IForgotPassLanguage;
+    error: { passwordLength: string };
 }
 
 export interface IPasswordLanguage {

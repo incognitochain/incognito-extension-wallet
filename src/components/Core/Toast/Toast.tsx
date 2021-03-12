@@ -33,7 +33,8 @@ const Styled = styled.div`
         height: 12px;
     }
     .scroll-view {
-        max-height: 100%;
+        max-height: 50px;
+        padding-bottom: unset;
     }
 `;
 

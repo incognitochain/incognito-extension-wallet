@@ -17,9 +17,12 @@ import { walletIdSelector } from 'src/module/Wallet';
 import { actionToggleModal } from 'src/components/Modal';
 
 const Styled = styled.div`
-    .qrcode-icon {
-        margin-left: unset;
-        margin-right: 15px;
+    .block-actions .qrcode-icon {
+        min-width: 20px;
+        margin-left: 10px;
+    }
+    .btn-container {
+        border-radius: 10px;
     }
 `;
 
@@ -75,7 +78,7 @@ const Backup = React.memo(() => {
     const handleShowQrBackup = () =>
         dispatch(
             actionToggleModal({
-                data: <QrCode qrCodeProps={{ value: backupData }} />,
+                data: <QrCode copyProps={{ ellipsis: false }} qrCodeProps={{ value: backupData }} />,
                 closeable: true,
                 title: backup.headerTitle,
             }),
@@ -87,8 +90,8 @@ const Backup = React.memo(() => {
                 <MasterKey />
                 <Masterless />
                 <div className="block-actions flex">
-                    <QrCodeIcon onClick={handleShowQrBackup} />
                     <Button title={copied ? backup.copied : backup.copyAll} onClick={handleCopyAll} />
+                    <QrCodeIcon onClick={handleShowQrBackup} />
                 </div>
             </div>
         </Styled>

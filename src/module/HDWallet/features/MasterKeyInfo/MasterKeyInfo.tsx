@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { IHDWalletLanguage } from 'src/i18n';
 import styled from 'styled-components';
 import { translateByFieldSelector } from 'src/module/Configs';
-import { Mnemonic, CopyIcon, KeyIcon, Header, LoadingIcon, TrashBinIcon } from 'src/components';
+import { Mnemonic, CopyIcon, KeyIcon, Header, LoadingIcon, TrashBinIcon, WarningIcon } from 'src/components';
 import { MnemonicQRCodeIcon } from 'src/components/Mnemonic';
 import { removingWalletSelector, switchingWalletSelector } from 'src/module/Wallet/Wallet.selector';
 import { AccountInstance } from 'incognito-js/build/web/browser';
@@ -30,16 +30,34 @@ const Styled = styled.div`
             margin-left: 10px;
         }
     }
+    .warning-block {
+        position: relative;
+        .icon {
+            position: absolute;
+            margin-left: unset;
+            top: -1px;
+        }
+    }
 `;
 
 const ListKeychain = React.memo(
-    ({ keychains, onClickKey }: { onClickKey: (account: AccountInstance) => void; keychains: AccountInstance[] }) => {
+    ({
+        keychains,
+        onClickKey,
+        isMasterless,
+    }: {
+        onClickKey: (account: AccountInstance) => void;
+        keychains: AccountInstance[];
+        isMasterless?: boolean;
+    }) => {
         const translate: IHDWalletLanguage = useSelector(translateByFieldSelector)('hdWallet');
         const dictionary = translate.info;
         return (
             <div className="list-keychain">
-                <p className="fw-medium fs-medium">{dictionary.keychains}</p>
-                <div className="keychains">
+                <p className="fw-medium fs-medium">
+                    {isMasterless ? dictionary.masterlessKeychains : dictionary.keychains}
+                </p>
+                <div className="keychains p-l-15">
                     {keychains.map((item) => (
                         <div key={item.name} className="keychain flex">
                             <p className="keychain-name fw-medium fs-medium ellipsis">{item.name}</p>
@@ -84,12 +102,17 @@ const MasterKey = React.memo((props: IMergeProps) => {
             ];
             return (
                 <div className="masterlesss">
-                    <ListKeychain {...{ keychains, onClickKey }} />
+                    <ListKeychain {...{ keychains, onClickKey, isMasterless }} />
                     {factories.map((item) => (
                         <Item key={item.title} {...item} />
                     ))}
-                    <p className="fw-medium m-b-30">{dictionary.masterlessDesc1}</p>
-                    <p className="fw-medium m-b-30">{dictionary.masterlessDesc2}</p>
+                    <div className="subs">
+                        <p className="fw-medium m-b-30 warning-block">
+                            <WarningIcon />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`   ${dictionary.masterlessDesc1}`}
+                        </p>
+                        <p className="fw-medium m-b-30">{dictionary.masterlessDesc2}</p>
+                    </div>
                 </div>
             );
         }

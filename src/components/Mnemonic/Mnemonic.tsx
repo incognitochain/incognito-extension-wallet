@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { themeSelector, translateByFieldSelector } from 'src/module/Configs';
+import { translateByFieldSelector } from 'src/module/Configs';
+import { themeSelector } from 'src/module/Setting';
 import { IGlobalStyle, COLORS } from 'src/styles';
 import { IHDWalletLanguage } from 'src/i18n';
 

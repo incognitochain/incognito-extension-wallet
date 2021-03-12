@@ -23,5 +23,3 @@ export const translateByFieldSelector = createSelector(configsSelector, (configs
 });
 
 export const modalTranslateSelector = createSelector(translateSelector, (translate) => translate.modal);
-
-export const themeSelector = createSelector(configsSelector, (configs) => configs.theme);

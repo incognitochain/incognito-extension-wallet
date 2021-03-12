@@ -10,6 +10,7 @@ interface IProps {
     hook?: any;
     qrCodeProps: BaseQRCodeProps;
     label?: string;
+    copyProps?: any;
 }
 
 const Styled = styled.div`
@@ -43,7 +44,7 @@ const Styled = styled.div`
 `;
 
 const QrCode = (props: IProps) => {
-    const { hook, qrCodeProps, label } = props;
+    const { hook, qrCodeProps, label, copyProps } = props;
     const { value } = qrCodeProps;
     const theme = useSelector(themeSelector);
     return (
@@ -53,7 +54,7 @@ const QrCode = (props: IProps) => {
                 <QRCodeReact {...{ ...qrCodeProps, size: qrCodeProps?.size || 175 }} />
             </div>
             {hook}
-            <Copy text={value} />
+            <Copy text={value} {...copyProps} />
         </Styled>
     );
 };
