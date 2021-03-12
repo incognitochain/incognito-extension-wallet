@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import toLower from 'lodash/toLower';
 import isEqual from 'lodash/isEqual';
 import { listIdsWalletSelector } from 'src/module/Wallet';
+import { actionSetStatusDarkMode } from 'src/module/Setting/Setting.actions';
 import { IWalletLanguage, IHDWalletLanguage } from 'src/i18n';
 import { translateByFieldSelector } from 'src/module/Configs/Configs.selector';
 import { actionInitAppState } from 'src/redux/actions';
@@ -38,6 +39,7 @@ import {
 } from './Wallet.selector';
 import { IWalletReducer } from './Wallet.interface';
 import { actionToggleForgetPassword } from '../Password';
+import { darkModeSelector } from '../Setting';
 
 export const actionSaveWallet = () => async (dispatch: Dispatch, getState: () => IRootState) => {
     const state = getState();
@@ -264,12 +266,11 @@ export const actionImportWallet = (
     const state: IRootState = getState();
     const mainnet: boolean = isMainnetSelector(state);
     const isForgetPassword: boolean = isForgetPasswordSelector(state);
+    const darkMode: boolean = darkModeSelector(state);
+    console.debug('DARKMODE OLD', darkMode);
     try {
         let walletId = -1;
         const dataImport = await importWallet({ walletName, mnemonic, pass, isForgetPassword });
-        if (isForgetPassword) {
-            dispatch(actionToggleForgetPassword(false));
-        }
         walletId = dataImport.walletId;
         let { wallet } = dataImport;
         const listAccount: AccountInstance[] = wallet.masterAccount.getAccounts();
@@ -280,6 +281,8 @@ export const actionImportWallet = (
         }
         if (isForgetPassword) {
             await dispatch(actionInitAppState());
+            await dispatch(actionToggleForgetPassword(false));
+            await dispatch(actionSetStatusDarkMode({ darkMode }));
         }
         await dispatch(actionResetFollowDefaultToken(mainnet));
         await dispatch(actionLoadedWallet({ wallet, walletId, mainnet }));

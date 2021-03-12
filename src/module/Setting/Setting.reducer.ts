@@ -9,6 +9,7 @@ import {
     ACTION_TOGGLE_MODE_SAVE_BURN_TX,
     ACTION_TOGGLE_MODE_SAVE_RAW_BURN_TX,
     ACTION_TOGGLE_DARK_MODE,
+    ACTION_SET_STATUS_DARK_MODE,
 } from './Setting.constant';
 
 export interface ISettingReducer {
@@ -77,10 +78,19 @@ const settingReducer = (
             };
         }
         case ACTION_TOGGLE_DARK_MODE: {
+            const darkModeStatus = !state.darkMode;
             return {
                 ...state,
-                darkMode: !state?.darkMode,
-                theme: state?.darkMode ? lightTheme : darkTheme,
+                darkMode: darkModeStatus,
+                theme: darkModeStatus ? lightTheme : darkTheme,
+            };
+        }
+        case ACTION_SET_STATUS_DARK_MODE: {
+            const { darkMode } = action.payload;
+            return {
+                ...state,
+                darkMode,
+                theme: darkMode ? darkTheme : lightTheme,
             };
         }
         default:

@@ -1,14 +1,11 @@
-import { DEFAULT_THEME, ITheme } from 'src/styles';
 import { ACTION_CHANGE_LANGUAGE } from './Configs.constant';
 
 export interface IConfigsReducer {
     language: string;
-    theme: ITheme;
 }
 
 const initialState: IConfigsReducer = {
     language: 'en',
-    theme: DEFAULT_THEME,
 };
 
 const reducer = (
