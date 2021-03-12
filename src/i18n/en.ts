@@ -67,7 +67,7 @@ const language: ILanguage = {
         },
         blockShield: {
             totalShielded: 'Shielded Balance',
-            btnShield: 'Shield my crypto',
+            btnShield: 'BridgeShield my crypto',
         },
     },
     token: {
@@ -450,6 +450,7 @@ const language: ILanguage = {
         },
         shield: 'Shield',
         unShield: 'Unshield',
+        connectWallet: 'Connect Wallet',
     },
 };
 

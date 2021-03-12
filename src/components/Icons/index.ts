@@ -24,3 +24,4 @@ export { default as LostConnectIcon } from './LostConnect';
 export { default as FastFeeIcon } from './FastFee';
 export { default as AppIcon } from './AppIcon';
 export { default as WarningIcon } from './Warning';
+export { default as ChainIcon } from './Chain';

@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import Close from 'src/components/Icons/Close';
-import { COLORS } from 'src/styles/colors';
 import withShield from 'src/module/Shield/Shield.enhance';
 import SearchBox from 'src/components/Header/Header.searchBox';
 import { ListAllToken, TokenBasic } from 'src/module/Token';
+import { ITheme } from 'src/styles';
 
 const Wrapper = styled.div`
     padding: 30px 28px 20px;
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
         margin-top: 10px;
         width: 100%;
         height: 51px;
-        border: 0.5px solid ${COLORS.colorKeyGrey};
+        border: ${({ theme }: { theme: ITheme }) => `0.5px solid ${theme.inputBorder}`};
         border-radius: 10px;
         padding: 15px;
         background-color: transparent;

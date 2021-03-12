@@ -7,6 +7,7 @@ import BRIDGE_ACTION_NAME from './Bridge.actionsName'; // defaults to localStora
 
 const initialState: IBridgeReducer = {
     tabSelect: TAB_SELECTOR.SHIELD,
+    accountsMetamask: [],
 };
 
 const bridgeReducer = (state = initialState, action: { type: string; payload: any }) => {
@@ -16,6 +17,13 @@ const bridgeReducer = (state = initialState, action: { type: string; payload: an
             return {
                 ...state,
                 tabSelect: tab,
+            };
+        }
+        case BRIDGE_ACTION_NAME.UPDATE_METAMASK_CONNECT_ACCOUNT: {
+            const { accounts } = action.payload;
+            return {
+                ...state,
+                accountsMetamask: accounts,
             };
         }
         default:

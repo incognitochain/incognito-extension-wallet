@@ -8,3 +8,4 @@ export const bridgeSelector = createSelector(
 );
 
 export const tabSelector = createSelector(bridgeSelector, (bridge) => bridge.tabSelect);
+export const accountsMetamaskSelector = createSelector(bridgeSelector, (bridge) => bridge.accountsMetamask);

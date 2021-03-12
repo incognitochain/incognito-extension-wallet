@@ -449,4 +449,5 @@ export interface IBridgeLanguage {
     };
     shield: string;
     unShield: string;
+    connectWallet: string;
 }

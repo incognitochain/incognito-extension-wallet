@@ -11,6 +11,7 @@ import { translateByFieldSelector } from './module/Configs';
 import { IGeneralLanguage } from './i18n';
 import withBackground from './AppBackground.enhance';
 import { Styled } from './App.styled';
+import withConnectWallet from './App.enhanceConnectWallet';
 
 const { store, persistor }: IConfigStore = configStore();
 
@@ -53,4 +54,4 @@ const enhance = (WrappedComponent: FunctionComponent) => (props: any) => {
     );
 };
 
-export default compose(enhance, withNetwork, withBackground);
+export default compose(enhance, withNetwork, withBackground, withConnectWallet);

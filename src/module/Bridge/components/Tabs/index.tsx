@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { translateByFieldSelector } from 'src/module/Configs';
 import { TAB_SELECTOR } from 'src/module/Bridge/Bridge.constant';
 import { tabSelector } from 'src/module/Bridge/Bridge.selector';
-import { actionSelectHeaderTab } from 'src/module/Bridge/Bridge.actions';
+import { actionSelectHeaderTab as selectHeaderTab } from 'src/module/Bridge/Bridge.actions';
 import { Button } from './styled';
 
 const Tab = React.memo(() => {
@@ -13,7 +13,7 @@ const Tab = React.memo(() => {
     const dispatch = useDispatch();
     const onSelectTab = (tab: string) => {
         if (tab === selected) return;
-        dispatch(actionSelectHeaderTab({ tab }));
+        dispatch(selectHeaderTab({ tab }));
     };
     return (
         <Row>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Information, BridgeContent } from 'src/module/Bridge/Components';
+import { Header, Information, BridgeContent } from 'src/module/Bridge/components';
 import Row from 'src/components/Row';
 import { Wrapper } from './Bridge.styled';
 
@@ -8,7 +8,8 @@ const Bridge = React.memo(() => {
         <Wrapper>
             <Header />
             <Row className="row">
-                <Information />
+                {/* <Information /> */}
+                <div />
                 <BridgeContent />
             </Row>
         </Wrapper>

@@ -222,7 +222,7 @@ const COMMON_CONSTANTS = {
             81: 'Shield', // decentralized
             94: 'Remove liquidity',
             95: 'Add liquidity',
-            96: 'Shield Amount',
+            96: 'BridgeShield Amount',
             25: 'Shield', // centralized
             92: 'Trade',
         },
