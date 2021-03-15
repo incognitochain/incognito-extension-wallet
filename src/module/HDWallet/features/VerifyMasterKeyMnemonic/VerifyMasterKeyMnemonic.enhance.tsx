@@ -12,6 +12,7 @@ import {
 import { actionChangePassword, actionCreatePassword, newPasswordSelector, passwordSelector } from 'src/module/Password';
 import { actionImportWallet } from 'src/module/Wallet';
 import { route as routeKeyChain } from 'src/module/Keychain';
+import { actionChangeMode } from 'src/module/Preload';
 
 interface IProps {}
 
@@ -32,7 +33,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
     const currentPass = useSelector(passwordSelector);
     const pass = newPass || currentPass;
     const { state }: { state: any } = useLocation();
-    const { shouldRedirectToKeyChain, shouldGoBack, showToast } = state || {};
+    const { shouldRedirectToKeyChain, shouldGoBack, showToast, mode } = state || {};
     const [submitting, setFormSubmitting] = React.useState<boolean>(false);
     const handleVerifyMnemonic = async () => {
         try {
@@ -49,6 +50,9 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: IProps & 
                     dispatch(actionChangePassword(pass));
                 }
                 dispatch(actionInitCreate());
+                if (mode) {
+                    dispatch(actionChangeMode(mode));
+                }
             });
             if (shouldRedirectToKeyChain) {
                 return history.push(routeKeyChain);

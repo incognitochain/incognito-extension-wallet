@@ -9,3 +9,8 @@ export const ACTION_SET_LOGIN = `[preload] Set login`;
 export const ACTION_UPDATE_REQUEST_FROM_DAPP = `[preload] Update request from DAPP`;
 export const ACTION_CLEAR_REQUEST_FROM_DAPP = `[preload] Clear request from DAPP`;
 export const ACTION_SET_CAMERA_PERMISSION = `[preload] Set camera permission`;
+export const ACTION_CHANGE_MODE = `[preload] Change mode`;
+export const MODE = {
+    extension: 1,
+    browser: 2,
+};
