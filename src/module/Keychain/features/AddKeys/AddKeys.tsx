@@ -11,6 +11,7 @@ import { route as routeCreateAccount } from 'src/module/Account/features/CreateA
 import {
     actionSetStepCreateMasterKey,
     route as routeCreateMasterKey,
+    pathName as pathCreateMasterKey,
     STEPS_CREATE,
 } from 'src/module/HDWallet/features/CreateMasterKey';
 import { route as routeImportMasterKey } from 'src/module/HDWallet/features/ImportMasterKey';
@@ -18,6 +19,8 @@ import { ACTION_TYPES, actionSetActionType, listMasterKeyIdsAndNamesSelector } f
 import { IGlobalStyle } from 'src/styles';
 import { route as routeImportAccount } from 'src/module/Account/features/ImportAccount';
 import { route as routeKeyChain } from 'src/module/Keychain';
+import { isContainsQueryString, openAsTab } from 'src/utils';
+import { isDevSelector } from 'src/module/Setting';
 
 export const Styled = styled.div`
     .disabled {
@@ -108,7 +111,14 @@ const BlockActions = React.memo(() => {
     const dictionary = translateKeychain.addKeys;
     const history = useHistory();
     const dispatch = useDispatch();
+    const isDev = useSelector(isDevSelector);
     const handleCreateMasterKey = () => {
+        const queryString = `?page=${pathCreateMasterKey}`;
+        const containsQueryString = isContainsQueryString(queryString);
+        const pathname = `index.html${queryString}`;
+        if (!containsQueryString && !isDev) {
+            return openAsTab(pathname);
+        }
         dispatch(actionSetActionType(ACTION_TYPES.CREATE));
         dispatch(actionSetStepCreateMasterKey(STEPS_CREATE.createMasterKeyName));
         history.push(routeCreateMasterKey, {

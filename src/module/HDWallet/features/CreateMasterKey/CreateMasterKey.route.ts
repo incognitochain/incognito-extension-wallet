@@ -11,4 +11,6 @@ const createMasterKeyRoute: IRouteProps = {
 
 export const route = createMasterKeyRoute.path;
 
+export const pathName = createMasterKeyRoute.path.split('/')[1];
+
 export default createMasterKeyRoute;

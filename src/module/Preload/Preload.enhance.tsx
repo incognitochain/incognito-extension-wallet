@@ -9,7 +9,8 @@ import { forceSendDataSelector } from 'src/module/Send/Send.selector';
 import { isTab } from 'src/utils';
 import { chainTokensSelector, pTokensSelector } from 'src/module/Token';
 import { actionFetch as actionPreloadApp } from './Preload.actions';
-import { preloadSelector } from './Preload.selector';
+import { modePreloadSelector, preloadSelector } from './Preload.selector';
+import { MODE } from './Preload.constant';
 
 const Styled = styled.div`
     > p {
@@ -55,12 +56,13 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
     const chainTokens = useSelector(chainTokensSelector);
     const forceSendData = useSelector(forceSendDataSelector);
     const handlePreload = () => dispatch(actionPreloadApp(forceSendData?.accountName));
+    const modePreload: number = useSelector(modePreloadSelector);
     React.useEffect(() => {
         if (!isTab()) {
             handlePreload();
         }
     }, []);
-    if (isTab()) {
+    if (isTab() || modePreload === MODE.browser) {
         return (
             <div>
                 <AppIcon />

@@ -22,6 +22,7 @@ import {
     ACTION_UPDATE_REQUEST_FROM_DAPP,
     ACTION_CLEAR_REQUEST_FROM_DAPP,
     ACTION_SET_CAMERA_PERMISSION,
+    ACTION_CHANGE_MODE,
 } from './Preload.constant';
 
 export const actionSetConfigs = (payload: IPreloadConfigs) => ({
@@ -145,4 +146,9 @@ export const actionClearRequestFromDApp = () => ({
 
 export const actionSetCameraPermission = () => ({
     type: ACTION_SET_CAMERA_PERMISSION,
+});
+
+export const actionChangeMode = (payload: number) => ({
+    type: ACTION_CHANGE_MODE,
+    payload,
 });
