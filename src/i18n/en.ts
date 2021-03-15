@@ -296,6 +296,9 @@ const language: ILanguage = {
             error2: `If that doesn’t work,<br /> please come back in 60 minutes.`,
             tooltip: 'Make sure you have selected the right coin',
         },
+        bridgeShieldAddress: {
+            title1: 'Only send to this address once.',
+        },
     },
     detail: {
         headerTitle: '',

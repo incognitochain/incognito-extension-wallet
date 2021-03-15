@@ -109,7 +109,7 @@ const LoadingVector = React.memo(() => {
 const Loading = (props: ILoadingIconProps) => {
     const { width = '20px', height = '20px', center } = props;
     return (
-        <Styled width={width} height={height} className={`loading-icon ${center ? 'loading-center' : ''}`}>
+        <Styled width={width} height={height} className={`loading-icon ${center ? 'loading-center' : ''} loading-icon`}>
             <LoadingVector />
         </Styled>
     );

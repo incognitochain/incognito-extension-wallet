@@ -7,8 +7,8 @@ export const Styled = styled(FieldBorderBox)`
     justify-content: space-between;
     align-items: center;
     padding: 0 14px;
-    > div {
-        display: flex;
+    > div .icon-verify {
+        transform: translateY(25%);
     }
 `;
 

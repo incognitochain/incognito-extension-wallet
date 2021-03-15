@@ -9,7 +9,7 @@ const Styled = styled.div`
 
 const VerifiedIcon = () => {
     return (
-        <Styled className="icon">
+        <Styled className="icon icon-verify">
             <img src={`${ENVS.REACT_APP_DOMAIN_URL}/images/icons/verified-token.png`} alt="" />
         </Styled>
     );

@@ -55,7 +55,7 @@ const Copy: React.FunctionComponent<IProps> = (props) => {
         }
     };
     return (
-        <Styled>
+        <Styled className="copy-wrapper">
             <p className={`text ${!ellipsis ? 'ellipsis' : ''}`}>
                 {ellipsis ? ellipsisCenter({ str: text, limit: 11 }) : text}{' '}
             </p>

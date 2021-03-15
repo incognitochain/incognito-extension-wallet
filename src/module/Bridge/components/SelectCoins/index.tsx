@@ -8,17 +8,18 @@ interface IProps {
     placeholder?: string;
     text?: string;
     buttonProps: React.HTMLAttributes<HTMLDivElement>;
+    verified: boolean;
 }
 
 const SelectCoins = React.memo((props: IProps) => {
-    const { placeholder, text, buttonProps } = props;
+    const { placeholder, text, buttonProps, verified } = props;
     return (
         <Styled {...buttonProps}>
             <Row>
                 <Text className="fs-medium fw-regular" isEmpty={isEmpty(text)}>
                     {text || placeholder}
                 </Text>
-                <VerifiedIcon />
+                {!!verified && <VerifiedIcon />}
             </Row>
             <ArrowDownIcon />
         </Styled>

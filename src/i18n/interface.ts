@@ -376,6 +376,9 @@ export interface IShieldLanguage {
         error2: string;
         tooltip: string;
     };
+    bridgeShieldAddress: {
+        title1: string;
+    };
 }
 
 export interface INewUserLanguage {
