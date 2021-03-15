@@ -73,6 +73,8 @@ class SelectedPrivacy {
 
     symbol: string;
 
+    isETH: boolean;
+
     name: string;
 
     contractId: string;
@@ -147,6 +149,7 @@ class SelectedPrivacy {
         this.isErc20Token = this.isPrivateToken && this.currencyType === COINS.PRIVATE_TOKEN_CURRENCY_TYPE.ERC20;
         this.isBep2Token = this.isPrivateToken && this.currencyType === COINS.PRIVATE_TOKEN_CURRENCY_TYPE.BNB_BEP2;
         this.symbol = combineData.call(this, pTokenData?.symbol, pCustomTokenData?.symbol, COINS.PRV.symbol);
+        this.isETH = this?.symbol === COINS.CRYPTO_SYMBOL.ETH;
         this.name = combineData.call(this, pTokenData?.name, pCustomTokenData?.name, 'Privacy');
         this.contractId = pTokenData?.contractId;
         this.decimals = this.isPrivacyToken ? pTokenData?.decimals : this.isNativeToken ? COINS.PRV.pDecimals : 0;

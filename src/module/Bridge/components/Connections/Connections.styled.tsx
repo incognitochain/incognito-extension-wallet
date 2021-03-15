@@ -10,20 +10,15 @@ const Button = styled.button`
     border-radius: 8px;
     margin-left: 10px;
     min-width: 125px;
-`;
-
-export const AccountOutChain = styled(Button)`
-    background-color: ${({ theme }: { theme: ITheme }) => theme.text};
-    color: ${({ theme }: { theme: ITheme }) => theme.inverseText};
-`;
-
-export const AccountInChain = styled(Button)`
-    background-color: ${({ theme }: { theme: ITheme }) => theme.inverseText};
-    color: ${({ theme }: { theme: ITheme }) => theme.text};
-    border: ${({ theme }: { theme: ITheme }) => `0.5px solid ${theme.inputBorder}`};
-    display: flex;
     .chain-icon {
         margin-right: 8px;
         margin-left: 0;
     }
+`;
+
+export const AccountBox = styled(Button)`
+    background-color: ${({ theme }: { theme: ITheme }) => theme.inverseText};
+    color: ${({ theme }: { theme: ITheme }) => theme.text};
+    border: ${({ theme }: { theme: ITheme }) => `0.5px solid ${theme.inputBorder}`};
+    display: flex;
 `;

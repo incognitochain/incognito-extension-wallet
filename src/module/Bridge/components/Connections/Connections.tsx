@@ -7,8 +7,16 @@ import { translateByFieldSelector } from 'src/module/Configs';
 import { ellipsisCenter } from 'src/utils';
 import { actionRemoveTooltip, actionShowTooltip } from 'src/module/Tooltip';
 import { paymentAddressSelector } from 'src/module/Account';
-import { Wrapper, AccountOutChain, AccountInChain } from 'src/module/Bridge/components/Connections/Connections.styled';
+import { Wrapper, AccountBox } from 'src/module/Bridge/components/Connections/Connections.styled';
 import { ChainIcon } from 'src/components/Icons';
+
+interface IAccountBoxProps {
+    ref: any;
+    text: string;
+    onClick?: () => void;
+    onMouseOver?: () => void;
+    onMouseLeave?: () => void;
+}
 
 const ID_BTN_OUT_CHAIN = 'connect-out-chain';
 
@@ -20,13 +28,25 @@ const Connections = React.memo(() => {
     const { connectWallet } = useSelector(translateByFieldSelector)('bridge');
     const accounts = useSelector(accountsMetamaskSelector);
     const incPaymentAddress: string = useSelector(paymentAddressSelector);
-    console.log(incPaymentAddress);
+
+    const metamaskAccount = React.useMemo(
+        () => (isEmpty(accounts) ? connectWallet : ellipsisCenter({ str: accounts[0], limit: 7 })),
+        [accounts],
+    );
+    const addressEllipsis = React.useMemo(
+        () =>
+            ellipsisCenter({
+                str: incPaymentAddress,
+                limit: 7,
+            }),
+        [incPaymentAddress],
+    );
+
     const handleClickButtonConnect = async () => {
         if (!isMetaMaskInstalled) {
             /** Open link install metamask */
             return window.open('https://metamask.io/', '_blank');
         }
-        await connectMetamask(ethereum);
         /** Request Connect to metamask */
         if (isEmpty(accounts)) await connectMetamask(ethereum);
     };
@@ -44,31 +64,26 @@ const Connections = React.memo(() => {
 
     const mouseOutChainMoveHoverOut = () => dispatch(actionRemoveTooltip(ID_BTN_OUT_CHAIN));
 
-    return (
-        <Wrapper>
-            <AccountOutChain
-                ref={outChainAccountRef}
+    const renderAccountBox = (payload: IAccountBoxProps) => {
+        const { ref, text, onClick } = payload;
+        return (
+            <AccountBox
+                ref={ref}
                 className="fs-regular fw-medium"
-                onClick={handleClickButtonConnect}
+                onClick={onClick}
                 onMouseOver={mouseOutChainMoveHover}
                 onMouseLeave={mouseOutChainMoveHoverOut}
             >
-                {isEmpty(accounts)
-                    ? connectWallet
-                    : ellipsisCenter({
-                          str: accounts[0],
-                          limit: 7,
-                      })}
-            </AccountOutChain>
-            <AccountInChain ref={incAccountRef} className="ml-10 fs-regular fw-medium">
                 <ChainIcon />
-                {isEmpty(accounts)
-                    ? connectWallet
-                    : ellipsisCenter({
-                          str: incPaymentAddress,
-                          limit: 7,
-                      })}
-            </AccountInChain>
+                {text}
+            </AccountBox>
+        );
+    };
+
+    return (
+        <Wrapper>
+            {renderAccountBox({ ref: outChainAccountRef, text: metamaskAccount, onClick: handleClickButtonConnect })}
+            {renderAccountBox({ ref: incAccountRef, text: addressEllipsis })}
         </Wrapper>
     );
 });

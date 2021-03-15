@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import Close from 'src/components/Icons/Close';
 import withShield from 'src/module/Shield/Shield.enhance';
 import SearchBox from 'src/components/Header/Header.searchBox';
-import { ListAllToken, TokenBasic } from 'src/module/Token';
+import { actionSetSelectedToken, ListAllToken, TokenBasic } from 'src/module/Token';
 import { ITheme } from 'src/styles';
+import { useDispatch } from 'react-redux';
+import { actionToggleModal } from 'src/components/Modal';
+import { actionSelectShieldToken } from '../../feature/BridgeShield/BridgeShield.actions';
 
 const Wrapper = styled.div`
     padding: 30px 28px 20px;
@@ -36,12 +39,18 @@ const Wrapper = styled.div`
 
 const CoinsShieldModal = React.memo((props: any) => {
     const { tokensFactories, toggleUnVerified, onToggleUnVerifiedTokens } = props;
+    const dispatch = useDispatch();
+    const closeModal = () => dispatch(actionToggleModal({}));
+    const handleSelectToken = (tokenId: string) => {
+        dispatch(actionSetSelectedToken(tokenId));
+        closeModal();
+    };
     const renderItem = (tokenId: string) => {
-        return <TokenBasic tokenId={tokenId} handleSelectToken={() => {}} />;
+        return <TokenBasic tokenId={tokenId} handleSelectToken={() => handleSelectToken(tokenId)} />;
     };
     return (
         <Wrapper>
-            <Close />
+            <Close onClick={closeModal} />
             <SearchBox title="Select a coin to shield" />
             <ListAllToken {...{ tokensFactories, toggleUnVerified, onToggleUnVerifiedTokens, renderItem }} />
         </Wrapper>
