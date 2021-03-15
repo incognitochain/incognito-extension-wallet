@@ -1,5 +1,5 @@
 import React from 'react';
-import { COLORS } from 'src/styles';
+import { IGlobalStyle } from 'src/styles';
 import styled from 'styled-components';
 
 export interface ILoadingIconProps {
@@ -30,7 +30,7 @@ const Styled: any = styled.div`
     div.spinner div {
         width: 9%;
         height: 28%;
-        background: ${COLORS.white};
+        background: ${(props: IGlobalStyle) => props.theme.text};
         position: absolute;
         left: 49%;
         top: 43%;
