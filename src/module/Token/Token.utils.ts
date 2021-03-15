@@ -11,7 +11,9 @@ export const handleFilterTokenByKeySearch = ({ tokens, keySearch = '' }: { token
             includes(toLower(token?.name), keySearch) ||
             includes(toLower(token?.symbol), keySearch) ||
             includes(toLower(token?.pSymbol), keySearch) ||
-            includes(toLower(token?.networkName), keySearch),
+            includes(toLower(token?.networkName), keySearch) ||
+            includes(toLower(token?.contractId), keySearch) ||
+            includes(toLower(token?.tokenId), keySearch),
     ) || tokens;
 
 export const getPrice = ({ token, tokenUSDT }: { token: ISelectedPrivacy; tokenUSDT: IPToken | any }) => {
