@@ -74,7 +74,7 @@ const enhance = (WrappedComponent: React.FunctionComponent) => (props: any) => {
                 {
                     desc: translate.darkMode.desc,
                     toggle: true,
-                    onClick: () => dispatch(actionToggleDarkMode()),
+                    onClick: () => dispatch(actionToggleDarkMode(!darkMode)),
                     toggleValue: darkMode,
                 },
             ],
