@@ -14,8 +14,5 @@ export const Styled = styled.div`
         .icon {
             margin-bottom: 15px;
         }
-        p {
-            color: ${(props: { theme: ITheme }) => props.theme.subText};
-        }
     }
 `;

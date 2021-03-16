@@ -22,7 +22,7 @@ const LostConnect = React.memo(() => {
             <Styled theme={theme}>
                 <div className="preload-container lost-network">
                     <LostConnectIcon />
-                    <p dangerouslySetInnerHTML={{ __html: translate.lostNetwork }} />
+                    <p className="sub-text" dangerouslySetInnerHTML={{ __html: translate.lostNetwork }} />
                 </div>
             </Styled>
         </ErrorBoundary>
