@@ -4,8 +4,8 @@ import styled from 'styled-components';
 interface IProps {}
 
 const Styled = styled.button`
-    width: 16px;
-    height: 16px;
+    width: 17px;
+    height: 17px;
 `;
 
 const ScanVector = React.memo((props: any) => {
